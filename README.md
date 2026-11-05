@@ -99,3 +99,38 @@ npm run test:server   # Vitest Unit + Supertest API/DB Integration
 npm run test:client   # Vitest + React Testing Library UI tests
 npm run test:e2e      # Playwright End-to-End browser tests
 ```
+
+## 5. F-03 Proposal Drafting, Submission & Instructor Review
+
+F-03 uses the existing `ProjectProposal` Prisma model; no additional migration or
+environment variable is required. Apply the current schema to a local database
+with the existing `npm --prefix server run prisma:migrate` command in Section 3.3.
+
+| Method | Endpoint | Access | Result |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/teams/:id/proposal` | Team member or `INSTRUCTOR` | Returns `{ proposal }` |
+| `PUT` | `/api/teams/:id/proposal` | Team member (`STUDENT`) | Saves draft fields: `title`, `problemStatement`, `techStack`, `repoUrl` |
+| `POST` | `/api/teams/:id/proposal/submit` | Team member (`STUDENT`) | Validates and submits the saved proposal |
+| `POST` | `/api/proposals/:id/review` | `INSTRUCTOR` | Body: `{ "decision": "APPROVED" \| "REVISION_REQUESTED", "reviewFeedback": "..." }` |
+
+Proposal state transitions:
+
+```text
+DRAFT ──submit──> SUBMITTED ──approve──> APPROVED
+                       └──request revision──> REVISION_REQUESTED
+                                                  └──edit and resubmit──> SUBMITTED
+```
+
+Editing or submitting a `SUBMITTED` or `APPROVED` proposal returns
+`409 BR03_INVALID_STATUS_TRANSITION`. Submission requires a trimmed title of at
+least 5 characters, problem statement of at least 20 characters, and tech stack
+of at least 3 characters; otherwise it returns `400 BR04_INCOMPLETE_PROPOSAL`.
+Instructor review requires a valid decision and feedback of at least 10 trimmed
+characters (`400 BR05_FEEDBACK_TOO_SHORT`); an invalid decision returns
+`400 VALIDATION_ERROR`. A proposal not in `SUBMITTED` returns
+`409 BR03_INVALID_STATUS_TRANSITION`. Review status is checked before review
+payload validation, so a non-submitted proposal returns 409 even when its
+feedback is also incomplete. Students accessing another team's proposal receive
+`403 BR06_FORBIDDEN_TEAM_ACCESS`; student review attempts receive
+`403 BR06_INSTRUCTOR_ROLE_REQUIRED`. Forbidden responses do not include proposal
+data.
