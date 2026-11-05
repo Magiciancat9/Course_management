@@ -301,6 +301,129 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
         reviewFeedback: 'Self-approving proposal as a student should be forbidden.',
       });
     expect(studentReviewAttempt.status).toBe(403);
-    expect(studentReviewAttempt.body.code).toBe('BR06_FORBIDDEN_ROLE');
+    expect(studentReviewAttempt.body.code).toBe('BR06_INSTRUCTOR_ROLE_REQUIRED');
+    expect(studentReviewAttempt.body.proposal).toBeUndefined();
+  });
+
+  it('TEST-07 / AC-07: persists a draft, retrieves it, and records submission metadata', async () => {
+    const login = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
+    const token = login.body.token;
+    const draft = {
+      title: 'Course project proposal',
+      problemStatement:
+        'Students need a reliable way to manage proposal submissions and instructor feedback.',
+      techStack: 'TypeScript, Express, PostgreSQL',
+      repoUrl: 'https://example.com/course-project',
+    };
+
+    const saveRes = await request(app)
+      .put(`/api/teams/${seeded.teamAlpha.id}/proposal`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(draft);
+    expect(saveRes.status).toBe(200);
+    expect(saveRes.body.proposal.title).toBe(draft.title);
+
+    const getRes = await request(app)
+      .get(`/api/teams/${seeded.teamAlpha.id}/proposal`)
+      .set('Authorization', `Bearer ${token}`);
+    expect(getRes.status).toBe(200);
+    expect(getRes.body.proposal).toMatchObject(draft);
+    expect(getRes.body.proposal.status).toBe('DRAFT');
+
+    const instructorLogin = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'instructor@kmutt.ac.th', password: 'Password123!' });
+    const instructorGetRes = await request(app)
+      .get(`/api/teams/${seeded.teamAlpha.id}/proposal`)
+      .set('Authorization', `Bearer ${instructorLogin.body.token}`);
+    expect(instructorGetRes.status).toBe(200);
+    expect(instructorGetRes.body.proposal.title).toBe(draft.title);
+
+    const submitRes = await request(app)
+      .post(`/api/teams/${seeded.teamAlpha.id}/proposal/submit`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({});
+    expect(submitRes.status).toBe(200);
+    expect(submitRes.body.proposal.status).toBe('SUBMITTED');
+    expect(submitRes.body.proposal.submittedAt).toBeTruthy();
+    expect(submitRes.body.proposal.revisionCount).toBe(1);
+  });
+
+  it('TEST-08 / AC-08: checks each completeness threshold and locks repeated submission', async () => {
+    const login = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
+    const token = login.body.token;
+
+    const shortTitle = await request(app)
+      .post(`/api/teams/${seeded.teamAlpha.id}/proposal/submit`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        title: 'X',
+        problemStatement: 'A sufficiently long problem statement for this proposal.',
+        techStack: 'React',
+      });
+    expect(shortTitle.status).toBe(400);
+    expect(shortTitle.body.code).toBe('BR04_INCOMPLETE_PROPOSAL');
+
+    const shortProblem = await request(app)
+      .post(`/api/teams/${seeded.teamAlpha.id}/proposal/submit`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        title: 'Valid title',
+        problemStatement: 'Too short',
+        techStack: 'React',
+      });
+    expect(shortProblem.status).toBe(400);
+    expect(shortProblem.body.code).toBe('BR04_INCOMPLETE_PROPOSAL');
+
+    const submitted = await request(app)
+      .post(`/api/teams/${seeded.teamAlpha.id}/proposal/submit`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        title: 'Valid title',
+        problemStatement: 'A sufficiently long problem statement for this proposal.',
+        techStack: 'React',
+      });
+    expect(submitted.status).toBe(200);
+
+    const repeatedSubmit = await request(app)
+      .post(`/api/teams/${seeded.teamAlpha.id}/proposal/submit`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({ title: 'X', problemStatement: 'X', techStack: 'X' });
+    expect(repeatedSubmit.status).toBe(409);
+    expect(repeatedSubmit.body.code).toBe('BR03_INVALID_STATUS_TRANSITION');
+  });
+
+  it('TEST-09 / AC-09: rejects review of a non-submitted proposal before validating its feedback', async () => {
+    const instructorLogin = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'instructor@kmutt.ac.th', password: 'Password123!' });
+    const proposal = await prisma.projectProposal.findUnique({
+      where: { teamId: seeded.teamAlpha.id },
+    });
+
+    const review = await request(app)
+      .post(`/api/proposals/${proposal!.id}/review`)
+      .set('Authorization', `Bearer ${instructorLogin.body.token}`)
+      .send({ decision: 'APPROVED', reviewFeedback: 'Short' });
+    expect(review.status).toBe(409);
+    expect(review.body.code).toBe('BR03_INVALID_STATUS_TRANSITION');
+  });
+
+  it('TEST-10 / AC-10: rejects cross-team submission without returning proposal data', async () => {
+    const login = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
+
+    const response = await request(app)
+      .post(`/api/teams/${seeded.teamBeta.id}/proposal/submit`)
+      .set('Authorization', `Bearer ${login.body.token}`)
+      .send({});
+    expect(response.status).toBe(403);
+    expect(response.body.code).toBe('BR06_FORBIDDEN_TEAM_ACCESS');
+    expect(response.body.proposal).toBeUndefined();
   });
 });

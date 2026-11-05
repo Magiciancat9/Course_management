@@ -602,7 +602,15 @@ app.post('/api/teams/:id/proposal/submit', requireAuth, requireRole('STUDENT'), 
   }
 });
 
-app.post('/api/proposals/:id/review', requireAuth, requireRole('INSTRUCTOR'), async (req, res) => {
+app.post('/api/proposals/:id/review', requireAuth, async (req, res) => {
+  if (req.user!.role !== 'INSTRUCTOR') {
+    res.status(403).json({
+      error: 'Forbidden: only instructors may review proposals.',
+      code: 'BR06_INSTRUCTOR_ROLE_REQUIRED',
+    });
+    return;
+  }
+
   try {
     const proposalId = Number(req.params.id);
     const { decision, reviewFeedback } = req.body || {};
