@@ -116,6 +116,10 @@ erDiagram
     int score "0-100 (Sprint 2)"
     string feedback
   }
+  REVOKED_TOKEN {
+    string jti PK
+    datetime expiresAt
+  }
 
   COURSE ||--o{ PROJECT_TEAM : "hosts"
   USER ||--o{ PROJECT_TEAM : "creates"
@@ -134,6 +138,7 @@ erDiagram
 - **`ProjectTeam` (`@@unique([courseId, name])`):** Prevents two teams in the same course from using the same team name.
 - **`TeamMember` (`@@unique([courseId, userId])`):** Enforces `BR-01` at both the application layer and PostgreSQL index level—a student can belong to at most one team per course.
 - **`ProjectProposal.teamId` (`@unique`):** Enforces one authoritative proposal record per team (`1:1`), linking ownership directly to `ProjectTeam` and its `TeamMember` roster (`BR-06`).
+- **`RevokedToken.jti` (`@id`):** Stores logged-out JWT identifiers and their expiration timestamps in PostgreSQL so revocation survives server restarts; expired rows are removed opportunistically.
 
 ### 2.3. Database Setup, Migrations, and Reproducible Seed Data
 - **Schema Management:** Managed via `server/prisma/schema.prisma`. Schema changes are applied with `npm --prefix server run prisma:migrate` (`prisma db push` / `prisma migrate deploy`).
@@ -199,8 +204,9 @@ erDiagram
 ### 3.4. Credential Handling, Session/Token Lifecycle, and Logout Design
 - **Password Hashing:** User passwords are hashed with `bcryptjs` (`10` salt rounds) before storage in `User.passwordHash`. Plaintext passwords are never logged or persisted (`NFR-03`).
 - **Token Issuance & Expiry:** `POST /api/auth/login` verifies credentials via `bcrypt.compare`. On success, the server signs a JWT (`HS256`) containing `{ userId, email, role, jti }` with an `8h` expiration (`exp`) using `process.env.JWT_SECRET`.
-- **Current-User Retrieval:** `GET /api/auth/me` validates the `Authorization: Bearer <token>` header, checks that `jti` is not in the server's revoked token store, and queries PostgreSQL for the fresh user profile (excluding `passwordHash`).
-- **Enforced Logout:** `POST /api/auth/logout` adds the token's unique `jti` (and raw token signature) to the backend revocation store (`revokedTokens`) and clears the client's stored token. Any subsequent API request reusing that logged-out token is rejected by `requireAuth` with `401 Unauthorized`.
+- **Secret Configuration:** `JWT_SECRET` is read at startup; startup fails if it is missing or empty. In production, the placeholder `replace-with-secure-random-jwt-secret` is also rejected.
+- **Current-User Retrieval:** `GET /api/auth/me` validates the bearer token, checks PostgreSQL for the token `jti` in `RevokedToken`, and queries PostgreSQL for the fresh user profile (excluding `passwordHash`).
+- **Enforced Logout:** `POST /api/auth/logout` persists the token `jti` and expiration in `RevokedToken` and clears the client stored token. Any subsequent API request reusing that logged-out token, including after a server restart, is rejected by `requireAuth` with `401 Unauthorized`.
 
 ---
 
