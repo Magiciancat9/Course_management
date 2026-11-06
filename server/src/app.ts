@@ -99,8 +99,21 @@ app.get('/api/auth/me', requireAuth, async (req, res) => {
 });
 
 app.post('/api/auth/logout', requireAuth, async (req, res) => {
-  revokeAuthToken(req.tokenJti, req.rawToken);
-  res.status(200).json({ message: 'Logged out successfully' });
+  if (!req.tokenJti || !req.tokenExpiresAt) {
+    res.status(401).json({
+      error: 'Invalid or expired authentication token.',
+      code: 'UNAUTHORIZED',
+    });
+    return;
+  }
+
+  try {
+    await revokeAuthToken(req.tokenJti, req.tokenExpiresAt);
+    res.status(200).json({ message: 'Logged out successfully' });
+  } catch (error) {
+    console.error('Logout error:', error);
+    res.status(500).json({ error: 'Internal server error', code: 'INTERNAL_ERROR' });
+  }
 });
 
 // ============================================================================

@@ -48,9 +48,15 @@ PORT=3000
 NODE_ENV=development
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/course_pms?schema=public"
 CORS_ORIGIN="http://localhost:5173"
-JWT_SECRET="dev-local-course-pms-jwt-secret-2026"
+JWT_SECRET="<generated value>"
 DEMO_USER_PASSWORD="Password123!"
 ```
+
+Generate a signing secret with:
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+Set `JWT_SECRET` to the generated value in `server/.env`.
 
 ### 3.3. Install, Migrate, and Seed Database
 ```bash

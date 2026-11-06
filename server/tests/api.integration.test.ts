@@ -9,7 +9,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
   let seeded: Awaited<ReturnType<typeof seedDatabase>>;
 
   beforeEach(async () => {
-    clearRevokedTokens();
+    await clearRevokedTokens();
     seeded = await seedDatabase(prisma);
   });
 
@@ -470,5 +470,6 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
       .set('Authorization', `Bearer ${token}`);
     expect(response.status).toBe(401);
     expect(response.body.code).toBe('TOKEN_REVOKED');
+    await (await import('../src/prisma')).default.$disconnect();
   });
 });
