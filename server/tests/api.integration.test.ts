@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterAll } from 'vitest';
+import { describe, it, expect, beforeEach, afterAll, vi } from 'vitest';
 import request from 'supertest';
 import app from '../src/app';
 import prisma from '../src/prisma';
@@ -425,5 +425,50 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
     expect(response.status).toBe(403);
     expect(response.body.code).toBe('BR06_FORBIDDEN_TEAM_ACCESS');
     expect(response.body.proposal).toBeUndefined();
+  });
+
+  it('TEST-13 / AC-03: refuses to initialize auth without JWT_SECRET', async () => {
+    const originalSecret = process.env.JWT_SECRET;
+    vi.doMock('../src/prisma', () => ({ default: {} }));
+    delete process.env.JWT_SECRET;
+    vi.resetModules();
+
+    let importError: unknown;
+    try {
+      await import('../src/middleware/auth');
+    } catch (error) {
+      importError = error;
+    } finally {
+      if (originalSecret === undefined) {
+        delete process.env.JWT_SECRET;
+      } else {
+        process.env.JWT_SECRET = originalSecret;
+      }
+      vi.doUnmock('../src/prisma');
+      vi.resetModules();
+    }
+
+    expect(importError).toBeInstanceOf(Error);
+    expect(String(importError)).toContain('JWT_SECRET');
+  });
+
+  it('TEST-14 / AC-03: rejects a logged-out token after the app is re-imported', async () => {
+    const login = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
+    const token = login.body.token;
+
+    const logout = await request(app)
+      .post('/api/auth/logout')
+      .set('Authorization', `Bearer ${token}`);
+    expect(logout.status).toBe(200);
+
+    vi.resetModules();
+    const restartedApp = (await import('../src/app')).default;
+    const response = await request(restartedApp)
+      .get('/api/auth/me')
+      .set('Authorization', `Bearer ${token}`);
+    expect(response.status).toBe(401);
+    expect(response.body.code).toBe('TOKEN_REVOKED');
   });
 });
