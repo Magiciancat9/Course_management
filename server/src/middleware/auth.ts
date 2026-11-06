@@ -8,6 +8,7 @@ export interface AuthTokenPayload {
   email: string;
   role: 'STUDENT' | 'INSTRUCTOR';
   jti: string;
+  exp?: number;
 }
 
 declare global {
@@ -21,16 +22,24 @@ declare global {
         role: 'STUDENT' | 'INSTRUCTOR';
       };
       tokenJti?: string;
-      rawToken?: string;
+      tokenExpiresAt?: Date;
     }
   }
 }
 
-const JWT_SECRET = process.env.JWT_SECRET || 'dev-local-course-pms-jwt-secret-2026';
-
-// In-memory revocation registry for logged-out tokens (AC-03)
-const revokedJtis = new Set<string>();
-const revokedRawTokens = new Set<string>();
+function getJwtSecret(): string {
+  const secret = process.env.JWT_SECRET;
+  if (
+    !secret ||
+    !secret.trim() ||
+    (process.env.NODE_ENV === 'production' &&
+      secret.trim() === 'replace-with-secure-random-jwt-secret')
+  ) {
+    throw new Error('JWT_SECRET must be configured with a non-empty secure value.');
+  }
+  return secret;
+}
+const JWT_SECRET = getJwtSecret();
 
 export function signAuthToken(user: {
   id: number;
@@ -50,14 +59,16 @@ export function signAuthToken(user: {
   );
 }
 
-export function revokeAuthToken(jti?: string, rawToken?: string): void {
-  if (jti) revokedJtis.add(jti);
-  if (rawToken) revokedRawTokens.add(rawToken);
+export async function revokeAuthToken(jti: string, expiresAt: Date): Promise<void> {
+  await prisma.revokedToken.upsert({
+    where: { jti },
+    create: { jti, expiresAt },
+    update: { expiresAt },
+  });
 }
 
-export function clearRevokedTokens(): void {
-  revokedJtis.clear();
-  revokedRawTokens.clear();
+export async function clearRevokedTokens(): Promise<void> {
+  await prisma.revokedToken.deleteMany();
 }
 
 export async function requireAuth(
@@ -75,7 +86,7 @@ export async function requireAuth(
   }
 
   const token = authHeader.slice(7).trim();
-  if (!token || revokedRawTokens.has(token)) {
+  if (!token) {
     res.status(401).json({
       error: 'Session token has been logged out or revoked.',
       code: 'TOKEN_REVOKED',
@@ -83,9 +94,34 @@ export async function requireAuth(
     return;
   }
 
+  let decoded: AuthTokenPayload;
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as AuthTokenPayload;
-    if (decoded.jti && revokedJtis.has(decoded.jti)) {
+    decoded = jwt.verify(token, JWT_SECRET) as AuthTokenPayload;
+  } catch {
+    res.status(401).json({
+      error: 'Invalid or expired authentication token.',
+      code: 'UNAUTHORIZED',
+    });
+    return;
+  }
+
+  if (!decoded.jti || typeof decoded.exp !== 'number') {
+    res.status(401).json({
+      error: 'Invalid or expired authentication token.',
+      code: 'UNAUTHORIZED',
+    });
+    return;
+  }
+
+  try {
+    await prisma.revokedToken.deleteMany({
+      where: { expiresAt: { lte: new Date() } },
+    });
+
+    const revokedToken = await prisma.revokedToken.findUnique({
+      where: { jti: decoded.jti },
+    });
+    if (revokedToken) {
       res.status(401).json({
         error: 'Session token has been logged out or revoked.',
         code: 'TOKEN_REVOKED',
@@ -114,13 +150,11 @@ export async function requireAuth(
 
     req.user = dbUser;
     req.tokenJti = decoded.jti;
-    req.rawToken = token;
+    req.tokenExpiresAt = new Date(decoded.exp * 1000);
     next();
-  } catch {
-    res.status(401).json({
-      error: 'Invalid or expired authentication token.',
-      code: 'UNAUTHORIZED',
-    });
+  } catch (error) {
+    console.error('Authentication verification error:', error);
+    res.status(500).json({ error: 'Internal server error', code: 'INTERNAL_ERROR' });
   }
 }
 

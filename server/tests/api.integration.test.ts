@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterAll } from 'vitest';
+import { describe, it, expect, beforeEach, afterAll, vi } from 'vitest';
 import request from 'supertest';
 import app from '../src/app';
 import prisma from '../src/prisma';
@@ -9,7 +9,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
   let seeded: Awaited<ReturnType<typeof seedDatabase>>;
 
   beforeEach(async () => {
-    clearRevokedTokens();
+    await clearRevokedTokens();
     seeded = await seedDatabase(prisma);
   });
 
@@ -162,7 +162,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
     expect(add4.body.code).toBe('BR02_MAX_TEAM_SIZE_EXCEEDED');
   });
 
-  it('TEST-07 & TEST-08 / AC-07 & AC-08: validates proposal completeness (BR-04), saves and submits proposal, and blocks edits while SUBMITTED (BR-03)', async () => {
+  it('TEST-07 & TEST-08 / AC-07 & AC-08: validates proposal completeness (BR-04), saves and submits proposal, and blocks edits while SUBMITTED (BR-03) (workflow)', async () => {
     const pawaritLogin = await request(app)
       .post('/api/auth/login')
       .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
@@ -205,7 +205,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
     expect(editWhileSubmitted.body.code).toBe('BR03_INVALID_STATUS_TRANSITION');
   });
 
-  it('TEST-09 / AC-09: enforces BR-05 on Instructor review feedback and completes REVISION_REQUESTED -> SUBMITTED -> APPROVED lifecycle', async () => {
+  it('TEST-09 / AC-09: enforces BR-05 on Instructor review feedback and completes REVISION_REQUESTED -> SUBMITTED -> APPROVED lifecycle (workflow)', async () => {
     const pawaritLogin = await request(app)
       .post('/api/auth/login')
       .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
@@ -267,7 +267,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
     expect(approveRes.body.proposal.status).toBe('APPROVED');
   });
 
-  it('TEST-10 / AC-10: enforces BR-06 role and cross-team ownership restrictions without leaking private data', async () => {
+  it('TEST-10 / AC-10: enforces BR-06 role and cross-team ownership restrictions without leaking private data (authorization)', async () => {
     const pawaritLogin = await request(app)
       .post('/api/auth/login')
       .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
@@ -305,7 +305,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
     expect(studentReviewAttempt.body.proposal).toBeUndefined();
   });
 
-  it('TEST-07 / AC-07: persists a draft, retrieves it, and records submission metadata', async () => {
+  it('TEST-07 / AC-07: persists a draft, retrieves it, and records submission metadata (persistence)', async () => {
     const login = await request(app)
       .post('/api/auth/login')
       .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
@@ -351,7 +351,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
     expect(submitRes.body.proposal.revisionCount).toBe(1);
   });
 
-  it('TEST-08 / AC-08: checks each completeness threshold and locks repeated submission', async () => {
+  it('TEST-08 / AC-08: checks each completeness threshold and locks repeated submission (validation)', async () => {
     const login = await request(app)
       .post('/api/auth/login')
       .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
@@ -397,7 +397,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
     expect(repeatedSubmit.body.code).toBe('BR03_INVALID_STATUS_TRANSITION');
   });
 
-  it('TEST-09 / AC-09: rejects review of a non-submitted proposal before validating its feedback', async () => {
+  it('TEST-09 / AC-09: rejects review of a non-submitted proposal before validating its feedback (state validation)', async () => {
     const instructorLogin = await request(app)
       .post('/api/auth/login')
       .send({ email: 'instructor@kmutt.ac.th', password: 'Password123!' });
@@ -413,7 +413,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
     expect(review.body.code).toBe('BR03_INVALID_STATUS_TRANSITION');
   });
 
-  it('TEST-10 / AC-10: rejects cross-team submission without returning proposal data', async () => {
+  it('TEST-10 / AC-10: rejects cross-team submission without returning proposal data (cross-team submission)', async () => {
     const login = await request(app)
       .post('/api/auth/login')
       .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
@@ -425,5 +425,51 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
     expect(response.status).toBe(403);
     expect(response.body.code).toBe('BR06_FORBIDDEN_TEAM_ACCESS');
     expect(response.body.proposal).toBeUndefined();
+  });
+
+  it('TEST-13 / AC-03: refuses to initialize auth without JWT_SECRET', async () => {
+    const originalSecret = process.env.JWT_SECRET;
+    vi.doMock('../src/prisma', () => ({ default: {} }));
+    delete process.env.JWT_SECRET;
+    vi.resetModules();
+
+    let importError: unknown;
+    try {
+      await import('../src/middleware/auth');
+    } catch (error) {
+      importError = error;
+    } finally {
+      if (originalSecret === undefined) {
+        delete process.env.JWT_SECRET;
+      } else {
+        process.env.JWT_SECRET = originalSecret;
+      }
+      vi.doUnmock('../src/prisma');
+      vi.resetModules();
+    }
+
+    expect(importError).toBeInstanceOf(Error);
+    expect(String(importError)).toContain('JWT_SECRET');
+  });
+
+  it('TEST-14 / AC-03: rejects a logged-out token after the app is re-imported', async () => {
+    const login = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
+    const token = login.body.token;
+
+    const logout = await request(app)
+      .post('/api/auth/logout')
+      .set('Authorization', `Bearer ${token}`);
+    expect(logout.status).toBe(200);
+
+    vi.resetModules();
+    const restartedApp = (await import('../src/app')).default;
+    const response = await request(restartedApp)
+      .get('/api/auth/me')
+      .set('Authorization', `Bearer ${token}`);
+    expect(response.status).toBe(401);
+    expect(response.body.code).toBe('TOKEN_REVOKED');
+    await (await import('../src/prisma')).default.$disconnect();
   });
 });

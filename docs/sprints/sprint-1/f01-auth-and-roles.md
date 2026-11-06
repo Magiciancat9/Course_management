@@ -1,9 +1,14 @@
 # Part E: Sprint 1 Feature Contract — F-01 Authentication, Session & Role Access Control
 
-**Contract Version:** `v1.0` (Prepared prior to Sprint 1 implementation)  
+**Contract Version:** `v1.1`
 **Feature ID:** `F-01`  
 **Linked Requirements:** `FR-01`, `BR-06`, `NFR-01`, `NFR-02`, `NFR-03`, `NFR-05`  
 **Dependencies:** None (Foundation feature)
+
+| Version | Date | Reason |
+| :--- | :--- | :--- |
+| `v1.0` | 2026-11-05 | Initial Sprint 1 authentication contract. |
+| `v1.1` | 2026-11-06 | Require startup JWT secret configuration and durable logout revocation across server restarts. |
 
 ---
 
@@ -66,4 +71,4 @@
 | :--- | :--- | :--- |
 | **AC-01** | `FR-01`, `NFR-03`, `NFR-05` | **Valid Login & Current-User Identity:** Given a seeded `STUDENT` or `INSTRUCTOR` account, submitting valid credentials to `POST /api/auth/login` returns `200 OK` with a signed JWT and user profile (without `passwordHash`), and calling `GET /api/auth/me` with that token returns the matching user identity. `GET /api/health` returns `200 OK`. |
 | **AC-02** | `FR-01`, `NFR-03` | **Invalid Login Rejection:** Submitting a wrong password, unknown email, or empty credentials to `POST /api/auth/login` is rejected with `401 Unauthorized` (or `400 Bad Request` when fields are missing) without issuing a token or leaking password hashes. |
-| **AC-03** | `FR-01`, `BR-06`, `NFR-01` | **Unauthenticated Rejection & Enforced Logout:** Any request to a protected endpoint (`/api/auth/me`, `/api/teams`, `/api/proposals`) without a valid token is rejected with `401 Unauthorized`. After calling `POST /api/auth/logout`, reusing the same JWT on any protected endpoint is rejected with `401 Unauthorized`. |
+| **AC-03** | `FR-01`, `BR-06`, `NFR-01` | **Unauthenticated Rejection & Enforced Logout:** Any request to a protected endpoint (`/api/auth/me`, `/api/teams`, `/api/proposals`) without a valid token is rejected with `401 Unauthorized`. After calling `POST /api/auth/logout`, reusing the same JWT on any protected endpoint is rejected with `401 Unauthorized`, including after a server restart. The server refuses to start without `JWT_SECRET`. |

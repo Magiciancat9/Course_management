@@ -28,10 +28,10 @@ This document maps every baseline Functional Requirement (`FR`), Business Rule (
 | **BR-06** | Team ownership isolation & `INSTRUCTOR` role restriction | `F-01`, `F-02`, `F-03` (Cross-cutting RBAC) | **Sprint 1** | `AC-03`, `AC-10` / `TEST-03`, `TEST-10`, `TEST-12` |
 | **BR-07** | Require `APPROVED` proposal before milestone submission | `F-05` Team Milestone Deliverable Submission | **Sprint 2** | Allocated to Sprint 2 contract (`F-05`) |
 | **BR-08** | Grade bounds (`0–100`) and no self-peer-evaluation | `F-06` Grading, `F-07` Peer Evaluation | **Sprint 2 & 3** | Allocated to Sprint 2 (`F-06`) & Sprint 3 (`F-07`) |
-| **NFR-01** | Reject unauthenticated requests (`401`) on protected APIs | `F-01` Auth & Cross-cutting API Middleware | **Sprint 1** | `AC-03` / `TEST-03` |
+| **NFR-01** | Protected endpoints reject unauthenticated requests with `401` and no private data | `F-01` Auth & Cross-cutting API Middleware | **Sprint 1** | `AC-03` / `TEST-03`, `TEST-14` |
 | **NFR-02** | Backend enforcement of role & team-ownership (`403`) | `F-01`, `F-02`, `F-03` Authorization Guards | **Sprint 1** | `AC-10` / `TEST-10`, `TEST-12` |
 | **NFR-03** | Bcrypt password hashing & zero credential leakage | `F-01` Auth & User Serialization | **Sprint 1** | `AC-01`, `AC-02` / `TEST-01`, `TEST-02` |
-| **NFR-04** | API response `< 300 ms` & PostgreSQL ACID persistence | `F-02`, `F-03` Persistence & API Layer | **Sprint 1** | `AC-04`, `AC-07`, `AC-09` / `TEST-04`, `TEST-07`, `TEST-09` |
+| **NFR-04** | State changes persist in PostgreSQL and can be retrieved on a later request | `F-02`, `F-03` Persistence & API Layer | **Sprint 1** | `AC-04`, `AC-07`, `AC-09` / `TEST-04`, `TEST-07`, `TEST-09` |
 | **NFR-05** | Container readiness, env config & `/api/health` (`200 OK`) | System Responsibility (`F-01` / Infrastructure) | **Sprint 1 & 2** | `AC-01` (`/api/health` verified in `TEST-01`; Cloud Run in Lab 5) |
 
 ---
@@ -52,3 +52,5 @@ This document maps every baseline Functional Requirement (`FR`), Business Rule (
 | :--- | :--- | :--- | :--- | :--- |
 | **CHG-01** | 2026-11-05 | `BR-03`, `F-03` | Replaced terminal `REJECTED` state with `REVISION_REQUESTED` so teams whose proposals are rejected by an Instructor can revise and re-submit (`REVISION_REQUESTED` → `SUBMITTED`) without creating orphaned team records. | Pawarit & Tatchakorn |
 | **CHG-02** | 2026-11-05 | `F-01`, `AD-02` | Added server-side token revocation tracking on `POST /api/auth/logout` in addition to client token removal, ensuring that reusing a logged-out JWT against protected backend endpoints is immediately rejected with `401 Unauthorized`. | Pawarit & Tatchakorn |
+| **CHG-03** | 2026-11-06 | `F-01`, `AC-03`, `AD-02`, `NFR-03` | Require an explicitly configured JWT secret and persist logged-out token identifiers in PostgreSQL, so startup fails safely and revocation survives server restarts. | Pawarit & Tatchakorn |
+| **CHG-04** | 2026-11-06 | `NFR-01`, `NFR-04` | Replaced unverified timing targets with observable authentication rejection and PostgreSQL persistence requirements; timing targets had no measuring test. | Pawarit & Tatchakorn |

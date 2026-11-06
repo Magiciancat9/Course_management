@@ -33,6 +33,13 @@ model User {
   reviewedProposals ProjectProposal[] @relation("ProposalReviewer")
 }
 
+model RevokedToken {
+  jti       String   @id
+  expiresAt DateTime
+
+  @@index([expiresAt])
+}
+
 model Course {
   id          Int           @id @default(autoincrement())
   code        String        @unique

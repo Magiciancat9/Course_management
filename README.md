@@ -48,23 +48,30 @@ PORT=3000
 NODE_ENV=development
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/course_pms?schema=public"
 CORS_ORIGIN="http://localhost:5173"
-JWT_SECRET="dev-local-course-pms-jwt-secret-2026"
+JWT_SECRET="<generated value>"
 DEMO_USER_PASSWORD="Password123!"
 ```
 
-### 3.3. Install, Migrate, and Seed Database
+Generate a signing secret with:
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+Set `JWT_SECRET` to the generated value in `server/.env`.
+
+### 3.3. Install, Apply Schema, and Seed Database
 ```bash
 # 1. Install dependencies across root, server, and client
 npm install
 npm --prefix server install
 npm --prefix client install
 
-# 2. Push Prisma schema to PostgreSQL and generate Prisma Client
+# 2. Apply the Sprint 1 schema with prisma db push and generate Prisma Client
 npm --prefix server run prisma:migrate
 
 # 3. Seed reproducible synthetic demo data
 npm --prefix server run prisma:seed
 ```
+The Sprint 1 `prisma:migrate` script runs `prisma db push` and does not maintain a migration history. Real Prisma migrations are planned for Sprint 2.
 
 ### 3.4. Seeded Local Test Accounts (Synthetic Demo Data)
 All seeded local demo accounts use the password defined in `DEMO_USER_PASSWORD` (default: `Password123!`):
