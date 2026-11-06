@@ -141,7 +141,7 @@ erDiagram
 - **`RevokedToken.jti` (`@id`):** Stores logged-out JWT identifiers and their expiration timestamps in PostgreSQL so revocation survives server restarts; expired rows are removed opportunistically.
 
 ### 2.3. Database Setup, Migrations, and Reproducible Seed Data
-- **Schema Management:** Managed via `server/prisma/schema.prisma`. Schema changes are applied with `npm --prefix server run prisma:migrate` (`prisma db push` / `prisma migrate deploy`).
+- **Schema Management:** Managed via `server/prisma/schema.prisma`. Sprint 1 applies the schema with `prisma db push`; real Prisma migrations are planned for Sprint 2.
 - **Reproducible Seed (`server/prisma/seed.ts`):** Executed via `npm --prefix server run prisma:seed`. It deterministically resets/upserts synthetic demo data using environment-configurable passwords (`DEMO_USER_PASSWORD`):
   - **Course:** `CPE334 — Software Engineering in the Age of AI Agents (Semester 1/2026)` with `maxTeamSize = 3`.
   - **Seeded Accounts:**
