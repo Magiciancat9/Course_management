@@ -162,7 +162,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
     expect(add4.body.code).toBe('BR02_MAX_TEAM_SIZE_EXCEEDED');
   });
 
-  it('TEST-07 & TEST-08 / AC-07 & AC-08: validates proposal completeness (BR-04), saves and submits proposal, and blocks edits while SUBMITTED (BR-03)', async () => {
+  it('TEST-07 & TEST-08 / AC-07 & AC-08: validates proposal completeness (BR-04), saves and submits proposal, and blocks edits while SUBMITTED (BR-03) (workflow)', async () => {
     const pawaritLogin = await request(app)
       .post('/api/auth/login')
       .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
@@ -205,7 +205,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
     expect(editWhileSubmitted.body.code).toBe('BR03_INVALID_STATUS_TRANSITION');
   });
 
-  it('TEST-09 / AC-09: enforces BR-05 on Instructor review feedback and completes REVISION_REQUESTED -> SUBMITTED -> APPROVED lifecycle', async () => {
+  it('TEST-09 / AC-09: enforces BR-05 on Instructor review feedback and completes REVISION_REQUESTED -> SUBMITTED -> APPROVED lifecycle (workflow)', async () => {
     const pawaritLogin = await request(app)
       .post('/api/auth/login')
       .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
@@ -267,7 +267,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
     expect(approveRes.body.proposal.status).toBe('APPROVED');
   });
 
-  it('TEST-10 / AC-10: enforces BR-06 role and cross-team ownership restrictions without leaking private data', async () => {
+  it('TEST-10 / AC-10: enforces BR-06 role and cross-team ownership restrictions without leaking private data (authorization)', async () => {
     const pawaritLogin = await request(app)
       .post('/api/auth/login')
       .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
@@ -305,7 +305,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
     expect(studentReviewAttempt.body.proposal).toBeUndefined();
   });
 
-  it('TEST-07 / AC-07: persists a draft, retrieves it, and records submission metadata', async () => {
+  it('TEST-07 / AC-07: persists a draft, retrieves it, and records submission metadata (persistence)', async () => {
     const login = await request(app)
       .post('/api/auth/login')
       .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
@@ -351,7 +351,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
     expect(submitRes.body.proposal.revisionCount).toBe(1);
   });
 
-  it('TEST-08 / AC-08: checks each completeness threshold and locks repeated submission', async () => {
+  it('TEST-08 / AC-08: checks each completeness threshold and locks repeated submission (validation)', async () => {
     const login = await request(app)
       .post('/api/auth/login')
       .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
@@ -397,7 +397,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
     expect(repeatedSubmit.body.code).toBe('BR03_INVALID_STATUS_TRANSITION');
   });
 
-  it('TEST-09 / AC-09: rejects review of a non-submitted proposal before validating its feedback', async () => {
+  it('TEST-09 / AC-09: rejects review of a non-submitted proposal before validating its feedback (state validation)', async () => {
     const instructorLogin = await request(app)
       .post('/api/auth/login')
       .send({ email: 'instructor@kmutt.ac.th', password: 'Password123!' });
@@ -413,7 +413,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
     expect(review.body.code).toBe('BR03_INVALID_STATUS_TRANSITION');
   });
 
-  it('TEST-10 / AC-10: rejects cross-team submission without returning proposal data', async () => {
+  it('TEST-10 / AC-10: rejects cross-team submission without returning proposal data (cross-team submission)', async () => {
     const login = await request(app)
       .post('/api/auth/login')
       .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
