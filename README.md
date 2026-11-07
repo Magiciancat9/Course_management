@@ -80,7 +80,7 @@ All seeded local demo accounts use the password defined in `DEMO_USER_PASSWORD` 
 | :--- | :--- | :--- | :--- |
 | `instructor@kmutt.ac.th` | `INSTRUCTOR` | — | Course Instructor for `CPE334` |
 | `pawarit@mail.kmutt.ac.th` | `STUDENT` | `67070503466` | Leader of **Team Alpha** (`DRAFT` proposal) |
-| `tatchakorn@mail.kmutt.ac.th` | `STUDENT` | `67070503415` | Unassigned student (ready to join **Team Alpha**) |
+| `tatchakorn@mail.kmutt.ac.th` | `STUDENT` | `67070503415` | Unassigned student (can be added to **Team Alpha** by a current member) |
 | `somchai@mail.kmutt.ac.th` | `STUDENT` | `67070503499` | Leader of **Team Beta** (`SUBMITTED` private proposal) |
 | `suda@mail.kmutt.ac.th` | `STUDENT` | `67070503488` | Unassigned student (for team creation & capacity tests) |
 
@@ -106,6 +106,8 @@ npm run test:server   # Vitest Unit + Supertest API/DB Integration
 npm run test:client   # Vitest + React Testing Library UI tests
 npm run test:e2e      # Playwright End-to-End browser tests
 ```
+
+> **Test database safety:** Server integration tests reset the database through `seedDatabase`, and each Playwright test runs the Prisma seed script. Set `DATABASE_URL` to a separate, disposable PostgreSQL test database before running `test:server` or `test:e2e`; never point these suites at a development or production database.
 
 ## 5. F-03 Proposal Drafting, Submission & Instructor Review
 
@@ -141,3 +143,9 @@ feedback is also incomplete. Students accessing another team's proposal receive
 `403 BR06_FORBIDDEN_TEAM_ACCESS`; student review attempts receive
 `403 BR06_INSTRUCTOR_ROLE_REQUIRED`. Forbidden responses do not include proposal
 data.
+
+## 6. Known Limitations
+
+- Sprint 1 applies the Prisma schema with `prisma db push`; it does not yet have a Prisma migration history.
+- Students cannot self-join an existing team. A current team member adds an eligible student by university email; a self-service join workflow remains a proposed scope change pending team approval.
+- PostgreSQL integration and E2E suites are destructive to their configured database and must only run against a disposable test database.

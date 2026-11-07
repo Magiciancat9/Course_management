@@ -147,7 +147,7 @@ erDiagram
   - **Seeded Accounts:**
     - `instructor@kmutt.ac.th` (`INSTRUCTOR` — Dr. Piyanit)
     - `pawarit@mail.kmutt.ac.th` (`STUDENT` — ID `67070503466`, Team Alpha Leader)
-    - `tatchakorn@mail.kmutt.ac.th` (`STUDENT` — ID `67070503415`, Available to join Team Alpha)
+    - `tatchakorn@mail.kmutt.ac.th` (`STUDENT` — ID `67070503415`, available to be added to Team Alpha by a current member)
     - `somchai@mail.kmutt.ac.th` (`STUDENT` — ID `67070503499`, Team Beta Leader with a private proposal used to test cross-team `403` isolation)
     - `suda@mail.kmutt.ac.th` (`STUDENT` — ID `67070503488`, Unassigned student for testing team creation & capacity boundaries)
 
@@ -159,15 +159,15 @@ erDiagram
 1. **Top Navigation Bar:** Displays application branding (`CoursePMS`), active course badge (`CPE334`), current authenticated user's full name, email, and role badge (`STUDENT` or `INSTRUCTOR`), and a **Logout** button.
 2. **Screen 1 — Login View (Unauthenticated):** Email and password form, demo quick-fill buttons for local testing, client validation for empty fields, and clear error alert on `401 Invalid credentials`.
 3. **Screen 2 — Student Workspace (`STUDENT` role):**
-   - **My Project Team Panel:** If unassigned, shows "Create New Team" form and available teams to join. If assigned, shows team name, course capacity indicator (e.g., `2 / 3 members`), member roster, and an "Add Teammate by Email" control (disabled when full or if proposal is locked).
+   - **My Project Team Panel:** If unassigned, shows the "Create New Team" form and explains that a current team member must add the student's university email to join an existing team; self-service joining is not implemented. If assigned, shows team name, course capacity indicator (e.g., `2 / 3 members`), member roster, and an "Add Teammate by Email" control (disabled when full, while an action is pending, or if the proposal is locked).
    - **Team Project Proposal Panel:** Displays current status badge (`DRAFT`, `SUBMITTED`, `APPROVED`, `REVISION_REQUESTED`), revision counter, and instructor review feedback banner (if reviewed). Provides the Proposal Editor (`title`, `problemStatement`, `techStack`, `repoUrl`) with **Save Draft** and **Submit Proposal for Review** actions.
 4. **Screen 3 — Instructor Course Review Console (`INSTRUCTOR` role):**
    - Summary metrics bar (Total Teams, Submitted Pending Review, Approved, Revision Requested).
    - All Course Teams & Proposals table with status filter (`ALL`, `SUBMITTED`, `APPROVED`, `REVISION_REQUESTED`, `DRAFT`).
    - **Instructor Proposal Review Modal/Panel:** Displays full proposal details and provides the decision form (`APPROVED` or `REVISION_REQUESTED`) + mandatory `reviewFeedback` textarea (minimum 10 characters).
 5. **Shared UI Behavior:**
-   - **Loading State:** Spinner and disabled submit buttons during in-flight API requests.
-   - **Empty State:** Informative placeholder card when a student has not yet joined a team or created a proposal.
+   - **Loading State:** Dashboard loading indicator, action-specific pending labels, and disabled mutation controls during in-flight requests.
+   - **Empty State:** Informative unassigned-student guidance and placeholder rows when team lists are empty.
    - **Error State:** Dismissible Bootstrap danger alert rendering the backend's structured `{ error, code }` message whenever a business rule (`400`/`403`/`409`) rejects an action.
 
 ### 3.2. API Conventions, Validation, and Safe Error Handling

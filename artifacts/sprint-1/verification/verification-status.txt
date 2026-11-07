@@ -1,0 +1,30 @@
+CoursePMS Sprint 1 follow-up verification
+Date: 2026-11-07
+Branch: fix/15-sprint1-hardening
+Base: origin/sprint-1-staging at c86992c
+Implementation commit: to be recorded after commit creation
+
+Passed
+- npm run build
+  Server TypeScript build and client TypeScript/Vite production build passed.
+- npm --prefix server run test -- --exclude tests/api.integration.test.ts
+  1 test file passed; 9 passed, 0 failed.
+- npm --prefix client run test
+  1 test file passed; 4 passed, 0 failed.
+- Server API integration test TypeScript check:
+  npx tsc --noEmit --target ES2022 --module commonjs --esModuleInterop --strict --skipLibCheck --types node,vitest/globals tests/api.integration.test.ts
+  Passed.
+- npx playwright test --list
+  Discovered 3 E2E tests; this command did not execute them.
+- git diff --check
+  Passed.
+
+Blocked / not verified
+- A pre-implementation attempt to run TEST-15 through TEST-19 could not initialize Prisma because PostgreSQL at localhost:5433 was unavailable. Five tests failed in beforeEach while connecting; no regression assertion ran. This is an environment failure, not red test evidence.
+- The database configured for the local test environment is named course_pms_review, but its PostgreSQL server is not running/reachable. The Docker daemon is also unavailable, so an isolated PostgreSQL test service could not be started.
+- PostgreSQL API integration tests, including concurrency tests TEST-15 through TEST-19 and TEST-21 through TEST-22, have not been verified after implementation.
+- Playwright E2E tests were not run because they seed/reset the configured PostgreSQL database.
+- No new E2E screenshots or red/green regression evidence were generated. No historical test result has been fabricated.
+
+Release status
+- Sprint 1 is not verified as release-ready. The PostgreSQL integration and E2E suites, teammate review, merge, and release tag remain outstanding.
