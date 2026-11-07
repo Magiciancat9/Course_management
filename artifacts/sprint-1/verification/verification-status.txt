@@ -2,7 +2,7 @@ CoursePMS Sprint 1 follow-up verification
 Date: 2026-11-07
 Branch: fix/15-sprint1-hardening
 Base: origin/sprint-1-staging at c86992c
-Implementation commit: to be recorded after commit creation
+Implementation commit tested: 472987f6ff49182bfd4dac475e36cf86f58ef325
 
 Passed
 - npm run build
