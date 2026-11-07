@@ -5,26 +5,26 @@ Base: origin/sprint-1-staging at c86992c
 Implementation commit tested: 472987f6ff49182bfd4dac475e36cf86f58ef325
 
 Passed
+- PostgreSQL test database readiness
+  Docker container course-pms-review-db accepted connections; verified current database is course_pms_review.
+- npm run test:server
+  2 test files passed; 31 tests passed (22 API/database integration tests and 9 domain unit tests).
+  Concurrency regression tests, including TEST-15, passed.
+- npm run test:e2e
+  All 3 Playwright tests passed, including TEST-11, TEST-12, and TEST-20.
+  Generated screenshots 01_login_screen.png through 06_br06_cross_team_forbidden_rejection.png in this directory.
+
+Previously passed for this implementation
 - npm run build
   Server TypeScript build and client TypeScript/Vite production build passed.
-- npm --prefix server run test -- --exclude tests/api.integration.test.ts
-  1 test file passed; 9 passed, 0 failed.
 - npm --prefix client run test
   1 test file passed; 4 passed, 0 failed.
-- Server API integration test TypeScript check:
+- Server API integration test TypeScript check
   npx tsc --noEmit --target ES2022 --module commonjs --esModuleInterop --strict --skipLibCheck --types node,vitest/globals tests/api.integration.test.ts
   Passed.
-- npx playwright test --list
-  Discovered 3 E2E tests; this command did not execute them.
 - git diff --check
   Passed.
 
-Blocked / not verified
-- A pre-implementation attempt to run TEST-15 through TEST-19 could not initialize Prisma because PostgreSQL at localhost:5433 was unavailable. Five tests failed in beforeEach while connecting; no regression assertion ran. This is an environment failure, not red test evidence.
-- The database configured for the local test environment is named course_pms_review, but its PostgreSQL server is not running/reachable. The Docker daemon is also unavailable, so an isolated PostgreSQL test service could not be started.
-- PostgreSQL API integration tests, including concurrency tests TEST-15 through TEST-19 and TEST-21 through TEST-22, have not been verified after implementation.
-- Playwright E2E tests were not run because they seed/reset the configured PostgreSQL database.
-- No new E2E screenshots or red/green regression evidence were generated. No historical test result has been fabricated.
-
 Release status
-- Sprint 1 is not verified as release-ready. The PostgreSQL integration and E2E suites, teammate review, merge, and release tag remain outstanding.
+- PostgreSQL integration and E2E verification are now complete and passing against the disposable course_pms_review database.
+- Sprint 1 is not yet verified as release-ready; teammate review, PR integration, and release tag remain outstanding.
