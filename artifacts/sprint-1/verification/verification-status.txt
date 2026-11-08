@@ -1,0 +1,30 @@
+CoursePMS Sprint 1 follow-up verification
+Date: 2026-11-07
+Branch: fix/15-sprint1-hardening
+Base: origin/sprint-1-staging at c86992c
+Implementation commit tested: 472987f6ff49182bfd4dac475e36cf86f58ef325
+
+Passed
+- PostgreSQL test database readiness
+  Docker container course-pms-review-db accepted connections; verified current database is course_pms_review.
+- npm run test:server
+  2 test files passed; 31 tests passed (22 API/database integration tests and 9 domain unit tests).
+  Concurrency regression tests, including TEST-15, passed.
+- npm run test:e2e
+  All 3 Playwright tests passed, including TEST-11, TEST-12, and TEST-20.
+  Generated screenshots 01_login_screen.png through 06_br06_cross_team_forbidden_rejection.png in this directory.
+
+Previously passed for this implementation
+- npm run build
+  Server TypeScript build and client TypeScript/Vite production build passed.
+- npm --prefix client run test
+  1 test file passed; 4 passed, 0 failed.
+- Server API integration test TypeScript check
+  npx tsc --noEmit --target ES2022 --module commonjs --esModuleInterop --strict --skipLibCheck --types node,vitest/globals tests/api.integration.test.ts
+  Passed.
+- git diff --check
+  Passed.
+
+Release status
+- PostgreSQL integration and E2E verification are now complete and passing against the disposable course_pms_review database.
+- Sprint 1 is not yet verified as release-ready; teammate review, PR integration, and release tag remain outstanding.
