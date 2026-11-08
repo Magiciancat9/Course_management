@@ -54,9 +54,8 @@ This document maps every baseline Functional Requirement (`FR`), Business Rule (
 | **CHG-02** | 2026-11-05 | `F-01`, `AD-02` | Added server-side token revocation tracking on `POST /api/auth/logout` in addition to client token removal, ensuring that reusing a logged-out JWT against protected backend endpoints is immediately rejected with `401 Unauthorized`. | Pawarit & Tatchakorn |
 | **CHG-03** | 2026-11-06 | `F-01`, `AC-03`, `AD-02`, `NFR-03` | Require an explicitly configured JWT secret and persist logged-out token identifiers in PostgreSQL, so startup fails safely and revocation survives server restarts. | Pawarit & Tatchakorn |
 | **CHG-04** | 2026-11-06 | `NFR-01`, `NFR-04` | Replaced unverified timing targets with observable authentication rejection and PostgreSQL persistence requirements; timing targets had no measuring test. | Pawarit & Tatchakorn |
+| **CHG-05** | 2026-11-08 | `FR-02`, `F-02` UI | Approved deferring self-service team joining from Sprint 1. Students join an existing team when a current team member adds them by university email, matching the implemented ownership-guarded API and UI. | Tatchakorn Thamnimitr |
 
 ## 4. Proposed Changes Pending Approval
 
-| Change ID | Affected IDs | Proposed Change & Rationale | Approval Status |
-| :--- | :--- | :--- | :--- |
-| **CHG-P01** | `FR-02`, F-02 UI | Keep member-invited additions for Sprint 1 and defer the self-service join workflow/API; the current UI explains that an existing member must add the student's email. This matches the ownership-guarded API without inventing an unimplemented path. | **Pending team approval** |
+No proposed changes are currently pending approval.
