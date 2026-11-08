@@ -48,6 +48,17 @@ export interface ProjectTeam {
   proposal: Proposal | null;
 }
 
+interface ApiResponseData {
+  error?: string;
+  code?: string;
+  token?: string;
+  user?: User;
+  courses?: Course[];
+  teams?: ProjectTeam[];
+  team?: ProjectTeam;
+  proposal?: Proposal;
+}
+
 const API_BASE = '';
 
 export default function App() {
@@ -56,6 +67,7 @@ export default function App() {
   const [teams, setTeams] = useState<ProjectTeam[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [pendingAction, setPendingAction] = useState<string | null>(null);
   const [errorBanner, setErrorBanner] = useState<{ error: string; code?: string } | null>(null);
   const [successBanner, setSuccessBanner] = useState<string | null>(null);
 
@@ -86,51 +98,90 @@ export default function App() {
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
-    const response = await fetch(`${API_BASE}${path}`, {
-      ...options,
-      headers,
-    });
-    const data = await response.json().catch(() => ({}));
-    return { status: response.status, ok: response.ok, data };
+    try {
+      const response = await fetch(`${API_BASE}${path}`, {
+        ...options,
+        headers,
+      });
+      let data: ApiResponseData;
+      try {
+        const payload: unknown = await response.json();
+        if (typeof payload !== 'object' || payload === null || Array.isArray(payload)) {
+          throw new Error('Response body is not an object.');
+        }
+        data = payload as ApiResponseData;
+      } catch {
+        data = {
+          error: 'The server returned an unreadable response.',
+          code: 'INVALID_RESPONSE',
+        };
+      }
+      return { status: response.status, ok: response.ok, data };
+    } catch (error) {
+      console.error(`API request failed for ${path}:`, error);
+      return {
+        status: 0,
+        ok: false,
+        data: {
+          error: 'Unable to reach the server. Check your connection and try again.',
+          code: 'NETWORK_ERROR',
+        },
+      };
+    }
   }
 
   async function loadDashboardData(activeToken: string) {
     setLoading(true);
     try {
-      const meRes = await fetch(`${API_BASE}/api/auth/me`, {
+      const meRes = await apiFetch('/api/auth/me', {
         headers: { Authorization: `Bearer ${activeToken}` },
       });
       if (!meRes.ok) {
-        setToken(null);
-        setUser(null);
-        localStorage.removeItem('course_pms_token');
-        setLoading(false);
+        setErrorBanner({
+          error: String(meRes.data.error || 'Could not load the current user.'),
+          code: typeof meRes.data.code === 'string' ? meRes.data.code : undefined,
+        });
+        if (meRes.status === 401) {
+          setToken(null);
+          setUser(null);
+          localStorage.removeItem('course_pms_token');
+        }
         return;
       }
-      const meData = await meRes.json();
-      setUser(meData.user);
+      const currentUser = meRes.data.user;
+      if (!currentUser) {
+        setErrorBanner({
+          error: 'The server response did not include the current user.',
+          code: 'INVALID_RESPONSE',
+        });
+        return;
+      }
+      setUser(currentUser);
 
       const [coursesRes, teamsRes] = await Promise.all([
-        fetch(`${API_BASE}/api/courses`, {
+        apiFetch('/api/courses', {
           headers: { Authorization: `Bearer ${activeToken}` },
         }),
-        fetch(`${API_BASE}/api/teams`, {
+        apiFetch('/api/teams', {
           headers: { Authorization: `Bearer ${activeToken}` },
         }),
       ]);
 
       if (coursesRes.ok) {
-        const cData = await coursesRes.json();
-        setCourses(cData.courses || []);
+        setCourses(coursesRes.data.courses || []);
+      } else {
+        setErrorBanner({
+          error: String(coursesRes.data.error || 'Could not load courses.'),
+          code: typeof coursesRes.data.code === 'string' ? coursesRes.data.code : undefined,
+        });
       }
       if (teamsRes.ok) {
-        const tData = await teamsRes.json();
-        const loadedTeams: ProjectTeam[] = tData.teams || [];
+        const loadedTeams: ProjectTeam[] = teamsRes.data.teams || [];
         setTeams(loadedTeams);
 
-        if (meData.user.role === 'STUDENT') {
+        if (currentUser.role === 'STUDENT') {
           const myTeam = loadedTeams.find((t) =>
-            t.members.some((m) => m.userId === meData.user.id)
+            t.members.some((m) => m.userId === currentUser.id)
           );
           if (myTeam?.proposal) {
             setPropTitle(myTeam.proposal.title || '');
@@ -141,6 +192,11 @@ export default function App() {
         } else if (loadedTeams.length > 0 && selectedTeamId === null) {
           setSelectedTeamId(loadedTeams[0].id);
         }
+      } else {
+        setErrorBanner({
+          error: String(teamsRes.data.error || 'Could not load teams.'),
+          code: typeof teamsRes.data.code === 'string' ? teamsRes.data.code : undefined,
+        });
       }
     } finally {
       setLoading(false);
@@ -153,45 +209,79 @@ export default function App() {
     }
   }, [token]);
 
+  async function withPendingAction(action: string, operation: () => Promise<void>) {
+    if (pendingAction) return;
+    setPendingAction(action);
+    try {
+      await operation();
+    } catch (error) {
+      console.error(`${action} failed:`, error);
+      setErrorBanner({
+        error: 'The request could not be completed. Please try again.',
+        code: 'REQUEST_FAILED',
+      });
+    } finally {
+      setPendingAction(null);
+    }
+  }
+
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
-    setErrorBanner(null);
-    setSuccessBanner(null);
-    if (!loginEmail.trim() || !loginPassword.trim()) {
-      setErrorBanner({
-        error: 'Email and password are required.',
-        code: 'VALIDATION_ERROR',
+    await withPendingAction('login', async () => {
+      setErrorBanner(null);
+      setSuccessBanner(null);
+      if (!loginEmail.trim() || !loginPassword.trim()) {
+        setErrorBanner({
+          error: 'Email and password are required.',
+          code: 'VALIDATION_ERROR',
+        });
+        return;
+      }
+
+      const { ok, data } = await apiFetch('/api/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ email: loginEmail, password: loginPassword }),
       });
-      return;
-    }
+      if (!ok) {
+        setErrorBanner({ error: data.error || 'Login failed.', code: data.code });
+        return;
+      }
+      if (!data.token || !data.user) {
+        setErrorBanner({
+          error: 'The server response did not include login credentials.',
+          code: 'INVALID_RESPONSE',
+        });
+        return;
+      }
 
-    const { ok, data } = await apiFetch('/api/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({ email: loginEmail, password: loginPassword }),
+      localStorage.setItem('course_pms_token', data.token);
+      setToken(data.token);
+      setUser(data.user);
+      setSuccessBanner(`Authenticated as ${data.user.fullName} (${data.user.role})`);
     });
-
-    if (!ok) {
-      setErrorBanner({ error: data.error || 'Login failed', code: data.code });
-      return;
-    }
-
-    localStorage.setItem('course_pms_token', data.token);
-    setToken(data.token);
-    setUser(data.user);
-    setSuccessBanner(`Authenticated as ${data.user.fullName} (${data.user.role})`);
   }
 
   async function handleLogout() {
-    setErrorBanner(null);
-    setSuccessBanner(null);
-    if (token) {
-      await apiFetch('/api/auth/logout', { method: 'POST' });
-    }
-    localStorage.removeItem('course_pms_token');
-    setToken(null);
-    setUser(null);
-    setTeams([]);
-    setSuccessBanner('Logged out successfully. Session token revoked.');
+    await withPendingAction('logout', async () => {
+      setErrorBanner(null);
+      setSuccessBanner(null);
+      if (!token) {
+        setErrorBanner({ error: 'No active session token is available.', code: 'NO_SESSION' });
+        return;
+      }
+
+      const { ok, data } = await apiFetch('/api/auth/logout', { method: 'POST' });
+      if (!ok) {
+        setErrorBanner({ error: data.error || 'Logout failed.', code: data.code });
+        return;
+      }
+
+      localStorage.removeItem('course_pms_token');
+      setToken(null);
+      setUser(null);
+      setTeams([]);
+      setSuccessBanner('Logged out successfully. Session token revoked.');
+    });
   }
 
   const myTeam = user
@@ -200,121 +290,149 @@ export default function App() {
 
   async function handleCreateTeam(e: React.FormEvent) {
     e.preventDefault();
-    setErrorBanner(null);
-    setSuccessBanner(null);
-    const courseId = courses[0]?.id || 1;
-    const { ok, data } = await apiFetch('/api/teams', {
-      method: 'POST',
-      body: JSON.stringify({ name: newTeamName, courseId }),
+    await withPendingAction('create-team', async () => {
+      setErrorBanner(null);
+      setSuccessBanner(null);
+      const courseId = courses[0]?.id || 1;
+      const { ok, data } = await apiFetch('/api/teams', {
+        method: 'POST',
+        body: JSON.stringify({ name: newTeamName, courseId }),
+      });
+      if (!ok) {
+        setErrorBanner({ error: data.error || 'Could not create team.', code: data.code });
+        return;
+      }
+      if (!data.team) {
+        setErrorBanner({ error: 'The server response did not include the new team.', code: 'INVALID_RESPONSE' });
+        return;
+      }
+      setNewTeamName('');
+      setSuccessBanner(`Created project team "${data.team.name}" successfully.`);
+      if (token) await loadDashboardData(token);
     });
-    if (!ok) {
-      setErrorBanner({ error: data.error, code: data.code });
-      return;
-    }
-    setNewTeamName('');
-    setSuccessBanner(`Created project team "${data.team.name}" successfully.`);
-    if (token) await loadDashboardData(token);
   }
 
   async function handleAddMember(e: React.FormEvent, targetTeamId?: number) {
     e.preventDefault();
-    setErrorBanner(null);
-    setSuccessBanner(null);
-    const tId = targetTeamId || myTeam?.id;
-    if (!tId) return;
+    await withPendingAction('add-member', async () => {
+      setErrorBanner(null);
+      setSuccessBanner(null);
+      const tId = targetTeamId || myTeam?.id;
+      if (!tId) return;
 
-    const { ok, data } = await apiFetch(`/api/teams/${tId}/members`, {
-      method: 'POST',
-      body: JSON.stringify({ email: addMemberEmail }),
+      const { ok, data } = await apiFetch(`/api/teams/${tId}/members`, {
+        method: 'POST',
+        body: JSON.stringify({ email: addMemberEmail }),
+      });
+      if (!ok) {
+        setErrorBanner({ error: data.error || 'Could not add team member.', code: data.code });
+        return;
+      }
+      if (!data.team) {
+        setErrorBanner({ error: 'The server response did not include the updated team.', code: 'INVALID_RESPONSE' });
+        return;
+      }
+      setAddMemberEmail('');
+      setSuccessBanner(
+        `Added member to ${data.team.name} (${data.team.members.length}/${data.team.course.maxTeamSize} members).`
+      );
+      if (token) await loadDashboardData(token);
     });
-    if (!ok) {
-      setErrorBanner({ error: data.error, code: data.code });
-      return;
-    }
-    setAddMemberEmail('');
-    setSuccessBanner(
-      `Added member to ${data.team.name} (${data.team.members.length}/${data.team.course.maxTeamSize} members).`
-    );
-    if (token) await loadDashboardData(token);
   }
 
   async function handleSaveDraft() {
     if (!myTeam) return;
-    setErrorBanner(null);
-    setSuccessBanner(null);
-    const { ok, data } = await apiFetch(`/api/teams/${myTeam.id}/proposal`, {
-      method: 'PUT',
-      body: JSON.stringify({
-        title: propTitle,
-        problemStatement: propProblem,
-        techStack: propStack,
-        repoUrl: propRepo,
-      }),
+    await withPendingAction('save-draft', async () => {
+      setErrorBanner(null);
+      setSuccessBanner(null);
+      const { ok, data } = await apiFetch(`/api/teams/${myTeam.id}/proposal`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          title: propTitle,
+          problemStatement: propProblem,
+          techStack: propStack,
+          repoUrl: propRepo,
+        }),
+      });
+      if (!ok) {
+        setErrorBanner({ error: data.error || 'Could not save proposal draft.', code: data.code });
+        return;
+      }
+      setSuccessBanner('Proposal draft saved to PostgreSQL.');
+      if (token) await loadDashboardData(token);
     });
-    if (!ok) {
-      setErrorBanner({ error: data.error, code: data.code });
-      return;
-    }
-    setSuccessBanner('Proposal draft saved to PostgreSQL.');
-    if (token) await loadDashboardData(token);
   }
 
   async function handleSubmitProposal() {
     if (!myTeam) return;
-    setErrorBanner(null);
-    setSuccessBanner(null);
-    const { ok, data } = await apiFetch(`/api/teams/${myTeam.id}/proposal/submit`, {
-      method: 'POST',
-      body: JSON.stringify({
-        title: propTitle,
-        problemStatement: propProblem,
-        techStack: propStack,
-        repoUrl: propRepo,
-      }),
+    await withPendingAction('submit-proposal', async () => {
+      setErrorBanner(null);
+      setSuccessBanner(null);
+      const { ok, data } = await apiFetch(`/api/teams/${myTeam.id}/proposal/submit`, {
+        method: 'POST',
+        body: JSON.stringify({
+          title: propTitle,
+          problemStatement: propProblem,
+          techStack: propStack,
+          repoUrl: propRepo,
+        }),
+      });
+      if (!ok) {
+        setErrorBanner({ error: data.error || 'Could not submit proposal.', code: data.code });
+        return;
+      }
+      if (!data.proposal) {
+        setErrorBanner({ error: 'The server response did not include the submitted proposal.', code: 'INVALID_RESPONSE' });
+        return;
+      }
+      setSuccessBanner(
+        `Proposal submitted for Instructor review (Status: ${data.proposal.status}, Revision #${data.proposal.revisionCount}).`
+      );
+      if (token) await loadDashboardData(token);
     });
-    if (!ok) {
-      setErrorBanner({ error: data.error, code: data.code });
-      return;
-    }
-    setSuccessBanner(
-      `Proposal submitted for Instructor review (Status: ${data.proposal.status}, Revision #${data.proposal.revisionCount}).`
-    );
-    if (token) await loadDashboardData(token);
   }
 
   async function handleInspectTeamProposal(targetTeamId: number) {
-    setErrorBanner(null);
-    setSuccessBanner(null);
-    const { ok, data } = await apiFetch(`/api/teams/${targetTeamId}/proposal`);
-    if (!ok) {
-      setErrorBanner({ error: data.error, code: data.code });
-      return;
-    }
-    setSuccessBanner(`Loaded proposal for Team #${targetTeamId}: "${data.proposal?.title}"`);
+    await withPendingAction('inspect-proposal', async () => {
+      setErrorBanner(null);
+      setSuccessBanner(null);
+      const { ok, data } = await apiFetch(`/api/teams/${targetTeamId}/proposal`);
+      if (!ok) {
+        setErrorBanner({ error: data.error || 'Could not load proposal.', code: data.code });
+        return;
+      }
+      setSuccessBanner(`Loaded proposal for Team #${targetTeamId}: "${data.proposal?.title || 'No proposal'}"`);
+    });
   }
 
   async function handleInstructorDecision(
     proposalId: number,
     decision: 'APPROVED' | 'REVISION_REQUESTED'
   ) {
-    setErrorBanner(null);
-    setSuccessBanner(null);
-    const { ok, data } = await apiFetch(`/api/proposals/${proposalId}/review`, {
-      method: 'POST',
-      body: JSON.stringify({
-        decision,
-        reviewFeedback: reviewFeedbackInput,
-      }),
+    await withPendingAction('review-proposal', async () => {
+      setErrorBanner(null);
+      setSuccessBanner(null);
+      const { ok, data } = await apiFetch(`/api/proposals/${proposalId}/review`, {
+        method: 'POST',
+        body: JSON.stringify({
+          decision,
+          reviewFeedback: reviewFeedbackInput,
+        }),
+      });
+      if (!ok) {
+        setErrorBanner({ error: data.error || 'Could not record instructor decision.', code: data.code });
+        return;
+      }
+      if (!data.proposal) {
+        setErrorBanner({ error: 'The server response did not include the reviewed proposal.', code: 'INVALID_RESPONSE' });
+        return;
+      }
+      setReviewFeedbackInput('');
+      setSuccessBanner(
+        `Proposal #${proposalId} transitioned to ${data.proposal.status} with recorded feedback.`
+      );
+      if (token) await loadDashboardData(token);
     });
-    if (!ok) {
-      setErrorBanner({ error: data.error, code: data.code });
-      return;
-    }
-    setReviewFeedbackInput('');
-    setSuccessBanner(
-      `Proposal #${proposalId} transitioned to ${data.proposal.status} with recorded feedback.`
-    );
-    if (token) await loadDashboardData(token);
   }
 
   function statusBadgeClass(status?: string) {
@@ -348,6 +466,12 @@ export default function App() {
             <div className="alert alert-danger shadow-sm" data-testid="auth-error" role="alert">
               <div className="fw-bold">Request Rejected {errorBanner.code ? `(${errorBanner.code})` : ''}</div>
               <div>{errorBanner.error}</div>
+              <button
+                type="button"
+                className="btn-close"
+                aria-label="Dismiss error"
+                onClick={() => setErrorBanner(null)}
+              />
             </div>
           )}
           {successBanner && (
@@ -395,8 +519,9 @@ export default function App() {
                   type="submit"
                   data-testid="login-submit"
                   className="btn btn-primary w-100 fw-semibold py-2"
+                  disabled={pendingAction !== null}
                 >
-                  Sign In
+                  {pendingAction === 'login' ? 'Signing in…' : 'Sign In'}
                 </button>
               </form>
 
@@ -409,6 +534,7 @@ export default function App() {
                   type="button"
                   data-testid="quickfill-pawarit"
                   className="btn btn-outline-secondary btn-sm text-start"
+                  disabled={pendingAction !== null}
                   onClick={() => {
                     setLoginEmail('pawarit@mail.kmutt.ac.th');
                     setLoginPassword('Password123!');
@@ -420,6 +546,7 @@ export default function App() {
                   type="button"
                   data-testid="quickfill-suda"
                   className="btn btn-outline-secondary btn-sm text-start"
+                  disabled={pendingAction !== null}
                   onClick={() => {
                     setLoginEmail('suda@mail.kmutt.ac.th');
                     setLoginPassword('Password123!');
@@ -431,6 +558,7 @@ export default function App() {
                   type="button"
                   data-testid="quickfill-instructor"
                   className="btn btn-outline-dark btn-sm text-start"
+                  disabled={pendingAction !== null}
                   onClick={() => {
                     setLoginEmail('instructor@kmutt.ac.th');
                     setLoginPassword('Password123!');
@@ -456,6 +584,10 @@ export default function App() {
 
   const selectedInstructorTeam =
     teams.find((t) => t.id === selectedTeamId) || filteredTeams[0] || null;
+  const proposalLocked =
+    myTeam?.proposal?.status === 'SUBMITTED' || myTeam?.proposal?.status === 'APPROVED';
+  const teamAtCapacity = Boolean(myTeam && myTeam.members.length >= myTeam.course.maxTeamSize);
+  const canReviewSelectedProposal = selectedInstructorTeam?.proposal?.status === 'SUBMITTED';
 
   return (
     <div className="min-vh-100 bg-light">
@@ -488,8 +620,9 @@ export default function App() {
               data-testid="logout-btn"
               className="btn btn-outline-light btn-sm"
               onClick={handleLogout}
+              disabled={pendingAction !== null}
             >
-              Logout
+              {pendingAction === 'logout' ? 'Logging out…' : 'Logout'}
             </button>
           </div>
         </div>
@@ -505,6 +638,12 @@ export default function App() {
               Operation Rejected {errorBanner.code ? `[${errorBanner.code}]` : ''}
             </div>
             <div>{errorBanner.error}</div>
+            <button
+              type="button"
+              className="btn-close"
+              aria-label="Dismiss error"
+              onClick={() => setErrorBanner(null)}
+            />
           </div>
         )}
         {successBanner && (
@@ -522,7 +661,7 @@ export default function App() {
               {/* My Team Card */}
               <div className="card shadow-sm border-0 mb-4">
                 <div className="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                  <h5 className="mb-0 fw-bold">F-02: My Project Team</h5>
+                  <h5 className="mb-0 fw-bold">My Project Team</h5>
                   {myTeam && (
                     <span className="badge bg-dark" data-testid="team-capacity-badge">
                       {myTeam.members.length} / {myTeam.course.maxTeamSize} Members
@@ -571,15 +710,25 @@ export default function App() {
                             placeholder="e.g., tatchakorn@mail.kmutt.ac.th"
                             value={addMemberEmail}
                             onChange={(e) => setAddMemberEmail(e.target.value)}
+                            disabled={pendingAction !== null || teamAtCapacity || proposalLocked}
                           />
                           <button
                             type="submit"
                             data-testid="add-member-btn"
                             className="btn btn-outline-primary btn-sm fw-semibold"
+                            disabled={pendingAction !== null || teamAtCapacity || proposalLocked}
                           >
-                            Add Member
+                            {pendingAction === 'add-member' ? 'Adding…' : 'Add Member'}
                           </button>
                         </div>
+                        {teamAtCapacity && (
+                          <div className="small text-muted mt-1">This team has reached its member limit.</div>
+                        )}
+                        {proposalLocked && (
+                          <div className="small text-muted mt-1">
+                            Team changes are locked while this proposal is under review or approved.
+                          </div>
+                        )}
                       </form>
                     </>
                   ) : (
@@ -587,41 +736,47 @@ export default function App() {
                       <p className="small mb-2">
                         You are not currently assigned to a team in{' '}
                         <strong>{courses[0]?.code || 'CPE334'}</strong>. Create a new project team
-                        below.
+                        below. To join an existing team, ask one of its members to add your university email.
                       </p>
                     </div>
                   )}
 
-                  <hr className="my-3" />
-                  <form onSubmit={handleCreateTeam}>
-                    <label className="form-label small fw-semibold">
-                      Create New Project Team in {courses[0]?.code || 'CPE334'} (Enforces BR-01)
-                    </label>
-                    <div className="input-group">
-                      <input
-                        type="text"
-                        data-testid="create-team-name"
-                        className="form-control form-control-sm"
-                        placeholder="New team name (e.g., Team Gamma)"
-                        value={newTeamName}
-                        onChange={(e) => setNewTeamName(e.target.value)}
-                      />
-                      <button
-                        type="submit"
-                        data-testid="create-team-btn"
-                        className="btn btn-dark btn-sm"
-                      >
-                        Create Team
-                      </button>
-                    </div>
-                  </form>
+                  {!myTeam && (
+                    <>
+                      <hr className="my-3" />
+                      <form onSubmit={handleCreateTeam}>
+                        <label className="form-label small fw-semibold">
+                          Create New Project Team in {courses[0]?.code || 'CPE334'}
+                        </label>
+                        <div className="input-group">
+                          <input
+                            type="text"
+                            data-testid="create-team-name"
+                            className="form-control form-control-sm"
+                            placeholder="New team name (e.g., Team Gamma)"
+                            value={newTeamName}
+                            onChange={(e) => setNewTeamName(e.target.value)}
+                            disabled={pendingAction !== null}
+                          />
+                          <button
+                            type="submit"
+                            data-testid="create-team-btn"
+                            className="btn btn-dark btn-sm"
+                            disabled={pendingAction !== null}
+                          >
+                            {pendingAction === 'create-team' ? 'Creating…' : 'Create Team'}
+                          </button>
+                        </div>
+                      </form>
+                    </>
+                  )}
                 </div>
               </div>
 
               {/* Course Teams Directory & Cross-Team Isolation Test Card */}
               <div className="card shadow-sm border-0">
                 <div className="card-header bg-white py-3">
-                  <h6 className="mb-0 fw-bold">Course Teams Directory & Access Check (BR-06)</h6>
+                  <h6 className="mb-0 fw-bold">Course Teams Directory</h6>
                 </div>
                 <div className="card-body p-0">
                   <table className="table table-sm table-hover mb-0 align-middle">
@@ -630,11 +785,17 @@ export default function App() {
                         <th className="ps-3">Team</th>
                         <th>Members</th>
                         <th>Status</th>
-                        <th className="pe-3 text-end">Access Check</th>
+                        <th className="pe-3 text-end">Proposal</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {teams.map((t) => (
+                      {teams.length === 0 ? (
+                        <tr>
+                          <td colSpan={4} className="text-center text-muted py-3">
+                            No project teams are available in this course yet.
+                          </td>
+                        </tr>
+                      ) : teams.map((t) => (
                         <tr key={t.id}>
                           <td className="ps-3 fw-semibold">{t.name}</td>
                           <td>
@@ -651,8 +812,9 @@ export default function App() {
                               data-testid={`inspect-proposal-${t.id}`}
                               className="btn btn-outline-secondary btn-sm"
                               onClick={() => handleInspectTeamProposal(t.id)}
+                              disabled={pendingAction !== null}
                             >
-                              View Proposal API
+                              {pendingAction === 'inspect-proposal' ? 'Loading…' : 'View Proposal'}
                             </button>
                           </td>
                         </tr>
@@ -668,7 +830,7 @@ export default function App() {
               <div className="card shadow-sm border-0">
                 <div className="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                   <div>
-                    <h5 className="mb-0 fw-bold">F-03: Team Project Proposal & Review Lifecycle</h5>
+                    <h5 className="mb-0 fw-bold">Team Project Proposal</h5>
                     <small className="text-muted">
                       State transitions: DRAFT → SUBMITTED → APPROVED / REVISION_REQUESTED
                     </small>
@@ -691,7 +853,8 @@ export default function App() {
                 <div className="card-body">
                   {!myTeam ? (
                     <div className="alert alert-secondary mb-0">
-                      Create or join a project team first to draft and submit a Project Proposal.
+                      Create a project team first. To join an existing team, ask one of its members
+                      to add your university email.
                     </div>
                   ) : (
                     <>
@@ -724,6 +887,7 @@ export default function App() {
                           className="form-control"
                           value={propTitle}
                           onChange={(e) => setPropTitle(e.target.value)}
+                          disabled={proposalLocked || pendingAction !== null}
                         />
                       </div>
 
@@ -738,6 +902,7 @@ export default function App() {
                           className="form-control"
                           value={propProblem}
                           onChange={(e) => setPropProblem(e.target.value)}
+                          disabled={proposalLocked || pendingAction !== null}
                         />
                       </div>
 
@@ -752,6 +917,7 @@ export default function App() {
                             className="form-control"
                             value={propStack}
                             onChange={(e) => setPropStack(e.target.value)}
+                            disabled={proposalLocked || pendingAction !== null}
                           />
                         </div>
                         <div className="col-md-6">
@@ -762,6 +928,7 @@ export default function App() {
                             className="form-control"
                             value={propRepo}
                             onChange={(e) => setPropRepo(e.target.value)}
+                            disabled={proposalLocked || pendingAction !== null}
                           />
                         </div>
                       </div>
@@ -772,16 +939,18 @@ export default function App() {
                           data-testid="save-draft-btn"
                           className="btn btn-outline-secondary fw-semibold"
                           onClick={handleSaveDraft}
+                          disabled={proposalLocked || pendingAction !== null}
                         >
-                          Save Draft (PUT)
+                          {pendingAction === 'save-draft' ? 'Saving…' : 'Save Draft'}
                         </button>
                         <button
                           type="button"
                           data-testid="submit-proposal-btn"
                           className="btn btn-primary fw-semibold"
                           onClick={handleSubmitProposal}
+                          disabled={proposalLocked || pendingAction !== null}
                         >
-                          Submit Proposal for Review (POST)
+                          {pendingAction === 'submit-proposal' ? 'Submitting…' : 'Submit Proposal for Review'}
                         </button>
                       </div>
                     </>
@@ -860,7 +1029,13 @@ export default function App() {
                         </tr>
                       </thead>
                       <tbody>
-                        {filteredTeams.map((t) => (
+                        {filteredTeams.length === 0 ? (
+                          <tr>
+                            <td colSpan={4} className="text-center text-muted py-3">
+                              No teams match this status filter.
+                            </td>
+                          </tr>
+                        ) : filteredTeams.map((t) => (
                           <tr
                             key={t.id}
                             className={
@@ -965,37 +1140,46 @@ export default function App() {
                             placeholder="Provide specific engineering feedback (minimum 10 characters)..."
                             value={reviewFeedbackInput}
                             onChange={(e) => setReviewFeedbackInput(e.target.value)}
+                            disabled={!canReviewSelectedProposal || pendingAction !== null}
                           />
                         </div>
 
-                        <div className="d-flex gap-2">
-                          <button
-                            type="button"
-                            data-testid="approve-proposal-btn"
-                            className="btn btn-success fw-semibold"
-                            onClick={() =>
-                              handleInstructorDecision(
-                                selectedInstructorTeam.proposal!.id,
-                                'APPROVED'
-                              )
-                            }
-                          >
-                            Approve Proposal (APPROVED)
-                          </button>
-                          <button
-                            type="button"
-                            data-testid="revision-proposal-btn"
-                            className="btn btn-warning fw-semibold"
-                            onClick={() =>
-                              handleInstructorDecision(
-                                selectedInstructorTeam.proposal!.id,
-                                'REVISION_REQUESTED'
-                              )
-                            }
-                          >
-                            Request Revision (REVISION_REQUESTED)
-                          </button>
-                        </div>
+                        {canReviewSelectedProposal ? (
+                          <div className="d-flex gap-2">
+                            <button
+                              type="button"
+                              data-testid="approve-proposal-btn"
+                              className="btn btn-success fw-semibold"
+                              onClick={() =>
+                                handleInstructorDecision(
+                                  selectedInstructorTeam.proposal!.id,
+                                  'APPROVED'
+                                )
+                              }
+                              disabled={pendingAction !== null}
+                            >
+                              {pendingAction === 'review-proposal' ? 'Recording…' : 'Approve Proposal'}
+                            </button>
+                            <button
+                              type="button"
+                              data-testid="revision-proposal-btn"
+                              className="btn btn-warning fw-semibold"
+                              onClick={() =>
+                                handleInstructorDecision(
+                                  selectedInstructorTeam.proposal!.id,
+                                  'REVISION_REQUESTED'
+                                )
+                              }
+                              disabled={pendingAction !== null}
+                            >
+                              {pendingAction === 'review-proposal' ? 'Recording…' : 'Request Revision'}
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="small text-muted">
+                            Instructor decisions are available only while a proposal is submitted for review.
+                          </div>
+                        )}
                       </>
                     )}
                   </div>

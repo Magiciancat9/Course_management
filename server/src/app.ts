@@ -15,6 +15,26 @@ import {
   validateInstructorReview,
 } from './utils/domainRules';
 
+function isUniqueConstraintViolation(err: unknown, fields: string[]): boolean {
+  if (
+    typeof err !== 'object' ||
+    err === null ||
+    !('code' in err) ||
+    err.code !== 'P2002' ||
+    !('meta' in err) ||
+    typeof err.meta !== 'object' ||
+    err.meta === null ||
+    !('target' in err.meta)
+  ) {
+    return false;
+  }
+
+  const target = err.meta.target;
+  return Array.isArray(target)
+    ? fields.every((field) => target.includes(field))
+    : typeof target === 'string' && fields.every((field) => target.includes(field));
+}
+
 const app = express();
 
 app.use(
@@ -289,6 +309,13 @@ app.post('/api/teams', requireAuth, requireRole('STUDENT'), async (req, res) => 
 
     res.status(201).json({ team: createdTeam });
   } catch (err) {
+    if (isUniqueConstraintViolation(err, ['courseId', 'userId'])) {
+      res.status(409).json({
+        error: 'Student is already a member of an active team in this course.',
+        code: 'BR01_DUPLICATE_TEAM_MEMBERSHIP',
+      });
+      return;
+    }
     console.error('Create team error:', err);
     res.status(500).json({ error: 'Internal server error', code: 'INTERNAL_ERROR' });
   }
@@ -307,102 +334,123 @@ app.post('/api/teams/:id/members', requireAuth, requireRole('STUDENT'), async (r
       return;
     }
 
-    const team = await prisma.projectTeam.findUnique({
-      where: { id: teamId },
-      include: {
-        course: true,
-        members: true,
-      },
-    });
+    const result = await prisma.$transaction(async (tx) => {
+      await tx.$queryRaw`SELECT "id" FROM "ProjectTeam" WHERE "id" = ${teamId} FOR UPDATE`;
 
-    if (!team) {
-      res.status(404).json({ error: 'Project team not found.', code: 'TEAM_NOT_FOUND' });
-      return;
-    }
-
-    // BR-06: Only current members of the team can add teammates to the team roster
-    const callerIsMember = team.members.some((m) => m.userId === req.user!.id);
-    if (!callerIsMember) {
-      res.status(403).json({
-        error: 'Forbidden: only members of this team may add teammates.',
-        code: 'BR06_FORBIDDEN_TEAM_ACCESS',
-      });
-      return;
-    }
-
-    // BR-02: Enforce course maximum team size
-    const capacityCheck = validateTeamCapacity(team.members.length, team.course.maxTeamSize);
-    if (!capacityCheck.valid) {
-      res.status(capacityCheck.status || 409).json({
-        error: capacityCheck.error,
-        code: capacityCheck.code,
-      });
-      return;
-    }
-
-    const targetUser = await prisma.user.findUnique({
-      where: { email: email.trim().toLowerCase() },
-    });
-
-    if (!targetUser || targetUser.role !== 'STUDENT') {
-      res.status(404).json({
-        error: 'Target student account not found.',
-        code: 'STUDENT_NOT_FOUND',
-      });
-      return;
-    }
-
-    // BR-01: Single Active Team Membership per Course
-    const existingMembership = await prisma.teamMember.findUnique({
-      where: {
-        courseId_userId: {
-          courseId: team.courseId,
-          userId: targetUser.id,
+      const team = await tx.projectTeam.findUnique({
+        where: { id: teamId },
+        include: {
+          course: true,
+          members: true,
         },
-      },
+      });
+
+      if (!team) {
+        return {
+          error: 'Project team not found.',
+          code: 'TEAM_NOT_FOUND',
+          status: 404,
+        };
+      }
+
+      const callerIsMember = team.members.some((m) => m.userId === req.user!.id);
+      if (!callerIsMember) {
+        return {
+          error: 'Forbidden: only members of this team may add teammates.',
+          code: 'BR06_FORBIDDEN_TEAM_ACCESS',
+          status: 403,
+        };
+      }
+
+      const capacityCheck = validateTeamCapacity(team.members.length, team.course.maxTeamSize);
+      if (!capacityCheck.valid) {
+        return {
+          error: capacityCheck.error,
+          code: capacityCheck.code,
+          status: capacityCheck.status ?? 409,
+        };
+      }
+
+      const targetUser = await tx.user.findUnique({
+        where: { email: email.trim().toLowerCase() },
+      });
+
+      if (!targetUser || targetUser.role !== 'STUDENT') {
+        return {
+          error: 'Target student account not found.',
+          code: 'STUDENT_NOT_FOUND',
+          status: 404,
+        };
+      }
+
+      const existingMembership = await tx.teamMember.findUnique({
+        where: {
+          courseId_userId: {
+            courseId: team.courseId,
+            userId: targetUser.id,
+          },
+        },
+      });
+
+      if (existingMembership) {
+        return {
+          error: 'Target student is already a member of an active team in this course.',
+          code: 'BR01_DUPLICATE_TEAM_MEMBERSHIP',
+          status: 409,
+        };
+      }
+
+      await tx.teamMember.create({
+        data: {
+          teamId: team.id,
+          userId: targetUser.id,
+          courseId: team.courseId,
+          memberRole: 'MEMBER',
+        },
+      });
+
+      const updatedTeam = await tx.projectTeam.findUnique({
+        where: { id: team.id },
+        include: {
+          course: true,
+          members: {
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  email: true,
+                  fullName: true,
+                  studentCode: true,
+                  role: true,
+                },
+              },
+            },
+            orderBy: { joinedAt: 'asc' },
+          },
+          proposal: true,
+        },
+      });
+
+      return { team: updatedTeam };
     });
 
-    if (existingMembership) {
+    if ('error' in result) {
+      res.status(result.status ?? 500).json({ error: result.error, code: result.code });
+      return;
+    }
+
+    res.status(200).json({ team: result.team });
+  } catch (err) {
+    if (
+      isUniqueConstraintViolation(err, ['courseId', 'userId']) ||
+      isUniqueConstraintViolation(err, ['teamId', 'userId'])
+    ) {
       res.status(409).json({
         error: 'Target student is already a member of an active team in this course.',
         code: 'BR01_DUPLICATE_TEAM_MEMBERSHIP',
       });
       return;
     }
-
-    await prisma.teamMember.create({
-      data: {
-        teamId: team.id,
-        userId: targetUser.id,
-        courseId: team.courseId,
-        memberRole: 'MEMBER',
-      },
-    });
-
-    const updatedTeam = await prisma.projectTeam.findUnique({
-      where: { id: team.id },
-      include: {
-        course: true,
-        members: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                email: true,
-                fullName: true,
-                studentCode: true,
-                role: true,
-              },
-            },
-          },
-          orderBy: { joinedAt: 'asc' },
-        },
-        proposal: true,
-      },
-    });
-
-    res.status(200).json({ team: updatedTeam });
-  } catch (err) {
     console.error('Add team member error:', err);
     res.status(500).json({ error: 'Internal server error', code: 'INTERNAL_ERROR' });
   }
@@ -455,66 +503,78 @@ app.put('/api/teams/:id/proposal', requireAuth, requireRole('STUDENT'), async (r
     const teamId = Number(req.params.id);
     const { title, problemStatement, techStack, repoUrl } = req.body || {};
 
-    const team = await prisma.projectTeam.findUnique({
-      where: { id: teamId },
-      include: { members: true, proposal: true },
-    });
+    const result = await prisma.$transaction(async (tx) => {
+      await tx.$queryRaw`SELECT "id" FROM "ProjectTeam" WHERE "id" = ${teamId} FOR UPDATE`;
 
-    if (!team) {
-      res.status(404).json({ error: 'Project team not found.', code: 'TEAM_NOT_FOUND' });
-      return;
-    }
-
-    // BR-06: Team ownership check
-    const isMember = team.members.some((m) => m.userId === req.user!.id);
-    if (!isMember) {
-      res.status(403).json({
-        error: 'Forbidden: you cannot modify another team’s project proposal.',
-        code: 'BR06_FORBIDDEN_TEAM_ACCESS',
+      const team = await tx.projectTeam.findUnique({
+        where: { id: teamId },
+        include: { members: true, proposal: true },
       });
-      return;
-    }
 
-    // BR-03: Cannot edit a proposal that is currently SUBMITTED or already APPROVED
-    if (
-      team.proposal &&
-      (team.proposal.status === 'SUBMITTED' || team.proposal.status === 'APPROVED')
-    ) {
-      res.status(409).json({
-        error: `Proposal cannot be edited while in ${team.proposal.status} status.`,
-        code: 'BR03_INVALID_STATUS_TRANSITION',
-      });
-      return;
-    }
+      if (!team) {
+        return {
+          error: 'Project team not found.',
+          code: 'TEAM_NOT_FOUND',
+          status: 404,
+        };
+      }
 
-    const proposal = await prisma.projectProposal.upsert({
-      where: { teamId: team.id },
-      create: {
-        teamId: team.id,
-        title: typeof title === 'string' ? title.trim() : '',
-        problemStatement: typeof problemStatement === 'string' ? problemStatement.trim() : '',
-        techStack: typeof techStack === 'string' ? techStack.trim() : '',
-        repoUrl: typeof repoUrl === 'string' ? repoUrl.trim() : '',
-        status: 'DRAFT',
-      },
-      update: {
-        title: typeof title === 'string' ? title.trim() : team.proposal?.title ?? '',
-        problemStatement:
-          typeof problemStatement === 'string'
-            ? problemStatement.trim()
-            : team.proposal?.problemStatement ?? '',
-        techStack:
-          typeof techStack === 'string' ? techStack.trim() : team.proposal?.techStack ?? '',
-        repoUrl: typeof repoUrl === 'string' ? repoUrl.trim() : team.proposal?.repoUrl ?? '',
-      },
-      include: {
-        reviewedBy: {
-          select: { id: true, email: true, fullName: true, role: true },
+      const isMember = team.members.some((m) => m.userId === req.user!.id);
+      if (!isMember) {
+        return {
+          error: 'Forbidden: you cannot modify another team’s project proposal.',
+          code: 'BR06_FORBIDDEN_TEAM_ACCESS',
+          status: 403,
+        };
+      }
+
+      if (
+        team.proposal &&
+        (team.proposal.status === 'SUBMITTED' || team.proposal.status === 'APPROVED')
+      ) {
+        return {
+          error: `Proposal cannot be edited while in ${team.proposal.status} status.`,
+          code: 'BR03_INVALID_STATUS_TRANSITION',
+          status: 409,
+        };
+      }
+
+      const proposal = await tx.projectProposal.upsert({
+        where: { teamId: team.id },
+        create: {
+          teamId: team.id,
+          title: typeof title === 'string' ? title.trim() : '',
+          problemStatement: typeof problemStatement === 'string' ? problemStatement.trim() : '',
+          techStack: typeof techStack === 'string' ? techStack.trim() : '',
+          repoUrl: typeof repoUrl === 'string' ? repoUrl.trim() : '',
+          status: 'DRAFT',
         },
-      },
+        update: {
+          title: typeof title === 'string' ? title.trim() : team.proposal?.title ?? '',
+          problemStatement:
+            typeof problemStatement === 'string'
+              ? problemStatement.trim()
+              : team.proposal?.problemStatement ?? '',
+          techStack:
+            typeof techStack === 'string' ? techStack.trim() : team.proposal?.techStack ?? '',
+          repoUrl: typeof repoUrl === 'string' ? repoUrl.trim() : team.proposal?.repoUrl ?? '',
+        },
+        include: {
+          reviewedBy: {
+            select: { id: true, email: true, fullName: true, role: true },
+          },
+        },
+      });
+
+      return { proposal };
     });
 
-    res.status(200).json({ proposal });
+    if ('error' in result) {
+      res.status(result.status ?? 500).json({ error: result.error, code: result.code });
+      return;
+    }
+
+    res.status(200).json({ proposal: result.proposal });
   } catch (err) {
     console.error('Save proposal draft error:', err);
     res.status(500).json({ error: 'Internal server error', code: 'INTERNAL_ERROR' });
@@ -526,89 +586,94 @@ app.post('/api/teams/:id/proposal/submit', requireAuth, requireRole('STUDENT'), 
     const teamId = Number(req.params.id);
     const { title, problemStatement, techStack, repoUrl } = req.body || {};
 
-    const team = await prisma.projectTeam.findUnique({
-      where: { id: teamId },
-      include: { members: true, proposal: true },
-    });
+    const result = await prisma.$transaction(async (tx) => {
+      await tx.$queryRaw`SELECT "id" FROM "ProjectTeam" WHERE "id" = ${teamId} FOR UPDATE`;
 
-    if (!team) {
-      res.status(404).json({ error: 'Project team not found.', code: 'TEAM_NOT_FOUND' });
-      return;
-    }
-
-    // BR-06: Team ownership check
-    const isMember = team.members.some((m) => m.userId === req.user!.id);
-    if (!isMember) {
-      res.status(403).json({
-        error: 'Forbidden: you cannot submit another team’s project proposal.',
-        code: 'BR06_FORBIDDEN_TEAM_ACCESS',
+      const team = await tx.projectTeam.findUnique({
+        where: { id: teamId },
+        include: { members: true, proposal: true },
       });
-      return;
-    }
 
-    const currentStatus = (team.proposal?.status || 'DRAFT') as
-      | 'DRAFT'
-      | 'SUBMITTED'
-      | 'APPROVED'
-      | 'REVISION_REQUESTED';
+      if (!team) {
+        return {
+          error: 'Project team not found.',
+          code: 'TEAM_NOT_FOUND',
+          status: 404,
+        };
+      }
 
-    const effectiveTitle =
-      typeof title === 'string' ? title : team.proposal?.title ?? '';
-    const effectiveProblem =
-      typeof problemStatement === 'string'
-        ? problemStatement
-        : team.proposal?.problemStatement ?? '';
-    const effectiveStack =
-      typeof techStack === 'string' ? techStack : team.proposal?.techStack ?? '';
-    const effectiveRepo =
-      typeof repoUrl === 'string' ? repoUrl : team.proposal?.repoUrl ?? '';
+      const isMember = team.members.some((m) => m.userId === req.user!.id);
+      if (!isMember) {
+        return {
+          error: 'Forbidden: you cannot submit another team’s project proposal.',
+          code: 'BR06_FORBIDDEN_TEAM_ACCESS',
+          status: 403,
+        };
+      }
 
-    // BR-03 & BR-04 validation
-    const validation = validateProposalSubmission(currentStatus, {
-      title: effectiveTitle,
-      problemStatement: effectiveProblem,
-      techStack: effectiveStack,
-    });
+      const currentStatus = team.proposal?.status || 'DRAFT';
+      const effectiveTitle = typeof title === 'string' ? title : team.proposal?.title ?? '';
+      const effectiveProblem =
+        typeof problemStatement === 'string'
+          ? problemStatement
+          : team.proposal?.problemStatement ?? '';
+      const effectiveStack =
+        typeof techStack === 'string' ? techStack : team.proposal?.techStack ?? '';
+      const effectiveRepo =
+        typeof repoUrl === 'string' ? repoUrl : team.proposal?.repoUrl ?? '';
 
-    if (!validation.valid) {
-      res.status(validation.status || 400).json({
-        error: validation.error,
-        code: validation.code,
+      const validation = validateProposalSubmission(currentStatus, {
+        title: effectiveTitle,
+        problemStatement: effectiveProblem,
+        techStack: effectiveStack,
       });
-      return;
-    }
 
-    const nextRevisionCount = (team.proposal?.revisionCount || 0) + 1;
+      if (!validation.valid) {
+        return {
+          error: validation.error,
+          code: validation.code,
+          status: validation.status ?? 400,
+        };
+      }
 
-    const proposal = await prisma.projectProposal.upsert({
-      where: { teamId: team.id },
-      create: {
-        teamId: team.id,
-        title: effectiveTitle.trim(),
-        problemStatement: effectiveProblem.trim(),
-        techStack: effectiveStack.trim(),
-        repoUrl: effectiveRepo.trim(),
-        status: 'SUBMITTED',
-        submittedAt: new Date(),
-        revisionCount: 1,
-      },
-      update: {
-        title: effectiveTitle.trim(),
-        problemStatement: effectiveProblem.trim(),
-        techStack: effectiveStack.trim(),
-        repoUrl: effectiveRepo.trim(),
-        status: 'SUBMITTED',
-        submittedAt: new Date(),
-        revisionCount: nextRevisionCount,
-      },
-      include: {
-        reviewedBy: {
-          select: { id: true, email: true, fullName: true, role: true },
+      const nextRevisionCount = (team.proposal?.revisionCount || 0) + 1;
+      const proposal = await tx.projectProposal.upsert({
+        where: { teamId: team.id },
+        create: {
+          teamId: team.id,
+          title: effectiveTitle.trim(),
+          problemStatement: effectiveProblem.trim(),
+          techStack: effectiveStack.trim(),
+          repoUrl: effectiveRepo.trim(),
+          status: 'SUBMITTED',
+          submittedAt: new Date(),
+          revisionCount: 1,
         },
-      },
+        update: {
+          title: effectiveTitle.trim(),
+          problemStatement: effectiveProblem.trim(),
+          techStack: effectiveStack.trim(),
+          repoUrl: effectiveRepo.trim(),
+          status: 'SUBMITTED',
+          submittedAt: new Date(),
+          revisionCount: nextRevisionCount,
+        },
+        include: {
+          reviewedBy: {
+            select: { id: true, email: true, fullName: true, role: true },
+          },
+        },
+      });
+
+      return { proposal };
     });
 
-    res.status(200).json({ proposal });
+    if ('error' in result) {
+      res.status(result.status ?? 500).json({ error: result.error, code: result.code });
+      return;
+    }
+
+    res.status(200).json({ proposal: result.proposal });
   } catch (err) {
     console.error('Submit proposal error:', err);
     res.status(500).json({ error: 'Internal server error', code: 'INTERNAL_ERROR' });
@@ -630,6 +695,7 @@ app.post('/api/proposals/:id/review', requireAuth, async (req, res) => {
 
     const existing = await prisma.projectProposal.findUnique({
       where: { id: proposalId },
+      select: { teamId: true },
     });
 
     if (!existing) {
@@ -640,32 +706,58 @@ app.post('/api/proposals/:id/review', requireAuth, async (req, res) => {
       return;
     }
 
-    // BR-03 & BR-05 validation
-    const validation = validateInstructorReview(existing.status, decision, reviewFeedback);
-    if (!validation.valid) {
-      res.status(validation.status || 400).json({
-        error: validation.error,
-        code: validation.code,
+    const result = await prisma.$transaction(async (tx) => {
+      await tx.$queryRaw`SELECT "id" FROM "ProjectTeam" WHERE "id" = ${existing.teamId} FOR UPDATE`;
+
+      const currentProposal = await tx.projectProposal.findUnique({
+        where: { id: proposalId },
       });
+
+      if (!currentProposal) {
+        return {
+          error: 'Project proposal not found.',
+          code: 'PROPOSAL_NOT_FOUND',
+          status: 404,
+        };
+      }
+
+      const validation = validateInstructorReview(
+        currentProposal.status,
+        decision,
+        reviewFeedback
+      );
+      if (!validation.valid) {
+        return {
+          error: validation.error,
+          code: validation.code,
+          status: validation.status ?? 400,
+        };
+      }
+
+      const updated = await tx.projectProposal.update({
+        where: { id: proposalId },
+        data: {
+          status: decision,
+          reviewFeedback: reviewFeedback.trim(),
+          reviewedById: req.user!.id,
+          reviewedAt: new Date(),
+        },
+        include: {
+          reviewedBy: {
+            select: { id: true, email: true, fullName: true, role: true },
+          },
+        },
+      });
+
+      return { proposal: updated };
+    });
+
+    if ('error' in result) {
+      res.status(result.status ?? 500).json({ error: result.error, code: result.code });
       return;
     }
 
-    const updated = await prisma.projectProposal.update({
-      where: { id: proposalId },
-      data: {
-        status: decision as 'APPROVED' | 'REVISION_REQUESTED',
-        reviewFeedback: reviewFeedback.trim(),
-        reviewedById: req.user!.id,
-        reviewedAt: new Date(),
-      },
-      include: {
-        reviewedBy: {
-          select: { id: true, email: true, fullName: true, role: true },
-        },
-      },
-    });
-
-    res.status(200).json({ proposal: updated });
+    res.status(200).json({ proposal: result.proposal });
   } catch (err) {
     console.error('Review proposal error:', err);
     res.status(500).json({ error: 'Internal server error', code: 'INTERNAL_ERROR' });

@@ -4,9 +4,11 @@ import path from 'path';
 import fs from 'fs';
 
 const REPO_ROOT = path.resolve(__dirname, '..');
-const SCREENSHOT_DIR = path.join(REPO_ROOT, 'artifacts', 'sprint-1');
+const SCREENSHOT_DIR = process.env.SPRINT1_ARTIFACT_DIR
+  ? path.resolve(process.env.SPRINT1_ARTIFACT_DIR)
+  : path.join(REPO_ROOT, 'artifacts', 'sprint-1', 'verification');
 
-test.describe('CoursePMS Sprint 1 — End-to-End Browser Verification (TEST-11 & TEST-12)', () => {
+test.describe('CoursePMS Sprint 1 — End-to-End Browser Verification (TEST-11, TEST-12 & TEST-20)', () => {
   test.beforeAll(() => {
     fs.mkdirSync(SCREENSHOT_DIR, { recursive: true });
   });
@@ -46,6 +48,9 @@ test.describe('CoursePMS Sprint 1 — End-to-End Browser Verification (TEST-11 &
     await page.getByTestId('submit-proposal-btn').click();
     await expect(page.getByTestId('proposal-status')).toHaveText('SUBMITTED');
     await expect(page.getByTestId('proposal-revision')).toContainText('Revision #1');
+    await expect(page.getByTestId('submit-proposal-btn')).toBeDisabled();
+    await expect(page.getByTestId('save-draft-btn')).toBeDisabled();
+    await expect(page.getByTestId('add-member-btn')).toBeDisabled();
     await page.screenshot({
       path: path.join(SCREENSHOT_DIR, '02_student_submitted_journey.png'),
       fullPage: true,
@@ -60,6 +65,8 @@ test.describe('CoursePMS Sprint 1 — End-to-End Browser Verification (TEST-11 &
     await page.getByTestId('login-submit').click();
     await expect(page.getByTestId('current-user-role')).toHaveText('INSTRUCTOR');
 
+    await page.locator('tbody tr').filter({ hasText: 'SUBMITTED' }).first().getByRole('button').click();
+    await expect(page.getByTestId('review-panel-status')).toHaveText('SUBMITTED');
     await page
       .getByTestId('review-feedback-input')
       .fill('Approved for Sprint 1! Well-defined domain boundaries, RBAC matrix, and schema.');
@@ -69,6 +76,7 @@ test.describe('CoursePMS Sprint 1 — End-to-End Browser Verification (TEST-11 &
       path: path.join(SCREENSHOT_DIR, '03_instructor_approved_review.png'),
       fullPage: true,
     });
+    await expect(page.getByTestId('approve-proposal-btn')).toHaveCount(0);
 
     // 6. Logout Instructor, Login back as Student, and retrieve persisted APPROVED result
     await page.getByTestId('logout-btn').click();
@@ -96,12 +104,26 @@ test.describe('CoursePMS Sprint 1 — End-to-End Browser Verification (TEST-11 &
     await page.getByTestId('login-submit').click();
     await expect(page.getByTestId('current-user-role')).toHaveText('STUDENT');
 
-    // 2. Business-Rule Rejection 1: Attempt to create a second team in the same course (BR-01)
-    await page.getByTestId('create-team-name').fill('Duplicate Team Attempt');
-    await page.getByTestId('create-team-btn').click();
-    await expect(page.getByTestId('error-banner')).toContainText(
-      'BR01_DUPLICATE_TEAM_MEMBERSHIP'
-    );
+    // 2. UI prevents an invalid duplicate-team action; the API still enforces BR-01 directly.
+    await expect(page.getByTestId('create-team-btn')).toHaveCount(0);
+    const duplicateCreate = await page.evaluate(async () => {
+      const token = localStorage.getItem('course_pms_token');
+      const coursesResponse = await fetch('/api/courses', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const { courses } = await coursesResponse.json();
+      const response = await fetch('/api/teams', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ name: 'Duplicate Team Attempt', courseId: courses[0].id }),
+      });
+      return { status: response.status, body: await response.json() };
+    });
+    expect(duplicateCreate.status).toBe(409);
+    expect(duplicateCreate.body.code).toBe('BR01_DUPLICATE_TEAM_MEMBERSHIP');
     await page.screenshot({
       path: path.join(SCREENSHOT_DIR, '05_br01_duplicate_team_rejection.png'),
       fullPage: true,
@@ -122,5 +144,16 @@ test.describe('CoursePMS Sprint 1 — End-to-End Browser Verification (TEST-11 &
       path: path.join(SCREENSHOT_DIR, '06_br06_cross_team_forbidden_rejection.png'),
       fullPage: true,
     });
+  });
+
+  test('TEST-20: displays invalid-login errors and supports dismissing the alert', async ({ page }) => {
+    await page.goto('/');
+    await page.getByTestId('login-email').fill('unknown@example.test');
+    await page.getByTestId('login-password').fill('WrongPassword!');
+    await page.getByTestId('login-submit').click();
+
+    await expect(page.getByTestId('auth-error')).toContainText('INVALID_CREDENTIALS');
+    await page.getByRole('button', { name: 'Dismiss error' }).click();
+    await expect(page.getByTestId('auth-error')).toHaveCount(0);
   });
 });

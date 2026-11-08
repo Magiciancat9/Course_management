@@ -1,11 +1,12 @@
 import { describe, it, expect, beforeEach, afterAll, vi } from 'vitest';
 import request from 'supertest';
+import jwt from 'jsonwebtoken';
 import app from '../src/app';
 import prisma from '../src/prisma';
 import { seedDatabase } from '../prisma/seed';
 import { clearRevokedTokens } from '../src/middleware/auth';
 
-describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TEST-10)', () => {
+describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TEST-22)', () => {
   let seeded: Awaited<ReturnType<typeof seedDatabase>>;
 
   beforeEach(async () => {
@@ -162,6 +163,249 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
     expect(add4.body.code).toBe('BR02_MAX_TEAM_SIZE_EXCEEDED');
   });
 
+  it('TEST-15: enforces team capacity during concurrent member additions and persists the bounded roster', async () => {
+    const login = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
+    const token = login.body.token;
+
+    const addSecondMember = await request(app)
+      .post(`/api/teams/${seeded.teamAlpha.id}/members`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({ email: 'tatchakorn@mail.kmutt.ac.th' });
+    expect(addSecondMember.status).toBe(200);
+
+    const candidates = await Promise.all(
+      Array.from({ length: 8 }, (_, index) =>
+        prisma.user.create({
+          data: {
+            email: `capacity-candidate-${index}@example.test`,
+            fullName: `Capacity Candidate ${index}`,
+            passwordHash: 'unused-test-hash',
+          },
+        })
+      )
+    );
+
+    const responses = await Promise.all(
+      candidates.map((candidate) =>
+        request(app)
+          .post(`/api/teams/${seeded.teamAlpha.id}/members`)
+          .set('Authorization', `Bearer ${token}`)
+          .send({ email: candidate.email })
+      )
+    );
+
+    expect(responses.filter((response) => response.status === 200)).toHaveLength(1);
+    expect(responses.filter((response) => response.status === 409)).toHaveLength(7);
+    expect(
+      responses
+        .filter((response) => response.status === 409)
+        .every((response) => response.body.code === 'BR02_MAX_TEAM_SIZE_EXCEEDED')
+    ).toBe(true);
+
+    const persistedMembers = await prisma.teamMember.findMany({
+      where: { teamId: seeded.teamAlpha.id },
+    });
+    expect(persistedMembers).toHaveLength(3);
+    expect(persistedMembers.length).toBeLessThanOrEqual(seeded.course.maxTeamSize);
+  });
+
+  it('TEST-16: allows only one concurrent proposal submission and increments the persisted revision once', async () => {
+    const login = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
+    const token = login.body.token;
+
+    const responses = await Promise.all(
+      Array.from({ length: 2 }, () =>
+        request(app)
+          .post(`/api/teams/${seeded.teamAlpha.id}/proposal/submit`)
+          .set('Authorization', `Bearer ${token}`)
+          .send({})
+      )
+    );
+
+    expect(responses.filter((response) => response.status === 200)).toHaveLength(1);
+    expect(responses.filter((response) => response.status === 409)).toHaveLength(1);
+    expect(
+      responses.find((response) => response.status === 409)?.body.code
+    ).toBe('BR03_INVALID_STATUS_TRANSITION');
+
+    const persistedProposal = await prisma.projectProposal.findUnique({
+      where: { teamId: seeded.teamAlpha.id },
+    });
+    expect(persistedProposal).toMatchObject({
+      status: 'SUBMITTED',
+      revisionCount: 1,
+    });
+  });
+
+  it('TEST-17: prevents a concurrent stale draft save from overwriting submitted proposal data', async () => {
+    const login = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
+    const token = login.body.token;
+    const submittedTitle = 'Proposal submitted during concurrent draft save';
+
+    const [draftResponse, submitResponse] = await Promise.all([
+      request(app)
+        .put(`/api/teams/${seeded.teamAlpha.id}/proposal`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({ title: 'Stale concurrent draft title' }),
+      request(app)
+        .post(`/api/teams/${seeded.teamAlpha.id}/proposal/submit`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({ title: submittedTitle }),
+    ]);
+
+    expect(submitResponse.status).toBe(200);
+    expect([200, 409]).toContain(draftResponse.status);
+    if (draftResponse.status === 409) {
+      expect(draftResponse.body.code).toBe('BR03_INVALID_STATUS_TRANSITION');
+    }
+
+    const persistedProposal = await prisma.projectProposal.findUnique({
+      where: { teamId: seeded.teamAlpha.id },
+    });
+    expect(persistedProposal).toMatchObject({
+      status: 'SUBMITTED',
+      title: submittedTitle,
+      revisionCount: 1,
+    });
+  });
+
+  it('TEST-18: allows only one concurrent instructor decision for a submitted proposal', async () => {
+    const login = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'instructor@kmutt.ac.th', password: 'Password123!' });
+    const token = login.body.token;
+    const proposal = await prisma.projectProposal.findUniqueOrThrow({
+      where: { teamId: seeded.teamBeta.id },
+    });
+
+    const responses = await Promise.all([
+      request(app)
+        .post(`/api/proposals/${proposal.id}/review`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          decision: 'APPROVED',
+          reviewFeedback: 'Approved after concurrency test.',
+        }),
+      request(app)
+        .post(`/api/proposals/${proposal.id}/review`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          decision: 'REVISION_REQUESTED',
+          reviewFeedback: 'Please revise after concurrency test.',
+        }),
+    ]);
+
+    const successfulResponses = responses.filter((response) => response.status === 200);
+    const rejectedResponses = responses.filter((response) => response.status === 409);
+    expect(successfulResponses).toHaveLength(1);
+    expect(rejectedResponses).toHaveLength(1);
+    expect(rejectedResponses[0].body.code).toBe('BR03_INVALID_STATUS_TRANSITION');
+
+    const persistedProposal = await prisma.projectProposal.findUniqueOrThrow({
+      where: { id: proposal.id },
+    });
+    expect(persistedProposal.status).toBe(successfulResponses[0].body.proposal.status);
+    expect(persistedProposal.reviewFeedback).toBe(
+      successfulResponses[0].body.proposal.reviewFeedback
+    );
+  });
+
+  it('TEST-19: rejects unknown emails with the same credential error and rejects malformed or expired tokens', async () => {
+    const unknownEmail = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'unknown@example.test', password: 'Password123!' });
+    expect(unknownEmail.status).toBe(401);
+    expect(unknownEmail.body.code).toBe('INVALID_CREDENTIALS');
+    expect(unknownEmail.body.token).toBeUndefined();
+    expect(unknownEmail.body.passwordHash).toBeUndefined();
+
+    const malformedToken = await request(app)
+      .get('/api/teams')
+      .set('Authorization', 'Bearer malformed.token.value');
+    expect(malformedToken.status).toBe(401);
+
+    const expiredToken = jwt.sign(
+      { userId: seeded.pawarit.id, email: seeded.pawarit.email, role: 'STUDENT' },
+      process.env.JWT_SECRET!,
+      { expiresIn: -1 }
+    );
+    const expiredResponse = await request(app)
+      .get('/api/teams')
+      .set('Authorization', `Bearer ${expiredToken}`);
+    expect(expiredResponse.status).toBe(401);
+  });
+
+  it('TEST-21: preserves one-team-per-course when the same student is added to different teams concurrently', async () => {
+    const candidate = await prisma.user.create({
+      data: {
+        email: 'cross-team-race@example.test',
+        fullName: 'Cross Team Race Candidate',
+        passwordHash: 'unused-test-hash',
+      },
+    });
+    const [pawaritLogin, somchaiLogin] = await Promise.all([
+      request(app)
+        .post('/api/auth/login')
+        .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' }),
+      request(app)
+        .post('/api/auth/login')
+        .send({ email: 'somchai@mail.kmutt.ac.th', password: 'Password123!' }),
+    ]);
+
+    const responses = await Promise.all([
+      request(app)
+        .post(`/api/teams/${seeded.teamAlpha.id}/members`)
+        .set('Authorization', `Bearer ${pawaritLogin.body.token}`)
+        .send({ email: candidate.email }),
+      request(app)
+        .post(`/api/teams/${seeded.teamBeta.id}/members`)
+        .set('Authorization', `Bearer ${somchaiLogin.body.token}`)
+        .send({ email: candidate.email }),
+    ]);
+
+    expect(responses.filter((response) => response.status === 200)).toHaveLength(1);
+    const conflict = responses.find((response) => response.status === 409);
+    expect(conflict?.body.code).toBe('BR01_DUPLICATE_TEAM_MEMBERSHIP');
+    expect(
+      await prisma.teamMember.count({
+        where: { userId: candidate.id, courseId: seeded.course.id },
+      })
+    ).toBe(1);
+  });
+
+  it('TEST-22: returns a domain conflict for concurrent team creation by one student', async () => {
+    const login = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'suda@mail.kmutt.ac.th', password: 'Password123!' });
+    const token = login.body.token;
+
+    const responses = await Promise.all([
+      request(app)
+        .post('/api/teams')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ name: 'Concurrent Team One', courseId: seeded.course.id }),
+      request(app)
+        .post('/api/teams')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ name: 'Concurrent Team Two', courseId: seeded.course.id }),
+    ]);
+
+    expect(responses.filter((response) => response.status === 201)).toHaveLength(1);
+    const conflict = responses.find((response) => response.status === 409);
+    expect(conflict?.body.code).toBe('BR01_DUPLICATE_TEAM_MEMBERSHIP');
+    expect(
+      await prisma.teamMember.count({
+        where: { userId: seeded.suda.id, courseId: seeded.course.id },
+      })
+    ).toBe(1);
+  });
+
   it('TEST-07 & TEST-08 / AC-07 & AC-08: validates proposal completeness (BR-04), saves and submits proposal, and blocks edits while SUBMITTED (BR-03) (workflow)', async () => {
     const pawaritLogin = await request(app)
       .post('/api/auth/login')
@@ -272,6 +516,9 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
       .post('/api/auth/login')
       .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
     const pawaritToken = pawaritLogin.body.token;
+    const teamBetaProposal = await prisma.projectProposal.findUniqueOrThrow({
+      where: { teamId: seeded.teamBeta.id },
+    });
 
     // 1. Student in Team Alpha tries to view Team Beta's private proposal -> 403 Forbidden
     const crossTeamGet = await request(app)
@@ -288,11 +535,15 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
       .send({ title: 'Tampered Proposal Title' });
     expect(crossTeamPut.status).toBe(403);
     expect(crossTeamPut.body.code).toBe('BR06_FORBIDDEN_TEAM_ACCESS');
+    const proposalAfterForbiddenPut = await prisma.projectProposal.findUniqueOrThrow({
+      where: { id: teamBetaProposal.id },
+    });
+    expect(proposalAfterForbiddenPut).toMatchObject({
+      title: teamBetaProposal.title,
+      status: teamBetaProposal.status,
+    });
 
     // 3. Student tries to call Instructor-only review endpoint -> 403 Forbidden
-    const teamBetaProposal = await prisma.projectProposal.findUnique({
-      where: { teamId: seeded.teamBeta.id },
-    });
     const studentReviewAttempt = await request(app)
       .post(`/api/proposals/${teamBetaProposal!.id}/review`)
       .set('Authorization', `Bearer ${pawaritToken}`)
