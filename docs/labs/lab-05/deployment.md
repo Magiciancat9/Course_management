@@ -117,6 +117,19 @@ npm --prefix client run dev
 
 The repository's production image uses the root `Dockerfile` and `.dockerignore`; local Compose builds and runs the same image against the external `db` service (verified in Lab 5 Issue #21).
 
+## Pull-request CI
+
+`.github/workflows/ci-docker.yml` runs for every pull request targeting `lab5-staging` or `main`. Its stable required-check job name is **`test-and-docker`**. The workflow uses Node.js 20 and a temporary PostgreSQL 16 service with CI-only credentials, then installs from the three committed npm lockfiles and runs, in order:
+
+1. `npm --prefix server run prisma:migrate` (the repository alias for Prisma `db push`) against the disposable CI database.
+2. `npm run test:server` (backend integration and unit tests).
+3. `npm run test:client` (frontend tests).
+4. `npm run test:e2e` after installing Playwright Chromium.
+5. `npm run build`.
+6. `docker build --tag course-pms:ci .`.
+
+Any failed command fails the required job. CI does not seed or deploy to a production database, does not run on `push`, and does not receive GCP credentials or production secrets. Database credentials and the JWT signing key in the workflow are throwaway test-only values. E2E seeding uses the repository's non-production fixture password; no demo password secret is supplied. The workflow file and a passing normal PR run are the evidence for C-01; the required-merge setting and deliberately failing PR for C-02 are tracked separately in Issue #25.
+
 ## GCP resource inventory
 
 | Resource | Name / value | Status |
