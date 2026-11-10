@@ -5,31 +5,49 @@ set -euo pipefail
 # CoursePMS — Idempotent Google Cloud Run Provisioning & First Deployment Script
 # ==============================================================================
 # Usage:
-#   ./deploy/deploy.sh [--demo]
+#   REGION=<confirmed-region> ./deploy/deploy.sh [--demo]
 #
-# Environment Variables (Optional):
-#   PROJECT_ID   GCP Project ID (defaults to active gcloud config project)
-#   REGION       GCP Region (default: asia-southeast1)
-#   DRY_RUN      Set DRY_RUN=1 to print all gcloud commands without executing
+# Environment Variables:
+#   REGION       Required. Team-confirmed GCP Region (no implicit default).
+#   PROJECT_ID   Optional. GCP Project ID (defaults to active gcloud project,
+#                or example-gcp-project when DRY_RUN=1).
+#   DRY_RUN      Optional. Set DRY_RUN=1 to print all gcloud commands without
+#                executing any real GCP calls.
 #
-# WHAT THIS SCRIPT DOES (human-reviewed initial setup; idempotent on re-run):
+# OWNER & BRANCH POLICY:
+#   - Must be run from an accepted commit on `main` (after merging reviewed
+#     changes from `lab5-staging` -> `main`).
+#   - Initial provisioning and IAM bindings MUST be executed by the GCP Project
+#     Owner (`martinvadre`), because Project Editors cannot modify project IAM
+#     policies.
+#   - Service accounts and project IAM bindings are configured BEFORE creating
+#     Artifact Registry or billable Cloud SQL resources so missing IAM
+#     permissions fail fast before any billable resource is provisioned.
+#
+# WHAT THIS SCRIPT DOES (idempotent on re-run):
 #   1. Enable required GCP APIs
-#   2. Create Artifact Registry Docker repository (course-pms)
-#   3. Create Cloud SQL for PostgreSQL 16 instance (course-pms-pg, db-f1-micro)
-#   4. Create PostgreSQL database (course_pms)
-#   5. Create dedicated runtime service account (course-pms-runner) + cloudsql.client
-#   6. Create DB user (coursepms) & store DATABASE_URL in Secret Manager
-#   7. Create JWT_SECRET in Secret Manager
-#   8. Optionally create DEMO_USER_PASSWORD in Secret Manager when --demo is passed
-#      and grant per-secret secretAccessor bindings (never project-wide)
+#   2. Create separate runtime (`course-pms-runner`) and migration
+#      (`course-pms-migrator`) service accounts + `roles/cloudsql.client`
+#      (executed before billable resource creation)
+#   3. Create Artifact Registry Docker repository (`course-pms`)
+#   4. Create Cloud SQL for PostgreSQL 16 instance (`course-pms-pg`, db-f1-micro)
+#   5. Create PostgreSQL database (`course_pms`)
+#   6. Create DB user (`coursepms`) & store `DATABASE_URL` in Secret Manager
+#   7. Create `JWT_SECRET` in Secret Manager
+#   8. Optionally create `DEMO_USER_PASSWORD` in Secret Manager when `--demo`
+#      is passed, and grant least-privilege per-secret access:
+#        - `course-pms-runner` (public service): `DATABASE_URL`, `JWT_SECRET`
+#        - `course-pms-migrator` (migration job): `DATABASE_URL` (and
+#          `DEMO_USER_PASSWORD` only when `--demo` is passed)
 #   9. Build & push unified CoursePMS image via Cloud Build
-#  10. Deploy & execute Cloud Run migration job (course-pms-migrate) BEFORE
-#      updating the service; abort if migration/seed fails
-#  11. Deploy public Cloud Run service (course-pms) on port 8080 with min-instances=0
+#  10. Deploy & execute Cloud Run migration job (`course-pms-migrate`) as
+#      `course-pms-migrator` BEFORE updating the service; abort if job fails
+#  11. Deploy public Cloud Run service (`course-pms`) as `course-pms-runner`
+#      on port 8080 with min-instances=0
 # ==============================================================================
 
 DRY_RUN="${DRY_RUN:-0}"
-REGION="${REGION:-asia-southeast1}"
+REGION="${REGION:-}"
 SEED_DEMO_DATA="false"
 
 for arg in "$@"; do
@@ -39,11 +57,18 @@ for arg in "$@"; do
       ;;
     *)
       echo "Unknown argument: $arg" >&2
-      echo "Usage: $0 [--demo]" >&2
+      echo "Usage: REGION=<confirmed-region> $0 [--demo]" >&2
       exit 1
       ;;
   esac
 done
+
+if [ -z "$REGION" ]; then
+  echo "Error: REGION is required and has no implicit default." >&2
+  echo "Confirm the team's GCP region first, then run:" >&2
+  echo "  REGION=<confirmed-region> $0 [--demo]" >&2
+  exit 1
+fi
 
 run_cmd() {
   local arg
@@ -84,8 +109,13 @@ DB_NAME="${DB_NAME:-course_pms}"
 DB_USER="${DB_USER:-coursepms}"
 SERVICE_NAME="${SERVICE_NAME:-course-pms}"
 MIGRATE_JOB_NAME="${MIGRATE_JOB_NAME:-course-pms-migrate}"
+
+# Separate identities for public web service vs. migration/seed job
 SA_NAME="${SA_NAME:-course-pms-runner}"
 SA_EMAIL="${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
+MIGRATE_SA_NAME="${MIGRATE_SA_NAME:-course-pms-migrator}"
+MIGRATE_SA_EMAIL="${MIGRATE_SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
+
 SQL_CONN_NAME="${PROJECT_ID}:${REGION}:${SQL_INSTANCE}"
 IMAGE_URI="${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${SERVICE_NAME}:latest"
 
@@ -95,11 +125,13 @@ SECRET_JWT="${SECRET_JWT:-course-pms-jwt-secret}"
 SECRET_DEMO_PASS="${SECRET_DEMO_PASS:-course-pms-demo-password}"
 
 echo "=================================================================="
-echo "CoursePMS Cloud Run Provisioning & Deployment"
-echo "Project : ${PROJECT_ID}"
-echo "Region  : ${REGION}"
-echo "Demo    : ${SEED_DEMO_DATA}"
-echo "Dry Run : ${DRY_RUN}"
+echo "CoursePMS Cloud Run Provisioning & Deployment (Production / main)"
+echo "Project      : ${PROJECT_ID}"
+echo "Region       : ${REGION}"
+echo "Service SA   : ${SA_EMAIL}"
+echo "Migration SA : ${MIGRATE_SA_EMAIL}"
+echo "Demo Seed    : ${SEED_DEMO_DATA}"
+echo "Dry Run      : ${DRY_RUN}"
 echo "=================================================================="
 
 # ==============================================================================
@@ -115,7 +147,38 @@ run_cmd gcloud services enable \
   --project "$PROJECT_ID"
 
 # ==============================================================================
-# 2. Create Artifact Registry repository (idempotent)
+# 2. Create Dedicated Service Accounts & Project IAM Bindings FIRST
+#    Runs BEFORE creating Artifact Registry or billable Cloud SQL resources so
+#    that missing Owner/IAM permissions fail fast without incurring charges.
+# ==============================================================================
+if [ "$DRY_RUN" = "1" ]; then
+  run_cmd gcloud iam service-accounts describe "$SA_EMAIL" --project "$PROJECT_ID"
+  run_cmd gcloud iam service-accounts create "$SA_NAME" --display-name="CoursePMS Cloud Run Public Service Account" --project "$PROJECT_ID"
+  run_cmd gcloud iam service-accounts describe "$MIGRATE_SA_EMAIL" --project "$PROJECT_ID"
+  run_cmd gcloud iam service-accounts create "$MIGRATE_SA_NAME" --display-name="CoursePMS Cloud Run Migration Job Service Account" --project "$PROJECT_ID"
+else
+  if ! gcloud iam service-accounts describe "$SA_EMAIL" --project "$PROJECT_ID" >/dev/null 2>&1; then
+    run_cmd gcloud iam service-accounts create "$SA_NAME" \
+      --display-name="CoursePMS Cloud Run Public Service Account" \
+      --project "$PROJECT_ID"
+  fi
+  if ! gcloud iam service-accounts describe "$MIGRATE_SA_EMAIL" --project "$PROJECT_ID" >/dev/null 2>&1; then
+    run_cmd gcloud iam service-accounts create "$MIGRATE_SA_NAME" \
+      --display-name="CoursePMS Cloud Run Migration Job Service Account" \
+      --project "$PROJECT_ID"
+  fi
+fi
+
+for sa_email in "$SA_EMAIL" "$MIGRATE_SA_EMAIL"; do
+  run_cmd gcloud projects add-iam-policy-binding "$PROJECT_ID" \
+    --member="serviceAccount:${sa_email}" \
+    --role="roles/cloudsql.client" \
+    --condition=None \
+    --quiet
+done
+
+# ==============================================================================
+# 3. Create Artifact Registry repository (idempotent)
 # ==============================================================================
 if [ "$DRY_RUN" = "1" ]; then
   run_cmd gcloud artifacts repositories describe "$REPO_NAME" --location "$REGION" --project "$PROJECT_ID"
@@ -131,7 +194,7 @@ else
 fi
 
 # ==============================================================================
-# 3. Create Cloud SQL for PostgreSQL 16 instance (idempotent, db-f1-micro)
+# 4. Create Cloud SQL for PostgreSQL 16 instance (idempotent, db-f1-micro)
 # ==============================================================================
 if [ "$DRY_RUN" = "1" ]; then
   run_cmd gcloud sql instances describe "$SQL_INSTANCE" --project "$PROJECT_ID"
@@ -151,7 +214,7 @@ else
 fi
 
 # ==============================================================================
-# 4. Create Database (idempotent)
+# 5. Create Database (idempotent)
 # ==============================================================================
 if [ "$DRY_RUN" = "1" ]; then
   run_cmd gcloud sql databases describe "$DB_NAME" --instance="$SQL_INSTANCE" --project "$PROJECT_ID"
@@ -161,26 +224,6 @@ else
     run_cmd gcloud sql databases create "$DB_NAME" --instance="$SQL_INSTANCE" --project "$PROJECT_ID"
   fi
 fi
-
-# ==============================================================================
-# 5. Create Dedicated Runtime Service Account & Cloud SQL Client role
-# ==============================================================================
-if [ "$DRY_RUN" = "1" ]; then
-  run_cmd gcloud iam service-accounts describe "$SA_EMAIL" --project "$PROJECT_ID"
-  run_cmd gcloud iam service-accounts create "$SA_NAME" --display-name="CoursePMS Cloud Run Service Account" --project "$PROJECT_ID"
-else
-  if ! gcloud iam service-accounts describe "$SA_EMAIL" --project "$PROJECT_ID" >/dev/null 2>&1; then
-    run_cmd gcloud iam service-accounts create "$SA_NAME" \
-      --display-name="CoursePMS Cloud Run Service Account" \
-      --project "$PROJECT_ID"
-  fi
-fi
-
-run_cmd gcloud projects add-iam-policy-binding "$PROJECT_ID" \
-  --member="serviceAccount:${SA_EMAIL}" \
-  --role="roles/cloudsql.client" \
-  --condition=None \
-  --quiet
 
 # ==============================================================================
 # 6. Create DB User & Store DATABASE_URL in Secret Manager (idempotent)
@@ -222,7 +265,7 @@ fi
 
 # ==============================================================================
 # 8. Optional DEMO_USER_PASSWORD in Secret Manager when --demo is passed
-#    Attached ONLY to the migration/seed job, never to the public web service.
+#    Granted ONLY to `course-pms-migrator`, never to `course-pms-runner`.
 # ==============================================================================
 JOB_SECRETS="DATABASE_URL=${SECRET_DB_URL}:latest"
 JOB_CMD="npm --prefix server run prisma:migrate:deploy"
@@ -242,14 +285,22 @@ if [ "$SEED_DEMO_DATA" = "true" ]; then
   JOB_CMD="npm --prefix server run prisma:migrate:deploy && npm --prefix server run prisma:seed"
 fi
 
-# Grant secretAccessor per-secret (never project-wide)
-RUNTIME_SECRETS=("$SECRET_DB_URL" "$SECRET_JWT")
-if [ "$SEED_DEMO_DATA" = "true" ]; then
-  RUNTIME_SECRETS+=("$SECRET_DEMO_PASS")
-fi
-for secret in "${RUNTIME_SECRETS[@]}"; do
+# Public service identity (`course-pms-runner`): only DATABASE_URL and JWT_SECRET
+for secret in "$SECRET_DB_URL" "$SECRET_JWT"; do
   run_cmd gcloud secrets add-iam-policy-binding "$secret" \
     --member="serviceAccount:${SA_EMAIL}" \
+    --role="roles/secretmanager.secretAccessor" \
+    --project "$PROJECT_ID" --quiet
+done
+
+# Migration job identity (`course-pms-migrator`): DATABASE_URL (+ DEMO_USER_PASSWORD only on --demo)
+MIGRATE_SECRETS=("$SECRET_DB_URL")
+if [ "$SEED_DEMO_DATA" = "true" ]; then
+  MIGRATE_SECRETS+=("$SECRET_DEMO_PASS")
+fi
+for secret in "${MIGRATE_SECRETS[@]}"; do
+  run_cmd gcloud secrets add-iam-policy-binding "$secret" \
+    --member="serviceAccount:${MIGRATE_SA_EMAIL}" \
     --role="roles/secretmanager.secretAccessor" \
     --project "$PROJECT_ID" --quiet
 done
@@ -263,11 +314,12 @@ run_cmd gcloud builds submit \
 
 # ==============================================================================
 # 10. Create/Update & Execute Cloud Run Job for Additive Migration (+ Optional Seed)
+#     Runs as dedicated `course-pms-migrator` service account.
 # ==============================================================================
 run_cmd gcloud run jobs deploy "$MIGRATE_JOB_NAME" \
   --image "$IMAGE_URI" \
   --region "$REGION" \
-  --service-account "$SA_EMAIL" \
+  --service-account "$MIGRATE_SA_EMAIL" \
   --set-cloudsql-instances "$SQL_CONN_NAME" \
   --set-secrets "$JOB_SECRETS" \
   --set-env-vars "NODE_ENV=production,TZ=Asia/Bangkok" \
@@ -289,6 +341,7 @@ fi
 
 # ==============================================================================
 # 11. Deploy Public Cloud Run Service (port 8080, min-instances 0)
+#     Runs as dedicated `course-pms-runner` service account.
 # ==============================================================================
 run_cmd gcloud run deploy "$SERVICE_NAME" \
   --image "$IMAGE_URI" \
@@ -318,6 +371,8 @@ printf '%s\n' "CoursePMS Deployment Completed!"
 printf '%s\n' "Service URL    : ${SERVICE_URL}"
 printf '%s\n' "Health Check   : ${SERVICE_URL}/api/health"
 printf '%s\n' "Readiness Check: ${SERVICE_URL}/api/ready"
+printf '%s\n' "Service SA     : ${SA_EMAIL}"
+printf '%s\n' "Migration SA   : ${MIGRATE_SA_EMAIL}"
 printf '%s\n' "JWT Secret     : Stored in Secret Manager: ${SECRET_JWT} (not printed)."
 if [ "$SEED_DEMO_DATA" = "true" ]; then
   printf '%s\n' "Demo Accounts  : instructor@kmutt.ac.th, pawarit@mail.kmutt.ac.th, tatchakorn@mail.kmutt.ac.th"
