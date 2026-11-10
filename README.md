@@ -28,6 +28,7 @@
 | **Part C** | System-Level SDS | [`docs/system-sds.md`](docs/system-sds.md) |
 | **Part D** | Three-Sprint Plan | [`docs/sprints/plan.md`](docs/sprints/plan.md) |
 | **Part E** | Sprint 1 Engineering Contracts & STS/DoD | [`docs/sprints/sprint-1/f01-auth-and-roles.md`](docs/sprints/sprint-1/f01-auth-and-roles.md), [`docs/sprints/sprint-1/f02-team-and-proposal-workflow.md`](docs/sprints/sprint-1/f02-team-and-proposal-workflow.md), [`docs/sprints/sprint-1/sts-and-dod.md`](docs/sprints/sprint-1/sts-and-dod.md) |
+| **Lab 5** | Cloud deployment configuration and GCP project record | [`docs/labs/lab-05/deployment.md`](docs/labs/lab-05/deployment.md), [`docs/labs/lab-05/gcp-project.md`](docs/labs/lab-05/gcp-project.md) |
 
 ---
 
@@ -38,25 +39,27 @@
 - **PostgreSQL** `>= 15.x` running locally on port `5432`
 
 ### 3.2. Environment Configuration
-Copy `.env.example` to `server/.env`:
+Copy `.env.example` to `.env` for Docker Compose and to `server/.env` for native server commands. Replace each placeholder locally; never commit either `.env` file:
 ```bash
+cp .env.example .env
 cp server/.env.example server/.env
 ```
-Default local `server/.env` values:
+Set these local development values in `server/.env` (and the Compose-specific values in the root `.env`):
 ```env
 PORT=3000
 NODE_ENV=development
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/course_pms?schema=public"
 CORS_ORIGIN="http://localhost:5173"
 JWT_SECRET="<generated value>"
-DEMO_USER_PASSWORD="Password123!"
+DEMO_USER_PASSWORD="<choose a local-only demo password>"
+POSTGRES_PASSWORD="<choose a local-only PostgreSQL password>"
 ```
 
 Generate a signing secret with:
 ```bash
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
-Set `JWT_SECRET` to the generated value in `server/.env`.
+Set `JWT_SECRET` to the generated value in `server/.env`. `POSTGRES_PASSWORD` is only used by local Docker Compose. In production, store `DATABASE_URL` and `JWT_SECRET` in Secret Manager. `DEMO_USER_PASSWORD` is only for the separate seed job; do not expose it to the web service.
 
 ### 3.3. Install, Apply Schema, and Seed Database
 ```bash
@@ -68,13 +71,15 @@ npm --prefix client install
 # 2. Apply the Sprint 1 schema with prisma db push and generate Prisma Client
 npm --prefix server run prisma:migrate
 
-# 3. Seed reproducible synthetic demo data
+# 3. Seed reproducible synthetic demo data (development/test databases only)
 npm --prefix server run prisma:seed
 ```
 The Sprint 1 `prisma:migrate` script runs `prisma db push` and does not maintain a migration history. Real Prisma migrations are planned for Sprint 2.
 
+The local/test seed resets its target database and must only be run against a disposable database. In `NODE_ENV=production`, the seed requires `DEMO_USER_PASSWORD` and only creates missing demo users/data; it does not delete or overwrite existing records. Supply the password to a one-time seed job from Secret Manager, never from committed source or the public web service. Do not run `prisma db push` against production; the production schema/migration procedure must be reviewed and documented before deployment.
+
 ### 3.4. Seeded Local Test Accounts (Synthetic Demo Data)
-All seeded local demo accounts use the password defined in `DEMO_USER_PASSWORD` (default: `Password123!`):
+All seeded local demo accounts use the password you set in the local `DEMO_USER_PASSWORD` variable. The placeholder in `.env.example` is not a usable password:
 
 | Email | Role | Student ID | Initial Seed State |
 | :--- | :--- | :--- | :--- |
