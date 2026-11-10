@@ -56,6 +56,16 @@ app.get('/api/health', (_req, res) => {
   });
 });
 
+app.get('/api/ready', async (_req, res) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    res.status(200).json({ status: 'ready', db: 'connected' });
+  } catch (error) {
+    console.error('Readiness check failed:', error);
+    res.status(503).json({ status: 'not_ready', db: 'disconnected' });
+  }
+});
+
 // ============================================================================
 // Feature F-01: Authentication, Session & Role Identity
 // ============================================================================
