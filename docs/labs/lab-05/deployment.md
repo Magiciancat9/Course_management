@@ -84,14 +84,16 @@ curl -i http://localhost:3000/api/ready
 
 ### Schema and seed safety
 
-The current `npm --prefix server run prisma:migrate` script invokes `prisma db push`; Sprint 1 has no Prisma migration history. Run it only against a disposable local development/test database:
+For local disposable development/test databases, `npm --prefix server run prisma:migrate` invokes `prisma db push`:
 
 ```powershell
 npm --prefix server run prisma:migrate
 npm --prefix server run prisma:seed
 ```
 
-In non-production modes the seed resets its target database and recreates the synthetic fixtures. **Never point it at a developer database with wanted data or at Cloud SQL.** In production mode, the seed requires `DEMO_USER_PASSWORD`, creates only missing demo users/course/teams/memberships/proposals, and does not delete or overwrite existing records. Existing account passwords are not changed by rerunning the production seed. Supply the password only to a reviewed, one-time seed job from Secret Manager. The production database schema/migration procedure must be separately reviewed before the first deployment; do not use `prisma db push` against production.
+For production and Cloud SQL, the repository includes a committed baseline Prisma migration (`server/prisma/migrations/20261110000000_init/migration.sql`) and the additive migration script `npm --prefix server run prisma:migrate:deploy` (`prisma migrate deploy`). The Cloud Run migration job (`course-pms-migrate`) runs `npm --prefix server run prisma:migrate:deploy` before the Cloud Run service is updated, and aborts the deployment if migration fails. Never run `prisma db push` against Cloud SQL or a database with data you need to keep.
+
+In non-production modes the seed resets its target database and recreates the synthetic fixtures. **Never point non-production seeding at a developer database with wanted data or at Cloud SQL.** In production mode (`NODE_ENV=production`), `npm --prefix server run prisma:seed` requires `DEMO_USER_PASSWORD`, creates only missing demo users/course/teams/memberships/proposals, and does not delete or overwrite existing records. Existing account passwords are not changed by rerunning the production seed. `deploy/deploy.sh --demo` attaches `DEMO_USER_PASSWORD` from Secret Manager (`course-pms-demo-password`) **only** to the `course-pms-migrate` Cloud Run job and never passes it to the public `course-pms` web service.
 
 Integration and Playwright tests can reset the database through the seed. Always set `DATABASE_URL` to a separate disposable test database before running them. Never run these tests against production or data you need to keep.
 
@@ -132,19 +134,78 @@ Any failed command fails the required job. CI does not seed or deploy to a produ
 
 ## GCP resource inventory
 
-| Resource | Name / value | Status |
+| Resource | Planned default / placeholder | Status |
 |---|---|---|
-| Project | `cpe334-kingnine` / `859617270560` | Reported by team; verify in Console |
+| Project | `cpe334-kingnine` / `859617270560` | Reported by team; verify in Console before provisioning |
 | Project owner | Martin Wongdaeng (`martinvadre`) | Reported by team; verify in IAM |
 | Project Editor | Tatchakorn Thamnimitr (`Magiciancat9`) | Reported by team; verify in IAM |
-| Region | **TBD** | Team must agree before resource creation |
-| Cloud Run service | **TBD** | Not created |
-| Cloud SQL instance/database | **TBD** | Not created |
-| Artifact Registry repository | **TBD** | Not created |
-| Secret Manager secret names | **TBD** | Not created; never record secret values here |
-| GitHub OIDC/WIF pool, provider, deploy service account | **TBD** | Configure later with least privilege; do not create or commit a JSON key |
+| Region | `<REGION>` (script default: `asia-southeast1`) | Team must confirm before running provisioning |
+| Cloud Run service | `course-pms` (container port `8080`, `--min-instances 0`, `--max-instances 3`) | Planned in `deploy/deploy.sh`; not yet provisioned |
+| Cloud Run migration job | `course-pms-migrate` (`prisma migrate deploy` + optional `--demo` seed) | Planned in `deploy/deploy.sh`; not yet provisioned |
+| Cloud SQL instance / database / user | `course-pms-pg` (`POSTGRES_16`, `enterprise`, `db-f1-micro`, `10GB SSD`) / DB `course_pms` / user `coursepms` | Planned in `deploy/deploy.sh`; not yet provisioned |
+| Artifact Registry repository | `course-pms` (Docker format) | Planned in `deploy/deploy.sh`; not yet provisioned |
+| Runtime service account | `course-pms-runner@cpe334-kingnine.iam.gserviceaccount.com` | Planned in `deploy/deploy.sh`; least-privilege runtime SA |
+| Secret Manager secret names | `course-pms-database-url`, `course-pms-jwt-secret`, `course-pms-demo-password` (when `--demo` is used) | Planned in `deploy/deploy.sh`; never record secret values here |
+| GitHub OIDC/WIF pool, provider, deploy service account | **TBD** (Issue #25 / #26) | Configure later with least privilege; do not create or commit a JSON key |
 
-Set an alerts-only budget before creating billable resources. Cloud Run minimum instances should be zero when idle; Cloud SQL can continue to incur charges while it exists. Confirm cost and billing status with the project owner before deployment.
+## First GCP provisioning and deployment (`Lab5-05` / Issue #23)
+
+### 1. Human pre-deployment checklist (Console & gcloud)
+
+Before running any provisioning command, the human operators (**Pawarit** and **Tatchakorn**) must verify:
+
+- [ ] Active account and project in Cloud Console and CLI (`gcloud config get-value account` and `gcloud config get-value project` match `cpe334-kingnine`).
+- [ ] Free Trial / billing status is active on `cpe334-kingnine` (do **not** pay a prepayment or click **Upgrade**).
+- [ ] An **alerts-only budget** is configured and saved as redacted evidence for Issue #19.
+- [ ] Both teammates' IAM roles are verified (`martinvadre` Owner, `Magiciancat9` Editor) and the target `<REGION>` (e.g., `asia-southeast1`) is agreed.
+
+### 2. Offline stub test and dry-run preview (safe, no GCP calls)
+
+From the repository root in bash / Git Bash / Cloud Shell:
+
+```bash
+# Run offline regression stub tests (verifies first_run, rerun, partial, job-fail, demo, secret redaction, and dry-run)
+bash deploy/tests/test_deploy_stub.sh
+
+# Preview every gcloud command without executing anything against GCP
+DRY_RUN=1 PROJECT_ID=cpe334-kingnine REGION=asia-southeast1 bash deploy/deploy.sh --demo
+```
+
+### 3. Human-reviewed first deployment command
+
+After both teammates inspect the dry-run output and confirm the project, budget alert, and region, a human operator executes from the repository root:
+
+```bash
+PROJECT_ID=cpe334-kingnine REGION=asia-southeast1 bash deploy/deploy.sh --demo
+```
+
+What `deploy/deploy.sh` guarantees:
+- **Idempotent resource & credential handling:** Existing Artifact Registry repositories, Cloud SQL instances/databases, service accounts, and Secret Manager secrets are reused without overwriting existing passwords or keys on re-run.
+- **Least-privilege IAM:** Grants `roles/cloudsql.client` to `course-pms-runner` and grants `roles/secretmanager.secretAccessor` **per individual secret** (`course-pms-database-url`, `course-pms-jwt-secret`, and `course-pms-demo-password`), never project-wide.
+- **Migration gate before service update:** Executes the `course-pms-migrate` Cloud Run job (`npm --prefix server run prisma:migrate:deploy && npm --prefix server run prisma:seed`) with `--wait` and aborts before `gcloud run deploy` if the migration/seed job fails.
+- **Secret isolation & redaction:** Database passwords and generated secrets are piped via stdin to Secret Manager, `--password=<REDACTED>` is masked in command logs, and `DEMO_USER_PASSWORD` is mounted only on `course-pms-migrate`, never on the public `course-pms` service.
+- **Cost controls:** Deploys Cloud Run with `--min-instances 0 --max-instances 3 --memory 512Mi --cpu 1` (scales to zero when idle) and Cloud SQL on the smallest `db-f1-micro` tier (`10GB SSD`). Note that Cloud SQL continues to incur charges while the instance exists; coordinate with your teammate before pausing or stopping any cloud resource needed for grading.
+
+### 4. End-to-end public URL verification checklist (`C-04` / R-03)
+
+After `deploy/deploy.sh` finishes and prints `SERVICE_URL`:
+
+1. **Health & database readiness checks:**
+   ```bash
+   curl -i "${SERVICE_URL}/api/health"
+   curl -i "${SERVICE_URL}/api/ready"
+   ```
+   Confirm both return `HTTP/2 200` and `/api/ready` returns `{"status":"ready","db":"connected"}`.
+2. **Retrieve demo password safely (human terminal only — never paste into chat, Git, or Issues):**
+   ```bash
+   gcloud secrets versions access latest --secret=course-pms-demo-password --project=cpe334-kingnine
+   ```
+3. **Browser end-to-end journey on `${SERVICE_URL}` (`C-04`):**
+   - Open `${SERVICE_URL}` (verify no `localhost` calls in DevTools Network).
+   - Sign in as Student (`pawarit@mail.kmutt.ac.th`) and Instructor (`instructor@kmutt.ac.th`).
+   - Complete the main CoursePMS Sprint 1 workflow: team roster management (`F-02`), proposal draft/submission (`F-03`), and Instructor review (`APPROVED` / `REVISION_REQUESTED`).
+   - Verify at least one expected rule rejection / access restriction (e.g., duplicate team membership `409 BR01_DUPLICATE_TEAM_MEMBERSHIP` or cross-team private proposal access `403 BR06_FORBIDDEN_TEAM_ACCESS`).
+   - Record the actual Cloud Run URL, active revision name, commit SHA, and redacted screenshots in Issue #23 and this document.
 
 ## Release procedure
 
