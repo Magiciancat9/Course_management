@@ -27,6 +27,8 @@ The committed `.env.example` files contain placeholders only. Copy them locally 
 | `JWT_SECRET` | Signs and verifies authentication tokens. Production fails to start if missing or left at the example placeholder. | **Yes** | Generate a unique local value for development; production from Secret Manager |
 | `DEMO_USER_PASSWORD` | Password used only when creating synthetic demo accounts with the Prisma seed. Production seeding requires it; existing users and data are preserved. | **Yes** | Local-only value in ignored `.env`; for a production seed job, inject from Secret Manager for that job only. Do not pass it to the public web service |
 | `POSTGRES_PASSWORD` | Password for the local PostgreSQL service in Docker Compose. Not read by the application server. | **Yes** | Root ignored `.env` for local Compose only; use a different credential for Cloud SQL |
+| `POSTGRES_PORT` | Optional host port override for the local Docker Compose PostgreSQL service (defaults to `5432`). | No | Local shell/`.env` override when host port `5432` is already in use |
+| `APP_PORT` | Optional host port override for the local Docker Compose application service (defaults to `3000`, mapped to container port `8080`). | No | Local shell/`.env` override when host port `3000` is already in use |
 
 Use unique, strong secrets. Never reuse a local demo password as a Cloud SQL password or JWT signing key. Do not print secret values in CI logs, deployment output, Issues, screenshots, or AI chats.
 
@@ -46,13 +48,39 @@ npm run build
 For local Docker Compose, ensure the root `.env` has URL-safe values for `POSTGRES_PASSWORD` and `JWT_SECRET`, then run:
 
 ```powershell
+# PowerShell
+docker build --no-cache -t course-pms:local .
 docker compose up --build -d
 docker compose ps
+docker compose exec app npm --prefix server run prisma:migrate
+docker compose exec -e DEMO_USER_PASSWORD="<local-demo-password>" app npm --prefix server run prisma:seed
 Invoke-WebRequest http://localhost:3000/api/health
 Invoke-WebRequest http://localhost:3000/api/ready
 ```
 
+```bash
+# macOS / Linux (bash / zsh)
+cp .env.example .env
+# Edit .env locally to set non-placeholder POSTGRES_PASSWORD and JWT_SECRET
+docker build --no-cache -t course-pms:local .
+docker compose up --build -d
+docker compose ps
+docker compose exec app npm --prefix server run prisma:migrate
+docker compose exec -e DEMO_USER_PASSWORD="<local-demo-password>" app npm --prefix server run prisma:seed
+curl -i http://localhost:3000/api/health
+curl -i http://localhost:3000/api/ready
+```
+
 `/api/health` reports that the process is alive. `/api/ready` runs a database query and returns HTTP 200 with `{"status":"ready","db":"connected"}` only when PostgreSQL is reachable; otherwise it returns HTTP 503. Neither endpoint replaces the browser end-to-end business-flow check.
+
+### Reproducible Docker build details (`C-03` / Issue #21)
+
+- **Build context hygiene (`.dockerignore`):** Excludes `.git`, `.github`, `**/node_modules`, `**/dist`, `**/build`, `**/.env`, `**/.env.*`, `artifacts`, `docs`, `e2e`, `test-results`, `playwright-report`, `coverage`, and `server/tests` so local `.env` files, dependency caches, Git metadata, and test artifacts never enter the build context or production image.
+- **Multi-stage `Dockerfile` (Node.js 20 Alpine):**
+  - `client-build`: runs `npm ci` from committed `client/package-lock.json` and `npm run build` (`tsc && vite build`).
+  - `server-build`: installs `openssl` for Prisma on Alpine, runs `npm ci` from committed `server/package-lock.json`, generates Prisma Client (`npx prisma generate`), and compiles TypeScript (`npm run build`).
+  - `production`: installs `openssl`, sets `NODE_ENV=production` and `PORT=8080` (overridable by the platform `PORT` environment variable), and copies only `./server/package*.json`, `./server/tsconfig.json`, `./server/node_modules`, `./server/dist`, `./server/prisma`, and `./client/dist`.
+- **External PostgreSQL (`docker-compose.yml`):** Keeps PostgreSQL 16 (`postgres:16-alpine`) in a separate `db` service with a `pg_isready` healthcheck and persistent named volume `pgdata`; `app` waits for `db` to report `service_healthy` and receives `DATABASE_URL` and `JWT_SECRET` via environment variables without hardcoded secrets.
 
 ### Schema and seed safety
 
@@ -87,7 +115,7 @@ npm --prefix server run dev
 npm --prefix client run dev
 ```
 
-The current repository's production image uses the root `Dockerfile`; local Compose uses it as well. A clean-clone Docker reproducibility check is tracked separately in Lab 5 Issue #21.
+The repository's production image uses the root `Dockerfile` and `.dockerignore`; local Compose builds and runs the same image against the external `db` service (verified in Lab 5 Issue #21).
 
 ## GCP resource inventory
 
