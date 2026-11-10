@@ -8,6 +8,7 @@ RUN npm run build
 
 FROM node:20-alpine AS server-build
 WORKDIR /app/server
+RUN apk add --no-cache openssl
 COPY server/package*.json ./
 RUN npm ci
 COPY server/ ./
@@ -15,9 +16,11 @@ RUN npx prisma generate && npm run build
 
 FROM node:20-alpine AS production
 WORKDIR /app
+RUN apk add --no-cache openssl
 ENV NODE_ENV=production
 ENV PORT=8080
 COPY --from=server-build /app/server/package*.json ./server/
+COPY --from=server-build /app/server/tsconfig.json ./server/
 COPY --from=server-build /app/server/node_modules ./server/node_modules
 COPY --from=server-build /app/server/dist ./server/dist
 COPY --from=server-build /app/server/prisma ./server/prisma

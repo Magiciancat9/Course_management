@@ -1,4 +1,4 @@
-import { PrismaClient, Role, ProposalStatus } from '@prisma/client';
+import { PrismaClient, Role, ProposalStatus, User } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
 
@@ -48,7 +48,7 @@ async function seedProductionDatabase(
   customPrisma: PrismaClient,
   passwordHash: string
 ) {
-  const users = [];
+  const users: User[] = [];
   for (const userData of demoUsers) {
     const user = await customPrisma.user.findUnique({
       where: { email: userData.email },
