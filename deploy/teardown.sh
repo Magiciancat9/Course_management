@@ -18,6 +18,9 @@ set -euo pipefail
 #   Deletes everything deploy/deploy.sh created (Cloud Run service + job, Cloud
 #   SQL instance, Artifact Registry repo, Secret Manager secrets, and service
 #   accounts) to stop billing after grading is complete.
+#   - Resources that are genuinely absent (NOT_FOUND / 404) are skipped cleanly.
+#   - Permission, authentication, or API failures abort the script with a
+#     non-zero exit code instead of claiming teardown completed.
 #
 # DESTRUCTIVE: all Cloud SQL data is permanently lost. You must type the
 # project ID to confirm. Preview first with:
@@ -33,13 +36,37 @@ if [ -z "$REGION" ]; then
   exit 1
 fi
 
-run_cmd() {
+delete_if_exists() {
+  local label="$1"
+  shift
   if [ "$DRY_RUN" = "1" ]; then
     echo "[DRY_RUN] $*"
-  else
-    echo "+ $*"
-    "$@"
+    return 0
   fi
+  echo "+ $*"
+  local stderr_file
+  stderr_file="$(mktemp)"
+  local rc=0
+  "$@" 2>"$stderr_file" || rc=$?
+  if [ "$rc" -eq 0 ]; then
+    if [ -s "$stderr_file" ]; then
+      cat "$stderr_file" >&2
+    fi
+    rm -f "$stderr_file"
+    return 0
+  fi
+  local err_msg
+  err_msg="$(cat "$stderr_file")"
+  if [ -n "$err_msg" ]; then
+    printf '%s\n' "$err_msg" >&2
+  fi
+  rm -f "$stderr_file"
+  if printf '%s' "$err_msg" | grep -Eiq '(NOT_FOUND|not found|was not found|does not exist|Cannot find|HTTPError 404|code[=: ]+404)'; then
+    echo "Info: ${label} is already absent; skipping."
+    return 0
+  fi
+  echo "Error: Failed to delete ${label} (exit ${rc})." >&2
+  return "$rc"
 }
 
 if [ "$DRY_RUN" = "1" ]; then
@@ -93,16 +120,25 @@ if [ "$DRY_RUN" != "1" ]; then
 fi
 
 # ------------------------------------------------------------------------------
-# Delete resources (each `|| true` so one missing resource does not stop the rest)
+# Delete resources (skips genuinely absent resources; fails on permission/API errors)
 # ------------------------------------------------------------------------------
-run_cmd gcloud run services delete "$SERVICE_NAME" --region "$REGION" --project "$PROJECT_ID" --quiet || true
-run_cmd gcloud run jobs delete "$MIGRATE_JOB_NAME" --region "$REGION" --project "$PROJECT_ID" --quiet || true
-run_cmd gcloud sql instances delete "$SQL_INSTANCE" --project "$PROJECT_ID" --quiet || true
-run_cmd gcloud artifacts repositories delete "$REPO_NAME" --location "$REGION" --project "$PROJECT_ID" --quiet || true
-run_cmd gcloud secrets delete "$SECRET_DB_URL" --project "$PROJECT_ID" --quiet || true
-run_cmd gcloud secrets delete "$SECRET_JWT" --project "$PROJECT_ID" --quiet || true
-run_cmd gcloud secrets delete "$SECRET_DEMO_PASS" --project "$PROJECT_ID" --quiet || true
-run_cmd gcloud iam service-accounts delete "$SA_EMAIL" --project "$PROJECT_ID" --quiet || true
-run_cmd gcloud iam service-accounts delete "$MIGRATE_SA_EMAIL" --project "$PROJECT_ID" --quiet || true
+delete_if_exists "Cloud Run service ${SERVICE_NAME}" \
+  gcloud run services delete "$SERVICE_NAME" --region "$REGION" --project "$PROJECT_ID" --quiet
+delete_if_exists "Cloud Run job ${MIGRATE_JOB_NAME}" \
+  gcloud run jobs delete "$MIGRATE_JOB_NAME" --region "$REGION" --project "$PROJECT_ID" --quiet
+delete_if_exists "Cloud SQL instance ${SQL_INSTANCE}" \
+  gcloud sql instances delete "$SQL_INSTANCE" --project "$PROJECT_ID" --quiet
+delete_if_exists "Artifact Registry repository ${REPO_NAME}" \
+  gcloud artifacts repositories delete "$REPO_NAME" --location "$REGION" --project "$PROJECT_ID" --quiet
+delete_if_exists "Secret ${SECRET_DB_URL}" \
+  gcloud secrets delete "$SECRET_DB_URL" --project "$PROJECT_ID" --quiet
+delete_if_exists "Secret ${SECRET_JWT}" \
+  gcloud secrets delete "$SECRET_JWT" --project "$PROJECT_ID" --quiet
+delete_if_exists "Secret ${SECRET_DEMO_PASS}" \
+  gcloud secrets delete "$SECRET_DEMO_PASS" --project "$PROJECT_ID" --quiet
+delete_if_exists "Service account ${SA_EMAIL}" \
+  gcloud iam service-accounts delete "$SA_EMAIL" --project "$PROJECT_ID" --quiet
+delete_if_exists "Service account ${MIGRATE_SA_EMAIL}" \
+  gcloud iam service-accounts delete "$MIGRATE_SA_EMAIL" --project "$PROJECT_ID" --quiet
 
 echo "Teardown completed."

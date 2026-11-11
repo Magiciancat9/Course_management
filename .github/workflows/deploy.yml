@@ -69,6 +69,7 @@ jobs:
     environment: demo
     permissions:
       contents: read
+      pull-requests: read
       id-token: write # required for keyless Google Cloud login (WIF)
     env:
       PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
@@ -100,7 +101,23 @@ jobs:
           [[ "$IMAGE_TAG" =~ ^[0-9a-f]{40}$ ]] || { echo 'Image tag must be a full 40-character commit SHA.'; exit 1; }
 
       # ------------------------------------------------------------------------
-      # 3. Log in to Google Cloud with Workload Identity Federation (no key file)
+      # 3. Verify the target commit came from a merged, teammate-approved PR to
+      #    main (blocks direct pushes or unreviewed commits before GCP auth)
+      # ------------------------------------------------------------------------
+      - name: Setup Python 3.14
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.14"
+
+      - name: Verify commit came from a reviewed pull request to main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          COMMIT_SHA: ${{ env.IMAGE_TAG }}
+        run: python3 deploy/verify_reviewed_commit.py
+
+      # ------------------------------------------------------------------------
+      # 4. Log in to Google Cloud with Workload Identity Federation (no key file)
       # ------------------------------------------------------------------------
       - name: Authenticate to Google Cloud without a key
         uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3
@@ -110,7 +127,7 @@ jobs:
       - uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db # v3.0.1
 
       # ------------------------------------------------------------------------
-      # 4. Build and push the image tagged with the full commit SHA
+      # 5. Build and push the image tagged with the full commit SHA
       #    (skipped for rollbacks)
       # ------------------------------------------------------------------------
       - name: Build and push image
@@ -122,20 +139,15 @@ jobs:
           docker push "$IMAGE"
 
       # ------------------------------------------------------------------------
-      # 5. Verify image -> run migration job -> update the Cloud Run service
+      # 6. Verify image -> run migration job -> update the Cloud Run service
       #    Exports SERVICE_URL and DEPLOYED_IMAGE for the next steps.
       # ------------------------------------------------------------------------
       - name: Verify image, migrate and deploy
         run: bash deploy/release.sh
 
       # ------------------------------------------------------------------------
-      # 6. Smoke test the live URL
+      # 7. Smoke test the live URL
       # ------------------------------------------------------------------------
-      - name: Setup Python 3.14
-        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
-        with:
-          python-version: "3.14"
-
       - name: Smoke test public URL
         env:
           EXPECTED_COMMIT_SHA: ${{ env.IMAGE_TAG }}
@@ -144,7 +156,7 @@ jobs:
         run: python3 deploy/smoke_test.py "$SERVICE_URL"
 
       # ------------------------------------------------------------------------
-      # 7. Deployment summary shown on the workflow run page
+      # 8. Deployment summary shown on the workflow run page
       # ------------------------------------------------------------------------
       - name: Record deployment
         run: |

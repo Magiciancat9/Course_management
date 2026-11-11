@@ -235,6 +235,7 @@ After `deploy/deploy.sh` finishes and prints `SERVICE_URL`:
 3. Open a release PR from `lab5-staging` into `main`; the teammate reviews and approves it, and the required `test-and-docker` check on `main` must pass.
 4. Merging the release PR into `main` triggers `.github/workflows/deploy.yml` (`Deploy CoursePMS`), which:
    - Re-runs the full reusable CI workflow (`.github/workflows/ci-docker.yml`, job `test-and-docker`) on the accepted `main` commit.
+   - Runs `python3 deploy/verify_reviewed_commit.py` to query the GitHub API and verify that `$IMAGE_TAG` belongs to a merged Pull Request targeting `main` with an independent `APPROVED` review (blocking direct pushes or unapproved merges before any GCP authentication or build).
    - Authenticates to GCP via keyless Workload Identity Federation (`google-github-actions/auth`, no JSON service-account key).
    - Builds the production image with `--build-arg APP_COMMIT_SHA="$IMAGE_TAG"` and pushes `asia-southeast1-docker.pkg.dev/cpe334-kingnine/course-pms/course-pms:<40-char-sha>`.
    - Runs `bash deploy/release.sh`:
@@ -281,6 +282,7 @@ If a deployed release needs to be rolled back to a previously built 40-character
   bash -n deploy/deploy.sh deploy/teardown.sh deploy/release.sh
   bash deploy/tests/test_deploy_stub.sh
   bash deploy/tests/test_release_stub.sh
+  bash deploy/tests/test_teardown_stub.sh
   python3 -m unittest discover -s deploy/tests -p 'test_smoke.py'
   ```
 
