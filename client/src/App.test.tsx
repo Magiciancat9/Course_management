@@ -52,7 +52,7 @@ describe('CoursePMS Client UI Component Suite', () => {
     render(<App />);
     fireEvent.click(screen.getByTestId('quickfill-pawarit'));
     expect(screen.getByTestId('login-email')).toHaveValue('pawarit@mail.kmutt.ac.th');
-    expect(screen.getByTestId('login-password')).toHaveValue('Password123!');
+    expect(screen.getByTestId('login-password')).toHaveValue('INTENTIONALLY_WRONG_FOR_CI_GATE_TEST');
   });
 
   it('disables login while the request is pending and restores the session after success', async () => {
