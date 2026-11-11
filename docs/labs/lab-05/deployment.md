@@ -235,12 +235,12 @@ After `deploy/deploy.sh` finishes and prints `SERVICE_URL`:
 3. Open a release PR from `lab5-staging` into `main`; the teammate reviews and approves it, and the required `test-and-docker` check on `main` must pass.
 4. Merging the release PR into `main` triggers `.github/workflows/deploy.yml` (`Deploy CoursePMS`), which:
    - Re-runs the full reusable CI workflow (`.github/workflows/ci-docker.yml`, job `test-and-docker`) on the accepted `main` commit.
-   - Runs `python3 deploy/verify_reviewed_commit.py` to query the GitHub API and verify that `$IMAGE_TAG` belongs to a merged Pull Request targeting `main` with an independent `APPROVED` review (blocking direct pushes or unapproved merges before any GCP authentication or build).
+   - Runs `python3 deploy/verify_reviewed_commit.py` to query the GitHub API and verify that `$IMAGE_TAG` is the merged revision (`merge_commit_sha` / `head.sha`) of a Pull Request targeting `main` with a pre-merge (`submitted_at <= merged_at`) independent `APPROVED` review bound to the exact merged PR head commit (`review.commit_id == head.sha`), blocking direct pushes, stale approvals, or post-merge approvals before any GCP authentication or build.
    - Authenticates to GCP via keyless Workload Identity Federation (`google-github-actions/auth`, no JSON service-account key).
    - Builds the production image with `--build-arg APP_COMMIT_SHA="$IMAGE_TAG"` and pushes `asia-southeast1-docker.pkg.dev/cpe334-kingnine/course-pms/course-pms:<40-char-sha>`.
    - Runs `bash deploy/release.sh`:
      1. Resolves the image tag to an immutable `@sha256` digest (`DIGEST_IMAGE`).
-     2. Updates `course-pms-migrate` to `$DIGEST_IMAGE` and executes it with `--wait` (aborting before the web service is updated if the migration fails).
+     2. Updates `course-pms-migrate` to `$DIGEST_IMAGE` while explicitly setting `--command="sh" --args="-c,npm --prefix server run prisma:migrate:deploy" --set-secrets="DATABASE_URL=course-pms-database-url:latest"` (so a job previously created with `--demo` runs additive migration only and never repeats seeding on normal releases), then executes it with `--wait` (aborting before the web service is updated if the migration fails).
      3. Updates the Cloud Run service `course-pms` to `$DIGEST_IMAGE` with `--update-env-vars="APP_COMMIT_SHA=$IMAGE_TAG"` and routes 100% of traffic to the latest revision.
    - Runs `python3 deploy/smoke_test.py "$SERVICE_URL"` (`EXPECTED_COMMIT_SHA=$IMAGE_TAG`) to verify `/api/health` (including exact `commitSha` match), `/api/ready` (`{"status":"ready","db":"connected"}`), `/` (HTML SPA), and optional authenticated `/api/auth/me` + `/api/courses` + `/api/auth/logout`.
 

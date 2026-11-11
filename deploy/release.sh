@@ -5,18 +5,23 @@
 # WHAT THIS SCRIPT DOES
 #   Update pre-provisioned resources only. Does not create SQL, IAM or secrets.
 #   (Create those once with deploy/deploy.sh.)
-#   Normal release : verify image -> run migration job -> update service.
+#   Normal release : verify image -> update migration job to migration-only ->
+#                    run migration job -> update service.
 #   Rollback       : verify image -> update service (NO migration, NO seed).
 #
 # INPUT (environment variables)
 #   PROJECT_ID, REGION, IMAGE_TAG   required (IMAGE_TAG = full 40-char commit SHA)
 #   REPO_NAME                       optional (default: course-pms)
 #   SERVICE_NAME, MIGRATE_JOB_NAME  optional (default: course-pms, course-pms-migrate)
+#   SECRET_DB_URL                   optional (default: course-pms-database-url)
 #   ROLLBACK                        true | false (default false)
 #   GITHUB_ENV                      when set, SERVICE_URL / DEPLOYED_IMAGE are
 #                                   appended so later workflow steps can use them
 #
 # IMPORTANT
+#   - Normal releases explicitly reset the migration job command/args and
+#     secrets to run additive migration ONLY (`prisma:migrate:deploy` with
+#     `DATABASE_URL`), even if the job was originally provisioned with `--demo`.
 #   - If the migration job fails, `set -e` stops the script BEFORE the service is
 #     updated, so a broken migration never reaches users.
 #   - The image is resolved to an immutable @sha256 digest so the job and the
@@ -34,6 +39,7 @@ set -euo pipefail
 REPO_NAME="${REPO_NAME:-course-pms}"
 SERVICE_NAME="${SERVICE_NAME:-course-pms}"
 MIGRATE_JOB_NAME="${MIGRATE_JOB_NAME:-course-pms-migrate}"
+SECRET_DB_URL="${SECRET_DB_URL:-course-pms-database-url}"
 ROLLBACK="${ROLLBACK:-false}"
 [[ "$IMAGE_TAG" =~ ^[0-9a-f]{40}$ ]] || { echo 'Invalid image tag.' >&2; exit 1; }
 [[ "$ROLLBACK" == true || "$ROLLBACK" == false ]] || { echo 'Invalid rollback mode.' >&2; exit 1; }
@@ -47,10 +53,20 @@ DIGEST_IMAGE="$(gcloud artifacts docker images describe "$IMAGE" --project="$PRO
 
 # ------------------------------------------------------------------------------
 # 3. Database migration (normal release only; `--wait` blocks until it finishes)
+#    Explicitly enforces migration-only command and secrets so a job previously
+#    created with `deploy/deploy.sh --demo` does not re-run seeding on release.
 #    IMPORTANT: a failure here aborts the release (set -e) — service untouched.
 # ------------------------------------------------------------------------------
+MIGRATE_ONLY_CMD="npm --prefix server run prisma:migrate:deploy"
 if [[ "$ROLLBACK" == false ]]; then
-  gcloud run jobs update "$MIGRATE_JOB_NAME" --image="$DIGEST_IMAGE" --project="$PROJECT_ID" --region="$REGION" --quiet
+  gcloud run jobs update "$MIGRATE_JOB_NAME" \
+    --image="$DIGEST_IMAGE" \
+    --command="sh" \
+    --args="-c,${MIGRATE_ONLY_CMD}" \
+    --set-secrets="DATABASE_URL=${SECRET_DB_URL}:latest" \
+    --project="$PROJECT_ID" \
+    --region="$REGION" \
+    --quiet
   gcloud run jobs execute "$MIGRATE_JOB_NAME" --wait --project="$PROJECT_ID" --region="$REGION" --quiet
 else
   echo 'Rollback: reuse existing image; skip tests, build, migration and seed.'

@@ -8,9 +8,14 @@ Covers:
   - EXPECTED_COMMIT_SHA verification on /api/health
   - a DB that is not ready fails even if HTTP answers
   - the session is logged out even if an authenticated check fails
-  - reviewed-PR commit verification rejects direct pushes, unapproved PRs,
-    self-approvals, and post-approval CHANGES_REQUESTED, and accepts a merged
-    main PR with an independent APPROVED review
+  - reviewed-PR commit verification rejects:
+      * direct pushes without a merged main PR
+      * commits that do not match the PR's merge_commit_sha or head.sha
+      * self-approvals or post-approval CHANGES_REQUESTED
+      * approvals bound to an older commit_id different from the merged PR head.sha
+      * approvals submitted after merged_at
+    and accepts a merged main PR with a pre-merge independent APPROVED review
+    bound to the exact merged PR head commit SHA.
 """
 import importlib.util
 from pathlib import Path
@@ -91,53 +96,120 @@ class SmokeTests(unittest.TestCase):
 
 
 class VerifyReviewedCommitTests(unittest.TestCase):
-    SHA = '1111111111111111111111111111111111111111'
+    MERGE_SHA = '1111111111111111111111111111111111111111'
+    HEAD_SHA = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+    STALE_SHA = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
     REPO = 'Magiciancat9/Course_management'
+
+    def make_pr(self, merge_sha=None, head_sha=None, merged_at='2026-11-11T10:00:00Z'):
+        return {
+            'number': 36,
+            'merged_at': merged_at,
+            'merge_commit_sha': merge_sha or self.MERGE_SHA,
+            'head': {'sha': head_sha or self.HEAD_SHA},
+            'base': {'ref': 'main'},
+            'user': {'login': 'martinvadre'},
+        }
 
     def test_direct_push_without_pr_is_rejected(self):
         with patch.object(verify_mod, 'github_get', return_value=[]):
-            with self.assertRaisesRegex(RuntimeError, 'not associated with a merged pull request'):
-                verify_mod.verify_reviewed_commit(self.REPO, self.SHA, 'gh-token')
+            with self.assertRaisesRegex(RuntimeError, 'not the merged revision'):
+                verify_mod.verify_reviewed_commit(self.REPO, self.MERGE_SHA, 'gh-token')
+
+    def test_unmatched_merge_or_head_commit_is_rejected(self):
+        other_sha = 'cccccccccccccccccccccccccccccccccccccccc'
+        with patch.object(
+            verify_mod,
+            'github_get',
+            return_value=[self.make_pr(merge_sha=other_sha, head_sha=self.HEAD_SHA)],
+        ):
+            with self.assertRaisesRegex(RuntimeError, 'not the merged revision'):
+                verify_mod.verify_reviewed_commit(self.REPO, self.MERGE_SHA, 'gh-token')
 
     def test_merged_pr_without_independent_approval_is_rejected(self):
         def fake_api(path, _token):
             if path.endswith('/pulls'):
-                return [
-                    {
-                        'number': 36,
-                        'merged_at': '2026-11-11T10:00:00Z',
-                        'base': {'ref': 'main'},
-                        'user': {'login': 'martinvadre'},
-                    }
-                ]
+                return [self.make_pr()]
             return [
-                {'user': {'login': 'martinvadre'}, 'state': 'APPROVED'},
-                {'user': {'login': 'Magiciancat9'}, 'state': 'APPROVED'},
-                {'user': {'login': 'Magiciancat9'}, 'state': 'CHANGES_REQUESTED'},
+                {
+                    'user': {'login': 'martinvadre'},
+                    'state': 'APPROVED',
+                    'commit_id': self.HEAD_SHA,
+                    'submitted_at': '2026-11-11T09:50:00Z',
+                },
+                {
+                    'user': {'login': 'Magiciancat9'},
+                    'state': 'APPROVED',
+                    'commit_id': self.HEAD_SHA,
+                    'submitted_at': '2026-11-11T09:52:00Z',
+                },
+                {
+                    'user': {'login': 'Magiciancat9'},
+                    'state': 'CHANGES_REQUESTED',
+                    'commit_id': self.HEAD_SHA,
+                    'submitted_at': '2026-11-11T09:55:00Z',
+                },
             ]
 
         with patch.object(verify_mod, 'github_get', side_effect=fake_api):
-            with self.assertRaisesRegex(RuntimeError, 'no merged pull request targeting main'):
-                verify_mod.verify_reviewed_commit(self.REPO, self.SHA, 'gh-token')
+            with self.assertRaisesRegex(RuntimeError, 'pre-merge independent APPROVED review'):
+                verify_mod.verify_reviewed_commit(self.REPO, self.MERGE_SHA, 'gh-token')
 
-    def test_merged_pr_with_independent_approval_passes(self):
+    def test_approval_for_stale_commit_before_merged_head_is_rejected(self):
         def fake_api(path, _token):
             if path.endswith('/pulls'):
-                return [
-                    {
-                        'number': 36,
-                        'merged_at': '2026-11-11T10:00:00Z',
-                        'base': {'ref': 'main'},
-                        'user': {'login': 'martinvadre'},
-                    }
-                ]
+                return [self.make_pr()]
             return [
-                {'user': {'login': 'Magiciancat9'}, 'state': 'COMMENTED'},
-                {'user': {'login': 'Magiciancat9'}, 'state': 'APPROVED'},
+                {
+                    'user': {'login': 'Magiciancat9'},
+                    'state': 'APPROVED',
+                    'commit_id': self.STALE_SHA,
+                    'submitted_at': '2026-11-11T09:50:00Z',
+                }
             ]
 
         with patch.object(verify_mod, 'github_get', side_effect=fake_api):
-            pr_num = verify_mod.verify_reviewed_commit(self.REPO, self.SHA, 'gh-token')
+            with self.assertRaisesRegex(RuntimeError, 'pre-merge independent APPROVED review'):
+                verify_mod.verify_reviewed_commit(self.REPO, self.MERGE_SHA, 'gh-token')
+
+    def test_approval_submitted_after_merge_is_rejected(self):
+        def fake_api(path, _token):
+            if path.endswith('/pulls'):
+                return [self.make_pr(merged_at='2026-11-11T10:00:00Z')]
+            return [
+                {
+                    'user': {'login': 'Magiciancat9'},
+                    'state': 'APPROVED',
+                    'commit_id': self.HEAD_SHA,
+                    'submitted_at': '2026-11-11T10:00:01Z',
+                }
+            ]
+
+        with patch.object(verify_mod, 'github_get', side_effect=fake_api):
+            with self.assertRaisesRegex(RuntimeError, 'pre-merge independent APPROVED review'):
+                verify_mod.verify_reviewed_commit(self.REPO, self.MERGE_SHA, 'gh-token')
+
+    def test_merged_pr_with_pre_merge_approval_bound_to_head_passes(self):
+        def fake_api(path, _token):
+            if path.endswith('/pulls'):
+                return [self.make_pr(merged_at='2026-11-11T10:00:00Z')]
+            return [
+                {
+                    'user': {'login': 'Magiciancat9'},
+                    'state': 'COMMENTED',
+                    'commit_id': self.STALE_SHA,
+                    'submitted_at': '2026-11-11T09:40:00Z',
+                },
+                {
+                    'user': {'login': 'Magiciancat9'},
+                    'state': 'APPROVED',
+                    'commit_id': self.HEAD_SHA,
+                    'submitted_at': '2026-11-11T09:58:00Z',
+                },
+            ]
+
+        with patch.object(verify_mod, 'github_get', side_effect=fake_api):
+            pr_num = verify_mod.verify_reviewed_commit(self.REPO, self.MERGE_SHA, 'gh-token')
             self.assertEqual(pr_num, 36)
 
 
