@@ -52,6 +52,7 @@ app.get('/api/health', (_req, res) => {
   res.status(200).json({
     status: 'ok',
     service: 'course-pms-api',
+    commitSha: process.env.APP_COMMIT_SHA || 'local',
     timestamp: new Date().toISOString(),
   });
 });
