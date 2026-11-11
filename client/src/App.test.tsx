@@ -39,6 +39,7 @@ describe('CoursePMS Client UI Component Suite', () => {
   it('renders login view when unauthenticated and validates empty credentials', async () => {
     render(<App />);
     expect(screen.getByText('Sign In to CoursePMS')).toBeInTheDocument();
+    expect(screen.getByTestId('release-badge')).toHaveTextContent('CPE 334 Cloud Release');
 
     await act(async () => {
       fireEvent.click(screen.getByTestId('login-submit'));

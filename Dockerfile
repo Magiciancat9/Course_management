@@ -1,6 +1,8 @@
 # Multi-stage Dockerfile for CoursePMS (Lab 5 / GCP Cloud Run Ready)
 FROM node:20-alpine AS client-build
 WORKDIR /app/client
+ARG APP_COMMIT_SHA=local
+ENV VITE_APP_COMMIT_SHA=${APP_COMMIT_SHA}
 COPY client/package*.json ./
 RUN npm ci
 COPY client/ ./
@@ -17,8 +19,10 @@ RUN npx prisma generate && npm run build
 FROM node:20-alpine AS production
 WORKDIR /app
 RUN apk add --no-cache openssl
+ARG APP_COMMIT_SHA=local
 ENV NODE_ENV=production
 ENV PORT=8080
+ENV APP_COMMIT_SHA=${APP_COMMIT_SHA}
 COPY --from=server-build /app/server/package*.json ./server/
 COPY --from=server-build /app/server/tsconfig.json ./server/
 COPY --from=server-build /app/server/node_modules ./server/node_modules

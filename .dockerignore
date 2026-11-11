@@ -15,3 +15,6 @@ test-results
 playwright-report
 coverage
 server/tests
+deploy
+**/__pycache__
+**/*.pyc

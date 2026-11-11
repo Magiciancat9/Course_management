@@ -1,10 +1,12 @@
 name: CI and Docker Build
 
 on:
+  workflow_call:
   pull_request:
     branches:
       - lab5-staging
       - main
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -52,6 +54,18 @@ jobs:
             package-lock.json
             server/package-lock.json
             client/package-lock.json
+
+      - name: Setup Python 3.14
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.14"
+
+      - name: Check deployment scripts without accessing GCP
+        run: |
+          bash -n deploy/deploy.sh deploy/teardown.sh deploy/release.sh
+          bash deploy/tests/test_deploy_stub.sh
+          bash deploy/tests/test_release_stub.sh
+          python3 -m unittest discover -s deploy/tests -p 'test_smoke.py'
 
       - name: Install dependencies
         run: |

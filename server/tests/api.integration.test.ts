@@ -1,4 +1,4 @@
-﻿import { describe, it, expect, beforeEach, afterAll, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterAll, vi } from 'vitest';
 import request from 'supertest';
 import jwt from 'jsonwebtoken';
 import app from '../src/app';
@@ -64,6 +64,7 @@ describe('CoursePMS Sprint 1 â€” API & Database Integration Suite (TEST-01 
     const healthRes = await request(app).get('/api/health');
     expect(healthRes.status).toBe(200);
     expect(healthRes.body.status).toBe('ok');
+    expect(healthRes.body.commitSha).toBeTruthy();
 
     const readinessRes = await request(app).get('/api/ready');
     expect(readinessRes.status).toBe(200);

@@ -1,6 +1,6 @@
 # CoursePMS Lab 5 Deployment Notes
 
-This document records the current cloud-readiness contract. GCP resources have not yet been provisioned; values not confirmed by the team are marked **TBD**. This document does not authorize or perform billing, IAM, database, or deployment operations.
+This document records the CoursePMS cloud-readiness contract, provisioned GCP resource inventory, automated CI/CD release pipeline, and rollback procedures. It does not store any secret values or credentials.
 
 ## Application and deployment shape
 
@@ -8,11 +8,12 @@ This document records the current cloud-readiness contract. GCP resources have n
 - **Runtime:** Node.js 20; React/Vite static build served by the Express API in production.
 - **Database:** PostgreSQL through Prisma. Teams, proposals, users, milestones, submissions, and revoked JWT identifiers are persisted in the database; no application uploads or other user data are stored on the container filesystem.
 - **Local persistence:** Docker Compose stores PostgreSQL data in the named `pgdata` volume. Do not remove the volume if local data must be retained.
-- **GCP target:** Cloud Run, Cloud SQL for PostgreSQL, Artifact Registry, and Secret Manager, following the Lab 5 reference architecture. Exact service, instance, database, region, and repository names are **TBD** until the project owner confirms them.
-- **GCP project:** `CPE334 Kingnine` (`cpe334-kingnine`, number `859617270560`), reported by the team. Martin Wongdaeng (`martinvadre`) is the project owner/creator; Tatchakorn Thamnimitr (`Magiciancat9`) is the project Editor. Confirm both roles in Cloud IAM before provisioning. Project identity does not prove that billing, Free Trial credits, or the budget are active.
-- **Region:** **TBD**. `asia-southeast1` is an example in course materials, not a confirmed team choice.
+- **GCP target:** Cloud Run (`course-pms` service + `course-pms-migrate` job), Cloud SQL for PostgreSQL 16 (`course-pms-pg`), Artifact Registry (`course-pms`), and Secret Manager, following the Lab 5 reference architecture.
+- **GCP project:** `CPE334 Kingnine` (`cpe334-kingnine`, number `859617270560`). Martin Wongdaeng (`martinvadre`) is the project owner/creator; Tatchakorn Thamnimitr (`Magiciancat9`) is the project Editor.
+- **Confirmed region:** `asia-southeast1`.
+- **Live public URL:** `https://course-pms-859617270560.asia-southeast1.run.app` (also reachable via `https://course-pms-jjbynk5xja-as.a.run.app`).
 
-The application serves its built frontend and API from the same origin when `NODE_ENV=production`. The client uses relative API paths; Vite's `localhost:3000` proxy is for local development only. No `VITE_*` runtime variable is currently read by the client.
+The application serves its built frontend and API from the same origin when `NODE_ENV=production`. The client uses relative API paths; Vite's `localhost:3000` proxy is for local development only.
 
 ## Environment variables
 
@@ -20,8 +21,9 @@ The committed `.env.example` files contain placeholders only. Copy them locally 
 
 | Variable | Purpose | Secret? | Source |
 |---|---|---|---|
-| `PORT` | HTTP port. The server defaults to `3000`; Cloud Run supplies the runtime port. | No | Local `.env`; Cloud Run runtime environment |
+| `PORT` | HTTP port. The server defaults to `3000`; Cloud Run supplies the runtime port (`8080`). | No | Local `.env`; Cloud Run runtime environment |
 | `NODE_ENV` | Selects development/test behavior or production static-file and seed behavior. | No | Local `.env`; set to `production` for Cloud Run |
+| `APP_COMMIT_SHA` | Full 40-character Git commit SHA of the running release, returned by `GET /api/health` (`commitSha`). Defaults to `local` in local development. | No | Set automatically at Docker build time (`--build-arg APP_COMMIT_SHA`) and Cloud Run update (`deploy/release.sh`) |
 | `DATABASE_URL` | Prisma PostgreSQL connection string. | **Yes** | Local disposable PostgreSQL in ignored `.env`; production from Secret Manager, attached only to services/jobs that need database access |
 | `CORS_ORIGIN` | Optional comma-separated browser origins accepted by the API. Same-origin production traffic normally does not require a separate client origin. | No | Local `.env`; set to the actual origin only if needed |
 | `JWT_SECRET` | Signs and verifies authentication tokens. Production fails to start if missing or left at the example placeholder. | **Yes** | Generate a unique local value for development; production from Secret Manager |
@@ -134,20 +136,20 @@ Any failed command fails the required job. CI does not seed or deploy to a produ
 
 ## GCP resource inventory
 
-| Resource | Planned default / placeholder | Status |
+| Resource | Actual value / name | Status |
 |---|---|---|
-| Project | `cpe334-kingnine` / `859617270560` | Reported by team; verify in Console before provisioning |
-| Project owner | Martin Wongdaeng (`martinvadre`) | Reported by team; verify in IAM (must run owner-only IAM/provisioning steps) |
-| Project Editor | Tatchakorn Thamnimitr (`Magiciancat9`) | Reported by team; verify in IAM |
-| Region | **TBD (`<REGION>`)** | Required explicit input (`REGION=<confirmed-region>`); no implicit default in `deploy/deploy.sh` |
-| Cloud Run service | `course-pms` (container port `8080`, `--min-instances 0`, `--max-instances 3`) | Planned in `deploy/deploy.sh`; not yet provisioned |
-| Cloud Run migration job | `course-pms-migrate` (`prisma migrate deploy` + optional `--demo` seed) | Planned in `deploy/deploy.sh`; not yet provisioned |
-| Cloud SQL instance / database / user | `course-pms-pg` (`POSTGRES_16`, `enterprise`, `db-f1-micro`, `10GB SSD`) / DB `course_pms` / user `coursepms` | Planned in `deploy/deploy.sh`; not yet provisioned |
-| Artifact Registry repository | `course-pms` (Docker format) | Planned in `deploy/deploy.sh`; not yet provisioned |
-| Public service runtime SA | `course-pms-runner@cpe334-kingnine.iam.gserviceaccount.com` | Planned in `deploy/deploy.sh`; accesses only `DATABASE_URL` and `JWT_SECRET` |
-| Migration job runtime SA | `course-pms-migrator@cpe334-kingnine.iam.gserviceaccount.com` | Planned in `deploy/deploy.sh`; accesses `DATABASE_URL` and (with `--demo`) `DEMO_USER_PASSWORD` |
-| Secret Manager secret names | `course-pms-database-url`, `course-pms-jwt-secret`, `course-pms-demo-password` (when `--demo` is used) | Planned in `deploy/deploy.sh`; never record secret values here |
-| GitHub OIDC/WIF pool, provider, deploy service account | **TBD** (Issue #25 / #26) | Configure later with least privilege; do not create or commit a JSON key |
+| Project | `cpe334-kingnine` / `859617270560` | Verified & active |
+| Project owner | Martin Wongdaeng (`martinvadre`) | Verified in IAM (`roles/owner`) |
+| Project Editor | Tatchakorn Thamnimitr (`Magiciancat9`) | Verified in IAM (`roles/editor`) |
+| Region | `asia-southeast1` | Confirmed & provisioned (`REGION=asia-southeast1`) |
+| Cloud Run service | `course-pms` (container port `8080`, `--min-instances 0`, `--max-instances 3`, initial revision `course-pms-00001-kqn`) | Provisioned & live (`https://course-pms-859617270560.asia-southeast1.run.app`) |
+| Cloud Run migration job | `course-pms-migrate` (`prisma migrate deploy` + optional `--demo` seed) | Provisioned & executed (`course-pms-migrate-ztd7w` succeeded) |
+| Cloud SQL instance / database / user | `course-pms-pg` (`POSTGRES_16`, `enterprise`, `db-f1-micro`, `10GB SSD`) / DB `course_pms` / user `coursepms` | Provisioned & connected (`/api/ready` HTTP 200) |
+| Artifact Registry repository | `course-pms` (Docker format, `asia-southeast1-docker.pkg.dev/cpe334-kingnine/course-pms`) | Provisioned |
+| Public service runtime SA | `course-pms-runner@cpe334-kingnine.iam.gserviceaccount.com` | Provisioned; accesses only `DATABASE_URL` and `JWT_SECRET` |
+| Migration job runtime SA | `course-pms-migrator@cpe334-kingnine.iam.gserviceaccount.com` | Provisioned; accesses `DATABASE_URL` and (with `--demo`) `DEMO_USER_PASSWORD` |
+| Secret Manager secret names | `course-pms-database-url`, `course-pms-jwt-secret`, `course-pms-demo-password` | Provisioned in Secret Manager; secret values are never recorded in Git |
+| GitHub OIDC/WIF pool, provider, deploy service account | Configured via GitHub `demo` Environment variables `WIF_PROVIDER` and `WIF_SERVICE_ACCOUNT` (`course-pms-deployer@cpe334-kingnine.iam.gserviceaccount.com`) | Keyless OIDC federation for `.github/workflows/deploy.yml` (no JSON key) |
 
 ## First GCP provisioning and deployment (`Lab5-05` / Issue #23)
 
@@ -224,21 +226,70 @@ After `deploy/deploy.sh` finishes and prints `SERVICE_URL`:
    - Verify at least one expected rule rejection / access restriction (e.g., duplicate team membership `409 BR01_DUPLICATE_TEAM_MEMBERSHIP` or cross-team private proposal access `403 BR06_FORBIDDEN_TEAM_ACCESS`).
    - Record the actual Cloud Run URL, active revision name, commit SHA, and redacted screenshots in Issue #23 and this document.
 
-## Release procedure
+## Automated Release & Rollback Procedure (`Lab5-07` / Issue #26)
 
-The intended team path is:
+### 1. Branch & Release Flow (`lab5-staging` -> `main`)
 
-1. Start a task branch from `lab5-staging`.
-2. Open a PR into `lab5-staging`; the teammate reviews it and CI passes before merge.
-3. Open a release PR from `lab5-staging` into `main`; the teammate reviews it and required checks pass.
-4. The eventual deploy workflow deploys accepted commits from `main` only, identifies the image/revision by commit SHA, and runs a read-only smoke check.
-5. Record the PR, workflow run, commit SHA, Cloud Run revision, and public URL in the Lab 5 evidence index.
+1. Start every task branch from `lab5-staging`.
+2. Open a PR into `lab5-staging`; the teammate reviews it and the `test-and-docker` check must pass before merge.
+3. Open a release PR from `lab5-staging` into `main`; the teammate reviews and approves it, and the required `test-and-docker` check on `main` must pass.
+4. Merging the release PR into `main` triggers `.github/workflows/deploy.yml` (`Deploy CoursePMS`), which:
+   - Re-runs the full reusable CI workflow (`.github/workflows/ci-docker.yml`, job `test-and-docker`) on the accepted `main` commit.
+   - Authenticates to GCP via keyless Workload Identity Federation (`google-github-actions/auth`, no JSON service-account key).
+   - Builds the production image with `--build-arg APP_COMMIT_SHA="$IMAGE_TAG"` and pushes `asia-southeast1-docker.pkg.dev/cpe334-kingnine/course-pms/course-pms:<40-char-sha>`.
+   - Runs `bash deploy/release.sh`:
+     1. Resolves the image tag to an immutable `@sha256` digest (`DIGEST_IMAGE`).
+     2. Updates `course-pms-migrate` to `$DIGEST_IMAGE` and executes it with `--wait` (aborting before the web service is updated if the migration fails).
+     3. Updates the Cloud Run service `course-pms` to `$DIGEST_IMAGE` with `--update-env-vars="APP_COMMIT_SHA=$IMAGE_TAG"` and routes 100% of traffic to the latest revision.
+   - Runs `python3 deploy/smoke_test.py "$SERVICE_URL"` (`EXPECTED_COMMIT_SHA=$IMAGE_TAG`) to verify `/api/health` (including exact `commitSha` match), `/api/ready` (`{"status":"ready","db":"connected"}`), `/` (HTML SPA), and optional authenticated `/api/auth/me` + `/api/courses` + `/api/auth/logout`.
 
-The deploy workflow, resource inventory, exact migration sequence, smoke test, and rollback commands remain pending the later deployment Issues. Do not claim a release has been deployed until the workflow run and active revision have been verified in GitHub and GCP.
+### 2. Running-Commit & Revision Identification (`C-06`)
+
+To verify which Git commit and Cloud Run revision are currently serving public traffic:
+
+```bash
+# 1. Inspect the live /api/health endpoint (returns status, service, commitSha, timestamp)
+curl -s https://course-pms-859617270560.asia-southeast1.run.app/api/health
+
+# 2. Inspect the active Cloud Run revision and image digest in GCP
+gcloud run services describe course-pms \
+  --region asia-southeast1 \
+  --project cpe334-kingnine \
+  --format="yaml(status.latestReadyRevisionName,status.traffic,spec.template.spec.containers[0].image)"
+```
+
+### 3. Rollback Procedure
+
+If a deployed release needs to be rolled back to a previously built 40-character commit SHA image in Artifact Registry:
+
+- **Option A — GitHub Actions manual rollback (`workflow_dispatch`):**
+  1. Open **Actions -> Deploy CoursePMS -> Run workflow** on branch `main`.
+  2. Enter `image_tag` = `<40-character-previous-commit-SHA>`.
+  3. The workflow skips rebuild and migration (`ROLLBACK=true`), resolves the existing image's `@sha256` digest, updates `course-pms` with `APP_COMMIT_SHA=<rollback-sha>`, routes 100% traffic to the rolled-back revision, and runs `deploy/smoke_test.py`.
+
+- **Option B — CLI rollback via `deploy/release.sh`:**
+  ```bash
+  PROJECT_ID=cpe334-kingnine \
+  REGION=asia-southeast1 \
+  IMAGE_TAG=<40-char-previous-commit-sha> \
+  ROLLBACK=true \
+  bash deploy/release.sh
+  ```
+
+- **Offline verification of release & smoke scripts (no GCP access):**
+  ```bash
+  bash -n deploy/deploy.sh deploy/teardown.sh deploy/release.sh
+  bash deploy/tests/test_deploy_stub.sh
+  bash deploy/tests/test_release_stub.sh
+  python3 -m unittest discover -s deploy/tests -p 'test_smoke.py'
+  ```
 
 ## Related Issues
 
 - [#19 - GCP project, budget, and team access](https://github.com/Magiciancat9/Course_management/issues/19)
 - [#20 - Make CoursePMS cloud-ready and document configuration](https://github.com/Magiciancat9/Course_management/issues/20)
 - [#21 - Verify reproducible Docker build](https://github.com/Magiciancat9/Course_management/issues/21)
+- [#22 - Add build and test CI for pull requests](https://github.com/Magiciancat9/Course_management/issues/22)
 - [#23 - Provision and deploy CoursePMS to GCP](https://github.com/Magiciancat9/Course_management/issues/23)
+- [#25 - Require passing CI and prove merge blocking](https://github.com/Magiciancat9/Course_management/issues/25)
+- [#26 - Release reviewed changes from main through CI/CD](https://github.com/Magiciancat9/Course_management/issues/26)

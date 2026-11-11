@@ -1,0 +1,159 @@
+# ##############################################################################
+# Deploy CoursePMS — automatic deployment from main to Google Cloud Run
+# ##############################################################################
+# WHAT THIS WORKFLOW DOES
+#   On every push to `main` (or a manual run on `main`) it:
+#     1) runs the CI workflow (ci-docker.yml, job `test-and-docker`) first,
+#     2) authenticates to Google Cloud WITHOUT a key file (Workload Identity
+#        Federation),
+#     3) builds + pushes the image tagged with the full 40-char commit SHA,
+#     4) runs deploy/release.sh (verify image digest -> migrate -> update service
+#        with APP_COMMIT_SHA),
+#     5) smoke-tests the public URL (deploy/smoke_test.py),
+#     6) writes a deployment summary.
+#   MANUAL ROLLBACK: run the workflow by hand on `main` and enter `image_tag` =
+#   the full 40-character commit SHA of an image that already exists in Artifact
+#   Registry. Tests, build and migration are skipped; only the service is pointed
+#   back to that image.
+#
+# IMPORTANT
+#   - Nothing secret lives in this file. Values come from GitHub
+#     Settings -> Environments -> demo (variables) and secrets.
+#   - Required environment variables in `demo`:
+#       GCP_PROJECT_ID, GCP_REGION, WIF_PROVIDER, WIF_SERVICE_ACCOUNT
+#   - Optional login smoke test: variable SMOKE_EMAIL + secret SMOKE_PASSWORD
+#     (set both or neither).
+# ##############################################################################
+
+name: Deploy CoursePMS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Rollback: full commit SHA of an existing image. Empty = test, build and deploy current main.'
+        type: string
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-course-pms
+  cancel-in-progress: false
+
+jobs:
+  # ----------------------------------------------------------------------------
+  # Job 1: run the CI workflow (its job id is `test-and-docker`).
+  # Skipped for rollbacks (image_tag set) and for anything that is not `main`.
+  # ----------------------------------------------------------------------------
+  test:
+    if: github.ref == 'refs/heads/main' && !inputs.image_tag
+    uses: ./.github/workflows/ci-docker.yml
+
+  # ----------------------------------------------------------------------------
+  # Job 2: build, migrate, deploy, smoke-test.
+  # Only runs on `main` if tests passed (or this is a manual rollback).
+  # ----------------------------------------------------------------------------
+  deploy:
+    needs: test
+    if: >-
+      always() && !cancelled() && github.ref == 'refs/heads/main' &&
+      (needs.test.result == 'success' ||
+       (github.event_name == 'workflow_dispatch' && inputs.image_tag != '' && needs.test.result == 'skipped'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: demo
+    permissions:
+      contents: read
+      id-token: write # required for keyless Google Cloud login (WIF)
+    env:
+      PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+      REGION: ${{ vars.GCP_REGION }}
+      REPO_NAME: course-pms
+      SERVICE_NAME: course-pms
+      MIGRATE_JOB_NAME: course-pms-migrate
+      IMAGE_TAG: ${{ inputs.image_tag || github.sha }}
+      ROLLBACK: ${{ inputs.image_tag != '' }}
+    steps:
+      # ------------------------------------------------------------------------
+      # 1. Check out source code (no git credentials kept on the runner)
+      # ------------------------------------------------------------------------
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # ------------------------------------------------------------------------
+      # 2. Fail early if settings are missing or the tag is not a full SHA
+      # ------------------------------------------------------------------------
+      - name: Validate deployment settings
+        env:
+          WIF_PROVIDER: ${{ vars.WIF_PROVIDER }}
+          WIF_SERVICE_ACCOUNT: ${{ vars.WIF_SERVICE_ACCOUNT }}
+        run: |
+          test -n "$PROJECT_ID" && test -n "$REGION"
+          test -n "$WIF_PROVIDER" && test -n "$WIF_SERVICE_ACCOUNT"
+          [[ "$IMAGE_TAG" =~ ^[0-9a-f]{40}$ ]] || { echo 'Image tag must be a full 40-character commit SHA.'; exit 1; }
+
+      # ------------------------------------------------------------------------
+      # 3. Log in to Google Cloud with Workload Identity Federation (no key file)
+      # ------------------------------------------------------------------------
+      - name: Authenticate to Google Cloud without a key
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3
+        with:
+          workload_identity_provider: ${{ vars.WIF_PROVIDER }}
+          service_account: ${{ vars.WIF_SERVICE_ACCOUNT }}
+      - uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db # v3.0.1
+
+      # ------------------------------------------------------------------------
+      # 4. Build and push the image tagged with the full commit SHA
+      #    (skipped for rollbacks)
+      # ------------------------------------------------------------------------
+      - name: Build and push image
+        if: env.ROLLBACK != 'true'
+        run: |
+          gcloud auth configure-docker "$REGION-docker.pkg.dev" --quiet
+          IMAGE="$REGION-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/$SERVICE_NAME:$IMAGE_TAG"
+          docker build --build-arg APP_COMMIT_SHA="$IMAGE_TAG" --tag "$IMAGE" .
+          docker push "$IMAGE"
+
+      # ------------------------------------------------------------------------
+      # 5. Verify image -> run migration job -> update the Cloud Run service
+      #    Exports SERVICE_URL and DEPLOYED_IMAGE for the next steps.
+      # ------------------------------------------------------------------------
+      - name: Verify image, migrate and deploy
+        run: bash deploy/release.sh
+
+      # ------------------------------------------------------------------------
+      # 6. Smoke test the live URL
+      # ------------------------------------------------------------------------
+      - name: Setup Python 3.14
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.14"
+
+      - name: Smoke test public URL
+        env:
+          EXPECTED_COMMIT_SHA: ${{ env.IMAGE_TAG }}
+          SMOKE_EMAIL: ${{ vars.SMOKE_EMAIL }}
+          SMOKE_PASSWORD: ${{ secrets.SMOKE_PASSWORD }}
+        run: python3 deploy/smoke_test.py "$SERVICE_URL"
+
+      # ------------------------------------------------------------------------
+      # 7. Deployment summary shown on the workflow run page
+      # ------------------------------------------------------------------------
+      - name: Record deployment
+        run: |
+          {
+            echo '### CoursePMS Cloud Run deployment'
+            echo "- Commit image tag: \`$IMAGE_TAG\`"
+            echo "- Digest: \`$DEPLOYED_IMAGE\`"
+            echo "- Rollback: $ROLLBACK"
+            echo "- URL: $SERVICE_URL"
+            echo '- Smoke test: passed (/api/health + commitSha, /api/ready DB, HTML).'
+            echo '- See smoke step for optional login check status.'
+          } >> "$GITHUB_STEP_SUMMARY"

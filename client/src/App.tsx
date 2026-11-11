@@ -456,7 +456,10 @@ export default function App() {
       <div className="min-vh-100 d-flex flex-column bg-light">
         <nav className="navbar navbar-dark bg-dark px-4 py-3 shadow-sm">
           <span className="navbar-brand fw-bold mb-0 h1">
-            CoursePMS <span className="badge bg-info text-dark ms-2">CPE 334 Sprint 1</span>
+            CoursePMS{' '}
+            <span className="badge bg-info text-dark ms-2" data-testid="release-badge">
+              CPE 334 Cloud Release
+            </span>
           </span>
           <span className="text-light small">Course Project Management System</span>
         </nav>
