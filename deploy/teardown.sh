@@ -61,7 +61,8 @@ delete_if_exists() {
     printf '%s\n' "$err_msg" >&2
   fi
   rm -f "$stderr_file"
-  if printf '%s' "$err_msg" | grep -Eiq '(NOT_FOUND|not found|was not found|does not exist|Cannot find|HTTPError 404|code[=: ]+404)'; then
+  if ! printf '%s' "$err_msg" | grep -Eiq '(PERMISSION_DENIED|permission|denied|forbidden|unauthorized|unauthenticated|not authorized|HTTPError 40[13]|code[=: ]+40[13])' \
+    && printf '%s' "$err_msg" | grep -Eiq '(NOT_FOUND|not found|was not found|does not exist|Cannot find|HTTPError 404|code[=: ]+404)'; then
     echo "Info: ${label} is already absent; skipping."
     return 0
   fi

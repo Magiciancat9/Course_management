@@ -40,6 +40,12 @@ case "${TEARDOWN_MODE:-normal}" in
       exit 1
     fi
     ;;
+  ambig-perm-not-found)
+    if [[ "$*" == "run services delete "* ]]; then
+      echo "ERROR: (gcloud.run.services.delete) Resource 'course-pms' was not found or you do not have permission to access it." >&2
+      exit 1
+    fi
+    ;;
 esac
 STUB
 chmod +x "$TASK_TMP/gcloud"
@@ -96,8 +102,8 @@ grep -q 'already absent; skipping' "$TASK_TMP/out"
 grep -q 'Teardown completed.' "$TASK_TMP/out"
 echo "PASS absent resources (NOT_FOUND) are skipped cleanly"
 
-# 6. Permission and API failures abort and never print "Teardown completed."
-for mode in perm-fail-sql api-fail-secret; do
+# 6. Permission, ambiguous not-found/permission, and API failures abort and never print "Teardown completed."
+for mode in perm-fail-sql api-fail-secret ambig-perm-not-found; do
   : > "$CALL_LOG"
   if printf 'teardown-test\n' | TEARDOWN_MODE="$mode" REGION=asia-southeast1 bash "$ROOT/deploy/teardown.sh" >"$TASK_TMP/out" 2>&1; then
     echo "Expected teardown failure for mode $mode" >&2
