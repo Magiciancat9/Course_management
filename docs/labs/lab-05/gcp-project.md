@@ -1,5 +1,7 @@
 # Lab 5 GCP Project Setup Record
 
+> Historical planning snapshot: the unverified items below describe the state when this record was created, not the current deployment. For the later resource inventory and evidence, see [deployment.md](deployment.md) and [evidence.md](evidence.md).
+
 This page records the team's selected GCP project and the human verification steps for Lab 5. Values shown as confirmed below came from the project information screenshot shared by the team; they do not prove that billing, IAM access, or a budget is configured.
 
 ## Project identity
