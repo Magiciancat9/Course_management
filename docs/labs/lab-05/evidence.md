@@ -10,7 +10,7 @@ This index records the evidence available on 2026-11-12. Links to GitHub require
 - Recorded public URL: <https://course-pms-859617270560.asia-southeast1.run.app>
 - Stack, configuration, commands, cloud resources, release and rollback: [deployment.md](deployment.md).
 - Initial setup planning snapshot: [gcp-project.md](gcp-project.md). The latter's unchecked items describe its original planning state.
-- Separate LEB2 evidence document: [draft PDF](lab5_sec31_EN-022_P6.pdf). Its submission filename is `lab5_sec31_EN-022_P6.pdf`; it must be updated after the outstanding evidence and review are complete.
+- The separate LEB2 evidence PDF is kept outside the repository. Its submission filename is `lab5_sec31_EN-022_P6.pdf`; update its release references before submission.
 
 ## Acceptance evidence
 
@@ -28,7 +28,7 @@ This index records the evidence available on 2026-11-12. Links to GitHub require
 1. Lab 5 tasks were tracked in labelled Issues [#19-#27](https://github.com/Magiciancat9/Course_management/issues?q=is%3Aissue+%22Lab+5%22); implementation PRs, including [#35](https://github.com/Magiciancat9/Course_management/pull/35), targeted `lab5-staging`.
 2. The independently reviewed [PR #36](https://github.com/Magiciancat9/Course_management/pull/36) promoted staging into `main`. The merge commit `fa7f156aa782eea48c36be5f23eaa7336a582458` triggered [run 43189078700](https://github.com/Magiciancat9/Course_management/actions/runs/43189078700).
 3. [Run 43196661493](https://github.com/Magiciancat9/Course_management/actions/runs/43196661493) later rebuilt that same commit and deployed digest `sha256:aec5f0178e7616bb5c039a6a0fca5f8e68356e412139942bd12e61550ce7fb04` as `course-pms-00003-b5t`. The previous digest was `sha256:e089ccd506bfeef8c04d7c24553488df238df6ba450354118feaec1bcb0eea7c`.
-4. The documentation task is [Issue #24](https://github.com/Magiciancat9/Course_management/issues/24), with [draft PR #37](https://github.com/Magiciancat9/Course_management/pull/37) targeting `lab5-staging`. Its review and merge remain pending.
+4. The documentation task is [Issue #24](https://github.com/Magiciancat9/Course_management/issues/24). [PR #37](https://github.com/Magiciancat9/Course_management/pull/37) was reviewed and merged into `lab5-staging`; promotion of the final evidence documentation to `main` remains pending.
 
 ## Before submission
 
