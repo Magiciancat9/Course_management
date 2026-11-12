@@ -6,26 +6,76 @@ import prisma from '../src/prisma';
 import { seedDatabase } from '../prisma/seed';
 import { clearRevokedTokens } from '../src/middleware/auth';
 
-describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TEST-22)', () => {
+const DEMO_PASSWORD = process.env.DEMO_USER_PASSWORD || 'Password123!';
+
+describe('CoursePMS Sprint 1 â€” API & Database Integration Suite (TEST-01 to TEST-22)', () => {
   let seeded: Awaited<ReturnType<typeof seedDatabase>>;
 
   beforeEach(async () => {
     await clearRevokedTokens();
     seeded = await seedDatabase(prisma);
   });
-
   afterAll(async () => {
     await prisma.$disconnect();
+  });
+
+  it('requires a production seed password and preserves existing production data', async () => {
+    const originalNodeEnv = process.env.NODE_ENV;
+    const originalDemoPassword = process.env.DEMO_USER_PASSWORD;
+    const proposal = await prisma.projectProposal.findFirst();
+    expect(proposal).not.toBeNull();
+    const markerTitle = 'Existing production proposal must remain unchanged';
+    await prisma.projectProposal.update({
+      where: { id: proposal!.id },
+      data: { title: markerTitle },
+    });
+    const userCount = await prisma.user.count();
+
+    try {
+      process.env.NODE_ENV = 'production';
+      delete process.env.DEMO_USER_PASSWORD;
+      await expect(seedDatabase(prisma)).rejects.toThrow(
+        'DEMO_USER_PASSWORD must be configured before seeding production.'
+      );
+
+      process.env.DEMO_USER_PASSWORD = 'lab5-production-seed-test-password';
+      await seedDatabase(prisma);
+
+      expect(await prisma.user.count()).toBe(userCount);
+      expect(
+        (await prisma.projectProposal.findUnique({ where: { id: proposal!.id } }))
+          ?.title
+      ).toBe(markerTitle);
+    } finally {
+      if (originalNodeEnv === undefined) {
+        delete process.env.NODE_ENV;
+      } else {
+        process.env.NODE_ENV = originalNodeEnv;
+      }
+      if (originalDemoPassword === undefined) {
+        delete process.env.DEMO_USER_PASSWORD;
+      } else {
+        process.env.DEMO_USER_PASSWORD = originalDemoPassword;
+      }
+    }
   });
 
   it('TEST-01 / AC-01: verifies health check, valid Student/Instructor login, current-user identity, and credential hygiene (no passwordHash)', async () => {
     const healthRes = await request(app).get('/api/health');
     expect(healthRes.status).toBe(200);
     expect(healthRes.body.status).toBe('ok');
+    expect(healthRes.body.commitSha).toBeTruthy();
+
+    const readinessRes = await request(app).get('/api/ready');
+    expect(readinessRes.status).toBe(200);
+    expect(readinessRes.body).toMatchObject({
+      status: 'ready',
+      db: 'connected',
+    });
 
     const studentLogin = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
+      .send({ email: 'pawarit@mail.kmutt.ac.th', password: DEMO_PASSWORD });
 
     expect(studentLogin.status).toBe(200);
     expect(studentLogin.body.token).toBeTruthy();
@@ -65,7 +115,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
 
     const loginRes = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
+      .send({ email: 'pawarit@mail.kmutt.ac.th', password: DEMO_PASSWORD });
     const token = loginRes.body.token;
 
     const logoutRes = await request(app)
@@ -83,7 +133,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
   it('TEST-04 / AC-04: allows an unassigned student to create a project team and add an eligible teammate', async () => {
     const sudaLogin = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'suda@mail.kmutt.ac.th', password: 'Password123!' });
+      .send({ email: 'suda@mail.kmutt.ac.th', password: DEMO_PASSWORD });
     const token = sudaLogin.body.token;
 
     const createRes = await request(app)
@@ -107,7 +157,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
   it('TEST-05 / AC-05: enforces BR-01 by preventing a student from creating or joining a second active team in the same course', async () => {
     const pawaritLogin = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
+      .send({ email: 'pawarit@mail.kmutt.ac.th', password: DEMO_PASSWORD });
     const pawaritToken = pawaritLogin.body.token;
 
     // Pawarit is already in Team Alpha; creating another team in CPE334 must be rejected (409)
@@ -122,7 +172,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
     // Somchai (Team Beta leader) trying to add Pawarit to Team Beta must also be rejected (409)
     const somchaiLogin = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'somchai@mail.kmutt.ac.th', password: 'Password123!' });
+      .send({ email: 'somchai@mail.kmutt.ac.th', password: DEMO_PASSWORD });
 
     const duplicateJoin = await request(app)
       .post(`/api/teams/${seeded.teamBeta.id}/members`)
@@ -136,7 +186,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
   it('TEST-06 / AC-06: enforces BR-02 by rejecting adding a 4th member when course maxTeamSize (3) is reached', async () => {
     const pawaritLogin = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
+      .send({ email: 'pawarit@mail.kmutt.ac.th', password: DEMO_PASSWORD });
     const token = pawaritLogin.body.token;
 
     // Add 2nd member (tatchakorn) and 3rd member (suda) to Team Alpha (maxTeamSize = 3)
@@ -166,7 +216,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
   it('TEST-15: enforces team capacity during concurrent member additions and persists the bounded roster', async () => {
     const login = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
+      .send({ email: 'pawarit@mail.kmutt.ac.th', password: DEMO_PASSWORD });
     const token = login.body.token;
 
     const addSecondMember = await request(app)
@@ -214,7 +264,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
   it('TEST-16: allows only one concurrent proposal submission and increments the persisted revision once', async () => {
     const login = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
+      .send({ email: 'pawarit@mail.kmutt.ac.th', password: DEMO_PASSWORD });
     const token = login.body.token;
 
     const responses = await Promise.all(
@@ -244,7 +294,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
   it('TEST-17: prevents a concurrent stale draft save from overwriting submitted proposal data', async () => {
     const login = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
+      .send({ email: 'pawarit@mail.kmutt.ac.th', password: DEMO_PASSWORD });
     const token = login.body.token;
     const submittedTitle = 'Proposal submitted during concurrent draft save';
 
@@ -278,7 +328,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
   it('TEST-18: allows only one concurrent instructor decision for a submitted proposal', async () => {
     const login = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'instructor@kmutt.ac.th', password: 'Password123!' });
+      .send({ email: 'instructor@kmutt.ac.th', password: DEMO_PASSWORD });
     const token = login.body.token;
     const proposal = await prisma.projectProposal.findUniqueOrThrow({
       where: { teamId: seeded.teamBeta.id },
@@ -319,7 +369,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
   it('TEST-19: rejects unknown emails with the same credential error and rejects malformed or expired tokens', async () => {
     const unknownEmail = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'unknown@example.test', password: 'Password123!' });
+      .send({ email: 'unknown@example.test', password: DEMO_PASSWORD });
     expect(unknownEmail.status).toBe(401);
     expect(unknownEmail.body.code).toBe('INVALID_CREDENTIALS');
     expect(unknownEmail.body.token).toBeUndefined();
@@ -352,10 +402,10 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
     const [pawaritLogin, somchaiLogin] = await Promise.all([
       request(app)
         .post('/api/auth/login')
-        .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' }),
+        .send({ email: 'pawarit@mail.kmutt.ac.th', password: DEMO_PASSWORD }),
       request(app)
         .post('/api/auth/login')
-        .send({ email: 'somchai@mail.kmutt.ac.th', password: 'Password123!' }),
+        .send({ email: 'somchai@mail.kmutt.ac.th', password: DEMO_PASSWORD }),
     ]);
 
     const responses = await Promise.all([
@@ -382,7 +432,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
   it('TEST-22: returns a domain conflict for concurrent team creation by one student', async () => {
     const login = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'suda@mail.kmutt.ac.th', password: 'Password123!' });
+      .send({ email: 'suda@mail.kmutt.ac.th', password: DEMO_PASSWORD });
     const token = login.body.token;
 
     const responses = await Promise.all([
@@ -409,7 +459,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
   it('TEST-07 & TEST-08 / AC-07 & AC-08: validates proposal completeness (BR-04), saves and submits proposal, and blocks edits while SUBMITTED (BR-03) (workflow)', async () => {
     const pawaritLogin = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
+      .send({ email: 'pawarit@mail.kmutt.ac.th', password: DEMO_PASSWORD });
     const token = pawaritLogin.body.token;
 
     // 1. Incomplete submission (short title) -> 400 BR04_INCOMPLETE_PROPOSAL
@@ -452,12 +502,12 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
   it('TEST-09 / AC-09: enforces BR-05 on Instructor review feedback and completes REVISION_REQUESTED -> SUBMITTED -> APPROVED lifecycle (workflow)', async () => {
     const pawaritLogin = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
+      .send({ email: 'pawarit@mail.kmutt.ac.th', password: DEMO_PASSWORD });
     const studentToken = pawaritLogin.body.token;
 
     const instructorLogin = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'instructor@kmutt.ac.th', password: 'Password123!' });
+      .send({ email: 'instructor@kmutt.ac.th', password: DEMO_PASSWORD });
     const instructorToken = instructorLogin.body.token;
 
     // Submit Team Alpha proposal first
@@ -514,7 +564,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
   it('TEST-10 / AC-10: enforces BR-06 role and cross-team ownership restrictions without leaking private data (authorization)', async () => {
     const pawaritLogin = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
+      .send({ email: 'pawarit@mail.kmutt.ac.th', password: DEMO_PASSWORD });
     const pawaritToken = pawaritLogin.body.token;
     const teamBetaProposal = await prisma.projectProposal.findUniqueOrThrow({
       where: { teamId: seeded.teamBeta.id },
@@ -559,7 +609,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
   it('TEST-07 / AC-07: persists a draft, retrieves it, and records submission metadata (persistence)', async () => {
     const login = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
+      .send({ email: 'pawarit@mail.kmutt.ac.th', password: DEMO_PASSWORD });
     const token = login.body.token;
     const draft = {
       title: 'Course project proposal',
@@ -585,7 +635,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
 
     const instructorLogin = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'instructor@kmutt.ac.th', password: 'Password123!' });
+      .send({ email: 'instructor@kmutt.ac.th', password: DEMO_PASSWORD });
     const instructorGetRes = await request(app)
       .get(`/api/teams/${seeded.teamAlpha.id}/proposal`)
       .set('Authorization', `Bearer ${instructorLogin.body.token}`);
@@ -605,7 +655,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
   it('TEST-08 / AC-08: checks each completeness threshold and locks repeated submission (validation)', async () => {
     const login = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
+      .send({ email: 'pawarit@mail.kmutt.ac.th', password: DEMO_PASSWORD });
     const token = login.body.token;
 
     const shortTitle = await request(app)
@@ -651,7 +701,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
   it('TEST-09 / AC-09: rejects review of a non-submitted proposal before validating its feedback (state validation)', async () => {
     const instructorLogin = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'instructor@kmutt.ac.th', password: 'Password123!' });
+      .send({ email: 'instructor@kmutt.ac.th', password: DEMO_PASSWORD });
     const proposal = await prisma.projectProposal.findUnique({
       where: { teamId: seeded.teamAlpha.id },
     });
@@ -667,7 +717,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
   it('TEST-10 / AC-10: rejects cross-team submission without returning proposal data (cross-team submission)', async () => {
     const login = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
+      .send({ email: 'pawarit@mail.kmutt.ac.th', password: DEMO_PASSWORD });
 
     const response = await request(app)
       .post(`/api/teams/${seeded.teamBeta.id}/proposal/submit`)
@@ -706,7 +756,7 @@ describe('CoursePMS Sprint 1 — API & Database Integration Suite (TEST-01 to TE
   it('TEST-14 / AC-03: rejects a logged-out token after the app is re-imported', async () => {
     const login = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'pawarit@mail.kmutt.ac.th', password: 'Password123!' });
+      .send({ email: 'pawarit@mail.kmutt.ac.th', password: DEMO_PASSWORD });
     const token = login.body.token;
 
     const logout = await request(app)

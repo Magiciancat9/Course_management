@@ -52,8 +52,19 @@ app.get('/api/health', (_req, res) => {
   res.status(200).json({
     status: 'ok',
     service: 'course-pms-api',
+    commitSha: process.env.APP_COMMIT_SHA || 'local',
     timestamp: new Date().toISOString(),
   });
+});
+
+app.get('/api/ready', async (_req, res) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    res.status(200).json({ status: 'ready', db: 'connected' });
+  } catch (error) {
+    console.error('Readiness check failed:', error);
+    res.status(503).json({ status: 'not_ready', db: 'disconnected' });
+  }
 });
 
 // ============================================================================
