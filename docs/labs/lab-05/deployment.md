@@ -15,6 +15,13 @@ This document records the CoursePMS cloud-readiness contract, provisioned GCP re
 
 The application serves its built frontend and API from the same origin when `NODE_ENV=production`. The client uses relative API paths; Vite's `localhost:3000` proxy is for local development only.
 
+### Implementation choices
+
+- The application image contains the Node.js/Express API and the built React frontend; PostgreSQL runs separately (Compose locally, Cloud SQL in GCP), not inside the application container.
+- Cloud Run serves the image and a separate Cloud Run job applies the committed Prisma migrations before a normal release. Production releases do not run the seed job.
+- GitHub Actions authenticates with Workload Identity Federation instead of a downloaded service-account key. The deployed image is resolved to a digest and `/api/health` reports the release commit.
+- Initial provisioning, the reviewed automated release, and the later persistence verification are separate events; see the [evidence index](evidence.md) for their dates, links, and limitations.
+
 ## Environment variables
 
 The committed `.env.example` files contain placeholders only. Copy them locally and replace placeholders in ignored `.env` files; never commit a real `.env`, connection string, password, or key.
@@ -31,6 +38,7 @@ The committed `.env.example` files contain placeholders only. Copy them locally 
 | `POSTGRES_PASSWORD` | Password for the local PostgreSQL service in Docker Compose. Not read by the application server. | **Yes** | Root ignored `.env` for local Compose only; use a different credential for Cloud SQL |
 | `POSTGRES_PORT` | Optional host port override for the local Docker Compose PostgreSQL service (defaults to `5432`). | No | Local shell/`.env` override when host port `5432` is already in use |
 | `APP_PORT` | Optional host port override for the local Docker Compose application service (defaults to `3000`, mapped to container port `8080`). | No | Local shell/`.env` override when host port `3000` is already in use |
+| `SMOKE_EMAIL` / `SMOKE_PASSWORD` | Optional credentials for authenticated release smoke checks; set both or neither. | Password: **Yes** | GitHub `demo` environment variable / secret, respectively |
 
 Use unique, strong secrets. Never reuse a local demo password as a Cloud SQL password or JWT signing key. Do not print secret values in CI logs, deployment output, Issues, screenshots, or AI chats.
 
@@ -226,6 +234,12 @@ After `deploy/deploy.sh` finishes and prints `SERVICE_URL`:
    - Verify at least one expected rule rejection / access restriction (e.g., duplicate team membership `409 BR01_DUPLICATE_TEAM_MEMBERSHIP` or cross-team private proposal access `403 BR06_FORBIDDEN_TEAM_ACCESS`).
    - Record the actual Cloud Run URL, active revision name, commit SHA, and redacted screenshots in Issue #23 and this document.
 
+### Recorded persistence verification (`C-05`)
+
+On 2026-11-12 the team created the synthetic team `Lab5-Persistence-20261112` on revision `course-pms-00002-8hp`. The service was temporarily disabled with manual scaling set to zero, then restored to automatic scaling; a new instance started and the team remained visible. A later [workflow run](https://github.com/Magiciancat9/Course_management/actions/runs/43196661493) built and deployed a different image digest to revision `course-pms-00003-b5t`, using the same reviewed source commit `fa7f156aa782eea48c36be5f23eaa7336a582458`. The same team remained visible after the redeployment. The service-level maximum of 20 and revision-level maximum of 3 were checked after restoring autoscaling.
+
+The [before record](https://github.com/Magiciancat9/Course_management/issues/27#issuecomment-6820053800) and [restart observations](https://github.com/Magiciancat9/Course_management/issues/27#issuecomment-6820497731) are textual; the [post-deployment image](https://github.com/user-attachments/assets/685d8a87-f715-48b4-a2fc-3b402aa3b4b1) is a redacted screenshot. [Issue #27](https://github.com/Magiciancat9/Course_management/issues/27) includes the teammate's verification. These are historical observations, not a guarantee of current service availability.
+
 ## Automated Release & Rollback Procedure (`Lab5-07` / Issue #26)
 
 ### 1. Branch & Release Flow (`lab5-staging` -> `main`)
@@ -263,6 +277,8 @@ gcloud run services describe course-pms \
 
 If a deployed release needs to be rolled back to a previously built 40-character commit SHA image in Artifact Registry:
 
+Both options resolve the SHA **tag's current digest**, not a historical digest. A later rebuild of the same commit can move that tag to a different digest, as happened during the C-05 verification. Check the tag's current digest against the intended release record before rollback; the tag alone cannot select the earlier digest. Also verify database-schema compatibility: rollback does not reverse migrations.
+
 - **Option A — GitHub Actions manual rollback (`workflow_dispatch`):**
   1. Open **Actions -> Deploy CoursePMS -> Run workflow** on branch `main`.
   2. Enter `image_tag` = `<40-character-previous-commit-SHA>`.
@@ -293,5 +309,8 @@ If a deployed release needs to be rolled back to a previously built 40-character
 - [#21 - Verify reproducible Docker build](https://github.com/Magiciancat9/Course_management/issues/21)
 - [#22 - Add build and test CI for pull requests](https://github.com/Magiciancat9/Course_management/issues/22)
 - [#23 - Provision and deploy CoursePMS to GCP](https://github.com/Magiciancat9/Course_management/issues/23)
+- [#24 - Complete deployment documentation and evidence index](https://github.com/Magiciancat9/Course_management/issues/24)
 - [#25 - Require passing CI and prove merge blocking](https://github.com/Magiciancat9/Course_management/issues/25)
 - [#26 - Release reviewed changes from main through CI/CD](https://github.com/Magiciancat9/Course_management/issues/26)
+- [#27 - Verify persistence after restart and redeploy](https://github.com/Magiciancat9/Course_management/issues/27)
+- [Evidence index and known gaps](evidence.md)
