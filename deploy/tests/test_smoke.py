@@ -36,6 +36,9 @@ verify_spec.loader.exec_module(verify_mod)
 
 
 class SmokeTests(unittest.TestCase):
+    def test_lab5_c02_intentional_failure(self):
+        self.fail('Intentional failure for Lab 5 C-02 merge-gate evidence; never merge this PR')
+
     def response(self, base, path, data=None, token=None):
         return {
             '/api/health': b'{"status":"ok","service":"course-pms-api","commitSha":"1111111111111111111111111111111111111111"}',
