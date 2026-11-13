@@ -1,9 +1,22 @@
 # Lab 6: Sprint 1 UAT Handoff
 
 **Status: preparation in progress; not yet ready for partner handoff.** The
-partner, UAT cases, accounts, test data, and communication channel still need
-to be confirmed. This document identifies the intended test baseline, not an
-acceptance decision.
+partner team has been identified, but UAT cases, accounts, test data, and the
+communication channel still need to be confirmed. This document identifies
+the intended test baseline, not an acceptance decision.
+
+## Partner team
+
+The independent UAT partner for CoursePMS is the fastTrack team, InfaCompany
+(Section 31, EN-028): Supapanya Yathip (`zerotwobook`) and Atip Infa-udom
+(`Atip-Infa`). Their [partner handoff](https://github.com/zerotwobook/fastTrack/blob/docs/s2-a-lab6-uat/docs/labs/lab-06/partner-handoff.md)
+identifies CoursePMS as their partner product. Our team independently tests
+their fastTrack product; their team independently tests CoursePMS.
+
+The partner's document proposes a retest on 14 November 2026 at 13:30
+Asia/Bangkok, but explicitly says partner confirmation is pending. Confirm
+the initial session, retest, and contact channel with both teams in
+[#51](https://github.com/Magiciancat9/Course_management/issues/51).
 
 ## Product and release under test
 
@@ -21,9 +34,9 @@ acceptance decision.
 On 2026-11-13 (UTC+7), the deployment run reported that
 `course-pms-00006-sbx` was serving 100% of traffic. A subsequent read-only
 check of `/api/health` returned HTTP 200 and `commitSha` matching the intended
-baseline; `/api/ready` returned HTTP 200 with the database connected. The
-revision is a deployment-time observation, not a guarantee of the current
-traffic configuration.
+baseline at approximately 17:29 Asia/Bangkok; `/api/ready` returned HTTP 200
+with the database connected. The revision is a deployment-time observation,
+not a guarantee of the current traffic configuration.
 
 The deployed commit is newer than the Sprint 1 tag. The
 [tag-to-baseline comparison](https://github.com/Magiciancat9/Course_management/compare/v1.0.0-sprint1...150dc5db3de5c829a7d9ef1adb545191cc37542d)
@@ -109,10 +122,10 @@ before deployment in [#51](https://github.com/Magiciancat9/Course_management/iss
 
 ## Communication and defect handoff
 
-Partner team and primary communication channel: **TBD in #51**. Confirm the
-channel and an escalation contact with the partner before sending this
-packet; do not put credentials in the public coordination record. Notify
-the partner before a deployment that could affect a test session.
+Primary communication channel and escalation contact: **not yet agreed**.
+Confirm them with the fastTrack team in #51 before sending this packet; do not
+put credentials in the public coordination record. Notify the partner before
+a deployment that could affect a test session.
 
 Agree where findings will be filed before testing. For each failure ask the
 tester to provide a report ID, reporter, tested URL and commit/revision,
