@@ -1,9 +1,10 @@
 # Lab 6: Sprint 1 UAT Handoff
 
-**Status: preparation in progress.** The partner, communication channel,
-account verification and case packet have been confirmed by the Product Team;
-the case and data preparation issues remain open. This document identifies
-the intended test baseline, not an acceptance decision.
+**Status: preparation in progress; not yet cleared for independent UAT.**
+The Product Team identified the partner, private communication channel and
+case packet, and reported checking accounts and sending credentials. Current
+traffic, individual account/fixture states, packet receipt and the test
+window remain to be confirmed. This is not an acceptance decision.
 
 ## Partner team
 
@@ -28,15 +29,17 @@ the initial session, retest, and contact channel with both teams in
 | Tag commit | `5979f5870e8e28277996dc3045cbf4be5f7236ad` |
 | Intended deployed baseline commit | `150dc5db3de5c829a7d9ef1adb545191cc37542d` |
 | Public application URL | <https://course-pms-859617270560.asia-southeast1.run.app> |
-| Revision recorded on deployment | `course-pms-00006-sbx` |
+| Revision at deployment, not confirmed current | `course-pms-00006-sbx`; 100% traffic at that deployment |
+| Current serving revision and traffic | Not confirmed; Product Team must verify before the session |
 | Deployment evidence | [GitHub Actions run 43368602701](https://github.com/Magiciancat9/Course_management/actions/runs/43368602701) |
 
 On 2026-11-13 (UTC+7), the deployment run reported that
 `course-pms-00006-sbx` was serving 100% of traffic. A subsequent read-only
-check of `/api/health` returned HTTP 200 and `commitSha` matching the intended
-baseline at approximately 17:29 Asia/Bangkok; `/api/ready` returned HTTP 200
-with the database connected. The revision is a deployment-time observation,
-not a guarantee of the current traffic configuration.
+checks on 13 November 2026 at approximately 19:43 Asia/Bangkok returned
+HTTP 200 from `/api/health`, with `commitSha` matching the intended baseline,
+and HTTP 200 from `/api/ready`, with the database connected. These are
+preparation observations, not independent UAT. The revision is a
+deployment-time observation, not a guarantee of current traffic.
 
 The deployed commit is newer than the Sprint 1 tag. The
 [tag-to-baseline comparison](https://github.com/Magiciancat9/Course_management/compare/v1.0.0-sprint1...150dc5db3de5c829a7d9ef1adb545191cc37542d)
@@ -53,10 +56,19 @@ expand the UAT scope.
 2. Open `/api/health` on the same origin and compare `commitSha` with the full
    intended baseline commit above. Open `/api/ready` and confirm HTTP 200 and
    `db: connected`. Record the time and results in the UAT execution log.
-3. Ask the Product Team to confirm the Cloud Run revision and its traffic
-   allocation in Cloud Run or deployment evidence. The health endpoint
+3. Ask the authorized Product Team to confirm the current Cloud Run service
+   traffic in the Google Cloud console, or use its authenticated read-only
+   CLI with the correct project:
+
+   ```text
+   gcloud run services describe course-pms --region asia-southeast1 --project PROJECT_ID --format="yaml(status.url,status.traffic)"
+   ```
+
+   Replace `PROJECT_ID` with the owner's actual project ID. Record the time,
+   revision names, percentages and sanitized evidence. The health endpoint
    identifies the commit, not the revision: a redeploy of the same commit can
-   produce a new revision.
+   produce a new revision. Historical deployment evidence alone is not
+   confirmation of current traffic.
 4. If the commit, revision, or readiness differs, stop and contact the Product
    Team. Record the test as blocked until the team identifies and agrees a
    release; never silently treat a different release as this baseline.
@@ -97,12 +109,18 @@ screenshots. The agreed case packet uses the following aliases:
 | S4 | STUDENT | Eligible unassigned fourth candidate for the capacity denial |
 | F | STUDENT | Member of another team for cross-team cases |
 
-The verified account-to-alias mapping and any subsequent changes should be
-confirmed privately with the partner. Record non-secret setup, starting
-memberships, proposal states, and a safe repeat-run arrangement in
+The account-to-alias mapping, each actual login and current membership have
+not been independently recorded. Confirm them privately with the partner,
+including an eligible unassigned S4 and the course's actual ID and
+`maxTeamSize`. The original seed describes only three initially unassigned
+students; do not assume a fourth exists. If an eligible S4 or the required
+capacity is unavailable, the capacity subcheck is BLOCKED until an agreed,
+safe fixture is available. Record non-secret setup, starting memberships,
+proposal states, and a safe repeat-run arrangement in
 [#50](https://github.com/Magiciancat9/Course_management/issues/50), which
 remains open. Use synthetic data only. Do not run destructive seed or reset
-commands against the shared deployed database.
+commands against the shared deployed database. A new team name does not
+release existing memberships. Retain the synthetic run's records for retest.
 
 ## UAT case packet and test order
 
@@ -113,8 +131,10 @@ The Product Team confirmed that the agreed packet is
 up the team and draft used by the later proposal, review and persistence
 cases; use the preconditions and steps in the packet, not an assumed clean
 state. The [repository case sheet](uat-cases.md) corrects the packet's
-course-selection instruction; send this correction to the partner and
-confirm receipt. Agree a new safe fixture arrangement before repeating the run.
+course-selection instruction: the UI selects the first course automatically,
+so confirm that it displays CPE334 rather than looking for a course picker.
+Send this correction to the partner and confirm receipt. Agree a new safe
+fixture arrangement before repeating the run.
 
 The packet is shared outside this repository; confirm its receipt through
 private chat. Authentication/team preparation remains tracked in
@@ -145,3 +165,9 @@ The reciprocal reports we send for the partner's product are tracked in
 
 Record PASS, FAIL, and BLOCKED honestly. The independent partner UAT team,
 not the Product Team, makes the acceptance decision for CoursePMS.
+
+The partner has reported that proposal fields may remain visible after
+switching accounts without reloading. This is a reported finding, not yet
+reproduced or triaged in this record. Investigate it separately before
+determining impact, any correction and the release for independent retest;
+do not treat this handoff as evidence that the finding is resolved.

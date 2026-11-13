@@ -10,6 +10,7 @@ overwriting an earlier failure or blocked attempt.
 |---|---|---|
 | CoursePMS, 13 November 2026 approximately 17:29 | `/`, `/api/health` and `/api/ready` returned HTTP 200; health matched `150dc5db3de5c829a7d9ef1adb545191cc37542d`; readiness reported database connected. Unauthenticated `GET /api/teams` returned 401 `UNAUTHORIZED`; empty login returned 400 `VALIDATION_ERROR`. | Product-team preparation, not a partner test; no traffic revision proof. |
 | CoursePMS, 13 November 2026 approximately 19:09 | `/api/health` returned HTTP 200 and the selected commit; `/api/ready` returned HTTP 200 and database connected. | Current serving revision and independent session remain unconfirmed. |
+| CoursePMS, 13 November 2026 approximately 19:43 | `/api/health` returned HTTP 200 and the selected commit; `/api/ready` returned HTTP 200 and database connected. | Read-only preparation, not a UAT result or current revision confirmation. |
 | fastTrack, 13 November 2026 approximately 17:42 | `/api/health` and `/api/ready` returned HTTP 200 and selected version `8e637e537cd037d630a5fffc1b5672d1b44371a8`. | Historical preparation observation, not a session or current revision confirmation. |
 
 [Public CoursePMS banner](evidence/coursepms-public-banner.png) is a cropped

@@ -8,7 +8,7 @@ Times are Asia/Bangkok.
 | Reciprocal teams | EN-022_P6 tests fastTrack; EN-028 InfaCompany tests CoursePMS. Members and coordination: [partner and schedule](partner-and-schedule.md). |
 | CoursePMS scope and cases | Sprint 1 F-01--F-03 and AC-01--AC-10; the agreed ZIP contains eight ordered cases. [Repository cases](uat-cases.md) adapt the packet; peer walkthrough and partner receipt of the corrected course step remain to be confirmed. |
 | CoursePMS selected source | `150dc5db3de5c829a7d9ef1adb545191cc37542d`; Sprint 1 tag `v1.0.0-sprint1` points to `5979f5870e8e28277996dc3045cbf4be5f7236ad`. These are distinct. |
-| CoursePMS health and readiness | On 13 November 2026 approximately 17:29 and 19:09, health and readiness returned HTTP 200; health reported the selected source and readiness database connected. |
+| CoursePMS health and readiness | On 13 November 2026 approximately 17:29, 19:09 and 19:43, health and readiness returned HTTP 200; health reported the selected source and readiness database connected. |
 | CoursePMS public access checks | At approximately 17:29, anonymous `GET /api/teams` returned 401 `UNAUTHORIZED`; empty login returned 400 `VALIDATION_ERROR`. These do not replace role or session UAT. |
 | Public screenshot | [Cropped CoursePMS banner](evidence/coursepms-public-banner.png), captured from the public application during preparation. It contains no case outcome and does not prove a revision. |
 | CoursePMS deployment revision | Deployment run `43368602701` reported `course-pms-00006-sbx` with 100% traffic then. Product Team must confirm the revision serving the actual UAT session. |

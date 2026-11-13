@@ -18,7 +18,7 @@ should participate and record what they actually test.
 | Selected deployed source | `150dc5db3de5c829a7d9ef1adb545191cc37542d` |
 | Historical deployment | Run `43368602701` reported revision `course-pms-00006-sbx` with 100% traffic at deployment; current traffic needs owner confirmation |
 
-On 13 November 2026 at approximately 19:09 Asia/Bangkok, the public health
+On 13 November 2026 at approximately 19:43 Asia/Bangkok, the public health
 endpoint returned HTTP 200 and the selected source commit; readiness returned
 HTTP 200 and database `connected`. These are preparation checks, not a UAT
 result. Health identifies source, not the serving Cloud Run revision. Verify
