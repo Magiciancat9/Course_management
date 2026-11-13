@@ -1,8 +1,8 @@
 # Lab 6: Sprint 1 UAT Handoff
 
-**Status: preparation in progress; not yet ready for partner handoff.** The
-partner team has been identified, but UAT cases, accounts, test data, and the
-communication channel still need to be confirmed. This document identifies
+**Status: preparation in progress.** The partner, communication channel,
+account verification and case packet have been confirmed by the Product Team;
+the case and data preparation issues remain open. This document identifies
 the intended test baseline, not an acceptance decision.
 
 ## Partner team
@@ -82,53 +82,57 @@ must not be dismissed as an enhancement.
 
 ## Accounts and test data
 
-Only the following account **labels and roles** are planned; actual account
-availability and initial state have not yet been verified. No passwords or
-tokens belong in this document, the repository, issues, or screenshots.
+The Product Team confirmed on 13 November 2026 that the test accounts were
+checked and their credentials sent to the partner through private chat. No
+passwords or tokens belong in this document, the repository, issues, or
+screenshots. The agreed case packet uses the following aliases:
 
 | Label | Role | Planned purpose |
 |---|---|---|
-| Student A | STUDENT | Member of Team Alpha; ownership and existing-team cases |
-| Student B | STUDENT | Eligible teammate for member-addition cases |
-| Student C | STUDENT | Unassigned student for team creation |
-| Student D | STUDENT | Member of Team Beta for cross-team cases |
-| Instructor | INSTRUCTOR | Proposal review cases |
+| I | INSTRUCTOR | Proposal review cases |
+| S1 | STUDENT | Unassigned student who creates the UAT team |
+| S2 | STUDENT | Eligible unassigned teammate |
+| S3 | STUDENT | Eligible unassigned third team member |
+| S4 | STUDENT | Eligible unassigned fourth candidate for the capacity denial |
+| F | STUDENT | Member of another team for cross-team cases |
 
-The account set is preliminary; capacity and repeatability scenarios may
-require additional eligible students and separate starting states. The owner
-of [#50](https://github.com/Magiciancat9/Course_management/issues/50) must
-confirm account labels, current team memberships, proposal states, setup,
-safe reset, and live login before handoff. Use synthetic data only. Do not
-run destructive seed or reset commands against the shared deployed database.
-Send actual account identifiers and passwords to the partner through a
-privately agreed channel, never through GitHub issues, the report PDF, or
-screenshots.
+The verified account-to-alias mapping and any subsequent changes should be
+confirmed privately with the partner. Record non-secret setup, starting
+memberships, proposal states, and a safe repeat-run arrangement in
+[#50](https://github.com/Magiciancat9/Course_management/issues/50), which
+remains open. Use synthetic data only. Do not run destructive seed or reset
+commands against the shared deployed database.
 
 ## UAT case packet and test order
 
-- Authentication and team cases: [#48](https://github.com/Magiciancat9/Course_management/issues/48)
-  (pending).
-- Proposal, review and access cases: [#49](https://github.com/Magiciancat9/Course_management/issues/49)
-  (pending).
-- Test account setup and reset: [#50](https://github.com/Magiciancat9/Course_management/issues/50)
-  (pending).
+The Product Team confirmed that the agreed packet is
+`CoursePMS_Send_to_UAT_Team.zip`, containing `01_Partner_Handoff.md`,
+`02_UAT_Cases.md`, and `03_Execution_Workbook.md`. The agreed sequence is
+**CPMS-UAT-01 through CPMS-UAT-08 in numerical order**. The first cases set
+up the team and draft used by the later proposal, review and persistence
+cases; use the preconditions and steps in the packet, not an assumed clean
+state. Agree a new safe fixture arrangement before repeating the run.
 
-Do not begin partner testing until the case authors specify each case's
-preconditions, inputs, expected outcomes, and either independent data/reset
-or an explicit sequence. Follow the finalized order in those cases; do not
-assume a clean starting state after another case has changed the data.
-Coordinate the partner, session dates, packet exchange, and notification
-before deployment in [#51](https://github.com/Magiciancat9/Course_management/issues/51).
+The packet is shared outside this repository; confirm its receipt through
+private chat. Authentication/team preparation remains tracked in
+[#48](https://github.com/Magiciancat9/Course_management/issues/48),
+proposal/review cases in
+[#49](https://github.com/Magiciancat9/Course_management/issues/49), and
+account setup/reset in
+[#50](https://github.com/Magiciancat9/Course_management/issues/50). These
+issues remain open; the agreed packet does not itself close their checklists.
+Coordinate session dates and packet exchange in
+[#51](https://github.com/Magiciancat9/Course_management/issues/51).
 
 ## Communication and defect handoff
 
-Primary communication channel and escalation contact: **not yet agreed**.
-Confirm them with the fastTrack team in #51 before sending this packet; do not
-put credentials in the public coordination record. Notify the partner before
-a deployment that could affect a test session.
+The Product Team confirmed **private chat** as the coordination and
+bug-reporting channel. Confirm the escalation contact and session dates in
+#51. Do not put credentials in the public coordination record. Notify the
+partner before a deployment that could affect a test session.
 
-Agree where findings will be filed before testing. For each failure ask the
-tester to provide a report ID, reporter, tested URL and commit/revision,
+Send findings to the Product Team through that private chat. For each failure
+ask the tester to provide a report ID, reporter, tested URL and commit/revision,
 linked case and AC, preconditions and synthetic inputs, numbered reproduction
 steps, expected and actual results, impact/severity with justification, and
 redacted evidence ID. Acknowledge and triage every finding; the Product Team
