@@ -1,41 +1,54 @@
 # Lab 6: independent UAT
 
-This folder organizes the CoursePMS Lab 6 work. The CoursePMS team prepares
-its Sprint 1 product for independent testing by the fastTrack team; the same
-two teams also exchange roles so that CoursePMS testers independently test
-fastTrack. An expected result, a template or a CI run is not an actual UAT
-result.
+This package follows the partner team's seven-document structure and uses
+CoursePMS Sprint 1 information. The two teams independently test each other's
+product:
 
-## Documents
-
-| Document | Purpose | Status |
+| Product team | Product | Independent UAT team |
 |---|---|---|
-| [Partner handoff](partner-handoff.md) | Scope, release, account and packet handoff | In preparation; detailed handoff is in PR [#61](https://github.com/Magiciancat9/Course_management/pull/61) |
-| [UAT cases](uat-cases.md) | Agreed case set and its source files | Eight cases agreed; case documentation and walkthrough pending |
-| [Execution results](execution-results.md) | Actual results for testing in both directions | Template; no execution is claimed |
-| [Findings and retest](findings-and-retest.md) | Report, triage, correction and retest records | Template; no findings are claimed |
-| [Acceptance record](acceptance-record.md) | Independent decision for each product and tested release | Pending |
-| [Preparation verification](preparation-verification.md) | Verified preparation, remaining prerequisites and evidence | In progress |
-| [Partner and schedule](partner-and-schedule.md) | Teams, coordination, releases and appointments | In progress |
+| EN-022_P6: Tatchakorn Thamnimitr and Pawarit Wongdaeng | CoursePMS | EN-028 InfaCompany: Supapanya Yathip and Atip Infa-udom |
+| EN-028 InfaCompany | fastTrack | EN-022_P6 |
 
-The existing detailed files are retained rather than duplicated:
-`handoff.md` in PR #61, `uat-cases-proposal.md` in PR
-[#62](https://github.com/Magiciancat9/Course_management/pull/62), and the
-authentication/team and fixture work tracked in
+CoursePMS scope is F-01 authentication and roles, F-02 team management, and
+F-03 proposal submission and review (AC-01--AC-10). Later-sprint features are
+outside this handoff. The eight CoursePMS cases run in order and map to
+AC-01--AC-10, but do not cover every contract subcheck; see the case sheet's
+coverage limitations. The fastTrack team's own case IDs and instructions
+apply when testing fastTrack.
+
+## Package
+
+| Document | What it contains |
+|---|---|
+| [Partner handoff](partner-handoff.md) | CoursePMS release, scope, private access, fixtures and inputs |
+| [UAT cases](uat-cases.md) | Eight executable CoursePMS cases and expected outcomes |
+| [Execution results](execution-results.md) | Preparation observations and actual UAT result records for both directions |
+| [Findings and retest](findings-and-retest.md) | Reporting, triage, correction and independent retest |
+| [Acceptance record](acceptance-record.md) | Separate independent decisions for each tested product |
+| [Preparation verification](preparation-verification.md) | Verified observations, evidence and remaining prerequisites |
+| [Partner and schedule](partner-and-schedule.md) | Members, release identities, communication and proposed appointments |
+
+The separately shared `CoursePMS_Send_to_UAT_Team.zip` is the agreed original
+packet. This repository case sheet adapts that packet, including a correction
+to its course-selection instruction; the updated instructions must be sent to
+and agreed with the partner. The detailed handoff in
+[PR #61](https://github.com/Magiciancat9/Course_management/pull/61),
+proposal cases in [PR #62](https://github.com/Magiciancat9/Course_management/pull/62),
+and authentication/fixture work in
 [#48](https://github.com/Magiciancat9/Course_management/issues/48) and
-[#50](https://github.com/Magiciancat9/Course_management/issues/50).
-These documents are not all merged into `lab6-staging` yet.
+[#50](https://github.com/Magiciancat9/Course_management/issues/50) are not
+all merged. Reconcile them with this case sheet before final handoff.
 
-## Working sequence
+## Workflow
 
-1. Finish and peer-review the handoff, cases, account/fixture instructions
-   and partner coordination. Confirm release and private access before testing.
-2. Both teams execute the other product's agreed cases and record actual
-   results and evidence.
-3. Exchange and triage actual findings; fix, review, release and independently
-   retest where required.
-4. Record each UAT Team's independent acceptance decision and assemble the
-   final self-contained report.
+1. Both teams confirm the packet, access, fixtures, schedule and exact live
+   source and serving revision; privately share credentials.
+2. Both members independently test the other product and record real
+   observations and sanitized evidence. Expected outcomes are not results.
+3. Exchange findings through private chat, record acknowledgement, fix and
+   independently retest as necessary.
+4. Each UAT team records its own decision for the exact tested release.
+   Never publish passwords, tokens, authorization headers or private data.
 
-Never put credentials, tokens or unredacted authentication data in these
-documents, issues, screenshots or the final PDF.
+The person responsible for an issue must not merge their own PR. The other
+teammate reviews the latest head and merges only after approval and green CI.
