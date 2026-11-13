@@ -3,9 +3,9 @@
 **Status: draft; not executed.** These cases describe the proposal portion
 of the agreed `CoursePMS_Send_to_UAT_Team.zip`, using its case IDs and order.
 The authentication and team cases CPMS-UAT-01 through CPMS-UAT-03 precede
-these cases. The independently testing team records real observations in
-`03_Execution_Workbook.md` from that packet; expected results here are not
-evidence of a pass.
+these cases. See the [consolidated case sheet](uat-cases.md) for all eight
+cases and [execution results](execution-results.md) for recorded outcomes.
+Expected results here are not evidence of a pass.
 
 The Product Team and partner must confirm the tested version, packet receipt,
 test accounts, current assignments and safe fixture setup before execution.
@@ -18,8 +18,8 @@ record BLOCKED rather than invent a result.
 - **Roles:** S1 is a member of the new UAT team, S2 another member, I an
   instructor, and F a student in a different team. Account identifiers and
   credentials are delivered separately through private chat.
-- **Inputs:** use the run-specific team name and values in
-  `01_Partner_Handoff.md`: title `CoursePMS Independent UAT Proposal`,
+- **Inputs:** use the run-specific team name and values in the
+  [partner handoff](partner-handoff.md): title `CoursePMS Independent UAT Proposal`,
   problem statement `Student teams need a clear and private project proposal review workflow.`,
   stack `React, Express, PostgreSQL`, and synthetic repository URL
   `https://example.com/coursepms-uat`. Use a new run suffix and approved

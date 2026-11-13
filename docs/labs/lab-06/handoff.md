@@ -67,8 +67,9 @@ The complete acceptance criteria and API outcomes are defined in the
 [authentication contract](../../sprints/sprint-1/f01-auth-and-roles.md) and
 [team and proposal contract](../../sprints/sprint-1/f02-team-and-proposal-workflow.md).
 The [test specification](../../sprints/sprint-1/sts-and-dod.md) maps them to
-automated tests. UAT cases will give the partner reproducible user-facing
-steps, inputs, and expected results.
+automated tests. The [UAT cases](uat-cases.md) give the partner reproducible
+user-facing steps, inputs, and expected results; their documented coverage
+limitations still apply.
 
 | Feature | UAT scope | Acceptance criteria |
 |---|---|---|
@@ -111,7 +112,9 @@ The Product Team confirmed that the agreed packet is
 **CPMS-UAT-01 through CPMS-UAT-08 in numerical order**. The first cases set
 up the team and draft used by the later proposal, review and persistence
 cases; use the preconditions and steps in the packet, not an assumed clean
-state. Agree a new safe fixture arrangement before repeating the run.
+state. The [repository case sheet](uat-cases.md) corrects the packet's
+course-selection instruction; send this correction to the partner and
+confirm receipt. Agree a new safe fixture arrangement before repeating the run.
 
 The packet is shared outside this repository; confirm its receipt through
 private chat. Authentication/team preparation remains tracked in

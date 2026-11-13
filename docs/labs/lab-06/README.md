@@ -31,13 +31,12 @@ apply when testing fastTrack.
 The separately shared `CoursePMS_Send_to_UAT_Team.zip` is the agreed original
 packet. This repository case sheet adapts that packet, including a correction
 to its course-selection instruction; the updated instructions must be sent to
-and agreed with the partner. The detailed handoff in
-[PR #61](https://github.com/Magiciancat9/Course_management/pull/61),
-proposal cases in [PR #62](https://github.com/Magiciancat9/Course_management/pull/62),
-and authentication/fixture work in
+and agreed with the partner. The [detailed baseline handoff](handoff.md)
+and [proposal case draft](uat-cases-proposal.md) are included in this folder.
+Authentication and fixture work in
 [#48](https://github.com/Magiciancat9/Course_management/issues/48) and
-[#50](https://github.com/Magiciancat9/Course_management/issues/50) are not
-all merged. Reconcile them with this case sheet before final handoff.
+[#50](https://github.com/Magiciancat9/Course_management/issues/50) still
+requires owner review. Reconcile it with this case sheet before final handoff.
 
 ## Workflow
 

@@ -96,6 +96,5 @@ Retain synthetic records and IDs for retest and grading. The UI provides no
 general team-removal or proposal-reset workflow; a new name alone does not
 free members for a fresh run. Agree a fresh eligible fixture before reruns.
 Do not reset, seed, delete or otherwise alter the shared database as cleanup.
-The detailed handoff remains in
-[PR #61](https://github.com/Magiciancat9/Course_management/pull/61) pending
-review and merge.
+The [detailed baseline handoff](handoff.md) is included in this folder;
+the consolidated package remains pending peer review and merge.

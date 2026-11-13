@@ -5,11 +5,10 @@ adapts the agreed `CoursePMS_Send_to_UAT_Team.zip`; it does not change the
 copy already sent. Send the course-selection correction in
 [the handoff](partner-handoff.md) to the partner and confirm receipt. This
 sheet is the intended consolidated repository reference; reconcile it with
-[#48](https://github.com/Magiciancat9/Course_management/issues/48) and
-[PR #62](https://github.com/Magiciancat9/Course_management/pull/62) before
-final handoff. Proposed isolated exact-boundary checks in PR #62 require
-separate partner agreement and a safe fixture; they are not part of the
-agreed eight cases.
+[#48](https://github.com/Magiciancat9/Course_management/issues/48) and the
+[proposal draft](uat-cases-proposal.md) before final handoff. The draft's
+proposed isolated exact-boundary checks require separate partner agreement
+and a safe fixture; they are not part of the agreed eight cases.
 
 ## Common setup and recording
 

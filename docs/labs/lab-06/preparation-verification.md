@@ -29,8 +29,8 @@ Times are Asia/Bangkok.
 4. Retain synthetic records for retest; do not reset or seed the shared
    database. Store no passwords, tokens or authorization headers in evidence.
 
-The handoff, cases and fixture work remain under review in
-[PR #61](https://github.com/Magiciancat9/Course_management/pull/61),
-[PR #62](https://github.com/Magiciancat9/Course_management/pull/62),
+The consolidated handoff and cases remain under peer review in
+[PR #61](https://github.com/Magiciancat9/Course_management/pull/61);
+authentication and fixture review remains tracked in
 [#48](https://github.com/Magiciancat9/Course_management/issues/48) and
 [#50](https://github.com/Magiciancat9/Course_management/issues/50).
