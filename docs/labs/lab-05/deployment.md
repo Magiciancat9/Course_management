@@ -131,7 +131,7 @@ The repository's production image uses the root `Dockerfile` and `.dockerignore`
 
 ## Pull-request CI
 
-`.github/workflows/ci-docker.yml` runs for every pull request targeting `lab5-staging` or `main`. Its stable required-check job name is **`test-and-docker`**. The workflow uses Node.js 20 and a temporary PostgreSQL 16 service with CI-only credentials, then installs from the three committed npm lockfiles and runs, in order:
+`.github/workflows/ci-docker.yml` runs for every pull request targeting `lab5-staging`, `lab6-staging`, or `main`. Its stable required-check job name is **`test-and-docker`**. The workflow uses Node.js 20 and a temporary PostgreSQL 16 service with CI-only credentials, then installs from the three committed npm lockfiles and runs, in order:
 
 1. `npm --prefix server run prisma:migrate` (the repository alias for Prisma `db push`) against the disposable CI database.
 2. `npm run test:server` (backend integration and unit tests).
