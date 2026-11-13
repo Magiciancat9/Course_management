@@ -32,7 +32,7 @@ the initial session, retest, and contact channel with both teams in
 | Intended deployed baseline commit | `150dc5db3de5c829a7d9ef1adb545191cc37542d` |
 | Public application URL | <https://course-pms-859617270560.asia-southeast1.run.app> |
 | Revision at deployment | `course-pms-00006-sbx`; 100% traffic at that deployment |
-| Product Team's traffic report | `course-pms-00006-sbx`, 100%; reported check time 8:03 p.m., date and time zone not recorded; evidence pending |
+| Product Team's traffic report | `course-pms-00006-sbx`, 100%; reported by 13 November 2026 at 20:08 Asia/Bangkok. The reported check time was 8:03 p.m.; its date and time zone and console evidence are not recorded. |
 | Deployment evidence | [GitHub Actions run 43368602701](https://github.com/Magiciancat9/Course_management/actions/runs/43368602701) |
 
 On 2026-11-13 (UTC+7), the deployment run reported that
@@ -41,9 +41,10 @@ checks on 13 November 2026 at approximately 19:43 Asia/Bangkok returned
 HTTP 200 from `/api/health`, with `commitSha` matching the intended baseline,
 and HTTP 200 from `/api/ready`, with the database connected. These are
 preparation observations, not independent UAT. The Product Team later
-reported the same revision receiving 100% of traffic at 8:03 p.m.; the date,
-time zone and sanitized console evidence have not been supplied. Reconfirm
-traffic immediately before the test session.
+reported by 13 November 2026 at 20:08 Asia/Bangkok that the same revision
+received 100% of traffic at 8:03 p.m.; the date and time zone of the check
+and sanitized console evidence have not been supplied. The report time is
+not the check time. Reconfirm traffic immediately before the test session.
 
 The deployed commit is newer than the Sprint 1 tag. The
 [tag-to-baseline comparison](https://github.com/Magiciancat9/Course_management/compare/v1.0.0-sprint1...150dc5db3de5c829a7d9ef1adb545191cc37542d)
