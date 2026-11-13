@@ -54,12 +54,14 @@ alias mapping and current states privately before testing:
 | S2, S3, S4 | Eligible students, each initially unassigned in CPE334 |
 | F | Student already in a different CPE334 team |
 
-The original seed only describes three initially unassigned students; it does
-not prove current account states or a usable fourth candidate. The owner must
-confirm S4 or agree a safe equivalent fixture; otherwise the capacity
-subcheck is BLOCKED. Confirm actual `maxTeamSize` is 3 for the expected 3/3
-case. Use isolated browser profiles and do not publish account mappings,
-passwords, tokens or authorization headers.
+The dedicated Lab 6 accounts and safe Run 1/Run 2 arrangement are in
+[UAT data and reruns](uat-data-and-reset.md). Their presence in source is not
+evidence that they exist in Cloud SQL, that their private credentials work, or
+that they are still unassigned. The owner must complete the documented
+additive production job and the Product Team must verify the starting state;
+otherwise the affected subchecks remain BLOCKED. Confirm actual `maxTeamSize`
+is 3 for the expected 3/3 case. Use isolated browser profiles and do not
+publish passwords, tokens or authorization headers.
 
 ## Synthetic inputs and sequence
 
@@ -97,7 +99,12 @@ sanitized reports and acknowledgement in
 
 Retain synthetic records and IDs for retest and grading. The UI provides no
 general team-removal or proposal-reset workflow; a new name alone does not
-free members for a fresh run. Agree a fresh eligible fixture before reruns.
-Do not reset, seed, delete or otherwise alter the shared database as cleanup.
-The [detailed baseline handoff](handoff.md) is included in this folder;
-the consolidated package remains pending peer review and merge.
+free members for a fresh run. Use the dedicated retest cohort described in
+[UAT data and reruns](uat-data-and-reset.md), and provision any later cohort
+through the same reviewed, additive production process. Do not run a
+non-production reset, delete records, move members, or otherwise alter the
+shared database as cleanup. The only permitted seed operation is the
+owner-approved, one-off production provisioning job documented there; it must
+run with `NODE_ENV=production` and must not be presented as UAT execution.
+The [detailed baseline handoff](handoff.md) is included in this folder; the
+consolidated package remains pending peer review and merge.
