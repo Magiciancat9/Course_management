@@ -2,9 +2,11 @@
 
 **Status: preparation in progress; not yet cleared for independent UAT.**
 The Product Team identified the partner, private communication channel and
-case packet, and reported checking accounts and sending credentials. Current
-traffic, individual account/fixture states, packet receipt and the test
-window remain to be confirmed. This is not an acceptance decision.
+case packet, and reported checking accounts and sending credentials. The
+Product Team has reported the serving revision and traffic, but the check
+date, time zone and evidence are not recorded. Individual account/fixture
+states, packet receipt and the test window remain to be confirmed. This is
+not an acceptance decision.
 
 ## Partner team
 
@@ -29,17 +31,19 @@ the initial session, retest, and contact channel with both teams in
 | Tag commit | `5979f5870e8e28277996dc3045cbf4be5f7236ad` |
 | Intended deployed baseline commit | `150dc5db3de5c829a7d9ef1adb545191cc37542d` |
 | Public application URL | <https://course-pms-859617270560.asia-southeast1.run.app> |
-| Revision at deployment, not confirmed current | `course-pms-00006-sbx`; 100% traffic at that deployment |
-| Current serving revision and traffic | Not confirmed; Product Team must verify before the session |
+| Revision at deployment | `course-pms-00006-sbx`; 100% traffic at that deployment |
+| Product Team's traffic report | `course-pms-00006-sbx`, 100%; reported check time 8:03 p.m., date and time zone not recorded; evidence pending |
 | Deployment evidence | [GitHub Actions run 43368602701](https://github.com/Magiciancat9/Course_management/actions/runs/43368602701) |
 
 On 2026-11-13 (UTC+7), the deployment run reported that
-`course-pms-00006-sbx` was serving 100% of traffic. A subsequent read-only
+`course-pms-00006-sbx` was serving 100% of traffic. Subsequent read-only
 checks on 13 November 2026 at approximately 19:43 Asia/Bangkok returned
 HTTP 200 from `/api/health`, with `commitSha` matching the intended baseline,
 and HTTP 200 from `/api/ready`, with the database connected. These are
-preparation observations, not independent UAT. The revision is a
-deployment-time observation, not a guarantee of current traffic.
+preparation observations, not independent UAT. The Product Team later
+reported the same revision receiving 100% of traffic at 8:03 p.m.; the date,
+time zone and sanitized console evidence have not been supplied. Reconfirm
+traffic immediately before the test session.
 
 The deployed commit is newer than the Sprint 1 tag. The
 [tag-to-baseline comparison](https://github.com/Magiciancat9/Course_management/compare/v1.0.0-sprint1...150dc5db3de5c829a7d9ef1adb545191cc37542d)

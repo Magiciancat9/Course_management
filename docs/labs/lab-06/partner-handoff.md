@@ -16,7 +16,7 @@ should participate and record what they actually test.
 | Course | CPE334, Semester 1/2026; verify the active course and its actual ID |
 | Sprint 1 tag | `v1.0.0-sprint1` at `5979f5870e8e28277996dc3045cbf4be5f7236ad` |
 | Selected deployed source | `150dc5db3de5c829a7d9ef1adb545191cc37542d` |
-| Historical deployment | Run `43368602701` reported revision `course-pms-00006-sbx` with 100% traffic at deployment; current traffic needs owner confirmation |
+| Traffic report | Product Team reported `course-pms-00006-sbx` receiving 100% at 8:03 p.m.; date, time zone and evidence not recorded. Run `43368602701` also reported this allocation at deployment. Reconfirm before testing. |
 
 On 13 November 2026 at approximately 19:43 Asia/Bangkok, the public health
 endpoint returned HTTP 200 and the selected source commit; readiness returned

@@ -40,7 +40,7 @@ of a test.
 | Product | Selected source | Deployed revision | Evidence / limitation |
 |---|---|---|---|
 | fastTrack | `8e637e537cd037d630a5fffc1b5672d1b44371a8` | Current revision not yet confirmed by its Product Team | At 17:42 Asia/Bangkok on 2026-11-13, `/api/health` and `/api/ready` returned HTTP 200 and this version. The partner handoff calls `fasttrack-app-00003-rc7` a historical revision, not a current traffic confirmation. |
-| CoursePMS | `150dc5db3de5c829a7d9ef1adb545191cc37542d` | `course-pms-00006-sbx` at the recorded deployment; current traffic not yet confirmed | At approximately 17:29 Asia/Bangkok on 2026-11-13, `/api/health` returned this commit and `/api/ready` reported the database connected. |
+| CoursePMS | `150dc5db3de5c829a7d9ef1adb545191cc37542d` | Product Team reported `course-pms-00006-sbx` at 100% at 8:03 p.m.; date, time zone and evidence not recorded | At approximately 19:43 Asia/Bangkok on 2026-11-13, `/api/health` returned this commit and `/api/ready` reported the database connected. Reconfirm traffic before the session. |
 
 fastTrack's historical Sprint 1 tag is `v1.0.0-sprint-1`, commit
 `ae7a60a6e3ed0a363dcee920ac1774a02f4f4ab8`; CoursePMS's tag is
