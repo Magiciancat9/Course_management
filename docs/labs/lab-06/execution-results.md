@@ -24,7 +24,7 @@ preparation image, not evidence that any UAT case passed.
 | Application | <https://course-pms-859617270560.asia-southeast1.run.app> |
 | Selected source | `150dc5db3de5c829a7d9ef1adb545191cc37542d`; source at session not yet recorded |
 | Serving revision, date/time and environment | Not confirmed for an actual session |
-| Packet and fixtures | Eight cases in [UAT cases](uat-cases.md); partner receipt and starting fixture not yet confirmed |
+| Packet and fixtures | Eight cases in [UAT cases](uat-cases.md); partner receipt not confirmed. Pawarit [reported](https://github.com/Magiciancat9/Course_management/pull/61#issuecomment-6854459046) successful account login and starting-fixture checks; per-alias details and session fixture not recorded. |
 
 | Case | Expected coverage | Result | Actual observation / evidence / finding |
 |---|---|---|---|

@@ -40,9 +40,12 @@ It does not prove a business flow, release revision or independent UAT.*
   readback, but do not cover every contract subcheck. Later-sprint
   milestones, grading and analytics are outside scope.
 
-The Product Team reported that test accounts were checked and credentials
-sent privately. This is not a recorded independent per-account smoke test.
-Confirm access and the following current states privately before testing:
+The Product Team reported that credentials were sent privately. On
+13 November 2026 at 20:34 Asia/Bangkok, Pawarit
+[reported](https://github.com/Magiciancat9/Course_management/pull/61#issuecomment-6854459046)
+that account login and starting-fixture checks passed on the live URL.
+Per-account details were not included in that report. Confirm the following
+alias mapping and current states privately before testing:
 
 | Alias | Required role and starting state |
 |---|---|

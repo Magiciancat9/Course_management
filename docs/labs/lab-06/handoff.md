@@ -4,9 +4,10 @@
 The Product Team identified the partner, private communication channel and
 case packet, and reported checking accounts and sending credentials. The
 Product Team has reported the serving revision and traffic, but the check
-date, time zone and evidence are not recorded. Individual account/fixture
-states, packet receipt and the test window remain to be confirmed. This is
-not an acceptance decision.
+date, time zone and evidence are not recorded. The reviewer reported that
+account login and starting-fixture checks passed; detailed alias states,
+packet receipt and the test window remain to be recorded. This is not an
+acceptance decision.
 
 ## Partner team
 
@@ -114,14 +115,17 @@ screenshots. The agreed case packet uses the following aliases:
 | S4 | STUDENT | Eligible unassigned fourth candidate for the capacity denial |
 | F | STUDENT | Member of another team for cross-team cases |
 
-The account-to-alias mapping, each actual login and current membership have
-not been independently recorded. Confirm them privately with the partner,
-including an eligible unassigned S4 and the course's actual ID and
+On 13 November 2026 at 20:34 Asia/Bangkok, Pawarit
+[reported](https://github.com/Magiciancat9/Course_management/pull/61#issuecomment-6854459046)
+that UAT account logins and starting-fixture checks passed on the live URL.
+The comment does not detail each account, membership, course ID or capacity.
+Record non-secret details and confirm the alias mapping privately with the
+partner, including an eligible unassigned S4 and the course's actual ID and
 `maxTeamSize`. The original seed describes only three initially unassigned
-students; do not assume a fourth exists. If an eligible S4 or the required
-capacity is unavailable, the capacity subcheck is BLOCKED until an agreed,
-safe fixture is available. Record non-secret setup, starting memberships,
-proposal states, and a safe repeat-run arrangement in
+students; do not infer S4's state from the seed. If an eligible S4 or the
+required capacity is unavailable, the capacity subcheck is BLOCKED until an
+agreed, safe fixture is available. Record non-secret setup, starting
+memberships, proposal states, and a safe repeat-run arrangement in
 [#50](https://github.com/Magiciancat9/Course_management/issues/50), which
 remains open. Use synthetic data only. Do not run destructive seed or reset
 commands against the shared deployed database. A new team name does not
