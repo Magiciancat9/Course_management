@@ -45,7 +45,14 @@ preparation image, not evidence that any UAT case passed.
 | Application | <https://fasttrack-app-kpx7au3w2a-as.a.run.app> |
 | Selected source | `8e637e537cd037d630a5fffc1b5672d1b44371a8`; source at session not yet recorded |
 | Serving revision, date/time and environment | Not confirmed for an actual session |
-| Cases | Use the IDs and steps in the partner's [UAT package](https://github.com/zerotwobook/fastTrack/tree/docs/s2-a-lab6-uat/docs/labs/lab-06); actual execution not recorded |
+| Cases | Use the IDs and steps in the partner's [UAT package](https://github.com/zerotwobook/fastTrack/tree/docs/s2-a-lab6-uat/docs/labs/lab-06); Batch 1 (`UAT-01`--`UAT-04`) is recorded as `BLOCKED` in [execution log](execution-log.md). Unblock requires: (1) private credential delivery (`SA`, `A1`) from `fastTrack`, and (2) `fastTrack` confirmation of session date/time and serving Cloud Run revision/traffic. |
+
+| Case | Expected coverage | Result | Actual observation / evidence / finding |
+|---|---|---|---|
+| UAT-01 | Create and read a milestone (Normal) | BLOCKED | `2026-11-14T19:34+07:00`: anonymous `/api/health` and `/api/ready` returned `HTTP 200` (`version: 8e637e537cd037d630a5fffc1b5672d1b44371a8`), but private `SA`/`A1` credentials and partner session/revision confirmation have not been delivered by `fastTrack`. See [execution log](execution-log.md). |
+| UAT-02 | Submit work and read append-only feedback (Normal) | BLOCKED | Blocked by `UAT-01` and missing private `SA`/`A1` credentials from `fastTrack`. See [execution log](execution-log.md). |
+| UAT-03 | Enforce one shared submission (Business rule) | BLOCKED | Blocked by `UAT-02` and missing private `A1` credentials from `fastTrack`. See [execution log](execution-log.md). |
+| UAT-04 | Reject late submission after deadline (Boundary) | BLOCKED | Missing private `SA`/`A1` credentials and partner session/revision confirmation from `fastTrack`. See [execution log](execution-log.md). |
 
 ## How to record a real case
 
