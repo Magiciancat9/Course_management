@@ -45,7 +45,7 @@ preparation image, not evidence that any UAT case passed.
 | Application | <https://fasttrack-app-kpx7au3w2a-as.a.run.app> |
 | Selected source | `8e637e537cd037d630a5fffc1b5672d1b44371a8`; source at session not yet recorded |
 | Serving revision, date/time and environment | Not confirmed for an actual session |
-| Cases | Use the IDs and steps in the partner's [UAT package](https://github.com/zerotwobook/fastTrack/tree/docs/s2-a-lab6-uat/docs/labs/lab-06); Batch 1 (`UAT-01`--`UAT-04`) recorded as `BLOCKED` in [execution log](execution-log.md) pending partner credentials and revision confirmation. |
+| Cases | Use the IDs and steps in the partner's [UAT package](https://github.com/zerotwobook/fastTrack/tree/docs/s2-a-lab6-uat/docs/labs/lab-06); Batch 1 (`UAT-01`--`UAT-04`) is recorded as `BLOCKED` in [execution log](execution-log.md). Unblock requires: (1) private credential delivery (`SA`, `A1`) from `fastTrack`, and (2) `fastTrack` confirmation of session date/time and serving Cloud Run revision/traffic. |
 
 | Case | Expected coverage | Result | Actual observation / evidence / finding |
 |---|---|---|---|

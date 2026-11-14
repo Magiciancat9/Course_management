@@ -5,6 +5,14 @@ confirmation.** `BLOCKED` is not a pass; do not replace partner-provided UAT
 accounts or independent student execution with unauthenticated or synthetic
 substitutes.
 
+## Unblock conditions (before `UAT-01` through `UAT-04` can start)
+
+1. `fastTrack` delivers private test-account credentials (`SA` and `A1`, plus
+   `SB` for Batch 2) and confirms `SA`/`A1` Team A assignment via private chat.
+2. `fastTrack` confirms the agreed session date/time (`Asia/Bangkok`) and the
+   active serving Cloud Run revision/traffic matching
+   `8e637e537cd037d630a5fffc1b5672d1b44371a8`.
+
 ## Session metadata (Batch 1)
 
 | Field | Recorded value |
