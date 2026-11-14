@@ -1,160 +1,242 @@
-# CoursePMS Sprint 1 UAT: proposal and review
+# Lab 6 UAT cases: proposal, review, and access control
 
-**Status: draft; not executed.** These cases describe the proposal portion
-of the agreed `CoursePMS_Send_to_UAT_Team.zip`, using its case IDs and order.
-The authentication and team cases CPMS-UAT-01 through CPMS-UAT-03 precede
-these cases. See the [consolidated case sheet](uat-cases.md) for all eight
-cases and [execution results](execution-results.md) for recorded outcomes.
-Expected results here are not evidence of a pass.
+**Status: preparation only; none of these cases is a recorded UAT result.**
+This companion sheet continues the authentication/team cases in
+[UAT cases: authentication and team rules](uat-cases-auth-team.md) with
+`UAT-06` through `UAT-10`. It covers Sprint 1 F-03 only: proposal drafts and
+submission, instructor review, state validation, privacy, and saved-state
+readback. Expected outcomes are specifications, not proof of a pass.
 
-The Product Team and partner must confirm the tested version, packet receipt,
-test accounts, current assignments and safe fixture setup before execution.
-Use only a newly created synthetic UAT team and data; do not modify historical
-Lab 5 evidence or reset the shared database. If any prerequisite is missing,
-record BLOCKED rather than invent a result.
+## Shared setup, sequence, and evidence
 
-## Shared setup and recording
+- **Run order:** the normal-proposal chain is `UAT-06`, `UAT-09`, `UAT-08`,
+  then `UAT-10`. UAT-07 is an isolated boundary case on the dedicated Run 2
+  cohort because a student already assigned to the normal team cannot create
+  a second CPE334 team. UAT-08's approval becomes the saved state used by
+  UAT-10.
+- **Roles:** S1 is the leader/member of the newly created UAT team; S2 is
+  another member; I is an instructor; F is a student in a different CPE334
+  team. Use separate browser profiles. Private credentials are never stored
+  in this document, screenshots, Git, or the final report.
+- **Run-specific data:** use a new team/run ID and the complete values in
+  [partner handoff](partner-handoff.md). The normal proposal title is
+  `CoursePMS Independent UAT Proposal`; problem statement is `Student teams
+  need a clear and private project proposal review workflow.`; technology
+  stack is `React, Express, PostgreSQL`; repository URL is
+  `https://example.com/coursepms-uat`.
+- **Version gate:** immediately before the session, record tested URL, source
+  commit, serving revision, time zone, course ID, and `maxTeamSize`. Stop and
+  record BLOCKED if access, fixture state, or the release cannot be confirmed.
+- **Evidence:** record tester/role, exact actions and inputs, expected and
+  actual results, PASS/FAIL/BLOCKED, sanitized evidence ID, and any finding.
+  A disabled UI control proves only the UI state. When a case requires an HTTP
+  response, use a private authenticated API client and record only status and
+  domain code—never a token, login body, cookie, or `Authorization` header.
+- **Retention:** retain the new synthetic team and proposal for later cases,
+  independent retest, and grading. Do not reset, seed, delete, or alter
+  historical Lab 5 data as cleanup.
 
-- **Roles:** S1 is a member of the new UAT team, S2 another member, I an
-  instructor, and F a student in a different team. Account identifiers and
-  credentials are delivered separately through private chat.
-- **Inputs:** use the run-specific team name and values in the
-  [partner handoff](partner-handoff.md): title `CoursePMS Independent UAT Proposal`,
-  problem statement `Student teams need a clear and private project proposal review workflow.`,
-  stack `React, Express, PostgreSQL`, and synthetic repository URL
-  `https://example.com/coursepms-uat`. Use a new run suffix and approved
-  eligible accounts for repeat runs.
-- **Order:** CPMS-UAT-04 saves a new incomplete draft; 05 submits it;
-  06 checks access without changing it; 07 reviews and approves it; 08
-  compares the approved state. Do not start a later case when its prerequisite
-  failed or was blocked.
-- **Recording:** for each case record tester, role, time and time zone,
-  version/revision, actual inputs, actions, results, PASS/FAIL/BLOCKED,
-  evidence IDs and any finding. Compare authorized state before and after a
-  denied write. Never include credentials, tokens or authorization headers.
-- **API observations:** the UI is the primary test surface. Where the UI
-  hides or disables an action, an authorized tester may use a private API
-  client with the correct account to verify the server guard. Record actual
-  sanitized status and error code; do not infer HTTP responses from disabled
-  controls. If the subcheck cannot be performed, record it as BLOCKED.
+## UAT-06: save a draft and submit a complete proposal
 
-## CPMS-UAT-04: incomplete proposal
+- **Requirement / AC:** F-03, FR-03/FR-04, AC-07, NFR-04.
+- **Category:** Normal journey.
+- **Purpose:** Verify that an authorized team member can persist a draft and
+  then submit a complete proposal exactly once.
+- **Roles:** S1; S2 may independently read the saved team state.
+- **Preconditions:** UAT-01 created the run's new team and UAT-02 added S2;
+  no proposal has been submitted for that team. S1 is signed in as a member.
+- **Synthetic inputs:** complete values from Shared setup above.
 
-**AC-08 / BR-04; business-rule validation.** Role: S1. Precondition: the
-new UAT team exists and its proposal is absent or DRAFT.
+### Numbered user actions
 
-1. Enter title `Test`, problem statement `Too short`, stack `TS`, and the
-   synthetic repository URL. Save Draft and reload.
-2. Record the saved values, status and revision. Select Submit Proposal.
-3. If the UI prevents the request, use the authorized S1 API session to
-   `POST /api/teams/<new-team-id>/proposal/submit` without a body.
-4. Reload the authorized proposal and compare its content, status,
-   `submittedAt` and `revisionCount` with the saved draft.
+1. As S1, open the new team's proposal editor and enter all four complete
+   values. Select **Save Draft** once.
+2. Confirm the visible proposal status is `DRAFT`; reload the browser and
+   compare all four values with the entered values.
+3. Select **Submit Proposal** once. Record the visible success/status result,
+   then reload the page.
+4. In S1's private API session, retrieve
+   `GET /api/teams/<team-id>/proposal` only if the UI does not expose the
+   required metadata. Record sanitized status, `submittedAt`, and
+   `revisionCount`.
+5. As S2 in a separate profile, open the same team and compare the authorized
+   proposal status and content with S1's readback.
 
-**Expected:** the incomplete draft can be saved and read. Submission is
-rejected with HTTP 400 / `BR04_INCOMPLETE_PROPOSAL` when a response is
-observed. It remains DRAFT with no successful submission timestamp or
-revision increment. Keep this draft for CPMS-UAT-05.
+### Expected results
 
-## CPMS-UAT-05: submit and lock
+- Saving makes the same four values available after reload and displays
+  `DRAFT`; it does not submit the proposal.
+- The first complete submission succeeds, displays `SUBMITTED`, persists a
+  non-empty submission time, and has `revisionCount = 1`.
+- The authorized metadata read, if performed, returns HTTP 200 and agrees
+  with the UI. S2 sees the same authorized team proposal state.
 
-**AC-07, AC-08 / BR-03; normal journey and state lock.** Role: S1.
-Precondition: CPMS-UAT-04 left the new proposal in DRAFT at revision 0.
+## UAT-07: validate completeness boundaries and submitted-state lock
 
-1. Replace the draft with the shared complete inputs. Save and reload; check
-   all fields.
-2. Submit once. Record the visible SUBMITTED status and revision 1. Use an
-   authorized `GET /api/teams/<new-team-id>/proposal` to record proposal ID,
-   `submittedAt`, content and revision, then reload.
-3. Confirm the editor/actions are locked. With S1's API session attempt
-   `PUT /api/teams/<new-team-id>/proposal` with synthetic changed fields,
-   then `POST /api/teams/<new-team-id>/proposal/submit` again.
-4. Read the proposal as S1 and compare fields, status, timestamp and revision
-   with step 2.
+- **Requirement / AC:** F-03, AC-08, BR-03, BR-04.
+- **Category:** Business rule / boundary.
+- **Purpose:** Verify incomplete proposals are rejected, exact lower
+  boundaries are accepted, and a submitted proposal cannot be changed or
+  submitted again.
+- **Role:** R1 (the dedicated Run 2/retest leader).
+- **Preconditions:** The Product Team provisioned the R1--R4 cohort described
+  in [UAT data and reruns](uat-data-and-reset.md). R1 is eligible and
+  unassigned in CPE334 and creates one separate boundary team, so UAT-06's
+  submitted proposal remains available for UAT-09/UAT-08. If R1 or a safe
+  equivalent fixture is unavailable, mark UAT-07 BLOCKED rather than reuse
+  S1, who is already assigned to the normal UAT team.
+- **Synthetic inputs:**
+  - title length 4: `Test`; title length 5: `Tests`;
+  - problem length 19: `1234567890123456789`; length 20:
+    `12345678901234567890`;
+  - valid stack: `React`; valid repository URL:
+    `https://example.com/coursepms-uat-boundary`.
 
-**Expected:** the complete proposal is SUBMITTED at revision 1 with a
-submission timestamp. Both attempted writes are HTTP 409 /
-`BR03_INVALID_STATUS_TRANSITION` if observed; saved state is unchanged.
-The UI does not itself display every ID or timestamp.
+### Numbered user actions
 
-## CPMS-UAT-06: cross-team and role denial
+1. As R1, create the run-specific boundary team. Save a draft with the
+   4-character title, the 20-character problem,
+   `React`, and the boundary URL. Attempt **Submit Proposal** once.
+2. Replace the title with `Tests`, save/reload, and confirm the draft remains
+   editable. Replace the problem with the 19-character value and attempt
+   submission once.
+3. Replace the problem with the 20-character value, save/reload, then submit
+   once. Record `SUBMITTED`, the submission time, and revision count.
+4. Attempt to edit one field and save. Attempt **Submit Proposal** again.
+   If the UI disables either action, preserve that evidence and use R1's
+   private API session to attempt the corresponding PUT or POST once.
+5. Reload and compare the saved fields, status, submission time, and revision
+   count with the state immediately after step 3.
 
-**AC-10 / BR-06; forbidden ownership and role.** Roles: F and S1; I may
-inspect the authorized control. Precondition: CPMS-UAT-05 is complete and F
-is a member of another team.
+### Expected results
 
-1. As S1, record the new proposal's ID, content, status, revision and review
-   fields. In F's separate profile select View Proposal on the UAT team's row.
-2. As F, use the API to GET, PUT synthetic changed content to, and POST submit
-   to `/api/teams/<new-team-id>/proposal`; use the `/submit` suffix for the
-   POST. Record each sanitized response.
-3. As S1, attempt `POST /api/proposals/<new-proposal-id>/review` with decision
-   `APPROVED` and feedback `This student review must be rejected.`
-4. Read the proposal as S1 or I and compare the saved state with step 1.
+- The 4-character title and 19-character problem submissions are rejected
+  with `BR04_INCOMPLETE_PROPOSAL` (HTTP 400 when the request is observed).
+  Neither attempt produces a submission timestamp or increments a revision.
+- The exact boundary values (title 5, problem 20) submit successfully with
+  `SUBMITTED`, a timestamp, and `revisionCount = 1`.
+- A submitted proposal's edit and repeated submit are rejected with
+  `BR03_INVALID_STATUS_TRANSITION` (HTTP 409 when observed). The persisted
+  content and metadata remain exactly as recorded after step 3.
 
-**Expected:** foreign GET/PUT/submit return HTTP 403 /
-`BR06_FORBIDDEN_TEAM_ACCESS` without disclosing private proposal details.
-Student review returns HTTP 403 / `BR06_INSTRUCTOR_ROLE_REQUIRED`. The
-authorized proposal remains unchanged. Record the actual UI and API results
-separately.
+## UAT-08: instructor requests revision, team resubmits, instructor approves
 
-## CPMS-UAT-07: review and resubmission
+- **Requirement / AC:** F-03, FR-05, AC-09, BR-03, BR-05.
+- **Category:** Normal review lifecycle and business-rule validation.
+- **Purpose:** Verify the complete instructor feedback workflow and its
+  validation boundary.
+- **Roles:** I and S1.
+- **Preconditions:** UAT-06 completed with the normal proposal `SUBMITTED`,
+  `revisionCount = 1`; I is a verified instructor in a separate profile.
+- **Synthetic inputs:** short feedback `Short`; revision feedback `Please
+  clarify the implementation and acceptance evidence.`; revised title
+  `CoursePMS Independent UAT Proposal Revised`; approval feedback `The revised
+  proposal scope is clear and suitable for the course.`
 
-**AC-09 / BR-03, BR-05; normal review lifecycle.** Roles: I and S1.
-Precondition: CPMS-UAT-06 leaves the proposal SUBMITTED at revision 1.
+### Numbered user actions
 
-1. As I, select the UAT proposal, enter feedback `Short`, and request a
-   revision. Record the rejection and compare saved state.
-2. Enter `Please clarify the implementation and acceptance evidence.`;
-   request revision. Reload as S1 and record REVISION_REQUESTED and feedback.
-3. As S1, change the title to `CoursePMS Independent UAT Proposal Revised`,
-   save, and submit again. Record SUBMITTED and revision 2.
-4. As I, approve with feedback
-   `The revised proposal scope is clear and suitable for the course.` Reload
-   as S1 and compare APPROVED status and feedback.
-5. Using the appropriate private I/S1 API sessions, attempt another review,
-   edit and submission on the APPROVED proposal. Read the authorized saved
-   proposal again.
+1. As I, open the UAT-06 proposal. Enter `Short` and select **Request
+   Revision** once. Reload and record proposal status, revision count, and
+   feedback state.
+2. Enter the full revision feedback and select **Request Revision** once.
+   Reload the instructor view.
+3. As S1, reload the proposal. Confirm `REVISION_REQUESTED` and the full
+   feedback. Change only the title to the revised title, save, and submit
+   once. Reload and record the new state.
+4. As I, reload the same proposal, enter the approval feedback, and select
+   **Approve Proposal** once. As S1, reload and compare the approved status
+   and feedback.
+5. Where the UI does not expose an error/status, use the correct private role
+   API session to record only the sanitized response. Do not use an API call
+   to bypass an already observed successful UI action.
 
-**Expected:** short feedback is rejected with HTTP 400 /
-`BR05_FEEDBACK_TOO_SHORT` without a state change. Valid feedback permits
-revision and resubmission increases revision 1 to 2; valid approval persists.
-Review, edit and resubmit after approval return HTTP 409 /
-`BR03_INVALID_STATUS_TRANSITION` if observed, without changing saved data.
-Record reviewer and timestamps through authorized API reads where needed.
+### Expected results
 
-## CPMS-UAT-08: saved-state persistence
+- Feedback shorter than 10 characters is rejected with
+  `BR05_FEEDBACK_TOO_SHORT` (HTTP 400 when observed); status remains
+  `SUBMITTED`, revision remains 1, and no short feedback is saved.
+- Valid revision feedback changes the proposal to `REVISION_REQUESTED` and is
+  visible to S1 after reload.
+- S1 can save the revised title and re-submit. Status returns to `SUBMITTED`,
+  `revisionCount = 2`, and the resubmission has a persisted timestamp.
+- Valid approval changes the same proposal to `APPROVED`; S1 sees the approval
+  feedback after reload. There is no new team or duplicate proposal.
 
-**AC-04, AC-07, AC-09; state/persistence.** Roles: S1, S2 and I.
-Precondition: CPMS-UAT-07 completed; no owner edits during comparison.
+## UAT-09: deny cross-team proposal access and student review
 
-1. Record the authorized team/roster and proposal ID, content, APPROVED
-   status, revision 2, submission time and latest review data.
-2. Reload as S1, then log out and back in; compare the saved state.
-3. Read the same team/proposal as S2 and as I; compare with step 1.
-4. Log out of temporary profiles and retain synthetic record IDs for retest.
+- **Requirement / AC:** F-03, AC-10, BR-06, NFR-02.
+- **Category:** Forbidden ownership and role.
+- **Purpose:** Verify a foreign student cannot read or mutate the UAT team's
+  private proposal, and a student cannot exercise instructor review.
+- **Roles:** F, S1, and I for an authorized comparison.
+- **Preconditions:** UAT-06 normal proposal is `SUBMITTED`; F is confirmed as
+  a member of another CPE334 team and is signed in in a separate profile.
+  Record S1's authorized baseline: title, status, revision, feedback, and
+  proposal ID (through a private read only when the ID is not in the UI).
+- **Synthetic input:** a complete changed proposal payload labelled with the
+  current run ID; it must not be saved if the guard works.
 
-**Expected:** the same authorized saved state is visible after reload and
-relogin, without duplicate team or proposal. This does not claim to test a
-server restart or redeployment.
+### Numbered user actions
 
-## Additional boundary coverage for issue #49
+1. As F, open the UAT team's row and select **View Proposal**. Record the UI
+   result, specifically whether any private title, problem statement, stack,
+   URL, feedback, or proposal metadata is shown.
+2. In F's private API session, attempt GET, PUT with the changed payload, and
+   POST submit on `/api/teams/<uat-team-id>/proposal`. Record only HTTP status
+   and domain code for each request.
+3. As S1, attempt the instructor review action on the same proposal using
+   `APPROVED` and `This student review must be rejected.` in a private API
+   session. Record only sanitized status/code.
+4. As S1 and then I, reload the authorized proposal and compare it with the
+   baseline from before step 1.
 
-The agreed packet's CPMS-UAT-04 uses several short fields at once; it does
-not isolate each exact minimum. Before adding the following to the independent
-session, agree it with the partner and prepare a **separate** synthetic team
-and eligible fixture. Do not alter the sequential CPMS-UAT-04--08 record:
+### Expected results
 
-1. Save and attempt to submit drafts with title lengths 4 then 5, while the
-   problem statement and stack meet their minimums. A 4-character title is
-   rejected. Do not submit a complete 5-character draft yet.
-2. With a 5-character title and valid stack, attempt submission with problem
-   statement length 19, then save length 20. The 19-character statement is
-   rejected.
-3. Submit the draft with title length 5, statement length 20 and a stack of at
-   least 3 characters. It is accepted and becomes SUBMITTED. Count trimmed
-   characters and record inputs, results and version.
+- F is denied the foreign proposal: GET, PUT, and submit return HTTP 403 with
+  `BR06_FORBIDDEN_TEAM_ACCESS` when observed. The foreign view does not expose
+  the private proposal content or feedback.
+- S1's student review is denied with HTTP 403
+  `BR06_INSTRUCTOR_ROLE_REQUIRED` when observed.
+- Authorized S1/I reads show the same title, status, revision, feedback, and
+  submission state as the recorded baseline; neither denied write changed it.
 
-The additional fixture and this boundary test have not been performed or
-approved by the independent team. A successful boundary submission changes
-that separate proposal's state and cannot be undone through the UI.
+## UAT-10: retain proposal history and state after reload and relogin
+
+- **Requirement / AC:** F-03, AC-07, AC-09, NFR-04.
+- **Category:** State / history / persistence.
+- **Roles:** S1, S2, and I.
+- **Preconditions:** UAT-08 completed; the normal proposal is `APPROVED` at
+  `revisionCount = 2`, and no Product Team change is occurring during the
+  comparison.
+
+### Numbered user actions
+
+1. As S1, record the complete authorized baseline: team name and roster,
+   proposal title/content, `APPROVED` status, revision count 2, submission
+   time, and latest instructor feedback.
+2. Reload the page, then log out. Use browser Back and refresh to confirm no
+   private workspace remains. Sign in again as S1 and compare every baseline
+   field.
+3. In separate profiles, sign in as S2 and I; open the same team/proposal and
+   compare the authorized state to S1's baseline.
+4. Retain the team/proposal identifiers and evidence references; do not reset
+   the data.
+
+### Expected results
+
+- Reload and relogin preserve the same team and proposal: no duplicate
+  proposal, no lost fields, no altered feedback, and `APPROVED` with
+  `revisionCount = 2`.
+- S2 and I see the same authorized saved state appropriate to their roles.
+- After logout, Back/Refresh does not reveal the private workspace. This case
+  verifies application/database readback only; it does not claim a restart or
+  redeployment test.
+
+## Scope and execution limits
+
+These cases do not add Sprint 2/3 features or claim every automated contract
+subcheck was manually executed. If a required account, separate boundary
+fixture, release identity, or private API observation is unavailable, record
+the affected subcheck as **BLOCKED**. The independent fastTrack team—not the
+CoursePMS Product Team—records actual results and makes the acceptance
+decision for CoursePMS.
