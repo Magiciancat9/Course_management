@@ -7,6 +7,14 @@ import { seedDatabase } from '../prisma/seed';
 import { clearRevokedTokens } from '../src/middleware/auth';
 
 const DEMO_PASSWORD = process.env.DEMO_USER_PASSWORD || 'Password123!';
+const LAB6_UAT_EMAILS = [
+  'uat.s3@mail.kmutt.ac.th',
+  'uat.s4@mail.kmutt.ac.th',
+  'uat.r1@mail.kmutt.ac.th',
+  'uat.r2@mail.kmutt.ac.th',
+  'uat.r3@mail.kmutt.ac.th',
+  'uat.r4@mail.kmutt.ac.th',
+];
 
 describe('CoursePMS Sprint 1 â€” API & Database Integration Suite (TEST-01 to TEST-22)', () => {
   let seeded: Awaited<ReturnType<typeof seedDatabase>>;
@@ -19,7 +27,7 @@ describe('CoursePMS Sprint 1 â€” API & Database Integration Suite (TEST-01 
     await prisma.$disconnect();
   });
 
-  it('requires a production seed password and preserves existing production data', async () => {
+  it('requires a production seed password, adds only missing UAT accounts, and preserves existing production data', async () => {
     const originalNodeEnv = process.env.NODE_ENV;
     const originalDemoPassword = process.env.DEMO_USER_PASSWORD;
     const proposal = await prisma.projectProposal.findFirst();
@@ -41,11 +49,19 @@ describe('CoursePMS Sprint 1 â€” API & Database Integration Suite (TEST-01 
       process.env.DEMO_USER_PASSWORD = 'lab5-production-seed-test-password';
       await seedDatabase(prisma);
 
-      expect(await prisma.user.count()).toBe(userCount);
+      expect(await prisma.user.count()).toBe(userCount + LAB6_UAT_EMAILS.length);
+      expect(
+        await prisma.user.count({
+          where: { email: { in: LAB6_UAT_EMAILS }, role: 'STUDENT' },
+        })
+      ).toBe(LAB6_UAT_EMAILS.length);
       expect(
         (await prisma.projectProposal.findUnique({ where: { id: proposal!.id } }))
           ?.title
       ).toBe(markerTitle);
+
+      await seedDatabase(prisma);
+      expect(await prisma.user.count()).toBe(userCount + LAB6_UAT_EMAILS.length);
     } finally {
       if (originalNodeEnv === undefined) {
         delete process.env.NODE_ENV;

@@ -42,6 +42,45 @@ const demoUsers = [
     studentCode: '67070503477',
     role: Role.STUDENT,
   },
+  // Lab 6 accounts are deliberately separate from the historical demo data.
+  // In production, seedProductionDatabase creates only missing users, so these
+  // entries do not reset data, change existing passwords, or alter memberships.
+  {
+    email: 'uat.s3@mail.kmutt.ac.th',
+    fullName: 'Lab 6 UAT Student 3',
+    studentCode: 'L6UAT2026S3',
+    role: Role.STUDENT,
+  },
+  {
+    email: 'uat.s4@mail.kmutt.ac.th',
+    fullName: 'Lab 6 UAT Student 4',
+    studentCode: 'L6UAT2026S4',
+    role: Role.STUDENT,
+  },
+  {
+    email: 'uat.r1@mail.kmutt.ac.th',
+    fullName: 'Lab 6 UAT Retest 1',
+    studentCode: 'L6UAT2026R1',
+    role: Role.STUDENT,
+  },
+  {
+    email: 'uat.r2@mail.kmutt.ac.th',
+    fullName: 'Lab 6 UAT Retest 2',
+    studentCode: 'L6UAT2026R2',
+    role: Role.STUDENT,
+  },
+  {
+    email: 'uat.r3@mail.kmutt.ac.th',
+    fullName: 'Lab 6 UAT Retest 3',
+    studentCode: 'L6UAT2026R3',
+    role: Role.STUDENT,
+  },
+  {
+    email: 'uat.r4@mail.kmutt.ac.th',
+    fullName: 'Lab 6 UAT Retest 4',
+    studentCode: 'L6UAT2026R4',
+    role: Role.STUDENT,
+  },
 ] as const;
 
 async function seedProductionDatabase(

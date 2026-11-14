@@ -164,6 +164,6 @@ Actual synthetic emails and passwords are provided privately to the partner team
 
 ## Cleanup and Reset Notes (Coordinated with Lab6-04)
 
-- **Do not run destructive seed/reset commands** (`prisma:seed` or database wipes) against the shared Cloud Run / Cloud SQL instance, as Lab 5 persistence evidence (`Lab5-Persistence-20261112`) and partner test records must remain intact.
+- **Do not run destructive seed/reset commands** or database wipes against the shared Cloud Run / Cloud SQL instance, as Lab 5 persistence evidence (`Lab5-Persistence-20261112`) and partner test records must remain intact. The only exception is the owner-approved, one-off provisioning job in `NODE_ENV=production` described in [UAT data and reruns](uat-data-and-reset.md); production seeding creates missing Lab 6 accounts only and must not be treated as UAT execution.
 - **Repeatable runs:** Each UAT execution uses a unique timestamped team name (`UAT-Team-<YYYYMMDD>-<HHMM>`) and dedicated synthetic unassigned student accounts documented in `Lab6-04` (`docs/labs/lab-06/uat-data-and-reset.md`).
 - **Evidence hygiene:** Redact or omit passwords, bearer tokens, and `Authorization` headers in all screenshots and execution logs (`docs/labs/lab-06/execution-results.md`).

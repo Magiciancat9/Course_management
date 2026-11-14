@@ -27,6 +27,7 @@ apply when testing fastTrack.
 | [Acceptance record](acceptance-record.md) | Separate independent decisions for each tested product |
 | [Preparation verification](preparation-verification.md) | Verified observations, evidence and remaining prerequisites |
 | [Partner and schedule](partner-and-schedule.md) | Members, release identities, communication and proposed appointments |
+| [UAT data and reruns](uat-data-and-reset.md) | Synthetic-account aliases, non-destructive provisioning, and Run 1/Run 2 plan |
 
 The separately shared `CoursePMS_Send_to_UAT_Team.zip` is the agreed original
 packet. This repository case sheet adapts that packet, including a correction
