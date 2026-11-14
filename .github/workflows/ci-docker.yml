@@ -5,6 +5,7 @@ on:
   pull_request:
     branches:
       - lab5-staging
+      - lab6-staging
       - main
   workflow_dispatch:
 
