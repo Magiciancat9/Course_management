@@ -1,7 +1,7 @@
 # Lab 6 UAT data and non-destructive rerun plan
 
-**Status: source prepared; production provisioning and login verification are
-not yet recorded.** This document is a fixture plan, not independent UAT
+**Status: production provisioning and sanitized login verification recorded.**
+This document is a fixture plan and provisioning record, not independent UAT
 evidence or acceptance. It contains no passwords, tokens, or other private
 authentication material.
 
@@ -102,3 +102,34 @@ partner agreement before using any equivalent fixture. That agreement must
 state the exact pre-existing synthetic team, authorized member, unassigned
 candidate, tested release, changed steps, and coverage limitation. It must
 not repurpose Lab 5 evidence or conceal a missing prerequisite.
+
+## Production provisioning and verification record (sanitized)
+
+- **Deployed URL:** `https://course-pms-859617270560.asia-southeast1.run.app`
+- **Release commit & deploy:** `9c22735995c985aaa0622b6b179de1ac9c1f80ca`
+  (`Deploy CoursePMS` run `43574812312`)
+- **Pre-seed health & readiness (`2026-11-14T15:17+07:00`):**
+  - `GET /api/health` -> `HTTP 200` (`commitSha: 9c22735995c985aaa0622b6b179de1ac9c1f80ca`)
+  - `GET /api/ready` -> `HTTP 200` (`{"status":"ready","db":"connected"}`)
+- **Additive production seed job (`2026-11-14T15:19+07:00`):**
+  - One-off Cloud Run Job execution `course-pms-seed-uat-4x9xk` with
+    `NODE_ENV=production` and `npm --prefix server run prisma:seed` completed
+    (`1 / 1 complete`), and the temporary job `course-pms-seed-uat` was deleted.
+  - Strictly additive: no `prisma db push`, database reset, or deletion of
+    existing Lab 5/UAT records was performed.
+- **Private login & starting-state verification (`2026-11-14T15:37+07:00`):**
+
+| Alias | Synthetic email | Login (`POST /api/auth/login`) | Role | CPE334 team memberships (`GET /api/teams`) |
+|---|---|---|---|---|
+| S1 | `niran@mail.kmutt.ac.th` | `HTTP 200` | `STUDENT` | None (`[]`) |
+| S2 | `tatchakorn@mail.kmutt.ac.th` | `HTTP 200` | `STUDENT` | None (`[]`) |
+| S3 | `uat.s3@mail.kmutt.ac.th` | `HTTP 200` | `STUDENT` | None (`[]`) |
+| S4 | `uat.s4@mail.kmutt.ac.th` | `HTTP 200` | `STUDENT` | None (`[]`) |
+| R1 | `uat.r1@mail.kmutt.ac.th` | `HTTP 200` | `STUDENT` | None (`[]`) |
+| R2 | `uat.r2@mail.kmutt.ac.th` | `HTTP 200` | `STUDENT` | None (`[]`) |
+| R3 | `uat.r3@mail.kmutt.ac.th` | `HTTP 200` | `STUDENT` | None (`[]`) |
+| R4 | `uat.r4@mail.kmutt.ac.th` | `HTTP 200` | `STUDENT` | None (`[]`) |
+
+- **Secret hygiene & handoff:** `git grep` confirms no live credential values
+  or tokens are committed to Git; credentials were delivered to the partner
+  team (`fastTrack`) via private direct chat only.
