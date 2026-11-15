@@ -28,7 +28,7 @@ publish passwords, tokens or authorization headers.
 
 | Direction / finding | Case / tested release | Actual result / evidence | Triage / owner | Independent retest |
 |---|---|---|---|---|
-| No finding recorded | Not recorded | Not observed | Not assessed | Not run |
+| CoursePMS `L6-OUT-EXP-001` (reported by fastTrack) | Account-switch check (`CPMS-L6-20261114-155049`) on `9c227359` / `course-pms-00008-hbv` | Prior-account 4-field draft remained visible after Logout -> Suda login without reload; reload cleared fields (`CPMS-UI-022`, `UI-24`–`UI-26`) | Accepted Defect (Major), Issue [#71](https://github.com/Magiciancat9/Course_management/issues/71); fix on `fix/lab6-10-l6-out-exp-001-draft-isolation` (`@martinvadre` driver, `@Magiciancat9` reviewer); see [Fix evidence](fix-evidence.md) | Pending teammate review, authorized release, and independent fastTrack retest |
 
 ## Correction and retest workflow
 
