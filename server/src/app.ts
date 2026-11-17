@@ -206,16 +206,7 @@ app.get('/api/teams', requireAuth, async (req, res) => {
       }
       return {
         ...team,
-        proposal: team.proposal
-          ? {
-              id: team.proposal.id,
-              teamId: team.proposal.teamId,
-              title: team.proposal.title,
-              status: team.proposal.status,
-              revisionCount: team.proposal.revisionCount,
-              updatedAt: team.proposal.updatedAt,
-            }
-          : null,
+        proposal: null,
       };
     });
 
@@ -773,6 +764,14 @@ app.post('/api/proposals/:id/review', requireAuth, async (req, res) => {
     console.error('Review proposal error:', err);
     res.status(500).json({ error: 'Internal server error', code: 'INTERNAL_ERROR' });
   }
+});
+
+// Unsupported proposal routes still belong to the protected API namespace.
+app.use('/api/proposals', requireAuth);
+
+// Unknown API requests must never fall through to the frontend HTML shell.
+app.use('/api', (_req, res) => {
+  res.status(404).json({ error: 'API route not found.', code: 'API_ROUTE_NOT_FOUND' });
 });
 
 // Serve static frontend in production container

@@ -974,8 +974,8 @@ export default function App() {
                             {t.members.length}/{t.course.maxTeamSize}
                           </td>
                           <td>
-                            <span className={`badge ${statusBadgeClass(t.proposal?.status)}`}>
-                              {t.proposal?.status || 'NO_DRAFT'}
+                            <span className={`badge ${statusBadgeClass(t.id === myTeam?.id ? t.proposal?.status : undefined)}`}>
+                              {t.id === myTeam?.id ? t.proposal?.status || 'NO_DRAFT' : 'PRIVATE'}
                             </span>
                           </td>
                           <td className="pe-3 text-end">
