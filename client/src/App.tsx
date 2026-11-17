@@ -118,6 +118,10 @@ export default function App() {
     dashboardAbortRef.current = null;
     setLoading(false);
     setPendingAction(null);
+    setErrorBanner(null);
+    setSuccessBanner(null);
+    setLoginEmail('');
+    setLoginPassword('');
     clearWorkspaceState();
     if (nextToken === null) {
       localStorage.removeItem('course_pms_token');
@@ -132,7 +136,7 @@ export default function App() {
       'Content-Type': 'application/json',
       ...((options.headers as Record<string, string>) || {}),
     };
-    if (token) {
+    if (token && !headers['Authorization']) {
       headers['Authorization'] = `Bearer ${token}`;
     }
     try {
@@ -181,7 +185,8 @@ export default function App() {
 
   async function loadDashboardData(
     activeToken: string,
-    expectedGeneration: number = sessionGenerationRef.current
+    expectedGeneration: number = sessionGenerationRef.current,
+    hydrateEditor: boolean = true
   ) {
     dashboardAbortRef.current?.abort();
     const controller = new AbortController();
@@ -266,12 +271,12 @@ export default function App() {
           const myTeam = loadedTeams.find((t) =>
             t.members.some((m) => m.userId === currentUser.id)
           );
-          if (myTeam?.proposal) {
+          if (myTeam?.proposal && hydrateEditor) {
             setPropTitle(myTeam.proposal.title || '');
             setPropProblem(myTeam.proposal.problemStatement || '');
             setPropStack(myTeam.proposal.techStack || '');
             setPropRepo(myTeam.proposal.repoUrl || '');
-          } else {
+          } else if (!myTeam?.proposal && hydrateEditor) {
             clearProposalEditorFields();
           }
         } else {
@@ -312,7 +317,15 @@ export default function App() {
     if (token) {
       loadDashboardData(token, sessionGenerationRef.current);
     }
+    return () => {
+      dashboardAbortRef.current?.abort();
+    };
   }, [token]);
+
+  useEffect(() => () => {
+    // Late mutations and logins must also become stale on unmount.
+    sessionGenerationRef.current += 1;
+  }, []);
 
   useEffect(() => {
     function handleStorageChange(event: StorageEvent) {
@@ -355,6 +368,7 @@ export default function App() {
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     await withPendingAction('login', async () => {
+      const requestGeneration = sessionGenerationRef.current;
       setErrorBanner(null);
       setSuccessBanner(null);
       if (!loginEmail.trim() || !loginPassword.trim()) {
@@ -369,6 +383,7 @@ export default function App() {
         method: 'POST',
         body: JSON.stringify({ email: loginEmail, password: loginPassword }),
       });
+      if (requestGeneration !== sessionGenerationRef.current) return;
       if (!ok) {
         setErrorBanner({ error: data.error || 'Login failed.', code: data.code });
         return;
@@ -417,6 +432,10 @@ export default function App() {
   const myTeam = user
     ? teams.find((t) => t.members.some((m) => m.userId === user.id))
     : undefined;
+
+  function canViewTeamProposalStatus(teamId: number) {
+    return user?.role === 'INSTRUCTOR' || teamId === myTeam?.id;
+  }
 
   function handleActionFailure(
     status: number,
@@ -481,7 +500,8 @@ export default function App() {
       setSuccessBanner(
         `Added member to ${data.team.name} (${data.team.members.length}/${data.team.course.maxTeamSize} members).`
       );
-      if (token) await loadDashboardData(token, requestGeneration);
+      // Roster refreshes must not discard the current user's unsaved draft.
+      if (token) await loadDashboardData(token, requestGeneration, false);
     });
   }
 
@@ -958,8 +978,8 @@ export default function App() {
                             {t.members.length}/{t.course.maxTeamSize}
                           </td>
                           <td>
-                            <span className={`badge ${statusBadgeClass(t.proposal?.status)}`}>
-                              {t.proposal?.status || 'NO_DRAFT'}
+                            <span className={`badge ${statusBadgeClass(canViewTeamProposalStatus(t.id) ? t.proposal?.status : undefined)}`}>
+                              {canViewTeamProposalStatus(t.id) ? t.proposal?.status || 'NO_DRAFT' : 'PRIVATE'}
                             </span>
                           </td>
                           <td className="pe-3 text-end">
@@ -1208,8 +1228,8 @@ export default function App() {
                               {t.members.length}/{t.course.maxTeamSize}
                             </td>
                             <td>
-                              <span className={`badge ${statusBadgeClass(t.proposal?.status)}`}>
-                                {t.proposal?.status || 'NONE'}
+                              <span className={`badge ${statusBadgeClass(canViewTeamProposalStatus(t.id) ? t.proposal?.status : undefined)}`}>
+                                {canViewTeamProposalStatus(t.id) ? t.proposal?.status || 'NONE' : 'PRIVATE'}
                               </span>
                             </td>
                             <td className="pe-3 text-end">

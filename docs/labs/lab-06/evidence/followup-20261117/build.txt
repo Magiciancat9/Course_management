@@ -1,0 +1,44 @@
+> course-pms@1.0.0 build
+> npm --prefix server run build && npm --prefix client run build
+
+
+> course-pms-server@1.0.0 build
+> prisma generate && tsc
+
+Prisma schema loaded from prisma\schema.prisma
+
+✔ Generated Prisma Client (v5.22.0) to .\..\..\..\server\node_modules\@prisma\client in 155ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+Tip: Want real-time updates to your database without manual polling? Discover how with Pulse: https://pris.ly/tip-0-pulse
+
+node.exe : ┌─────────────────────────────────────────────────────────┐
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (┌──────────────...──────────────┐:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+│  Update available 5.22.0 -> 8.0.0-rc.34                 │
+│                                                         │
+│  This is a major update - please follow the guide at    │
+│  https://pris.ly/d/major-version-upgrade                │
+│                                                         │
+│  Run the following to update                            │
+│    npm i -g prisma@latest                               │
+│    npm i @prisma/client@latest                          │
+└─────────────────────────────────────────────────────────┘
+
+> course-pms-client@1.0.0 build
+> tsc && vite build
+
+vite v5.4.21 building for production...
+transforming...
+✓ 31 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.46 kB │ gzip:  0.32 kB
+dist/assets/index-CfkJyshZ.css  231.25 kB │ gzip: 30.69 kB
+dist/assets/index-CW5OQPUK.js   171.09 kB │ gzip: 52.65 kB
+✓ built in 1.64s

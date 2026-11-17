@@ -1,0 +1,19 @@
+> course-pms@1.0.0 test:client
+> npm --prefix client run test
+
+
+> course-pms-client@1.0.0 test
+> vitest run --config vitest.config.ts
+
+
+ RUN  v2.1.9 C:/Users/Kingnine/Documents/Course_management/.worktrees/lab6-response/client
+
+ ✓ src/App.directoryPrivacy.test.tsx (1 test) 184ms
+ ✓ src/App.test.tsx (4 tests) 241ms
+ ✓ src/App.sessionReview.test.tsx (5 tests) 356ms
+ ✓ src/App.sessionIsolation.test.tsx (5 tests) 495ms
+
+ Test Files  4 passed (4)
+      Tests  15 passed (15)
+   Start at  14:16:20
+   Duration  3.08s (transform 307ms, setup 0ms, collect 2.15s, tests 1.28s, environment 4.78s, prepare 780ms)

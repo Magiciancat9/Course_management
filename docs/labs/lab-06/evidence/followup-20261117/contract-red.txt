@@ -1,0 +1,160 @@
+> course-pms-server@1.0.0 test
+> vitest run --config vitest.config.ts tests/routing-privacy.unit.test.ts
+
+node.exe : [33mThe CJS build of Vite's Node API is deprecated. See
+https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.[39m
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([33mThe CJS bu...e details.[39m:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+
+ RUN  v2.1.9 C:/Users/Kingnine/Documents/Course_management/.worktrees/lab6-response/server
+
+ ❯ tests/routing-privacy.unit.test.ts (8 tests | 6 failed) 1590ms
+   × Versioned roster and API routing contracts > returns foreign rosters with no proposal metadata and preserves the current team full proposal 84ms
+     → expected { id: 12, name: 'Foreign team', …(2) } to match object { name: 'Foreign team', …(2) }
+(1 matching property omitted from actual)
+   × Versioned roster and API routing contracts > returns only rosters and null proposals to an unassigned student 13ms
+     → expected { id: 501, teamId: 11, …(4) } to be null
+   × Versioned roster and API routing contracts > requires authentication for unsupported protected proposal route /api/proposals 8ms
+     → expected 200 to be 401 // Object.is equality
+   × Versioned roster and API routing contracts > requires authentication for unsupported protected proposal route /api/proposals/999/unknown 5ms
+     → expected 200 to be 401 // Object.is equality
+   × Versioned roster and API routing contracts > returns JSON 404 for authenticated unsupported collection GET without inventing a list endpoint 5ms
+     → expected 200 to be 404 // Object.is equality
+   × Versioned roster and API routing contracts > returns JSON 404 for unknown APIs before the SPA fallback 4ms
+     → expected 200 to be 404 // Object.is equality
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/routing-privacy.unit.test.ts > Versioned roster and API routing contracts > returns foreign rosters with
+no proposal metadata and preserves the current team full proposal
+AssertionError: expected { id: 12, name: 'Foreign team', …(2) } to match object { name: 'Foreign team', …(2) }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+  Object {
+    "members": Array [
+      Object {
+        "userId": 999,
+      },
+    ],
+    "name": "Foreign team",
+-   "proposal": null,
++   "proposal": Object {
++     "id": 502,
++     "revisionCount": 1,
++     "status": "DRAFT",
++     "teamId": 12,
++     "title": "Foreign private title",
++     "updatedAt": "2026-11-17T00:00:00Z",
++   },
+  }
+
+ ❯ tests/routing-privacy.unit.test.ts:50:34
+     48|     expect(result.status).toBe(200);
+     49|     expect(result.body.teams[0].proposal).toEqual(proposal);
+     50|     expect(result.body.teams[1]).toMatchObject({ name: 'Foreign team',…
+       |                                  ^
+     51|     expect(JSON.stringify(result.body)).not.toContain('Foreign private…
+     52|     expect(teams[1].proposal.title).toBe('Foreign private title');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/routing-privacy.unit.test.ts > Versioned roster and API routing contracts > returns only rosters and null
+proposals to an unassigned student
+AssertionError: expected { id: 501, teamId: 11, …(4) } to be null
+
+- Expected:
+null
+
++ Received:
+Object {
+  "id": 501,
+  "revisionCount": 1,
+  "status": "DRAFT",
+  "teamId": 11,
+  "title": "Private draft title",
+  "updatedAt": "2026-11-17T00:00:00Z",
+}
+
+ ❯ tests/routing-privacy.unit.test.ts:59:65
+     57|     expect(result.status).toBe(200);
+     58|     expect(result.body.teams).toHaveLength(2);
+     59|     for (const team of result.body.teams) expect(team.proposal).toBeNu…
+       |                                                                 ^
+     60|     expect(JSON.stringify(result.body)).not.toContain('Private draft t…
+     61|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  tests/routing-privacy.unit.test.ts > Versioned roster and API routing contracts > requires authentication for
+unsupported protected proposal route /api/proposals
+ FAIL  tests/routing-privacy.unit.test.ts > Versioned roster and API routing contracts > requires authentication for
+unsupported protected proposal route /api/proposals/999/unknown
+AssertionError: expected 200 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 200
+
+ ❯ tests/routing-privacy.unit.test.ts:71:27
+     69|   it.each(['/api/proposals', '/api/proposals/999/unknown'])('requires …
+     70|     const result = await request(app).get(route);
+     71|     expect(result.status).toBe(401);
+       |                           ^
+     72|     expect(result.type).toBe('application/json');
+     73|     expect(result.body.code).toBe('UNAUTHORIZED');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  tests/routing-privacy.unit.test.ts > Versioned roster and API routing contracts > returns JSON 404 for
+authenticated unsupported collection GET without inventing a list endpoint
+AssertionError: expected 200 to be 404 // Object.is equality
+
+- Expected
++ Received
+
+- 404
++ 200
+
+ ❯ tests/routing-privacy.unit.test.ts:78:27
+     76|   it('returns JSON 404 for authenticated unsupported collection GET wi…
+     77|     const result = await request(app).get('/api/proposals').set('Autho…
+     78|     expect(result.status).toBe(404);
+       |                           ^
+     79|     expect(result.type).toBe('application/json');
+     80|     expect(result.body).toEqual({ error: 'API route not found.', code:…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  tests/routing-privacy.unit.test.ts > Versioned roster and API routing contracts > returns JSON 404 for unknown
+APIs before the SPA fallback
+AssertionError: expected 200 to be 404 // Object.is equality
+
+- Expected
++ Received
+
+- 404
++ 200
+
+ ❯ tests/routing-privacy.unit.test.ts:86:27
+     84|   it('returns JSON 404 for unknown APIs before the SPA fallback', asyn…
+     85|     const result = await request(app).get('/api/nonexistent-route');
+     86|     expect(result.status).toBe(404);
+       |                           ^
+     87|     expect(result.type).toBe('application/json');
+     88|     expect(result.body.code).toBe('API_ROUTE_NOT_FOUND');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 2 passed (8)
+   Start at  14:13:25
+   Duration  8.90s (transform 267ms, setup 0ms, collect 5.93s, tests 1.59s, environment 0ms, prepare 1.02s)

@@ -1,7 +1,9 @@
 # Findings, corrections and independent retests
 
-**No findings or retests are recorded in this document yet.** An empty list
-does not establish that the products have no defects.
+L6-OUT-EXP-001 is recorded below. See the dated [incoming triage](triage.md),
+[follow-up verification](session-followup.md), and [return package](return-to-fasttrack.md)
+for the 17 November continuation of #71 / #72 in Draft PR #73. Independent
+retest and final acceptance remain pending.
 
 ## Report and triage
 

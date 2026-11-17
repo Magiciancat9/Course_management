@@ -1,0 +1,43 @@
+> course-pms@1.0.0 test:client
+
+> npm --prefix client run test
+
+
+
+
+
+> course-pms-client@1.0.0 test
+
+> vitest run --config vitest.config.ts
+
+
+
+
+
+ RUN  v2.1.9 C:/Users/Kingnine/Documents/Course_management/.worktrees/lab6-response/client
+
+
+
+ ✓ src/App.test.tsx (4 tests) 524ms
+
+ ✓ src/App.sessionIsolation.test.tsx (5 tests) 1318ms
+
+   ✓ CoursePMS Session-Scoped Draft Isolation (L6-OUT-EXP-001) > clears all four proposal fields when switching from Account A (draft) to Account B (no proposal) without reload 357ms
+
+   ✓ CoursePMS Session-Scoped Draft Isolation (L6-OUT-EXP-001) > handles reverse switching, no-team student, instructor, and B with its own proposal cleanly 492ms
+
+ ✓ src/App.sessionReview.test.tsx (5 tests) 1407ms
+
+   ✓ L6-OUT-EXP-001 PR review regressions > ignores a delayed login response after another tab switches to B 460ms
+
+   ✓ L6-OUT-EXP-001 PR review regressions > clears private title banners and login fields at an identity boundary 389ms
+
+
+
+ Test Files  3 passed (3)
+
+      Tests  14 passed (14)
+
+   Start at  12:42:18
+
+   Duration  7.11s (transform 935ms, setup 0ms, collect 4.75s, tests 3.25s, environment 6.97s, prepare 477ms)
