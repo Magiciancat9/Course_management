@@ -1,5 +1,29 @@
 # Lab 6: independent UAT
 
+## 17 November continuation
+
+Martin's latest integration review is addressed in [review response](review-73-martin.md):
+an explicit shared instructor/own-team status guard, instructor UI coverage and
+removal of the temporary integration helper. Use the current head and CI for
+review; earlier exports remain dated snapshots.
+
+The latest fastTrack follow-up is answered in [follow-up response](followup-response.md).
+Both prior contract clarifications are now resolved and corrected in the candidate:
+[dispositions](contract-dispositions.md). [Acceptance records](acceptance-record.md)
+are reconciled with dated actual evidence, with human decisions still pending.
+Use [release readiness](release-readiness.md), [actual activity forms](member-activity.md)
+and [proposed targeted retest](retest-request.md) for the remaining owner actions.
+
+The earlier private fastTrack handoff has been inspected. Existing defect #71 / Draft
+PR #72 is continued by [Draft PR #73](https://github.com/Magiciancat9/Course_management/pull/73),
+which targets the existing fix branch. Start with the [return package](return-to-fasttrack.md),
+[incoming triage](triage.md), [follow-up verification](session-followup.md),
+[member allocation](member-work-plan.md), and [Parts A–D draft](report-draft.md).
+The [simulation example](simulation-example.md) is fictional and is not actual
+student participation or acceptance. Release, independent retest and both
+human acceptance decisions remain pending. Earlier preparation/status records
+below are historical and should be read with this dated continuation.
+
 This package follows the partner team's seven-document structure and uses
 CoursePMS Sprint 1 information. The two teams independently test each other's
 product:

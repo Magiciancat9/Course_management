@@ -1,86 +1,76 @@
-# Lab 6 partner coordination and schedule
+# Lab 6 partner pairing, packet exchange, and schedule
 
-**Status: coordination in progress.** Planned dates, historical releases and
-templates are not evidence of UAT execution or an acceptance decision.
+**Status: coordination record; independent execution and acceptance remain
+pending.** This document distinguishes material received from the partner,
+anonymous read-only observations, user-supplied arrangements, and facts that
+still require a direct confirmation. A prepared packet, CI result, API check,
+or AI-assisted observation is not a substitute for two students' independent
+UAT execution.
 
-## Teams and product roles
+## Teams and reciprocal roles
 
-| Team | Product | Members | Role in this exchange |
+| Team | Product | Members | Lab 6 responsibility |
 |---|---|---|---|
-| EN-022_P6, Section 31 | CoursePMS | Tatchakorn Thamnimitr (`Magiciancat9`), Pawarit Wongdaeng (`martinvadre`) | Product Team for CoursePMS; independent UAT Team for fastTrack |
-| EN-028, Section 31, InfaCompany | fastTrack | Supapanya Yathip (`zerotwobook`), Atip Infa-udom (`Atip-Infa`) | Product Team for fastTrack; independent UAT Team for CoursePMS |
+| EN-022_P6, Section 31 | CoursePMS | Tatchakorn Thamnimitr, 67070503415 (`Magiciancat9`); Pawarit Wongdaeng, 67070503466 (`martinvadre`) | Product Team for CoursePMS; independent UAT Team for fastTrack |
+| EN-028, Section 31, InfaCompany | fastTrack | Supapanya Yathip, 67070503443 (`zerotwobook`); Atip Infa-udom, 67070503446 (`Atip-Infa`) | Product Team for fastTrack; independent UAT Team for CoursePMS |
 
-The partner's [handoff](https://github.com/zerotwobook/fastTrack/blob/docs/s2-a-lab6-uat/docs/labs/lab-06/partner-handoff.md)
-records both teams, member identifiers and the exchange. Both members of
-each team must participate in testing the other team's product. Record actual
-participants and actions during execution; a planned tester is not evidence
-of a test.
+Both members of each UAT Team must participate in testing the other team's
+product. Planned names, repository history, and AI-assisted checks do not
+prove attendance or independently tested outcomes; record actual participation
+in [execution results](execution-results.md).
 
-## Packet exchange and access
+## Packet exchange ledger
 
-- **fastTrack:** the partner's
-  [UAT package](https://github.com/zerotwobook/fastTrack/tree/docs/s2-a-lab6-uat/docs/labs/lab-06)
-  supplies its handoff, eight cases, execution workbook, findings and
-  acceptance templates. Its case sheet covers Sprint 1 F-01--F-04. The
-  partner must confirm the currently deployed release and the roles/team
-  assignments of the SA, A1 and SB test accounts; receipt of their
-  credentials by our team is not yet recorded.
-- **CoursePMS:** the Product Team confirmed the agreed packet is
-  `CoursePMS_Send_to_UAT_Team.zip`, with CPMS-UAT-01 through CPMS-UAT-08 in
-  numerical order. The Product Team reports the accounts were checked and
-  credentials sent to the partner through private chat. Confirm packet
-  receipt, actual account-to-alias mapping, fixture state and safe rerun
-  arrangements with the partner before execution.
-- **Secrets:** share credentials only in private chat. Do not copy passwords,
-  tokens, authentication responses or private messages containing them to
-  Git, issues, screenshots or the final report.
-
-## Release identities
-
-| Product | Selected source | Deployed revision | Evidence / limitation |
-|---|---|---|---|
-| fastTrack | `8e637e537cd037d630a5fffc1b5672d1b44371a8` | Current revision not yet confirmed by its Product Team | At 17:42 Asia/Bangkok on 2026-11-13, `/api/health` and `/api/ready` returned HTTP 200 and this version. The partner handoff calls `fasttrack-app-00003-rc7` a historical revision, not a current traffic confirmation. |
-| CoursePMS | `150dc5db3de5c829a7d9ef1adb545191cc37542d` | Product Team reported by 20:08 Asia/Bangkok on 2026-11-13 that `course-pms-00006-sbx` received 100% at 8:03 p.m.; check date, time zone and evidence not recorded | At approximately 19:43 Asia/Bangkok on 2026-11-13, `/api/health` returned this commit and `/api/ready` reported the database connected. Reconfirm traffic before the session. |
-
-fastTrack's historical Sprint 1 tag is `v1.0.0-sprint-1`, commit
-`ae7a60a6e3ed0a363dcee920ac1774a02f4f4ab8`; CoursePMS's tag is
-`v1.0.0-sprint1`, commit `5979f5870e8e28277996dc3045cbf4be5f7236ad`.
-The selected deployed commits above are distinct from those tags.
-
-Before each session, recheck the selected product's health/readiness and ask
-its Product Team to confirm the revision serving traffic. A health response
-identifies source, not a Cloud Run revision. If the release differs, pause and
-agree and record the actual tested baseline; do not silently transfer results
-or acceptance to another version. Each Product Team should notify the testers
-before a deployment that could affect a session.
-
-## Schedule and communication
-
-The shared coordination and defect-reporting channel is **private chat**, as
-confirmed by the CoursePMS Product Team. Exchange sanitized finding IDs,
-version, case/AC, steps, expected and actual results, impact and evidence;
-record delivery and acknowledgement without publishing credentials.
-
-| Event | Date/time (Asia/Bangkok) | Status |
+| Direction / material | What is available | Status and boundary |
 |---|---|---|
-| Initial UAT | 13 November 2026 from 17:30, listed in the partner handoff | Proposed; actual start, participation and completion not recorded |
-| Defect-correction window | Not recorded | To agree with both teams |
-| Retest | 14 November 2026 at 13:30, listed in the partner handoff | Proposed; partner confirmation pending |
+| fastTrack → CoursePMS | Partner package at [fastTrack Lab 6](https://github.com/zerotwobook/fastTrack/tree/docs/s2-a-lab6-uat/docs/labs/lab-06); supplied local archive `coursepms-fasttrack-lab6-20261113.zip` was read without extraction or script execution. | Packet/source reference received. The archive identifies prepared-packet source commit `749e5676a44b014b8c070ee2c5ba1bf4b03b245f` and includes cases, handoff, templates, contracts, and an evidence inventory. Its historical templates retain `NOT RUN`/`PENDING`; archive contents do not establish student participation, acceptance, or credential delivery. |
+| fastTrack → CoursePMS | Eight fastTrack cases covering delivered Sprint 1 F-01--F-04; account labels SA, A1, SB (plus optional A2/B1); setup/cleanup and finding/retest templates. | Cases and alias labels are available in the received packet. Private passwords, current assignment, and actual delivery to EN-022_P6 require direct confirmation from fastTrack. |
+| CoursePMS → fastTrack | CoursePMS packet: [handoff](handoff.md), [auth/team cases](uat-cases-auth-team.md), [proposal/review cases](uat-cases-proposal.md), [consolidated cases](uat-cases.md), fixture plan, execution/finding/acceptance templates. | Packet is ready to share. Partner packet receipt, private credential delivery, and current starting-state confirmation must be recorded separately; no receipt is inferred from a repository link. |
+| Both directions | Credentials and any raw login responses. | Private chat only. Never place passwords, tokens, cookies, authorization headers, or private chat screenshots in Git, public issues, or the final PDF. |
 
-Keep dated, redacted evidence of the final agreement and notify both teams of
-any schedule or release changes. If a partner or service is unavailable,
-record the actual blockage, notify the instructor/TA and retain proof; do not
-replace independent testing with the Product Team's own tests.
+## Release identities and session gate
 
-## Before execution
+| Product under test | Repository / public URL | Selected source | Current read-only observation | Revision / traffic status |
+|---|---|---|---|---|
+| fastTrack | [repository](https://github.com/zerotwobook/fastTrack); <https://fasttrack-app-kpx7au3w2a-as.a.run.app> | `8e637e537cd037d630a5fffc1b5672d1b44371a8`; historical Sprint 1 tag `v1.0.0-sprint-1` points to `ae7a60a6e3ed0a363dcee920ac1774a02f4f4ab8`. | On 14 November 2026, anonymous `/api/health` returned `status: ok`, `version: 8e637e537cd037d630a5fffc1b5672d1b44371a8`; `/api/ready` returned `status: ready`, `database: connected`. | `fasttrack-app-00003-rc7` is historical only. Product Team must confirm current Cloud Run revision/traffic and that this exact source is accepted for the session. |
+| CoursePMS | [repository](https://github.com/Magiciancat9/Course_management); <https://course-pms-859617270560.asia-southeast1.run.app> | `9c22735995c985aaa0622b6b179de1ac9c1f80ca`; historical Sprint 1 tag `v1.0.0-sprint1` points to `5979f5870e8e28277996dc3045cbf4be5f7236ad`. | Production provisioning record documents a successful deploy and readiness check for this source; see [UAT data and reruns](uat-data-and-reset.md). | Product Team must reconfirm the serving Cloud Run revision/traffic immediately before the independent session. Health identifies source, not Cloud Run traffic allocation. |
 
-1. Both teams confirm session times, evidence location, escalation contact,
-   packet receipt and private account access.
-2. Each Product Team confirms its live source, serving revision and approved
-   synthetic fixture setup. Do not reset a shared database or alter historical
-   evidence.
-3. Each UAT Team records actual tester names, roles, date/time, inputs,
-   results, PASS/FAIL/BLOCKED and evidence for the other product's cases.
-4. Report failures through private chat, record acknowledgement, and agree
-   corrections and retests. Only the independent UAT Team can make its
-   product's acceptance decision.
+Before each session, both Product Teams must record the exact source,
+revision/traffic, URL, time zone, and health/readiness result. If the serving
+source differs, stop the affected test and agree a new baseline. Results and
+acceptance never silently transfer to another release. Each Product Team must
+notify the other through private chat before a deployment that could affect an
+active test or retest.
+
+## Appointments and coordination
+
+| Event | Date/time (Asia/Bangkok) | Current record |
+|---|---|---|
+| Initial UAT | 13 November 2026, from 17:30 | User-supplied plan retained by the partner packet. Actual start, both testers' participation, and completion are not recorded here. |
+| Defect-correction window | Not agreed | Product Teams must agree an owner, target corrected source/revision, and notification when a finding is accepted. |
+| Retest | 14 November 2026, 13:30 | Proposed in the partner packet; direct partner confirmation and actual attendance are not recorded. If the time has passed without a recorded session, agree a replacement appointment rather than backdating execution. |
+| Defect channel | Private chat | Use a sanitized finding ID, product/version, case/AC, preconditions, steps, expected/actual result, impact/severity, evidence ID, owner, and acknowledgement time. Record the acknowledgement without copying credentials. |
+| Evidence location | To confirm privately | Both teams must agree where redacted screenshots/records are retained and who may access them before execution. |
+
+## Pre-session checklist
+
+- [x] Partner identity, repositories, product URLs, planned roles, selected
+  source identities, and both case packets are available as preparation
+  material.
+- [x] Current anonymous fastTrack health/readiness returns the selected source
+  and connected database; this is not authenticated UAT or revision evidence.
+- [ ] fastTrack Product Team confirms the serving revision/traffic, accepted
+  scope, SA/A1/SB assignment, and private credential delivery to both CoursePMS
+  testers.
+- [ ] CoursePMS Product Team confirms packet receipt by fastTrack, current
+  serving revision/traffic, private credential delivery, and S1--S4/R1--R4
+  starting state for the actual session.
+- [ ] Both teams confirm a replacement/actual session time, correction window,
+  retest time, escalation contact, and evidence location through private chat.
+- [ ] Both UAT Teams record actual testers, tested release, inputs, results,
+  evidence, and findings in their own execution records.
+
+If the partner is unavailable or the application is unavailable, retain
+sanitized evidence, notify the instructor/TA promptly, and record the
+dependency. Do not replace the independent partner with Product Team testing
+or convert preparation observations into UAT results.

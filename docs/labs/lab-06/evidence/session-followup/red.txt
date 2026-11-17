@@ -1,0 +1,225 @@
+> course-pms@1.0.0 test:client
+
+> npm --prefix client run test
+
+
+
+
+
+> course-pms-client@1.0.0 test
+
+> vitest run --config vitest.config.ts
+
+
+
+
+
+ RUN  v2.1.9 C:/Users/Kingnine/Documents/Course_management/.worktrees/lab6-response/client
+
+
+
+ ✓ src/App.test.tsx (4 tests) 1489ms
+
+   ✓ CoursePMS Client UI Component Suite > shows network errors and lets the user dismiss the alert 954ms
+
+ ❯ src/App.sessionReview.test.tsx (5 tests | 3 failed) 1534ms
+
+   × L6-OUT-EXP-001 PR review regressions > ignores a delayed login response after another tab switches to B 233ms
+
+     → expect(element).toHaveTextContent()
+
+
+
+Expected element to have text content:
+
+  Beta
+
+Received:
+
+  Alpha (101)a@example.test
+
+   × L6-OUT-EXP-001 PR review regressions > clears private title banners and login fields at an identity boundary 160ms
+
+     → expect(element).not.toBeInTheDocument()
+
+
+
+expected document not to contain element, found <div
+
+  class="alert alert-success shadow-sm"
+
+  data-testid="success-banner"
+
+  role="alert"
+
+>
+
+  Loaded proposal for Team #11: "Alpha private title"
+
+</div> instead
+
+   × L6-OUT-EXP-001 PR review regressions > preserves all unsaved editor fields after a same-session member refresh 179ms
+
+     → expect(element).toHaveValue(Unsaved title)
+
+
+
+Expected the element to have value:
+
+  Unsaved title
+
+Received:
+
+  Alpha private title
+
+   ✓ L6-OUT-EXP-001 PR review regressions > keeps B pending while a stale A mutation finishes 618ms
+
+   ✓ L6-OUT-EXP-001 PR review regressions > restores all saved fields after unmount and reload with the same token 340ms
+
+ ✓ src/App.sessionIsolation.test.tsx (5 tests) 2433ms
+
+   ✓ CoursePMS Session-Scoped Draft Isolation (L6-OUT-EXP-001) > clears all four proposal fields when switching from Account A (draft) to Account B (no proposal) without reload 545ms
+
+   ✓ CoursePMS Session-Scoped Draft Isolation (L6-OUT-EXP-001) > handles reverse switching, no-team student, instructor, and B with its own proposal cleanly 1076ms
+
+   ✓ CoursePMS Session-Scoped Draft Isolation (L6-OUT-EXP-001) > clears sensitive proposal state on 401 session expiry and preserves same-session typing on save error 431ms
+
+
+
+node.exe : ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+At line:1 char:1
+
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
+
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    + CategoryInfo          : NotSpecified: (⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯:String) [], RemoteException
+
+    + FullyQualifiedErrorId : NativeCommandError
+
+
+
+
+
+ FAIL  src/App.sessionReview.test.tsx > L6-OUT-EXP-001 PR review regressions > ignores a delayed login response after
+
+another tab switches to B
+
+Error: expect(element).toHaveTextContent()
+
+
+
+Expected element to have text content:
+
+  Beta
+
+Received:
+
+  Alpha (101)a@example.test
+
+ ❯ src/App.sessionReview.test.tsx:70:53
+
+     68|     await switchToB();
+
+     69|     await act(async () => { pending.resolve(response({ token: 'token-a…
+
+     70|     expect(screen.getByTestId('current-user-info')).toHaveTextContent(…
+
+       |                                                     ^
+
+     71|     expect(localStorage.getItem('course_pms_token')).toBe('token-b');
+
+     72|     expect(screen.getByTestId('proposal-title')).toHaveValue('');
+
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+
+
+ FAIL  src/App.sessionReview.test.tsx > L6-OUT-EXP-001 PR review regressions > clears private title banners and login
+
+fields at an identity boundary
+
+Error: expect(element).not.toBeInTheDocument()
+
+
+
+expected document not to contain element, found <div
+
+  class="alert alert-success shadow-sm"
+
+  data-testid="success-banner"
+
+  role="alert"
+
+>
+
+  Loaded proposal for Team #11: "Alpha private title"
+
+</div> instead
+
+ ❯ src/App.sessionReview.test.tsx:82:64
+
+     80|     expect(screen.getByTestId('success-banner')).toHaveTextContent(tea…
+
+     81|     await switchToB();
+
+     82|     expect(screen.queryByText(/Loaded proposal for Team/)).not.toBeInT…
+
+       |                                                                ^
+
+     83|     await act(async () => { fireEvent.click(screen.getByTestId('logout…
+
+     84|     expect(screen.getByTestId('login-email')).toHaveValue('');
+
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+
+
+ FAIL  src/App.sessionReview.test.tsx > L6-OUT-EXP-001 PR review regressions > preserves all unsaved editor fields
+
+after a same-session member refresh
+
+Error: expect(element).toHaveValue(Unsaved title)
+
+
+
+Expected the element to have value:
+
+  Unsaved title
+
+Received:
+
+  Alpha private title
+
+ ❯ src/App.sessionReview.test.tsx:98:85
+
+     96|     await act(async () => { fireEvent.click(screen.getByTestId('add-me…
+
+     97|     await waitFor(() => expect(screen.getByTestId('add-member-btn')).t…
+
+     98|     for (const [id, value] of Object.entries(edits)) expect(screen.get…
+
+       |                                                                                     ^
+
+     99|   });
+
+    100|
+
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+
+ Test Files  1 failed | 2 passed (3)
+
+      Tests  3 failed | 11 passed (14)
+
+   Start at  12:41:12
+
+   Duration  20.04s (transform 894ms, setup 0ms, collect 33.15s, tests 5.46s, environment 13.07s, prepare 2.06s)

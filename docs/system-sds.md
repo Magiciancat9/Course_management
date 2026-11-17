@@ -189,6 +189,20 @@ erDiagram
 
 ### 3.3. Role and Ownership Permission Matrix
 
+Roster-only directory privacy is literal: student responses retain complete
+proposals only for the student's own team and set every foreign team's
+`proposal` to `null`. Foreign title, status, identifiers, revision count and
+timestamps are not public summaries. Instructors retain complete proposals.
+The student UI labels foreign proposal state `PRIVATE`; `null` does not imply
+that a foreign team has no draft.
+
+The proposal API namespace remains protected for unsupported routes: an
+unauthenticated `/api/proposals` request receives JSON 401, while an unsupported
+request after valid authentication receives JSON 404 `API_ROUTE_NOT_FOUND`.
+There is no bare collection-list endpoint. Other unknown `/api` requests return
+JSON 404 before the frontend fallback; frontend navigation outside `/api`
+retains SPA HTML behavior.
+
 | Protected Operation | Endpoint | Unauthenticated | `STUDENT` (Own Team) | `STUDENT` (Other Team / Unassigned) | `INSTRUCTOR` |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | Get current session user | `GET /api/auth/me` | `401` | **Allow (`200`)** | **Allow (`200`)** | **Allow (`200`)** |

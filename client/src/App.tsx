@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 export interface User {
   id: number;
@@ -90,12 +90,53 @@ export default function App() {
   const [selectedTeamId, setSelectedTeamId] = useState<number | null>(null);
   const [reviewFeedbackInput, setReviewFeedbackInput] = useState('');
 
+  // Session boundary refs: prevent cross-session stale responses and callbacks
+  const sessionGenerationRef = useRef<number>(0);
+  const dashboardAbortRef = useRef<AbortController | null>(null);
+
+  function clearProposalEditorFields() {
+    setPropTitle('');
+    setPropProblem('');
+    setPropStack('');
+    setPropRepo('');
+  }
+
+  function clearWorkspaceState() {
+    setTeams([]);
+    setCourses([]);
+    setNewTeamName('');
+    setAddMemberEmail('');
+    clearProposalEditorFields();
+    setStatusFilter('ALL');
+    setSelectedTeamId(null);
+    setReviewFeedbackInput('');
+  }
+
+  function invalidateSessionBoundary(nextToken: string | null = null): number {
+    sessionGenerationRef.current += 1;
+    dashboardAbortRef.current?.abort();
+    dashboardAbortRef.current = null;
+    setLoading(false);
+    setPendingAction(null);
+    setErrorBanner(null);
+    setSuccessBanner(null);
+    setLoginEmail('');
+    setLoginPassword('');
+    clearWorkspaceState();
+    if (nextToken === null) {
+      localStorage.removeItem('course_pms_token');
+      setToken(null);
+      setUser(null);
+    }
+    return sessionGenerationRef.current;
+  }
+
   async function apiFetch(path: string, options: RequestInit = {}) {
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       ...((options.headers as Record<string, string>) || {}),
     };
-    if (token) {
+    if (token && !headers['Authorization']) {
       headers['Authorization'] = `Bearer ${token}`;
     }
     try {
@@ -116,12 +157,24 @@ export default function App() {
           code: 'INVALID_RESPONSE',
         };
       }
-      return { status: response.status, ok: response.ok, data };
+      return { status: response.status, ok: response.ok, aborted: false, data };
     } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        return {
+          status: 0,
+          ok: false,
+          aborted: true,
+          data: {
+            error: 'Request aborted.',
+            code: 'ABORTED',
+          },
+        };
+      }
       console.error(`API request failed for ${path}:`, error);
       return {
         status: 0,
         ok: false,
+        aborted: false,
         data: {
           error: 'Unable to reach the server. Check your connection and try again.',
           code: 'NETWORK_ERROR',
@@ -130,22 +183,37 @@ export default function App() {
     }
   }
 
-  async function loadDashboardData(activeToken: string) {
+  async function loadDashboardData(
+    activeToken: string,
+    expectedGeneration: number = sessionGenerationRef.current,
+    hydrateEditor: boolean = true
+  ) {
+    dashboardAbortRef.current?.abort();
+    const controller = new AbortController();
+    dashboardAbortRef.current = controller;
+
     setLoading(true);
     try {
       const meRes = await apiFetch('/api/auth/me', {
         headers: { Authorization: `Bearer ${activeToken}` },
+        signal: controller.signal,
       });
+      if (
+        meRes.aborted ||
+        controller.signal.aborted ||
+        expectedGeneration !== sessionGenerationRef.current
+      ) {
+        return;
+      }
       if (!meRes.ok) {
-        setErrorBanner({
+        const errorPayload = {
           error: String(meRes.data.error || 'Could not load the current user.'),
           code: typeof meRes.data.code === 'string' ? meRes.data.code : undefined,
-        });
+        };
         if (meRes.status === 401) {
-          setToken(null);
-          setUser(null);
-          localStorage.removeItem('course_pms_token');
+          invalidateSessionBoundary(null);
         }
+        setErrorBanner(errorPayload);
         return;
       }
       const currentUser = meRes.data.user;
@@ -161,37 +229,74 @@ export default function App() {
       const [coursesRes, teamsRes] = await Promise.all([
         apiFetch('/api/courses', {
           headers: { Authorization: `Bearer ${activeToken}` },
+          signal: controller.signal,
         }),
         apiFetch('/api/teams', {
           headers: { Authorization: `Bearer ${activeToken}` },
+          signal: controller.signal,
         }),
       ]);
+      if (
+        coursesRes.aborted ||
+        teamsRes.aborted ||
+        controller.signal.aborted ||
+        expectedGeneration !== sessionGenerationRef.current
+      ) {
+        return;
+      }
 
       if (coursesRes.ok) {
         setCourses(coursesRes.data.courses || []);
+      } else if (coursesRes.status === 401) {
+        invalidateSessionBoundary(null);
+        setErrorBanner({
+          error: String(coursesRes.data.error || 'Session expired or revoked.'),
+          code: typeof coursesRes.data.code === 'string' ? coursesRes.data.code : undefined,
+        });
+        return;
       } else {
         setErrorBanner({
           error: String(coursesRes.data.error || 'Could not load courses.'),
           code: typeof coursesRes.data.code === 'string' ? coursesRes.data.code : undefined,
         });
       }
+
       if (teamsRes.ok) {
         const loadedTeams: ProjectTeam[] = teamsRes.data.teams || [];
         setTeams(loadedTeams);
 
         if (currentUser.role === 'STUDENT') {
+          setSelectedTeamId(null);
+          setReviewFeedbackInput('');
           const myTeam = loadedTeams.find((t) =>
             t.members.some((m) => m.userId === currentUser.id)
           );
-          if (myTeam?.proposal) {
+          if (myTeam?.proposal && hydrateEditor) {
             setPropTitle(myTeam.proposal.title || '');
             setPropProblem(myTeam.proposal.problemStatement || '');
             setPropStack(myTeam.proposal.techStack || '');
             setPropRepo(myTeam.proposal.repoUrl || '');
+          } else if (!myTeam?.proposal && hydrateEditor) {
+            clearProposalEditorFields();
           }
-        } else if (loadedTeams.length > 0 && selectedTeamId === null) {
-          setSelectedTeamId(loadedTeams[0].id);
+        } else {
+          clearProposalEditorFields();
+          if (
+            loadedTeams.length > 0 &&
+            (selectedTeamId === null || !loadedTeams.some((t) => t.id === selectedTeamId))
+          ) {
+            setSelectedTeamId(loadedTeams[0].id);
+          } else if (loadedTeams.length === 0) {
+            setSelectedTeamId(null);
+          }
         }
+      } else if (teamsRes.status === 401) {
+        invalidateSessionBoundary(null);
+        setErrorBanner({
+          error: String(teamsRes.data.error || 'Session expired or revoked.'),
+          code: typeof teamsRes.data.code === 'string' ? teamsRes.data.code : undefined,
+        });
+        return;
       } else {
         setErrorBanner({
           error: String(teamsRes.data.error || 'Could not load teams.'),
@@ -199,35 +304,71 @@ export default function App() {
         });
       }
     } finally {
-      setLoading(false);
+      if (dashboardAbortRef.current === controller) {
+        dashboardAbortRef.current = null;
+      }
+      if (!controller.signal.aborted && expectedGeneration === sessionGenerationRef.current) {
+        setLoading(false);
+      }
     }
   }
 
   useEffect(() => {
     if (token) {
-      loadDashboardData(token);
+      loadDashboardData(token, sessionGenerationRef.current);
     }
+    return () => {
+      dashboardAbortRef.current?.abort();
+    };
+  }, [token]);
+
+  useEffect(() => () => {
+    // Late mutations and logins must also become stale on unmount.
+    sessionGenerationRef.current += 1;
+  }, []);
+
+  useEffect(() => {
+    function handleStorageChange(event: StorageEvent) {
+      if (event.key === 'course_pms_token' || event.key === null) {
+        const updatedToken = localStorage.getItem('course_pms_token');
+        if (updatedToken !== token) {
+          invalidateSessionBoundary(updatedToken);
+          if (updatedToken !== null) {
+            setUser(null);
+            setToken(updatedToken);
+          }
+        }
+      }
+    }
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, [token]);
 
   async function withPendingAction(action: string, operation: () => Promise<void>) {
     if (pendingAction) return;
+    const actionGeneration = sessionGenerationRef.current;
     setPendingAction(action);
     try {
       await operation();
     } catch (error) {
       console.error(`${action} failed:`, error);
-      setErrorBanner({
-        error: 'The request could not be completed. Please try again.',
-        code: 'REQUEST_FAILED',
-      });
+      if (actionGeneration === sessionGenerationRef.current) {
+        setErrorBanner({
+          error: 'The request could not be completed. Please try again.',
+          code: 'REQUEST_FAILED',
+        });
+      }
     } finally {
-      setPendingAction(null);
+      if (actionGeneration === sessionGenerationRef.current) {
+        setPendingAction(null);
+      }
     }
   }
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     await withPendingAction('login', async () => {
+      const requestGeneration = sessionGenerationRef.current;
       setErrorBanner(null);
       setSuccessBanner(null);
       if (!loginEmail.trim() || !loginPassword.trim()) {
@@ -242,6 +383,7 @@ export default function App() {
         method: 'POST',
         body: JSON.stringify({ email: loginEmail, password: loginPassword }),
       });
+      if (requestGeneration !== sessionGenerationRef.current) return;
       if (!ok) {
         setErrorBanner({ error: data.error || 'Login failed.', code: data.code });
         return;
@@ -254,6 +396,7 @@ export default function App() {
         return;
       }
 
+      invalidateSessionBoundary(data.token);
       localStorage.setItem('course_pms_token', data.token);
       setToken(data.token);
       setUser(data.user);
@@ -263,6 +406,7 @@ export default function App() {
 
   async function handleLogout() {
     await withPendingAction('logout', async () => {
+      const requestGeneration = sessionGenerationRef.current;
       setErrorBanner(null);
       setSuccessBanner(null);
       if (!token) {
@@ -270,16 +414,17 @@ export default function App() {
         return;
       }
 
-      const { ok, data } = await apiFetch('/api/auth/logout', { method: 'POST' });
+      const { ok, status, data } = await apiFetch('/api/auth/logout', { method: 'POST' });
+      if (requestGeneration !== sessionGenerationRef.current) return;
       if (!ok) {
+        if (status === 401) {
+          invalidateSessionBoundary(null);
+        }
         setErrorBanner({ error: data.error || 'Logout failed.', code: data.code });
         return;
       }
 
-      localStorage.removeItem('course_pms_token');
-      setToken(null);
-      setUser(null);
-      setTeams([]);
+      invalidateSessionBoundary(null);
       setSuccessBanner('Logged out successfully. Session token revoked.');
     });
   }
@@ -288,18 +433,35 @@ export default function App() {
     ? teams.find((t) => t.members.some((m) => m.userId === user.id))
     : undefined;
 
+  function canViewTeamProposalStatus(teamId: number) {
+    return user?.role === 'INSTRUCTOR' || teamId === myTeam?.id;
+  }
+
+  function handleActionFailure(
+    status: number,
+    data: ApiResponseData,
+    fallbackMessage: string
+  ) {
+    if (status === 401) {
+      invalidateSessionBoundary(null);
+    }
+    setErrorBanner({ error: data.error || fallbackMessage, code: data.code });
+  }
+
   async function handleCreateTeam(e: React.FormEvent) {
     e.preventDefault();
     await withPendingAction('create-team', async () => {
+      const requestGeneration = sessionGenerationRef.current;
       setErrorBanner(null);
       setSuccessBanner(null);
       const courseId = courses[0]?.id || 1;
-      const { ok, data } = await apiFetch('/api/teams', {
+      const { ok, status, data } = await apiFetch('/api/teams', {
         method: 'POST',
         body: JSON.stringify({ name: newTeamName, courseId }),
       });
+      if (requestGeneration !== sessionGenerationRef.current) return;
       if (!ok) {
-        setErrorBanner({ error: data.error || 'Could not create team.', code: data.code });
+        handleActionFailure(status, data, 'Could not create team.');
         return;
       }
       if (!data.team) {
@@ -308,24 +470,26 @@ export default function App() {
       }
       setNewTeamName('');
       setSuccessBanner(`Created project team "${data.team.name}" successfully.`);
-      if (token) await loadDashboardData(token);
+      if (token) await loadDashboardData(token, requestGeneration);
     });
   }
 
   async function handleAddMember(e: React.FormEvent, targetTeamId?: number) {
     e.preventDefault();
     await withPendingAction('add-member', async () => {
+      const requestGeneration = sessionGenerationRef.current;
       setErrorBanner(null);
       setSuccessBanner(null);
       const tId = targetTeamId || myTeam?.id;
       if (!tId) return;
 
-      const { ok, data } = await apiFetch(`/api/teams/${tId}/members`, {
+      const { ok, status, data } = await apiFetch(`/api/teams/${tId}/members`, {
         method: 'POST',
         body: JSON.stringify({ email: addMemberEmail }),
       });
+      if (requestGeneration !== sessionGenerationRef.current) return;
       if (!ok) {
-        setErrorBanner({ error: data.error || 'Could not add team member.', code: data.code });
+        handleActionFailure(status, data, 'Could not add team member.');
         return;
       }
       if (!data.team) {
@@ -336,16 +500,18 @@ export default function App() {
       setSuccessBanner(
         `Added member to ${data.team.name} (${data.team.members.length}/${data.team.course.maxTeamSize} members).`
       );
-      if (token) await loadDashboardData(token);
+      // Roster refreshes must not discard the current user's unsaved draft.
+      if (token) await loadDashboardData(token, requestGeneration, false);
     });
   }
 
   async function handleSaveDraft() {
     if (!myTeam) return;
     await withPendingAction('save-draft', async () => {
+      const requestGeneration = sessionGenerationRef.current;
       setErrorBanner(null);
       setSuccessBanner(null);
-      const { ok, data } = await apiFetch(`/api/teams/${myTeam.id}/proposal`, {
+      const { ok, status, data } = await apiFetch(`/api/teams/${myTeam.id}/proposal`, {
         method: 'PUT',
         body: JSON.stringify({
           title: propTitle,
@@ -354,21 +520,23 @@ export default function App() {
           repoUrl: propRepo,
         }),
       });
+      if (requestGeneration !== sessionGenerationRef.current) return;
       if (!ok) {
-        setErrorBanner({ error: data.error || 'Could not save proposal draft.', code: data.code });
+        handleActionFailure(status, data, 'Could not save proposal draft.');
         return;
       }
       setSuccessBanner('Proposal draft saved to PostgreSQL.');
-      if (token) await loadDashboardData(token);
+      if (token) await loadDashboardData(token, requestGeneration);
     });
   }
 
   async function handleSubmitProposal() {
     if (!myTeam) return;
     await withPendingAction('submit-proposal', async () => {
+      const requestGeneration = sessionGenerationRef.current;
       setErrorBanner(null);
       setSuccessBanner(null);
-      const { ok, data } = await apiFetch(`/api/teams/${myTeam.id}/proposal/submit`, {
+      const { ok, status, data } = await apiFetch(`/api/teams/${myTeam.id}/proposal/submit`, {
         method: 'POST',
         body: JSON.stringify({
           title: propTitle,
@@ -377,8 +545,9 @@ export default function App() {
           repoUrl: propRepo,
         }),
       });
+      if (requestGeneration !== sessionGenerationRef.current) return;
       if (!ok) {
-        setErrorBanner({ error: data.error || 'Could not submit proposal.', code: data.code });
+        handleActionFailure(status, data, 'Could not submit proposal.');
         return;
       }
       if (!data.proposal) {
@@ -388,17 +557,19 @@ export default function App() {
       setSuccessBanner(
         `Proposal submitted for Instructor review (Status: ${data.proposal.status}, Revision #${data.proposal.revisionCount}).`
       );
-      if (token) await loadDashboardData(token);
+      if (token) await loadDashboardData(token, requestGeneration);
     });
   }
 
   async function handleInspectTeamProposal(targetTeamId: number) {
     await withPendingAction('inspect-proposal', async () => {
+      const requestGeneration = sessionGenerationRef.current;
       setErrorBanner(null);
       setSuccessBanner(null);
-      const { ok, data } = await apiFetch(`/api/teams/${targetTeamId}/proposal`);
+      const { ok, status, data } = await apiFetch(`/api/teams/${targetTeamId}/proposal`);
+      if (requestGeneration !== sessionGenerationRef.current) return;
       if (!ok) {
-        setErrorBanner({ error: data.error || 'Could not load proposal.', code: data.code });
+        handleActionFailure(status, data, 'Could not load proposal.');
         return;
       }
       setSuccessBanner(`Loaded proposal for Team #${targetTeamId}: "${data.proposal?.title || 'No proposal'}"`);
@@ -410,17 +581,19 @@ export default function App() {
     decision: 'APPROVED' | 'REVISION_REQUESTED'
   ) {
     await withPendingAction('review-proposal', async () => {
+      const requestGeneration = sessionGenerationRef.current;
       setErrorBanner(null);
       setSuccessBanner(null);
-      const { ok, data } = await apiFetch(`/api/proposals/${proposalId}/review`, {
+      const { ok, status, data } = await apiFetch(`/api/proposals/${proposalId}/review`, {
         method: 'POST',
         body: JSON.stringify({
           decision,
           reviewFeedback: reviewFeedbackInput,
         }),
       });
+      if (requestGeneration !== sessionGenerationRef.current) return;
       if (!ok) {
-        setErrorBanner({ error: data.error || 'Could not record instructor decision.', code: data.code });
+        handleActionFailure(status, data, 'Could not record instructor decision.');
         return;
       }
       if (!data.proposal) {
@@ -431,7 +604,7 @@ export default function App() {
       setSuccessBanner(
         `Proposal #${proposalId} transitioned to ${data.proposal.status} with recorded feedback.`
       );
-      if (token) await loadDashboardData(token);
+      if (token) await loadDashboardData(token, requestGeneration);
     });
   }
 
@@ -805,8 +978,8 @@ export default function App() {
                             {t.members.length}/{t.course.maxTeamSize}
                           </td>
                           <td>
-                            <span className={`badge ${statusBadgeClass(t.proposal?.status)}`}>
-                              {t.proposal?.status || 'NO_DRAFT'}
+                            <span className={`badge ${statusBadgeClass(canViewTeamProposalStatus(t.id) ? t.proposal?.status : undefined)}`}>
+                              {canViewTeamProposalStatus(t.id) ? t.proposal?.status || 'NO_DRAFT' : 'PRIVATE'}
                             </span>
                           </td>
                           <td className="pe-3 text-end">
@@ -1055,8 +1228,8 @@ export default function App() {
                               {t.members.length}/{t.course.maxTeamSize}
                             </td>
                             <td>
-                              <span className={`badge ${statusBadgeClass(t.proposal?.status)}`}>
-                                {t.proposal?.status || 'NONE'}
+                              <span className={`badge ${statusBadgeClass(canViewTeamProposalStatus(t.id) ? t.proposal?.status : undefined)}`}>
+                                {canViewTeamProposalStatus(t.id) ? t.proposal?.status || 'NONE' : 'PRIVATE'}
                               </span>
                             </td>
                             <td className="pe-3 text-end">
