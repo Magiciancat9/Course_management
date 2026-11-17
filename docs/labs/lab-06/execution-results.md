@@ -1,8 +1,12 @@
 # Independent UAT execution results
 
-**No independent execution has been recorded here.** Preparation checks
-below are not UAT passes. Add actual results for each direction without
-overwriting an earlier failure or blocked attempt.
+The tables below preserve earlier preparation and unexecuted-case records.
+The 17 November private handoff now supplies dated AI-operated evidence for
+both directions: CoursePMS core 36 PASS assertions, full ledger 56 PASS / 1 FAIL / 57;
+reciprocal fastTrack evidence has separate denominators and procedure deviations.
+See [report Part B](report-draft.md) and [return package](return-to-fasttrack.md)
+for the updated assessment. This does not retroactively change earlier NOT RUN
+entries into personal student execution. Both human decisions remain PENDING.
 
 ## Preparation observations, not UAT
 

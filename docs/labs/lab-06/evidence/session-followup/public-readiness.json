@@ -1,0 +1,41 @@
+{
+  "observed_at": "2026-11-17T12:43:22.666161+07:00",
+  "kind": "anonymous read-only metadata, not UAT",
+  "observations": [
+    {
+      "url": "https://course-pms-859617270560.asia-southeast1.run.app/api/health",
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "service": "course-pms-api",
+        "commitSha": "9c22735995c985aaa0622b6b179de1ac9c1f80ca",
+        "timestamp": "2026-11-17T05:43:39.933Z"
+      }
+    },
+    {
+      "url": "https://course-pms-859617270560.asia-southeast1.run.app/api/ready",
+      "status": 200,
+      "body": {
+        "status": "ready",
+        "db": "connected"
+      }
+    },
+    {
+      "url": "https://fasttrack-app-kpx7au3w2a-as.a.run.app/api/health",
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "version": "8e637e537cd037d630a5fffc1b5672d1b44371a8"
+      }
+    },
+    {
+      "url": "https://fasttrack-app-kpx7au3w2a-as.a.run.app/api/ready",
+      "status": 200,
+      "body": {
+        "status": "ready",
+        "database": "connected",
+        "version": "8e637e537cd037d630a5fffc1b5672d1b44371a8"
+      }
+    }
+  ]
+}

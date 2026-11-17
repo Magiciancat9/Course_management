@@ -72,3 +72,8 @@
 | **AC-01** | `FR-01`, `NFR-03`, `NFR-05` | **Valid Login & Current-User Identity:** Given a seeded `STUDENT` or `INSTRUCTOR` account, submitting valid credentials to `POST /api/auth/login` returns `200 OK` with a signed JWT and user profile (without `passwordHash`), and calling `GET /api/auth/me` with that token returns the matching user identity. `GET /api/health` returns `200 OK`. |
 | **AC-02** | `FR-01`, `NFR-03` | **Invalid Login Rejection:** Submitting a wrong password, unknown email, or empty credentials to `POST /api/auth/login` is rejected with `401 Unauthorized` (or `400 Bad Request` when fields are missing) without issuing a token or leaking password hashes. |
 | **AC-03** | `FR-01`, `BR-06`, `NFR-01` | **Unauthenticated Rejection & Enforced Logout:** Any request to a protected endpoint (`/api/auth/me`, `/api/teams`, `/api/proposals`) without a valid token is rejected with `401 Unauthorized`. After calling `POST /api/auth/logout`, reusing the same JWT on any protected endpoint is rejected with `401 Unauthorized`, including after a server restart. The server refuses to start without `JWT_SECRET`. |
+
+For the unsupported bare proposal collection path, AC-03 still requires JSON
+401 before authentication. After valid authentication it returns JSON 404
+`API_ROUTE_NOT_FOUND`; this does not define a collection-list feature. Unknown
+API routes must not be served as frontend HTML.

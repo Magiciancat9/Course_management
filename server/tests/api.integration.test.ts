@@ -128,11 +128,20 @@ describe('CoursePMS Sprint 1 â€” API & Database Integration Suite (TEST-01 
   it('TEST-03 / AC-03: rejects unauthenticated requests to protected endpoints and revokes token upon logout', async () => {
     const unauthTeams = await request(app).get('/api/teams');
     expect(unauthTeams.status).toBe(401);
+    const unauthProposals = await request(app).get('/api/proposals');
+    expect(unauthProposals.status).toBe(401);
+    expect(unauthProposals.body.code).toBe('UNAUTHORIZED');
 
     const loginRes = await request(app)
       .post('/api/auth/login')
       .send({ email: 'pawarit@mail.kmutt.ac.th', password: DEMO_PASSWORD });
     const token = loginRes.body.token;
+
+    const unsupportedCollection = await request(app)
+      .get('/api/proposals')
+      .set('Authorization', `Bearer ${token}`);
+    expect(unsupportedCollection.status).toBe(404);
+    expect(unsupportedCollection.body.code).toBe('API_ROUTE_NOT_FOUND');
 
     const logoutRes = await request(app)
       .post('/api/auth/logout')
@@ -620,6 +629,25 @@ describe('CoursePMS Sprint 1 â€” API & Database Integration Suite (TEST-01 
     expect(studentReviewAttempt.status).toBe(403);
     expect(studentReviewAttempt.body.code).toBe('BR06_INSTRUCTOR_ROLE_REQUIRED');
     expect(studentReviewAttempt.body.proposal).toBeUndefined();
+  });
+
+  it('TEST-23 / AC-10: exposes only rosters for foreign teams while retaining authorized proposal details', async () => {
+    const expectedOwn = await prisma.projectProposal.findUniqueOrThrow({ where: { teamId: seeded.teamAlpha.id } });
+    const expectedForeign = await prisma.projectProposal.findUniqueOrThrow({ where: { teamId: seeded.teamBeta.id } });
+    for (const email of ['pawarit@mail.kmutt.ac.th', 'suda@mail.kmutt.ac.th', 'instructor@kmutt.ac.th']) {
+      const login = await request(app).post('/api/auth/login').send({ email, password: DEMO_PASSWORD });
+      expect(login.status).toBe(200);
+      const directory = await request(app).get('/api/teams').set('Authorization', `Bearer ${login.body.token}`);
+      expect(directory.status).toBe(200);
+      for (const team of directory.body.teams) {
+        const mayRead = email === 'instructor@kmutt.ac.th' ||
+          (email === 'pawarit@mail.kmutt.ac.th' && team.id === seeded.teamAlpha.id);
+        if (mayRead) expect(team.proposal).toMatchObject({ title: team.id === seeded.teamAlpha.id ? expectedOwn.title : expectedForeign.title });
+        else expect(team.proposal).toBeNull();
+        expect(team.members.length).toBeGreaterThan(0);
+      }
+    }
+    expect(await prisma.projectProposal.findUniqueOrThrow({ where: { id: expectedForeign.id } })).toEqual(expectedForeign);
   });
 
   it('TEST-07 / AC-07: persists a draft, retrieves it, and records submission metadata (persistence)', async () => {

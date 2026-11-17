@@ -1,0 +1,112 @@
+> course-pms@1.0.0 test:client
+> npm --prefix client run test
+
+
+> course-pms-client@1.0.0 test
+> vitest run --config vitest.config.ts
+
+
+ RUN  v2.1.9 C:/Users/Kingnine/Documents/Course_management/.worktrees/lab6-response/client
+
+ ❯ src/App.directoryPrivacy.test.tsx (1 test | 1 failed) 189ms
+   × labels foreign proposal state as private instead of implying that no draft exists 188ms
+     → Unable to find an element with the text: PRIVATE. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<tr>[39m
+  [36m<td[39m
+    [33mclass[39m=[32m"ps-3 fw-semibold"[39m
+  [36m>[39m
+    [0mForeign team[0m
+  [36m</td>[39m
+  [36m<td>[39m
+    [0m0[0m
+    [0m/[0m
+    [0m3[0m
+  [36m</td>[39m
+  [36m<td>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"badge bg-secondary"[39m
+    [36m>[39m
+      [0mNO_DRAFT[0m
+    [36m</span>[39m
+  [36m</td>[39m
+  [36m<td[39m
+    [33mclass[39m=[32m"pe-3 text-end"[39m
+  [36m>[39m
+    [36m<button[39m
+      [33mclass[39m=[32m"btn btn-outline-secondary btn-sm"[39m
+      [33mdata-testid[39m=[32m"inspect-proposal-12"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [0mView Proposal[0m
+    [36m</button>[39m
+  [36m</td>[39m
+[36m</tr>[39m
+ ✓ src/App.test.tsx (4 tests) 230ms
+ ✓ src/App.sessionReview.test.tsx (5 tests) 371ms
+ ✓ src/App.sessionIsolation.test.tsx (5 tests) 522ms
+
+node.exe : ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+
+ FAIL  src/App.directoryPrivacy.test.tsx > labels foreign proposal state as private instead of implying that no draft
+exists
+TestingLibraryElementError: Unable to find an element with the text: PRIVATE. This could be because the text is broken
+up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more
+flexible.
+
+Ignored nodes: comments, script, style
+[36m<tr>[39m
+  [36m<td[39m
+    [33mclass[39m=[32m"ps-3 fw-semibold"[39m
+  [36m>[39m
+    [0mForeign team[0m
+  [36m</td>[39m
+  [36m<td>[39m
+    [0m0[0m
+    [0m/[0m
+    [0m3[0m
+  [36m</td>[39m
+  [36m<td>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"badge bg-secondary"[39m
+    [36m>[39m
+      [0mNO_DRAFT[0m
+    [36m</span>[39m
+  [36m</td>[39m
+  [36m<td[39m
+    [33mclass[39m=[32m"pe-3 text-end"[39m
+  [36m>[39m
+    [36m<button[39m
+      [33mclass[39m=[32m"btn btn-outline-secondary btn-sm"[39m
+      [33mdata-testid[39m=[32m"inspect-proposal-12"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [0mView Proposal[0m
+    [36m</button>[39m
+  [36m</td>[39m
+[36m</tr>[39m
+ ❯ Object.getElementError ../../../client/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../../client/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../../client/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../../client/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/App.directoryPrivacy.test.tsx:24:26
+     22|   render(<App />);
+     23|   const foreign = await screen.findByRole('row', { name: /Foreign team…
+     24|   expect(within(foreign).getByText('PRIVATE')).toBeInTheDocument();
+       |                          ^
+     25|   expect(within(foreign).queryByText('NO_DRAFT')).not.toBeInTheDocumen…
+     26|   expect(within(screen.getByRole('row', { name: /Own team/ })).getByTe…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  1 failed | 14 passed (15)
+   Start at  14:14:35
+   Duration  10.10s (transform 651ms, setup 0ms, collect 10.52s, tests 1.31s, environment 22.29s, prepare 2.63s)
