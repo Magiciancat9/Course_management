@@ -1,5 +1,10 @@
 # Session isolation follow-up verification
 
+This preserves the original #71 proof chain. The later fastTrack reply is
+handled in [follow-up response](followup-response.md); [contract dispositions](contract-dispositions.md)
+record the additional #74/#75 correction and 41-backend/15-client/3-E2E CI.
+Use the latest #73/export metadata for the final candidate head.
+
 Date: 17 November 2026, Asia/Bangkok. Operator: Codex. Human reviewer approval: **PENDING**.
 
 ## Version chain

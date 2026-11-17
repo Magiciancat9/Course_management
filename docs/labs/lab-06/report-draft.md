@@ -1,5 +1,12 @@
 # CoursePMS Lab 6 report draft — Parts A–D
 
+Latest 17 November update: [follow-up response](followup-response.md) records
+the new partner exchange; [contract dispositions](contract-dispositions.md)
+resolve #74/#75 with the user's roster-only policy and versioned AC-03.
+[Acceptance](acceptance-record.md) is reconciled; actual decisions stay pending.
+Current code-head CI: 41 backend / 15 frontend / 3 E2E passed with production
+and Docker builds. Earlier rows below preserve the original #71 proof chain.
+
 Team EN-022_P6, Section 31: Tatchakorn Thamnimitr (67070503415), Pawarit Wongdaeng (67070503466). Partner: EN-028 InfaCompany / fastTrack. Prepared as Markdown on 17 November 2026. **Draft; unresolved human work and release/retest dependencies remain.** Submission deadline in supplied material: 22 November 2026, 23:59 Asia/Bangkok, LEB2.
 
 | Part | Evidence location | PDF pages |
@@ -38,7 +45,7 @@ L6-OUT-EXP-001 is an **accepted Major defect** under [#71](https://github.com/Ma
 
 The original cause was missing editor resets on logout/empty-state loads and absent session-response guards. Review of the existing correction also exposed an unguarded delayed login, retained private title banners and lost unsaved edits during member refresh. All were reproduced with actual assertion failures and corrected in the follow-up candidate.
 
-[Triage](triage.md) distinguishes the accepted defect from two unresolved contract questions (foreign title summaries and bare proposal-collection GET), and from the incoming report's arithmetic error. No extra product bug or invented assertion was created. Formal teammate disposition review and partner acknowledgement remain pending; [private reply](return-to-fasttrack.md) is drafted but unsent.
+[Triage](triage.md) records the original accepted defect and the now-resolved contract findings: #74 Major foreign proposal metadata exposure under the user's roster-only decision, and #75 Minor auth/JSON-routing mismatch under versioned AC-03. Both have actual RED/GREEN in [contract dispositions](contract-dispositions.md). The incoming arithmetic error remains a report discrepancy, not a product bug. Formal teammate review/release/retest remain pending; [latest private reply](followup-response.md) is drafted but unsent.
 
 ## Part D — Correction and independent retest
 

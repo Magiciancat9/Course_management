@@ -2,6 +2,11 @@
 
 **Review candidate, not a release or a sent message.** Both independent acceptance decisions remain **PENDING**. Prepared by Codex using actual source/test evidence. Human signatures and activities are not supplied by this record.
 
+For the latest second exchange, start with [follow-up response](followup-response.md),
+[resolved contracts](contract-dispositions.md), [reconciled acceptance](acceptance-record.md)
+and [concrete release actions](release-readiness.md). The new sendable follow-up
+excludes fictional simulation and internal report drafts.
+
 ## A. Receipt and triage
 
 | Field | Actual record |
@@ -15,8 +20,8 @@
 | Disposition/severity | Accepted defect / Major: client-private draft exposure across identities; no established server authorization bypass; human disposition review pending |
 | Root cause | Editor empty-state/logout omissions plus missing session guards; review additionally found late-login and private-banner gaps |
 | Owner/reviewer | Existing #56 allocation: Pawarit implements, Tatchakorn reviews. Follow-up from Tatchakorn's account needs Pawarit's inspection before independent integrated-head review. See [work allocation](member-work-plan.md). |
-| Bare collection GET | Contract clarification pending; no collection GET in SDS endpoint table or implementation; SPA fallback explains HTML |
-| Title summaries | Policy clarification pending: sanitizer returns foreign title/status metadata; SDS roster-only wording needs explicit team reconciliation |
+| Bare collection GET | Resolved: #75 accepted Minor auth/JSON-routing defect under versioned AC-03. Candidate returns JSON 401 before auth, JSON 404 after valid auth for unsupported collection GET. No collection-list feature added. |
+| Title summaries | Resolved: user confirmed existing roster-only policy. #74 accepted Major: candidate returns foreign `proposal: null` / UI `PRIVATE`, retaining own/instructor detail. |
 
 Full rationale: [triage](triage.md).
 
@@ -29,7 +34,7 @@ Full rationale: [triage](triage.md).
 | Review follow-up RED | `9834080`: 3 failed / 11 passed |
 | Follow-up GREEN | `6de3c9a8b3404b831041a9b9fe855d1d52f9cac3`: 14 passed / 0 skipped |
 | Branch / PR | `fix/lab6-10-session-boundary-followup`; [#73](https://github.com/Magiciancat9/Course_management/pull/73), Draft into #72's branch |
-| Broader checks | Production build and 9 domain unit tests passed locally. CI run 44026535153 at `5e11600` passed 32 backend, 14 frontend and 3 E2E tests, production and Docker builds, zero skipped. See [verification](session-followup.md). |
+| Broader checks | Latest contract code-head CI 44037614365 at `b29109d` passed 41 backend, 15 frontend and 3 E2E tests, production and Docker builds, zero skipped. Earlier RED/GREEN remains in [session verification](session-followup.md); newest evidence in [contract dispositions](contract-dispositions.md). |
 | Human review | PENDING; no approval submitted or invented |
 | Integration / reviewed main | PENDING; no merge performed |
 | Fixed deployment / deployed smoke | PENDING; live source remains the original `9c227359…` |
@@ -40,13 +45,13 @@ Readable command output and exact version chain: [follow-up verification](sessio
 
 | Field | Actual record / required owner action |
 | --- | --- |
-| Candidate code | `6de3c9a8b3404b831041a9b9fe855d1d52f9cac3`; not yet integrated/released |
+| Candidate code | `b29109d531ca47eace1b13f55076dbcbb9509c14` includes the prior session corrections; not yet integrated/released |
 | Public URL | <https://course-pms-859617270560.asia-southeast1.run.app> |
-| Public observation | 17 November, approximately 12:43 Asia/Bangkok; HTTP 200 health source `9c22735995c985aaa0622b6b179de1ac9c1f80ca`; ready `db: connected` |
+| Public observation | Latest 17 November, approximately 14:20 Asia/Bangkok; HTTP 200 health source `9c22735995c985aaa0622b6b179de1ac9c1f80ca`; ready `db: connected`. Earlier 12:43 and partner 13:42 readings remain historical. |
 | Fixed serving revision / image digest / traffic | PENDING after authorized release; current service metadata not independently retrieved |
 | Owner console evidence | PENDING; release owner must capture dated console view without secrets |
 | Safe fixtures | Historical Team 5, proposal 3, APPROVED revision 2 retained. S1–S3 assigned, S4 unassigned and R1–R4 unused in original run; privately reverify current eligibility. Credentials stay outside package. |
-| Retest appointment/channel | PENDING agreement with fastTrack; draft below is unsent |
+| Retest appointment/channel | Proposed 20 November 19:00–19:45 Asia/Bangkok; not booked, conditional on reviewed release and eligible fixtures; [request](retest-request.md) unsent |
 
 Owner read-only commands after release, with `gcloud` installed/authenticated:
 
@@ -74,7 +79,7 @@ The reciprocal follow-up archive contains a **user-reported**, unwitnessed state
 | Tatchakorn Thamnimitr / 67070503415 | PENDING actual per-case record; authenticated account alone is not personal execution | PENDING |
 | Pawarit Wongdaeng / 67070503466 | PENDING actual per-case record; original PR author alone is not personal execution | PENDING |
 
-Use [proposed allocation and activity form](member-work-plan.md); [illustrative simulation](simulation-example.md) is excluded from actual results.
+Use [actual activity forms](member-activity.md). The internal fictional illustration is excluded from actual results and the new partner follow-up export.
 
 ## E. CoursePMS independent decision about fastTrack
 
@@ -92,6 +97,6 @@ Corrected-version retester/time, actual outcome of L6-OUT-EXP-001, affected chec
 
 ## G. Draft private reply — UNSENT
 
-> We received your 17 November handoff in our local coding session and acknowledge the corrected 56 PASS / 1 FAIL / 57-assertion ledger, including 36 core PASS assertions. We retain L6-OUT-EXP-001 as an accepted Major client-session isolation defect under Issue #71, subject to teammate review. Existing Draft PR #72 has a tested follow-up in Draft PR #73: original RED replay 5 failed/4 passed, follow-up RED 3 failed/11 passed, then GREEN 14 passed. Production build and 9 backend domain tests passed locally; current CI/review status is in the attached records. The public service still serves 9c227359…; no corrected release or independent retest is claimed. We will provide the reviewed release's exact source, digest, serving revision and traffic before requesting your no-refresh account-switch retest. We have preserved your historical fixtures. Please agree a retest appointment after release identity is supplied. Title-summary visibility and bare collection-GET contract questions remain open. Both independent acceptance decisions remain pending.
+> We acknowledge your original and follow-up evidence and the corrected 56 PASS / 1 FAIL / 57 ledger, including 36 core PASS assertions. L6-OUT-EXP-001 remains accepted Major under #71. Continued Draft #73 also resolves roster-only directory privacy (#74, Major) and protected JSON routing (#75, Minor), with genuine RED/GREEN and code-head CI passing 41 backend, 15 frontend and 3 E2E tests plus production/Docker builds. The public service still serves 9c227359…; no corrected release or independent retest is claimed. The reconciled acceptance record and actual activity forms keep human decisions/signatures pending. We propose 20 November 19:00–19:45 Asia/Bangkok, conditional on identified reviewed release and privately reverified fixtures. See the latest follow-up response for the exact remaining owner actions and request. No historical fixture was changed.
 
 This package has not been sent. Share privately after checking the current CI/review/release records; do not include credentials or original private screenshots in a public repository.

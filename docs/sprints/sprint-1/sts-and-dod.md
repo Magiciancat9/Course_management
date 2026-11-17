@@ -37,6 +37,22 @@ Every Sprint 1 Acceptance Criterion (`AC-01`–`AC-10`) is mapped to executable 
 
 ---
 
+### Lab 6 privacy and routing regression additions
+
+| Test ID / suite | Linked contract | Actual executable coverage |
+| --- | --- | --- |
+| TEST-23 | AC-10, BR-06, SDS roster-only directory | `server/tests/api.integration.test.ts::TEST-23 / AC-10: exposes only rosters for foreign teams while retaining authorized proposal details` checks own, foreign, unassigned and instructor responses against disposable PostgreSQL and verifies retained foreign data unchanged. |
+| TEST-03 extension | AC-03, protected proposal namespace | Existing database-backed TEST-03 additionally checks unauthenticated bare collection GET 401 and authenticated unsupported GET JSON 404. |
+| Production routing/privacy suite | AC-03, AC-10, JSON routing, roster-only privacy | `server/tests/routing-privacy.unit.test.ts` exercises the real production Express handlers and auth with a mocked synthetic repository: foreign/null and own/full proposals, unassigned/instructor roles, protected unsupported routes, JSON API fallback and retained frontend SPA behavior. These are 8 mocked-repository HTTP tests, not database integration or deployed UAT. |
+| Directory privacy UI | Roster-only UI semantics | `client/src/App.directoryPrivacy.test.tsx` verifies foreign `PRIVATE`, own `NO_DRAFT`, and the retained denial-inspection control. |
+
+The code-head CI for `b29109d` passed 41 backend tests (24 database integration,
+9 domain and 8 mocked-repository routing), 15 client tests and 3 E2E tests,
+zero skipped; see [contract proof](../../labs/lab-06/contract-dispositions.md).
+Historical and final-head CI records remain version-bound. Existing session
+isolation tests remain in the client suite. This addition does not itself
+complete human review, release, independent retest or acceptance.
+
 ## 2. Product Definition of Done (DoD)
 
 A Sprint 1 feature (`F-01`, `F-02`, `F-03`) and the Sprint 1 release increment are considered **Done** only when all of the following criteria are objectively verified with retained evidence:

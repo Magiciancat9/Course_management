@@ -2,7 +2,14 @@
 
 ## 17 November continuation
 
-The private fastTrack handoff has been inspected. Existing defect #71 / Draft
+The latest fastTrack follow-up is answered in [follow-up response](followup-response.md).
+Both prior contract clarifications are now resolved and corrected in the candidate:
+[dispositions](contract-dispositions.md). [Acceptance records](acceptance-record.md)
+are reconciled with dated actual evidence, with human decisions still pending.
+Use [release readiness](release-readiness.md), [actual activity forms](member-activity.md)
+and [proposed targeted retest](retest-request.md) for the remaining owner actions.
+
+The earlier private fastTrack handoff has been inspected. Existing defect #71 / Draft
 PR #72 is continued by [Draft PR #73](https://github.com/Magiciancat9/Course_management/pull/73),
 which targets the existing fix branch. Start with the [return package](return-to-fasttrack.md),
 [incoming triage](triage.md), [follow-up verification](session-followup.md),
