@@ -1,6 +1,6 @@
 # CoursePMS return package — 17 November 2026
 
-**Review candidate, not a release or a sent message.** Both independent acceptance decisions remain **PENDING**. Prepared by Codex using actual source/test evidence. Human signatures and activities are not supplied by this record.
+**Historical candidate return package; superseded for release identity by the [deployed-release handoff](deployed-release-handoff.md).** Corrected main `aeb804e…` is now deployed on `course-pms-00009-mk2`; see [actual release evidence](release-evidence.md). Candidate/old-source/PENDING deployment rows below retain their earlier preparation context. No partner message or independent retest/acceptance is inferred from deployment; both actual human decisions remain **PENDING**.
 
 For the latest second exchange, start with [follow-up response](followup-response.md),
 [resolved contracts](contract-dispositions.md), [reconciled acceptance](acceptance-record.md)

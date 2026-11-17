@@ -1,0 +1,90 @@
+{
+  "observed_at": "2026-11-17T18:37:44.834651+07:00",
+  "operator": "Codex AI",
+  "scope": "anonymous post-deployment preparation/smoke; no login, private data read, mutation or independent UAT",
+  "expected_main_commit": "aeb804ea5bc667399b00cf54df10046a6ded46e0",
+  "observations": [
+    {
+      "url": "https://course-pms-859617270560.asia-southeast1.run.app/api/health",
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "body": {
+        "status": "ok",
+        "service": "course-pms-api",
+        "commitSha": "aeb804ea5bc667399b00cf54df10046a6ded46e0",
+        "timestamp": "2026-11-17T11:38:00.746Z"
+      },
+      "passed": true
+    },
+    {
+      "url": "https://course-pms-859617270560.asia-southeast1.run.app/api/ready",
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "body": {
+        "status": "ready",
+        "db": "connected"
+      },
+      "passed": true
+    },
+    {
+      "url": "https://course-pms-859617270560.asia-southeast1.run.app/api/proposals",
+      "status": 401,
+      "content_type": "application/json; charset=utf-8",
+      "body": {
+        "error": "Authentication required. Please provide a valid Bearer token.",
+        "code": "UNAUTHORIZED"
+      },
+      "passed": true
+    },
+    {
+      "url": "https://course-pms-859617270560.asia-southeast1.run.app/api/does-not-exist",
+      "status": 404,
+      "content_type": "application/json; charset=utf-8",
+      "body": {
+        "error": "API route not found.",
+        "code": "API_ROUTE_NOT_FOUND"
+      },
+      "passed": true
+    },
+    {
+      "url": "https://course-pms-859617270560.asia-southeast1.run.app/",
+      "status": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "is_html": true,
+      "passed": true
+    },
+    {
+      "url": "https://course-pms-859617270560.asia-southeast1.run.app/courses/1",
+      "status": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "is_html": true,
+      "passed": true
+    },
+    {
+      "url": "https://course-pms-jjbynk5aja-as.a.run.app/api/health",
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "body": {
+        "status": "ok",
+        "service": "course-pms-api",
+        "commitSha": "aeb804ea5bc667399b00cf54df10046a6ded46e0",
+        "timestamp": "2026-11-17T11:38:01.807Z"
+      },
+      "passed": true
+    },
+    {
+      "url": "https://course-pms-jjbynk5aja-as.a.run.app/api/ready",
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "body": {
+        "status": "ready",
+        "db": "connected"
+      },
+      "passed": true
+    }
+  ],
+  "summary": {
+    "passed": 8,
+    "total": 8
+  }
+}

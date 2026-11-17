@@ -1,4 +1,12 @@
-# Concrete release prerequisites and owner actions
+# Historical release preparation and owner actions
+
+Latest status: #72/#73 and release #76 are merged; corrected main `aeb804e…`
+is deployed on `course-pms-00009-mk2`. See [actual release evidence](release-evidence.md)
+and [current handoff](deployed-release-handoff.md). **The preparation tables and
+pending owner steps below are the earlier dated preparation snapshot**, not
+current claims that those merges/deployment are still unperformed. Remaining
+notification, authenticated checks, owner console evidence and independent
+decisions are recorded explicitly in the current release document.
 
 Updated 17 November 2026. **Candidate ready for human inspection; release not authorized or performed.** The full correction already includes original #72 plus #73's follow-up and the contract fixes in #74/#75. There is no need to duplicate or recreate those changes.
 

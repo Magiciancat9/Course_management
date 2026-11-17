@@ -1,0 +1,14 @@
+2026-11-17T11:33:47.6485030Z PASS commit aeb804ea5bc667399b00cf54df10046a6ded46e0 verified via reviewed PR #76 (head 54ac5ee7678900bde9969b3c0aeac39635aea484) -> main
+2026-11-17T11:35:27.6158140Z Service [course-pms] revision [course-pms-00009-mk2] has been deployed and is serving 100 percent of traffic.
+2026-11-17T11:35:27.6160058Z Service URL: https://course-pms-859617270560.asia-southeast1.run.app
+2026-11-17T11:35:30.9667552Z Traffic:
+2026-11-17T11:35:30.9668089Z   100% LATEST (currently course-pms-00009-mk2)
+2026-11-17T11:35:32.8998294Z Service URL: https://course-pms-jjbynk5aja-as.a.run.app
+2026-11-17T11:35:32.9116525Z   SERVICE_URL: https://course-pms-jjbynk5aja-as.a.run.app
+2026-11-17T11:35:32.9117833Z   DEPLOYED_IMAGE: asia-southeast1-docker.pkg.dev/cpe334-kingnine/course-pms/course-pms@sha256:e5cb29a0cf687cdda01110434528d627cd09057d94e9ab028510e5ad090a89e0
+2026-11-17T11:35:34.0968429Z PASS /api/health
+2026-11-17T11:35:34.0968846Z PASS /api/ready
+2026-11-17T11:35:34.0969141Z PASS /
+2026-11-17T11:35:34.0969532Z SKIP login: optional smoke credentials not configured
+2026-11-17T11:35:34.1152950Z   SERVICE_URL: https://course-pms-jjbynk5aja-as.a.run.app
+2026-11-17T11:35:34.1153879Z   DEPLOYED_IMAGE: asia-southeast1-docker.pkg.dev/cpe334-kingnine/course-pms/course-pms@sha256:e5cb29a0cf687cdda01110434528d627cd09057d94e9ab028510e5ad090a89e0

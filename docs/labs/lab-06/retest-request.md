@@ -9,7 +9,17 @@ Prepared 17 November 2026 for fastTrack. Proposed appointment: **20 November 202
 3. Privately reverify eligible existing aliases: A owns a saved four-field draft; B owns a team with no saved proposal; an own-proposal destination, no-team student and instructor are available. Credentials stay outside the package. Alias availability is **PENDING**; old membership snapshots are not current eligibility proof.
 4. Preserve team 5 / proposal 3 / APPROVED revision 2. No team creation, membership change, proposal save/submit/review, reset, seed or deletion is needed for these read-only switches. Use local synthetic fixtures for races or writes. A denial write requires a separately agreed safe target; otherwise mark that subcheck BLOCKED.
 
-The current live source is still the original `9c227359…`, so **corrected-deployment retest remains BLOCKED**. Candidate CI is not a deployed retest.
+Deployment entry update, 17 November: the corrected main source
+`aeb804ea5bc667399b00cf54df10046a6ded46e0` is now live on
+`course-pms-00009-mk2`, 100% traffic per dated CLI output. Public health and
+readiness match; see [release evidence](release-evidence.md). The old-source
+blocker is resolved. **Independent retest remains NOT RUN** and entry is still
+pending actual notification/time agreement, private fixture eligibility and
+safe procedures. The pipeline's optional login smoke was SKIPPED; public checks
+and CI do not establish authenticated deployed UAT.
+
+Start by loading the corrected frontend freshly once before the reproduction;
+then do not refresh between A and B sessions during the no-refresh switch.
 
 ## Targeted cases after entry passes
 

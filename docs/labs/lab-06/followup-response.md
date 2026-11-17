@@ -1,5 +1,12 @@
 # CoursePMS response to fastTrack follow-up — 17 November 2026
 
+This is the historical pre-release response. Actual #76 merge, corrected
+deployment and public smoke are now recorded in [release evidence](release-evidence.md)
+and the [deployed-release handoff](deployed-release-handoff.md). Earlier
+candidate/old-source blocker statements below describe that earlier snapshot;
+they do not override the verified deployed source. Actual notification and
+independent retest/decisions are still pending.
+
 **Prepared response; not sent.** The user supplied `FastTrack_Followup_to_CoursePMS_20261117.zip`; all **9** manifest payload entries verified locally. Its original draft/NOT SENT attribution is retained. No external delivery timestamp, human review, deployment or acceptance is invented.
 
 ## Response to the six requested actions
