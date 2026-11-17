@@ -1,6 +1,6 @@
 # Lab 6 corrected release evidence — 17 November 2026
 
-**Corrected release deployed; independent retest and both human decisions remain pending.** Codex inspected the real GitHub release/deployment records and made anonymous read-only public checks. No new human UAT activity or signature is inferred from CI, review metadata or this document.
+**Corrected release deployed; later partner technical retest received and product-side acknowledged.** Eight deployed cases and RT-07 evidence/isolated replay pass on the released source; see [completed retest](coursepms-retest-completion.md). Formal independent human decisions remain pending. Original public/pipeline checks below retain their actual operators and limits; no new human signature or pipeline login PASS is inferred.
 
 ## Reviewed integration and deployment identity
 
@@ -59,7 +59,30 @@ Issue #57 required telling fastTrack **before** deployment. The user reported th
 
 The current time may record preparation of a new after-deployment message only. Actual notification time/channel, recipient acknowledgement and an agreed retest appointment remain **PENDING**. The prepared [handoff draft](deployed-release-handoff.md) has not been sent by the assistant. Preserve this deviation for the reviewer/report rather than claim a pre-deployment notice.
 
-## Remaining #57 work and independent retest
+## Current completion update and #57 review
+
+The received private completion package supplies later authenticated login,
+team/proposal readback, no-refresh switching, no-team destination, bounded role
+denial and preserved-state evidence on the exact released source. These were
+AI-operated for fastTrack, not a new CoursePMS Product Team execution or a
+pipeline login rerun. The earlier optional pipeline login remains SKIPPED.
+
+The user acknowledges receipt of that technical result in this chat and asks
+for CoursePMS-only closeout. The returned peer artifacts evidence receipt/use
+of release identity and retest instructions; actual external time/channel and
+human acceptance are not supplied. [Product task map](coursepms-product-closeout.md).
+
+Reviewer `martinvadre` must disposition the missing pre-deployment notice and
+any remaining owner-evidence requirements before closing #57. The notification
+exception is retained; it is not completed retrospectively. Dated CLI evidence
+is retained while a console screenshot is still not supplied. This update does
+not change reciprocal fastTrack records or sign the independent decision.
+
+## Historical pre-completion #57 checklist
+
+The following records what remained before the later completed partner retest.
+Its NOT RUN/entry-pending wording is superseded for those technical observations
+by the completion update above, without inventing pipeline/product-team execution.
 
 - User sends the actual after-deployment notification and corrected version/evidence; record real delivery time/channel and response.
 - Owner supplies dated console evidence and privately verifies eligible test accounts plus historical state using agreed read-only checks. No credentials or raw storage enter the record.

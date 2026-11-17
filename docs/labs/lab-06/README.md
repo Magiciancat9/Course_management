@@ -2,13 +2,24 @@
 
 ## 17 November continuation
 
+**CoursePMS product-side technical result is now received and acknowledged.**
+The completed partner package reports 8 deployed targeted PASS plus RT-07
+evidence/isolated-replay PASS. Start with [CoursePMS product closeout](coursepms-product-closeout.md)
+and [completed retest record](coursepms-retest-completion.md). The user requests
+one product at a time: reciprocal fastTrack work is deferred, with its existing
+records and decision unchanged. Formal fastTrack human acceptance of CoursePMS
+is still pending; user receipt of technical results does not supply that decision.
+
 **Corrected release is now deployed.** [Release evidence](release-evidence.md)
 identifies main `aeb804ea5bc667399b00cf54df10046a6ded46e0`, revision
 `course-pms-00009-mk2`, 100% dated CLI traffic and successful public checks.
 Use the [deployed-release handoff](deployed-release-handoff.md) for actual
 notification and independent retest. Pre-deployment notification was not sent
 in the retained record; the new draft is still unsent. Authenticated smoke,
-fixture readback, actual independent retest and both human decisions remain pending.
+fixture/readback limits and historical notification exceptions are retained;
+the later partner technical retest/readback is now recorded in the closeout
+above. The original pipeline login SKIP and actual human decision limits are
+not rewritten as new pipeline passes or signatures.
 
 Martin's latest integration review is addressed in [review response](review-73-martin.md):
 an explicit shared instructor/own-team status guard, instructor UI coverage and

@@ -1,5 +1,32 @@
 # Lab 6 Part D Fix Evidence — L6-OUT-EXP-001
 
+## Current technical closeout — 17 November
+
+The reviewed correction and release are complete: #73/#72 -> release #76 ->
+main `aeb804ea5bc667399b00cf54df10046a6ded46e0`, deployed revision
+`course-pms-00009-mk2`. Main CI passed **41 backend / 16 frontend / 3 E2E**,
+zero skipped, production and Docker builds passed. #77's actual release evidence
+was reviewed and merged. The newly received partner retest now reports 8
+deployed targeted PASS plus RT-07 evidence/isolated-replay PASS; the user
+acknowledges that technical result. [Completed retest](coursepms-retest-completion.md),
+[release proof](release-evidence.md), [product closure map](coursepms-product-closeout.md).
+
+| Defect | Same-test RED -> GREEN proof | Final correction/retest trace |
+| --- | --- | --- |
+| #71, Major client session isolation | `d3ea0116`: `npm run test:client`, 5 failed/4 passed -> `3b7de940`: 9 passed. Additional stale-session RED `9834080`: 3 failed/11 passed -> `6de3c9a`: 14 client passed. Actual logs in [session verification](session-followup.md). | Final follow-up `a309cea`, integrated `ae6f364`, reviewed #72/#73, release #76; RT-01–05 and RT-07 PASS in stated modes |
+| #74, Major foreign proposal metadata | `dd45d9e`: `npm --prefix server run test -- tests/routing-privacy.unit.test.ts` combined suite 6 failed/2 passed (two privacy failures); client directory suite 1 failed/14 passed. `b29109d`: same privacy/routing tests 8 passed (17 with domain), client 15 passed. [Contract RED/GREEN](contract-dispositions.md). | Authorized own/Instructor access retained; final Instructor regression makes 16 client tests; RT-03/08 PASS |
+| #75, Minor protected JSON routing | Same `dd45d9e` HTTP suite: four routing failures within 6 failed/2 passed -> `b29109d` same HTTP suite 8 passed. [Exact output](evidence/followup-20261117/contract-red.txt), [GREEN HTTP/domain](evidence/followup-20261117/contract-green.txt). | Protected namespace and JSON fallback deployed; RT-09 PASS |
+
+Source, test names, actual commands and retained counts link above. The later
+partner's **16 client / 19 selected server** isolated replay is a separate
+verification set; its initial Node 26 localStorage failures are runner
+diagnostics, not original product RED evidence or seven new bugs.
+
+The task's implementation/RED/GREEN/review gates are evidenced. Technical issue
+closure does not supply fastTrack's independent human acceptance, retrospective
+pre-deployment notification or a student's personal UAT signature. The original
+sections below preserve the pre-integration snapshots and their dated limits.
+
 > 17 November continuation: this document preserves the original #72 record.
 > Review found three further failing cases, corrected in [Draft PR #73](https://github.com/Magiciancat9/Course_management/pull/73).
 > See [new RED/GREEN evidence](session-followup.md) and [return package](return-to-fasttrack.md)

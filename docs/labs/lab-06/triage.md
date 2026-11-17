@@ -1,5 +1,13 @@
 # Incoming finding triage — 17 November 2026
 
+**Current CoursePMS technical outcome:** all three accepted corrections are
+reviewed, deployed and covered by the received targeted retest. The product-side
+user acknowledges the result; [completion record](coursepms-retest-completion.md)
+and [task closure map](coursepms-product-closeout.md) retain the exact source,
+proof and actor boundaries. Former candidate/review-pending statements below
+are the earlier dated triage snapshot. Formal fastTrack human acceptance is
+still pending, and the reciprocal fastTrack work is deferred unchanged.
+
 Latest continuation: the user's roster-only decision and versioned AC-03
 resolve both former clarifications as corrected candidate defects #74/#75.
 See [contract dispositions](contract-dispositions.md), [follow-up response](followup-response.md)

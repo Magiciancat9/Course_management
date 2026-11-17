@@ -1,4 +1,11 @@
-# Proposed independent retest — NOT BOOKED / NOT EXECUTED
+# CoursePMS targeted retest plan and completed-result reference
+
+**Historical plan; actual CoursePMS technical retest is now completed and received.**
+See [case-by-case result and actual times](coursepms-retest-completion.md).
+Eight deployed cases pass and RT-07 passes in evidence/isolated-replay mode.
+The proposed 20 November appointment below was not booked and is not the actual
+17 November execution. Formal independent human acceptance remains pending.
+The entry-blocked/NOT RUN wording below preserves the earlier preparation state.
 
 Prepared 17 November 2026 for fastTrack. Proposed appointment: **20 November 2026, 19:00–19:45 Asia/Bangkok**, conditional on a reviewed corrected deployment and privately agreed fixtures. Neither team has confirmed this appointment. No calendar invitation or partner message was sent.
 

@@ -1,5 +1,12 @@
 # Resolved contract dispositions — 17 November 2026
 
+Current CoursePMS outcome: the correction was reviewed, merged through #72/#73
+and release #76, deployed as main `aeb804e…`, and now has a received passing
+targeted technical retest. [Completed result](coursepms-retest-completion.md)
+and [product closeout](coursepms-product-closeout.md) supersede the earlier
+candidate/pending-release wording at the end of this dated proof record.
+Formal fastTrack human acceptance remains pending; reciprocal work is deferred.
+
 The user selected the existing **roster-only** contract in this coding session: students see other teams and members, but no foreign proposal metadata or detail. Codex records and implements that instruction as a review candidate; no teammate approval, deployment or independent acceptance is implied.
 
 ## Directory proposal summaries — accepted defect, Major, Issue #74
