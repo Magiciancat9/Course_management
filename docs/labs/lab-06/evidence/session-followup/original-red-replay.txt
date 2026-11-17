@@ -1,0 +1,2843 @@
+
+> course-pms@1.0.0 test:client
+> npm --prefix client run test
+
+
+> course-pms-client@1.0.0 test
+> vitest run --config vitest.config.ts
+
+
+ RUN  v2.1.9 C:/Users/Kingnine/Documents/Course_management/.worktrees/lab6-original-red/client
+
+ ✓ src/App.test.tsx (4 tests) 375ms
+ ❯ src/App.sessionIsolation.test.tsx (5 tests | 5 failed) 2930ms
+   × CoursePMS Session-Scoped Draft Isolation (L6-OUT-EXP-001) > clears all four proposal fields when switching from Account A (draft) to Account B (no proposal) without reload 221ms
+     → expect(element).toHaveValue()
+
+Expected the element to have value:
+
+Received:
+  Alpha Private Draft Title
+   × CoursePMS Session-Scoped Draft Isolation (L6-OUT-EXP-001) > handles reverse switching, no-team student, instructor, and B with its own proposal cleanly 1406ms
+     → expect(element).toHaveValue()
+
+Expected the element to have value:
+
+Received:
+  Instructor private review note
+
+Ignored nodes: comments, script, style
+<html>
+  <head />
+  <body>
+    <div>
+      <div
+        class="min-vh-100 bg-light"
+      >
+        <nav
+          class="navbar navbar-expand-lg navbar-dark bg-dark px-4 py-3 shadow-sm"
+        >
+          <div
+            class="container-fluid"
+          >
+            <span
+              class="navbar-brand fw-bold"
+            >
+              CoursePMS
+               
+              <span
+                class="badge bg-info text-dark ms-2"
+              >
+                CPE334
+                 (
+                1/2026
+                )
+              </span>
+            </span>
+            <div
+              class="d-flex align-items-center gap-3"
+            >
+              <div
+                class="text-light text-end"
+                data-testid="current-user-info"
+              >
+                <div
+                  class="fw-semibold"
+                >
+                  Instructor One
+                   
+                </div>
+                <div
+                  class="small text-secondary"
+                >
+                  instructor@example.test
+                </div>
+              </div>
+              <span
+                class="badge bg-warning text-dark fs-6"
+                data-testid="current-user-role"
+              >
+                INSTRUCTOR
+              </span>
+              <button
+                class="btn btn-outline-light btn-sm"
+                data-testid="logout-btn"
+                type="button"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </nav>
+        <div
+          class="container py-4"
+          style=""
+        >
+          <div
+            class="alert alert-success shadow-sm"
+            data-testid="success-banner"
+            role="alert"
+          >
+            Authenticated as Instructor One (INSTRUCTOR)
+          </div>
+          <div>
+            <div
+              class="row g-3 mb-4"
+            >
+              <div
+                class="col-md-3"
+              >
+                <div
+                  class="card border-0 shadow-sm text-center p-3"
+                >
+                  <div
+                    class="text-muted small fw-semibold"
+                  >
+                    Total Registered Teams
+                  </div>
+                  <div
+                    class="fs-3 fw-bold"
+                  >
+                    2
+                  </div>
+                </div>
+              </div>
+              <div
+                class="col-md-3"
+              >
+                <div
+                  class="card border-0 shadow-sm text-center p-3"
+                >
+                  <div
+                    class="text-primary small fw-semibold"
+                  >
+                    Submitted (Pending Review)
+                  </div>
+                  <div
+                    class="fs-3 fw-bold text-primary"
+                  >
+                    0
+                  </div>
+                </div>
+              </div>
+              <div
+                class="col-md-3"
+              >
+                <div
+                  class="card border-0 shadow-sm text-center p-3"
+                >
+                  <div
+                    class="text-success small fw-semibold"
+                  >
+                    Approved Proposals
+                  </div>
+                  <div
+                    class="fs-3 fw-bold text-success"
+                  >
+                    0
+                  </div>
+                </div>
+              </div>
+              <div
+                class="col-md-3"
+              >
+                <div
+                  class="card border-0 shadow-sm text-center p-3"
+                >
+                  <div
+                    class="text-warning small fw-semibold"
+                  >
+                    Revision Requested
+                  </div>
+                  <div
+                    class="fs-3 fw-bold text-warning"
+                  >
+                    0
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="row g-4"
+            >
+              <div
+                class="col-lg-6"
+              >
+                <div
+                  class="card shadow-sm border-0"
+                >
+                  <div
+                    class="card-header bg-white py-3 d-flex justify-content-between align-items-center"
+                  >
+                    <h5
+                      class="mb-0 fw-bold"
+                    >
+                      All Course Project Teams
+                    </h5>
+                    <select
+                      class="form-select form-select-sm w-auto"
+                      data-testid="instructor-status-filter"
+                    >
+                      <option
+                        value="ALL"
+                      >
+                        All Statuses
+                      </option>
+                      <option
+                        value="SUBMITTED"
+                      >
+                        SUBMITTED
+                      </option>
+                      <option
+                        value="APPROVED"
+                      >
+                        APPROVED
+                      </option>
+                      <option
+                        value="REVISION_REQUESTED"
+                      >
+                        REVISION_REQUESTED
+                      </option>
+                      <option
+                        value="DRAFT"
+                      >
+                        DRAFT
+                      </option>
+                    </select>
+                  </div>
+                  <div
+                    class="card-body p-0"
+                  >
+                    <table
+                      class="table table-hover mb-0 align-middle"
+                    >
+                      <thead
+                        class="table-light"
+                      >
+                        <tr>
+                          <th
+                            class="ps-3"
+                          >
+                            Team
+                          </th>
+                          <th>
+                            Members
+                          </th>
+                          <th>
+                            Proposal Status
+                          </th>
+                          <th
+                            class="pe-3 text-end"
+                          >
+                            Action
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          class="table-active"
+                        >
+                          <td
+                            class="ps-3"
+                          >
+                            <div
+                              class="fw-bold"
+                            >
+                              Synthetic Alpha Team
+                            </div>
+                            <div
+                              class="small text-muted"
+                            >
+                              Alpha Private Draft Title
+                            </div>
+                          </td>
+                          <td>
+                            1
+                            /
+                            3
+                          </td>
+                          <td>
+                            <span
+                              class="badge bg-secondary"
+                            >
+                              DRAFT
+                            </span>
+                          </td>
+                          <td
+                            class="pe-3 text-end"
+                          >
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              data-testid="select-team-11"
+                              type="button"
+                            >
+                              Inspect / Review
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td
+                            class="ps-3"
+                          >
+                            <div
+                              class="fw-bold"
+                            >
+                              Synthetic Beta Team
+                            </div>
+                            <div
+                              class="small text-muted"
+                            >
+                              Beta Own Proposal Title
+                            </div>
+                          </td>
+                          <td>
+                            1
+                            /
+                            3
+                          </td>
+                          <td>
+                            <span
+                              class="badge bg-secondary"
+                            >
+                              DRAFT
+                            </span>
+                          </td>
+                          <td
+                            class="pe-3 text-end"
+                          >
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              data-testid="select-team-12"
+                              type="button"
+                            >
+                              Inspect / Review
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="col-lg-6"
+              >
+                <div
+                  class="card shadow-sm border-0"
+                >
+                  <div
+                    class="card-header bg-white py-3"
+                  >
+                    <h5
+                      class="mb-0 fw-bold"
+                    >
+                      Instructor Proposal Review Panel (F-03 / BR-05)
+                    </h5>
+                  </div>
+                  <div
+                    class="card-body"
+                  >
+                    <div
+                      class="d-flex justify-content-between align-items-start mb-3"
+                    >
+                      <div>
+                        <h5
+                          class="fw-bold mb-1"
+                          data-testid="review-panel-team"
+                        >
+                          Synthetic Alpha Team
+                          : 
+                          Alpha Private Draft Title
+                        </h5>
+                        <div
+                          class="small text-muted"
+                        >
+                          Members:
+                           
+                          Student Alpha (67070500001)
+                        </div>
+                      </div>
+                      <span
+                        class="badge bg-secondary fs-6"
+                        data-testid="review-panel-status"
+                      >
+                        DRAFT
+                      </span>
+                    </div>
+                    <div
+                      class="bg-light p-3 rounded mb-3 border"
+                    >
+                      <div
+                        class="fw-semibold small text-uppercase text-muted mb-1"
+                      >
+                        Problem Statement
+                      </div>
+                      <p
+                        class="mb-2"
+                      >
+                        Alpha private problem statement with sufficient detail.
+                      </p>
+                      <div
+                        class="small"
+                      >
+                        <strong>
+                          Tech Stack:
+                        </strong>
+                         
+                        React, Node, PostgreSQL
+                         
+                        | 
+                        <strong>
+                          Repo:
+                        </strong>
+                         
+                        https://github.com/example/alpha-private-repo
+                         |
+                         
+                        <strong>
+                          Revision:
+                        </strong>
+                         #
+                        0
+                      </div>
+                    </div>
+                    <div
+                      class="mb-3"
+                    >
+                      <label
+                        class="form-label fw-semibold"
+                      >
+                        Instructor Review Feedback
+                         
+                        <span
+                          class="text-danger"
+                        >
+                          * (min 10 chars, BR-05)
+                        </span>
+                      </label>
+                      <textarea
+                        class="form-control"
+                        data-testid="review-feedback-input"
+                        disabled=""
+                        placeholder="Provide specific engineering feedback (minimum 10 characters)..."
+                        rows="3"
+                      >
+                        Instructor private review note
+                      </textarea>
+                    </div>
+                    <div
+                      class="small text-muted"
+                    >
+                      Instructor decisions are available only while a proposal is submitted for review.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+   × CoursePMS Session-Scoped Draft Isolation (L6-OUT-EXP-001) > ignores delayed dashboard responses from Account A that resolve after Account B has loaded 120ms
+     → expect(element).toHaveValue()
+
+Expected the element to have value:
+
+Received:
+  Alpha Private Draft Title
+   × CoursePMS Session-Scoped Draft Isolation (L6-OUT-EXP-001) > prevents delayed mutation/finally callbacks from a prior session from overwriting B state or pending status 77ms
+     → expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found <div
+  class="alert alert-success shadow-sm"
+  data-testid="success-banner"
+  role="alert"
+>
+  Proposal draft saved to PostgreSQL.
+</div> instead
+   × CoursePMS Session-Scoped Draft Isolation (L6-OUT-EXP-001) > clears sensitive proposal state on 401 session expiry and preserves same-session typing on save error 1103ms
+     → Unable to find an element with the text: Sign In to CoursePMS. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="min-vh-100 bg-light"
+    >
+      <nav
+        class="navbar navbar-expand-lg navbar-dark bg-dark px-4 py-3 shadow-sm"
+      >
+        <div
+          class="container-fluid"
+        >
+          <span
+            class="navbar-brand fw-bold"
+          >
+            CoursePMS
+             
+            <span
+              class="badge bg-info text-dark ms-2"
+            >
+              CPE334
+               (
+              1/2026
+              )
+            </span>
+          </span>
+          <div
+            class="d-flex align-items-center gap-3"
+          >
+            <div
+              class="text-light text-end"
+              data-testid="current-user-info"
+            >
+              <div
+                class="fw-semibold"
+              >
+                Student Alpha
+                 
+                <span
+                  class="text-info"
+                >
+                  (
+                  67070500001
+                  )
+                </span>
+              </div>
+              <div
+                class="small text-secondary"
+              >
+                student-a@example.test
+              </div>
+            </div>
+            <span
+              class="badge bg-success fs-6"
+              data-testid="current-user-role"
+            >
+              STUDENT
+            </span>
+            <button
+              class="btn btn-outline-light btn-sm"
+              data-testid="logout-btn"
+              type="button"
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+      </nav>
+      <div
+        class="container py-4"
+        style=""
+      >
+        <div
+          class="alert alert-danger shadow-sm"
+          data-testid="error-banner"
+          role="alert"
+        >
+          <div
+            class="fw-bold"
+          >
+            Operation Rejected 
+            [TOKEN_REVOKED]
+          </div>
+          <div>
+            Token revoked
+          </div>
+          <button
+            aria-label="Dismiss error"
+            class="btn-close"
+            type="button"
+          />
+        </div>
+        <div
+          class="row g-4"
+        >
+          <div
+            class="col-lg-5"
+          >
+            <div
+              class="card shadow-sm border-0 mb-4"
+            >
+              <div
+                class="card-header bg-white py-3 d-flex justify-content-between align-items-center"
+              >
+                <h5
+                  class="mb-0 fw-bold"
+                >
+                  My Project Team
+                </h5>
+                <span
+                  class="badge bg-dark"
+                  data-testid="team-capacity-badge"
+                >
+                  1
+                   / 
+                  3
+                   Members
+                </span>
+              </div>
+              <div
+                class="card-body"
+              >
+                <h5
+                  class="fw-bold text-primary mb-1"
+                  data-testid="my-team-name"
+                >
+                  Synthetic Alpha Team
+                </h5>
+                <p
+                  class="text-muted small mb-3"
+                >
+                  Course: 
+                  CPE334
+                   — Max Team Size: 
+                  3
+                   
+                  (BR-02)
+                </p>
+                <h6
+                  class="fw-semibold"
+                >
+                  Team Roster:
+                </h6>
+                <ul
+                  class="list-group mb-3"
+                  data-testid="team-roster-list"
+                >
+                  <li
+                    class="list-group-item d-flex justify-content-between align-items-center"
+                  >
+                    <div>
+                      <div
+                        class="fw-semibold"
+                      >
+                        Student Alpha
+                      </div>
+                      <div
+                        class="small text-muted"
+                      >
+                        student-a@example.test
+                         
+                        • ID: 67070500001
+                      </div>
+                    </div>
+                    <span
+                      class="badge bg-secondary"
+                    >
+                      LEADER
+                    </span>
+                  </li>
+                </ul>
+                <form>
+                  <label
+                    class="form-label small fw-semibold"
+                  >
+                    Add Teammate by University Email (Enforces BR-01 & BR-02)
+                  </label>
+                  <div
+                    class="input-group"
+                  >
+                    <input
+                      class="form-control form-control-sm"
+                      data-testid="add-member-email"
+                      placeholder="e.g., tatchakorn@mail.kmutt.ac.th"
+                      type="email"
+                      value=""
+                    />
+                    <button
+                      class="btn btn-outline-primary btn-sm fw-semibold"
+                      data-testid="add-member-btn"
+                      type="submit"
+                    >
+                      Add Member
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div
+              class="card shadow-sm border-0"
+            >
+              <div
+                class="card-header bg-white py-3"
+              >
+                <h6
+                  class="mb-0 fw-bold"
+                >
+                  Course Teams Directory
+                </h6>
+              </div>
+              <div
+                class="card-body p-0"
+              >
+                <table
+                  class="table table-sm table-hover mb-0 align-middle"
+                >
+                  <thead
+                    class="table-light"
+                  >
+                    <tr>
+                      <th
+                        class="ps-3"
+                      >
+                        Team
+                      </th>
+                      <th>
+                        Members
+                      </th>
+                      <th>
+                        Status
+                      </th>
+                      <th
+                        class="pe-3 text-end"
+                      >
+                        Proposal
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td
+                        class="ps-3 fw-semibold"
+                      >
+                        Synthetic Alpha Team
+                      </td>
+                      <td>
+                        1
+                        /
+                        3
+                      </td>
+                      <td>
+                        <span
+                          class="badge bg-secondary"
+                        >
+                          DRAFT
+                        </span>
+                      </td>
+                      <td
+                        class="pe-3 text-end"
+                      >
+                        <button
+                          class="btn btn-outline-secondary btn-sm"
+                          data-testid="inspect-proposal-11"
+                          type="button"
+                        >
+                          View Proposal
+                        </button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        class="ps-3 fw-semibold"
+                      >
+                        Synthetic Beta Team
+                      </td>
+                      <td>
+                        1
+                        /
+                        3
+                      </td>
+                      <td>
+                        <span
+                          class="badge bg-secondary"
+                        >
+                          NO_DRAFT
+                        </span>
+                      </td>
+                      <td
+                        class="pe-3 text-end"
+                      >
+                        <button
+                          class="btn btn-outline-secondary btn-sm"
+                          data-testid="inspect-proposal-12"
+                          type="button"
+                        >
+                          View Proposal
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div
+            class="col-lg-7"
+          >
+            <div
+              class="card shadow-sm border-0"
+            >
+              <div
+                class="card-header bg-white py-3 d-flex justify-content-between align-items-center"
+              >
+                <div>
+                  <h5
+                    class="mb-0 fw-bold"
+                  >
+                    Team Project Proposal
+                  </h5>
+                  <small
+                    class="text-muted"
+                  >
+                    State transitions: DRAFT → SUBMITTED → APPROVED / REVISION_REQUESTED
+                  </small>
+                </div>
+                <div
+                  class="text-end"
+                >
+                  <span
+                    class="badge bg-secondary fs-6"
+                    data-testid="proposal-status"
+                  >
+                    DRAFT
+                  </span>
+                  <div
+                    class="small text-muted mt-1"
+                    data-testid="proposal-revision"
+                  >
+                    Revision #
+                    0
+                  </div>
+                </div>
+              </div>
+              <div
+                class="card-body"
+              >
+                <div
+                  class="mb-3"
+                >
+                  <label
+                    class="form-label fw-semibold"
+                  >
+                    Project Title 
+                    <span
+                      class="text-danger"
+                    >
+                      * (min 5 chars, BR-04)
+                    </span>
+                  </label>
+                  <input
+                    class="form-control"
+                    data-testid="proposal-title"
+                    type="text"
+                    value="Alpha Unsaved Edit In Progress"
+                  />
+                </div>
+                <div
+                  class="mb-3"
+                >
+                  <label
+                    class="form-label fw-semibold"
+                  >
+                    Problem Statement & Scope
+                     
+                    <span
+                      class="text-danger"
+                    >
+                      * (min 20 chars, BR-04)
+                    </span>
+                  </label>
+                  <textarea
+                    class="form-control"
+                    data-testid="proposal-problem"
+                    rows="4"
+                  >
+                    Alpha private problem statement with sufficient detail.
+                  </textarea>
+                </div>
+                <div
+                  class="row g-3 mb-4"
+                >
+                  <div
+                    class="col-md-6"
+                  >
+                    <label
+                      class="form-label fw-semibold"
+                    >
+                      Selected Tech Stack 
+                      <span
+                        class="text-danger"
+                      >
+                        * (BR-04)
+                      </span>
+                    </label>
+                    <input
+                      class="form-control"
+                      data-testid="proposal-stack"
+                      type="text"
+                      value="React, Node, PostgreSQL"
+                    />
+                  </div>
+                  <div
+                    class="col-md-6"
+                  >
+                    <label
+                      class="form-label fw-semibold"
+                    >
+                      GitHub Repository URL
+                    </label>
+                    <input
+                      class="form-control"
+                      data-testid="proposal-repo"
+                      type="text"
+                      value="https://github.com/example/alpha-private-repo"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="d-flex gap-2"
+                >
+                  <button
+                    class="btn btn-outline-secondary fw-semibold"
+                    data-testid="save-draft-btn"
+                    type="button"
+                  >
+                    Save Draft
+                  </button>
+                  <button
+                    class="btn btn-primary fw-semibold"
+                    data-testid="submit-proposal-btn"
+                    type="button"
+                  >
+                    Submit Proposal for Review
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="min-vh-100 bg-light"
+    >
+      <nav
+        class="navbar navbar-expand-lg navbar-dark bg-dark px-4 py-3 shadow-sm"
+      >
+        <div
+          class="container-fluid"
+        >
+          <span
+            class="navbar-brand fw-bold"
+          >
+            CoursePMS
+             
+            <span
+              class="badge bg-info text-dark ms-2"
+            >
+              CPE334
+               (
+              1/2026
+              )
+            </span>
+          </span>
+          <div
+            class="d-flex align-items-center gap-3"
+          >
+            <div
+              class="text-light text-end"
+              data-testid="current-user-info"
+            >
+              <div
+                class="fw-semibold"
+              >
+                Student Alpha
+                 
+                <span
+                  class="text-info"
+                >
+                  (
+                  67070500001
+                  )
+                </span>
+              </div>
+              <div
+                class="small text-secondary"
+              >
+                student-a@example.test
+              </div>
+            </div>
+            <span
+              class="badge bg-success fs-6"
+              data-testid="current-user-role"
+            >
+              STUDENT
+            </span>
+            <button
+              class="btn btn-outline-light btn-sm"
+              data-testid="logout-btn"
+              type="button"
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+      </nav>
+      <div
+        class="container py-4"
+        style=""
+      >
+        <div
+          class="alert alert-danger shadow-sm"
+          data-testid="error-banner"
+          role="alert"
+        >
+          <div
+            class="fw-bold"
+          >
+            Operation Rejected 
+            [TOKEN_REVOKED]
+          </div>
+          <div>
+            Token revoked
+          </div>
+          <button
+            aria-label="Dismiss error"
+            class="btn-close"
+            type="button"
+          />
+        </div>
+        <div
+          class="row g-4"
+        >
+          <div
+            class="col-lg-5"
+          >
+            <div
+              class="card shadow-sm border-0 mb-4"
+            >
+              <div
+                class="card-header bg-white py-3 d-flex justify-content-between align-items-center"
+              >
+                <h5
+                  class="mb-0 fw-bold"
+                >
+                  My Project Team
+                </h5>
+                <span
+                  class="badge bg-dark"
+                  data-testid="team-capacity-badge"
+                >
+                  1
+                   / 
+                  3
+                   Members
+                </span>
+              </div>
+              <div
+                class="card-body"
+              >
+                <h5
+                  class="fw-bold text-primary mb-1"
+                  data-testid="my-team-name"
+                >
+                  Synthetic Alpha Team
+                </h5>
+                <p
+                  class="text-muted small mb-3"
+                >
+                  Course: 
+                  CPE334
+                   — Max Team Size: 
+                  3
+                   
+                  (BR-02)
+                </p>
+                <h6
+                  class="fw-semibold"
+                >
+                  Team Roster:
+                </h6>
+                <ul
+                  class="list-group mb-3"
+                  data-testid="team-roster-list"
+                >
+                  <li
+                    class="list-group-item d-flex justify-content-between align-items-center"
+                  >
+                    <div>
+                      <div
+                        class="fw-semibold"
+                      >
+                        Student Alpha
+                      </div>
+                      <div
+                        class="small text-muted"
+                      >
+                        student-a@example.test
+                         
+                        • ID: 67070500001
+                      </div>
+                    </div>
+                    <span
+                      class="badge bg-secondary"
+                    >
+                      LEADER
+                    </span>
+                  </li>
+                </ul>
+                <form>
+                  <label
+                    class="form-label small fw-semibold"
+                  >
+                    Add Teammate by University Email (Enforces BR-01 & BR-02)
+                  </label>
+                  <div
+                    class="input-group"
+                  >
+                    <input
+                      class="form-control form-control-sm"
+                      data-testid="add-member-email"
+                      placeholder="e.g., tatchakorn@mail.kmutt.ac.th"
+                      type="email"
+                      value=""
+                    />
+                    <button
+                      class="btn btn-outline-primary btn-sm fw-semibold"
+                      data-testid="add-member-btn"
+                      type="submit"
+                    >
+                      Add Member
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div
+              class="card shadow-sm border-0"
+            >
+              <div
+                class="card-header bg-white py-3"
+              >
+                <h6
+                  class="mb-0 fw-bold"
+                >
+                  Course Teams Directory
+                </h6>
+              </div>
+              <div
+                class="card-body p-0"
+              >
+                <table
+                  class="table table-sm table-hover mb-0 align-middle"
+                >
+                  <thead
+                    class="table-light"
+                  >
+                    <tr>
+                      <th
+                        class="ps-3"
+                      >
+                        Team
+                      </th>
+                      <th>
+                        Members
+                      </th>
+                      <th>
+                        Status
+                      </th>
+                      <th
+                        class="pe-3 text-end"
+                      >
+                        Proposal
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td
+                        class="ps-3 fw-semibold"
+                      >
+                        Synthetic Alpha Team
+                      </td>
+                      <td>
+                        1
+                        /
+                        3
+                      </td>
+                      <td>
+                        <span
+                          class="badge bg-secondary"
+                        >
+                          DRAFT
+                        </span>
+                      </td>
+                      <td
+                        class="pe-3 text-end"
+                      >
+                        <button
+                          class="btn btn-outline-secondary btn-sm"
+                          data-testid="inspect-proposal-11"
+                          type="button"
+                        >
+                          View Proposal
+                        </button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        class="ps-3 fw-semibold"
+                      >
+                        Synthetic Beta Team
+                      </td>
+                      <td>
+                        1
+                        /
+                        3
+                      </td>
+                      <td>
+                        <span
+                          class="badge bg-secondary"
+                        >
+                          NO_DRAFT
+                        </span>
+                      </td>
+                      <td
+                        class="pe-3 text-end"
+                      >
+                        <button
+                          class="btn btn-outline-secondary btn-sm"
+                          data-testid="inspect-proposal-12"
+                          type="button"
+                        >
+                          View Proposal
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div
+            class="col-lg-7"
+          >
+            <div
+              class="card shadow-sm border-0"
+            >
+              <div
+                class="card-header bg-white py-3 d-flex justify-content-between align-items-center"
+              >
+                <div>
+                  <h5
+                    class="mb-0 fw-bold"
+                  >
+                    Team Project Proposal
+                  </h5>
+                  <small
+                    class="text-muted"
+                  >
+                    State transitions: DRAFT → SUBMITTED → APPROVED / REVISION_REQUESTED
+                  </small>
+                </div>
+                <div
+                  class="text-end"
+                >
+                  <span
+                    class="badge bg-secondary fs-6"
+                    data-testid="proposal-status"
+                  >
+                    DRAFT
+                  </span>
+                  <div
+                    class="small text-muted mt-1"
+                    data-testid="proposal-revision"
+                  >
+                    Revision #
+                    0
+                  </div>
+                </div>
+              </div>
+              <div
+                class="card-body"
+              >
+                <div
+                  class="mb-3"
+                >
+                  <label
+                    class="form-label fw-semibold"
+                  >
+                    Project Title 
+                    <span
+                      class="text-danger"
+                    >
+                      * (min 5 chars, BR-04)
+                    </span>
+                  </label>
+                  <input
+                    class="form-control"
+                    data-testid="proposal-title"
+                    type="text"
+                    value="Alpha Unsaved Edit In Progress"
+                  />
+                </div>
+                <div
+                  class="mb-3"
+                >
+                  <label
+                    class="form-label fw-semibold"
+                  >
+                    Problem Statement & Scope
+                     
+                    <span
+                      class="text-danger"
+                    >
+                      * (min 20 chars, BR-04)
+                    </span>
+                  </label>
+                  <textarea
+                    class="form-control"
+                    data-testid="proposal-problem"
+                    rows="4"
+                  >
+                    Alpha private problem statement with sufficient detail.
+                  </textarea>
+                </div>
+                <div
+                  class="row g-3 mb-4"
+                >
+                  <div
+                    class="col-md-6"
+                  >
+                    <label
+                      class="form-label fw-semibold"
+                    >
+                      Selected Tech Stack 
+                      <span
+                        class="text-danger"
+                      >
+                        * (BR-04)
+                      </span>
+                    </label>
+                    <input
+                      class="form-control"
+                      data-testid="proposal-stack"
+                      type="text"
+                      value="React, Node, PostgreSQL"
+                    />
+                  </div>
+                  <div
+                    class="col-md-6"
+                  >
+                    <label
+                      class="form-label fw-semibold"
+                    >
+                      GitHub Repository URL
+                    </label>
+                    <input
+                      class="form-control"
+                      data-testid="proposal-repo"
+                      type="text"
+                      value="https://github.com/example/alpha-private-repo"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="d-flex gap-2"
+                >
+                  <button
+                    class="btn btn-outline-secondary fw-semibold"
+                    data-testid="save-draft-btn"
+                    type="button"
+                  >
+                    Save Draft
+                  </button>
+                  <button
+                    class="btn btn-primary fw-semibold"
+                    data-testid="submit-proposal-btn"
+                    type="button"
+                  >
+                    Submit Proposal for Review
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+node.exe : ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+ FAIL  src/App.sessionIsolation.test.tsx > CoursePMS Session-Scoped Draft Isolation (L6-OUT-EXP-001) > clears all four 
+proposal fields when switching from Account A (draft) to Account B (no proposal) without reload
+Error: expect(element).toHaveValue()
+
+Expected the element to have value:
+
+Received:
+  Alpha Private Draft Title
+ ❯ src/App.sessionIsolation.test.tsx:217:50
+    215|     });
+    216| 
+    217|     expect(screen.getByTestId('proposal-title')).toHaveValue('');
+       |                                                  ^
+    218|     expect(screen.getByTestId('proposal-problem')).toHaveValue('');
+    219|     expect(screen.getByTestId('proposal-stack')).toHaveValue('');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/App.sessionIsolation.test.tsx > CoursePMS Session-Scoped Draft Isolation (L6-OUT-EXP-001) > handles reverse 
+switching, no-team student, instructor, and B with its own proposal cleanly
+Error: expect(element).toHaveValue()
+
+Expected the element to have value:
+
+Received:
+  Instructor private review note
+
+Ignored nodes: comments, script, style
+<html>
+  <head />
+  <body>
+    <div>
+      <div
+        class="min-vh-100 bg-light"
+      >
+        <nav
+          class="navbar navbar-expand-lg navbar-dark bg-dark px-4 py-3 shadow-sm"
+        >
+          <div
+            class="container-fluid"
+          >
+            <span
+              class="navbar-brand fw-bold"
+            >
+              CoursePMS
+               
+              <span
+                class="badge bg-info text-dark ms-2"
+              >
+                CPE334
+                 (
+                1/2026
+                )
+              </span>
+            </span>
+            <div
+              class="d-flex align-items-center gap-3"
+            >
+              <div
+                class="text-light text-end"
+                data-testid="current-user-info"
+              >
+                <div
+                  class="fw-semibold"
+                >
+                  Instructor One
+                   
+                </div>
+                <div
+                  class="small text-secondary"
+                >
+                  instructor@example.test
+                </div>
+              </div>
+              <span
+                class="badge bg-warning text-dark fs-6"
+                data-testid="current-user-role"
+              >
+                INSTRUCTOR
+              </span>
+              <button
+                class="btn btn-outline-light btn-sm"
+                data-testid="logout-btn"
+                type="button"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </nav>
+        <div
+          class="container py-4"
+          style=""
+        >
+          <div
+            class="alert alert-success shadow-sm"
+            data-testid="success-banner"
+            role="alert"
+          >
+            Authenticated as Instructor One (INSTRUCTOR)
+          </div>
+          <div>
+            <div
+              class="row g-3 mb-4"
+            >
+              <div
+                class="col-md-3"
+              >
+                <div
+                  class="card border-0 shadow-sm text-center p-3"
+                >
+                  <div
+                    class="text-muted small fw-semibold"
+                  >
+                    Total Registered Teams
+                  </div>
+                  <div
+                    class="fs-3 fw-bold"
+                  >
+                    2
+                  </div>
+                </div>
+              </div>
+              <div
+                class="col-md-3"
+              >
+                <div
+                  class="card border-0 shadow-sm text-center p-3"
+                >
+                  <div
+                    class="text-primary small fw-semibold"
+                  >
+                    Submitted (Pending Review)
+                  </div>
+                  <div
+                    class="fs-3 fw-bold text-primary"
+                  >
+                    0
+                  </div>
+                </div>
+              </div>
+              <div
+                class="col-md-3"
+              >
+                <div
+                  class="card border-0 shadow-sm text-center p-3"
+                >
+                  <div
+                    class="text-success small fw-semibold"
+                  >
+                    Approved Proposals
+                  </div>
+                  <div
+                    class="fs-3 fw-bold text-success"
+                  >
+                    0
+                  </div>
+                </div>
+              </div>
+              <div
+                class="col-md-3"
+              >
+                <div
+                  class="card border-0 shadow-sm text-center p-3"
+                >
+                  <div
+                    class="text-warning small fw-semibold"
+                  >
+                    Revision Requested
+                  </div>
+                  <div
+                    class="fs-3 fw-bold text-warning"
+                  >
+                    0
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="row g-4"
+            >
+              <div
+                class="col-lg-6"
+              >
+                <div
+                  class="card shadow-sm border-0"
+                >
+                  <div
+                    class="card-header bg-white py-3 d-flex justify-content-between 
+align-items-center"
+                  >
+                    <h5
+                      class="mb-0 fw-bold"
+                    >
+                      All Course Project Teams
+                    </h5>
+                    <select
+                      class="form-select form-select-sm w-auto"
+                      data-testid="instructor-status-filter"
+                    >
+                      <option
+                        value="ALL"
+                      >
+                        All Statuses
+                      </option>
+                      <option
+                        value="SUBMITTED"
+                      >
+                        SUBMITTED
+                      </option>
+                      <option
+                        value="APPROVED"
+                      >
+                        APPROVED
+                      </option>
+                      <option
+                        value="REVISION_REQUESTED"
+                      >
+                        REVISION_REQUESTED
+                      </option>
+                      <option
+                        value="DRAFT"
+                      >
+                        DRAFT
+                      </option>
+                    </select>
+                  </div>
+                  <div
+                    class="card-body p-0"
+                  >
+                    <table
+                      class="table table-hover mb-0 align-middle"
+                    >
+                      <thead
+                        class="table-light"
+                      >
+                        <tr>
+                          <th
+                            class="ps-3"
+                          >
+                            Team
+                          </th>
+                          <th>
+                            Members
+                          </th>
+                          <th>
+                            Proposal Status
+                          </th>
+                          <th
+                            class="pe-3 text-end"
+                          >
+                            Action
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          class="table-active"
+                        >
+                          <td
+                            class="ps-3"
+                          >
+                            <div
+                              class="fw-bold"
+                            >
+                              Synthetic Alpha Team
+                            </div>
+                            <div
+                              class="small text-muted"
+                            >
+                              Alpha Private Draft Title
+                            </div>
+                          </td>
+                          <td>
+                            1
+                            /
+                            3
+                          </td>
+                          <td>
+                            <span
+                              class="badge bg-secondary"
+                            >
+                              DRAFT
+                            </span>
+                          </td>
+                          <td
+                            class="pe-3 text-end"
+                          >
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              data-testid="select-team-11"
+                              type="button"
+                            >
+                              Inspect / Review
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td
+                            class="ps-3"
+                          >
+                            <div
+                              class="fw-bold"
+                            >
+                              Synthetic Beta Team
+                            </div>
+                            <div
+                              class="small text-muted"
+                            >
+                              Beta Own Proposal Title
+                            </div>
+                          </td>
+                          <td>
+                            1
+                            /
+                            3
+                          </td>
+                          <td>
+                            <span
+                              class="badge bg-secondary"
+                            >
+                              DRAFT
+                            </span>
+                          </td>
+                          <td
+                            class="pe-3 text-end"
+                          >
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              data-testid="select-team-12"
+                              type="button"
+                            >
+                              Inspect / Review
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="col-lg-6"
+              >
+                <div
+                  class="card shadow-sm border-0"
+                >
+                  <div
+                    class="card-header bg-white py-3"
+                  >
+                    <h5
+                      class="mb-0 fw-bold"
+                    >
+                      Instructor Proposal Review Panel (F-03 / BR-05)
+                    </h5>
+                  </div>
+                  <div
+                    class="card-body"
+                  >
+                    <div
+                      class="d-flex justify-content-between align-items-start mb-3"
+                    >
+                      <div>
+                        <h5
+                          class="fw-bold mb-1"
+                          data-testid="review-panel-team"
+                        >
+                          Synthetic Alpha Team
+                          : 
+                          Alpha Private Draft Title
+                        </h5>
+                        <div
+                          class="small text-muted"
+                        >
+                          Members:
+                           
+                          Student Alpha (67070500001)
+                        </div>
+                      </div>
+                      <span
+                        class="badge bg-secondary fs-6"
+                        data-testid="review-panel-status"
+                      >
+                        DRAFT
+                      </span>
+                    </div>
+                    <div
+                      class="bg-light p-3 rounded mb-3 border"
+                    >
+                      <div
+                        class="fw-semibold small text-uppercase text-muted mb-1"
+                      >
+                        Problem Statement
+                      </div>
+                      <p
+                        class="mb-2"
+                      >
+                        Alpha private problem statement with sufficient detail.
+                      </p>
+                      <div
+                        class="small"
+                      >
+                        <strong>
+                          Tech Stack:
+                        </strong>
+                         
+                        React, Node, PostgreSQL
+                         
+                        | 
+                        <strong>
+                          Repo:
+                        </strong>
+                         
+                        https://github.com/example/alpha-private-repo
+                         |
+                         
+                        <strong>
+                          Revision:
+                        </strong>
+                         #
+                        0
+                      </div>
+                    </div>
+                    <div
+                      class="mb-3"
+                    >
+                      <label
+                        class="form-label fw-semibold"
+                      >
+                        Instructor Review Feedback
+                         
+                        <span
+                          class="text-danger"
+                        >
+                          * (min 10 chars, BR-05)
+                        </span>
+                      </label>
+                      <textarea
+                        class="form-control"
+                        data-testid="review-feedback-input"
+                        disabled=""
+                        placeholder="Provide specific engineering feedback (minimum 10 
+characters)..."
+                        rows="3"
+                      >
+                        Instructor private review note
+                      </textarea>
+                    </div>
+                    <div
+                      class="small text-muted"
+                    >
+                      Instructor decisions are available only while a proposal is submitted for review.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+ ❯ src/App.sessionIsolation.test.tsx:317:59
+    315|     await signInThroughForm(INSTRUCTOR_I.email);
+    316|     await waitFor(() => {
+    317|       expect(screen.getByTestId('review-feedback-input')).toHaveValue(…
+       |                                                           ^
+    318|     });
+    319|   });
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../../client/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../../client/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../../client/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/App.sessionIsolation.test.tsx > CoursePMS Session-Scoped Draft Isolation (L6-OUT-EXP-001) > ignores delayed 
+dashboard responses from Account A that resolve after Account B has loaded
+Error: expect(element).toHaveValue()
+
+Expected the element to have value:
+
+Received:
+  Alpha Private Draft Title
+ ❯ src/App.sessionIsolation.test.tsx:378:50
+    376|     expect(screen.getByTestId('current-user-info')).toHaveTextContent(…
+    377|     expect(screen.getByTestId('my-team-name')).toHaveTextContent(TEAM_…
+    378|     expect(screen.getByTestId('proposal-title')).toHaveValue('');
+       |                                                  ^
+    379|     expect(screen.getByTestId('proposal-problem')).toHaveValue('');
+    380|     expect(screen.getByTestId('proposal-stack')).toHaveValue('');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/App.sessionIsolation.test.tsx > CoursePMS Session-Scoped Draft Isolation (L6-OUT-EXP-001) > prevents 
+delayed mutation/finally callbacks from a prior session from overwriting B state or pending status
+Error: expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found <div
+  class="alert alert-success shadow-sm"
+  data-testid="success-banner"
+  role="alert"
+>
+  Proposal draft saved to PostgreSQL.
+</div> instead
+ ❯ src/App.sessionIsolation.test.tsx:439:75
+    437|     });
+    438| 
+    439|     expect(screen.queryByText('Proposal draft saved to PostgreSQL.')).…
+       |                                                                           ^
+    440|   });
+    441| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/App.sessionIsolation.test.tsx > CoursePMS Session-Scoped Draft Isolation (L6-OUT-EXP-001) > clears 
+sensitive proposal state on 401 session expiry and preserves same-session typing on save error
+TestingLibraryElementError: Unable to find an element with the text: Sign In to CoursePMS. This could be because the 
+text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your 
+matcher more flexible.
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="min-vh-100 bg-light"
+    >
+      <nav
+        class="navbar navbar-expand-lg navbar-dark bg-dark px-4 py-3 shadow-sm"
+      >
+        <div
+          class="container-fluid"
+        >
+          <span
+            class="navbar-brand fw-bold"
+          >
+            CoursePMS
+             
+            <span
+              class="badge bg-info text-dark ms-2"
+            >
+              CPE334
+               (
+              1/2026
+              )
+            </span>
+          </span>
+          <div
+            class="d-flex align-items-center gap-3"
+          >
+            <div
+              class="text-light text-end"
+              data-testid="current-user-info"
+            >
+              <div
+                class="fw-semibold"
+              >
+                Student Alpha
+                 
+                <span
+                  class="text-info"
+                >
+                  (
+                  67070500001
+                  )
+                </span>
+              </div>
+              <div
+                class="small text-secondary"
+              >
+                student-a@example.test
+              </div>
+            </div>
+            <span
+              class="badge bg-success fs-6"
+              data-testid="current-user-role"
+            >
+              STUDENT
+            </span>
+            <button
+              class="btn btn-outline-light btn-sm"
+              data-testid="logout-btn"
+              type="button"
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+      </nav>
+      <div
+        class="container py-4"
+        style=""
+      >
+        <div
+          class="alert alert-danger shadow-sm"
+          data-testid="error-banner"
+          role="alert"
+        >
+          <div
+            class="fw-bold"
+          >
+            Operation Rejected 
+            [TOKEN_REVOKED]
+          </div>
+          <div>
+            Token revoked
+          </div>
+          <button
+            aria-label="Dismiss error"
+            class="btn-close"
+            type="button"
+          />
+        </div>
+        <div
+          class="row g-4"
+        >
+          <div
+            class="col-lg-5"
+          >
+            <div
+              class="card shadow-sm border-0 mb-4"
+            >
+              <div
+                class="card-header bg-white py-3 d-flex justify-content-between align-items-center"
+              >
+                <h5
+                  class="mb-0 fw-bold"
+                >
+                  My Project Team
+                </h5>
+                <span
+                  class="badge bg-dark"
+                  data-testid="team-capacity-badge"
+                >
+                  1
+                   / 
+                  3
+                   Members
+                </span>
+              </div>
+              <div
+                class="card-body"
+              >
+                <h5
+                  class="fw-bold text-primary mb-1"
+                  data-testid="my-team-name"
+                >
+                  Synthetic Alpha Team
+                </h5>
+                <p
+                  class="text-muted small mb-3"
+                >
+                  Course: 
+                  CPE334
+                   — Max Team Size: 
+                  3
+                   
+                  (BR-02)
+                </p>
+                <h6
+                  class="fw-semibold"
+                >
+                  Team Roster:
+                </h6>
+                <ul
+                  class="list-group mb-3"
+                  data-testid="team-roster-list"
+                >
+                  <li
+                    class="list-group-item d-flex justify-content-between align-items-center"
+                  >
+                    <div>
+                      <div
+                        class="fw-semibold"
+                      >
+                        Student Alpha
+                      </div>
+                      <div
+                        class="small text-muted"
+                      >
+                        student-a@example.test
+                         
+                        • ID: 67070500001
+                      </div>
+                    </div>
+                    <span
+                      class="badge bg-secondary"
+                    >
+                      LEADER
+                    </span>
+                  </li>
+                </ul>
+                <form>
+                  <label
+                    class="form-label small fw-semibold"
+                  >
+                    Add Teammate by University Email (Enforces BR-01 & BR-02)
+                  </label>
+                  <div
+                    class="input-group"
+                  >
+                    <input
+                      class="form-control form-control-sm"
+                      data-testid="add-member-email"
+                      placeholder="e.g., tatchakorn@mail.kmutt.ac.th"
+                      type="email"
+                      value=""
+                    />
+                    <button
+                      class="btn btn-outline-primary btn-sm fw-semibold"
+                      data-testid="add-member-btn"
+                      type="submit"
+                    >
+                      Add Member
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div
+              class="card shadow-sm border-0"
+            >
+              <div
+                class="card-header bg-white py-3"
+              >
+                <h6
+                  class="mb-0 fw-bold"
+                >
+                  Course Teams Directory
+                </h6>
+              </div>
+              <div
+                class="card-body p-0"
+              >
+                <table
+                  class="table table-sm table-hover mb-0 align-middle"
+                >
+                  <thead
+                    class="table-light"
+                  >
+                    <tr>
+                      <th
+                        class="ps-3"
+                      >
+                        Team
+                      </th>
+                      <th>
+                        Members
+                      </th>
+                      <th>
+                        Status
+                      </th>
+                      <th
+                        class="pe-3 text-end"
+                      >
+                        Proposal
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td
+                        class="ps-3 fw-semibold"
+                      >
+                        Synthetic Alpha Team
+                      </td>
+                      <td>
+                        1
+                        /
+                        3
+                      </td>
+                      <td>
+                        <span
+                          class="badge bg-secondary"
+                        >
+                          DRAFT
+                        </span>
+                      </td>
+                      <td
+                        class="pe-3 text-end"
+                      >
+                        <button
+                          class="btn btn-outline-secondary btn-sm"
+                          data-testid="inspect-proposal-11"
+                          type="button"
+                        >
+                          View Proposal
+                        </button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        class="ps-3 fw-semibold"
+                      >
+                        Synthetic Beta Team
+                      </td>
+                      <td>
+                        1
+                        /
+                        3
+                      </td>
+                      <td>
+                        <span
+                          class="badge bg-secondary"
+                        >
+                          NO_DRAFT
+                        </span>
+                      </td>
+                      <td
+                        class="pe-3 text-end"
+                      >
+                        <button
+                          class="btn btn-outline-secondary btn-sm"
+                          data-testid="inspect-proposal-12"
+                          type="button"
+                        >
+                          View Proposal
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div
+            class="col-lg-7"
+          >
+            <div
+              class="card shadow-sm border-0"
+            >
+              <div
+                class="card-header bg-white py-3 d-flex justify-content-between align-items-center"
+              >
+                <div>
+                  <h5
+                    class="mb-0 fw-bold"
+                  >
+                    Team Project Proposal
+                  </h5>
+                  <small
+                    class="text-muted"
+                  >
+                    State transitions: DRAFT → SUBMITTED → APPROVED / REVISION_REQUESTED
+                  </small>
+                </div>
+                <div
+                  class="text-end"
+                >
+                  <span
+                    class="badge bg-secondary fs-6"
+                    data-testid="proposal-status"
+                  >
+                    DRAFT
+                  </span>
+                  <div
+                    class="small text-muted mt-1"
+                    data-testid="proposal-revision"
+                  >
+                    Revision #
+                    0
+                  </div>
+                </div>
+              </div>
+              <div
+                class="card-body"
+              >
+                <div
+                  class="mb-3"
+                >
+                  <label
+                    class="form-label fw-semibold"
+                  >
+                    Project Title 
+                    <span
+                      class="text-danger"
+                    >
+                      * (min 5 chars, BR-04)
+                    </span>
+                  </label>
+                  <input
+                    class="form-control"
+                    data-testid="proposal-title"
+                    type="text"
+                    value="Alpha Unsaved Edit In Progress"
+                  />
+                </div>
+                <div
+                  class="mb-3"
+                >
+                  <label
+                    class="form-label fw-semibold"
+                  >
+                    Problem Statement & Scope
+                     
+                    <span
+                      class="text-danger"
+                    >
+                      * (min 20 chars, BR-04)
+                    </span>
+                  </label>
+                  <textarea
+                    class="form-control"
+                    data-testid="proposal-problem"
+                    rows="4"
+                  >
+                    Alpha private problem statement with sufficient detail.
+                  </textarea>
+                </div>
+                <div
+                  class="row g-3 mb-4"
+                >
+                  <div
+                    class="col-md-6"
+                  >
+                    <label
+                      class="form-label fw-semibold"
+                    >
+                      Selected Tech Stack 
+                      <span
+                        class="text-danger"
+                      >
+                        * (BR-04)
+                      </span>
+                    </label>
+                    <input
+                      class="form-control"
+                      data-testid="proposal-stack"
+                      type="text"
+                      value="React, Node, PostgreSQL"
+                    />
+                  </div>
+                  <div
+                    class="col-md-6"
+                  >
+                    <label
+                      class="form-label fw-semibold"
+                    >
+                      GitHub Repository URL
+                    </label>
+                    <input
+                      class="form-control"
+                      data-testid="proposal-repo"
+                      type="text"
+                      value="https://github.com/example/alpha-private-repo"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="d-flex gap-2"
+                >
+                  <button
+                    class="btn btn-outline-secondary fw-semibold"
+                    data-testid="save-draft-btn"
+                    type="button"
+                  >
+                    Save Draft
+                  </button>
+                  <button
+                    class="btn btn-primary fw-semibold"
+                    data-testid="submit-proposal-btn"
+                    type="button"
+                  >
+                    Submit Proposal for Review
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="min-vh-100 bg-light"
+    >
+      <nav
+        class="navbar navbar-expand-lg navbar-dark bg-dark px-4 py-3 shadow-sm"
+      >
+        <div
+          class="container-fluid"
+        >
+          <span
+            class="navbar-brand fw-bold"
+          >
+            CoursePMS
+             
+            <span
+              class="badge bg-info text-dark ms-2"
+            >
+              CPE334
+               (
+              1/2026
+              )
+            </span>
+          </span>
+          <div
+            class="d-flex align-items-center gap-3"
+          >
+            <div
+              class="text-light text-end"
+              data-testid="current-user-info"
+            >
+              <div
+                class="fw-semibold"
+              >
+                Student Alpha
+                 
+                <span
+                  class="text-info"
+                >
+                  (
+                  67070500001
+                  )
+                </span>
+              </div>
+              <div
+                class="small text-secondary"
+              >
+                student-a@example.test
+              </div>
+            </div>
+            <span
+              class="badge bg-success fs-6"
+              data-testid="current-user-role"
+            >
+              STUDENT
+            </span>
+            <button
+              class="btn btn-outline-light btn-sm"
+              data-testid="logout-btn"
+              type="button"
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+      </nav>
+      <div
+        class="container py-4"
+        style=""
+      >
+        <div
+          class="alert alert-danger shadow-sm"
+          data-testid="error-banner"
+          role="alert"
+        >
+          <div
+            class="fw-bold"
+          >
+            Operation Rejected 
+            [TOKEN_REVOKED]
+          </div>
+          <div>
+            Token revoked
+          </div>
+          <button
+            aria-label="Dismiss error"
+            class="btn-close"
+            type="button"
+          />
+        </div>
+        <div
+          class="row g-4"
+        >
+          <div
+            class="col-lg-5"
+          >
+            <div
+              class="card shadow-sm border-0 mb-4"
+            >
+              <div
+                class="card-header bg-white py-3 d-flex justify-content-between align-items-center"
+              >
+                <h5
+                  class="mb-0 fw-bold"
+                >
+                  My Project Team
+                </h5>
+                <span
+                  class="badge bg-dark"
+                  data-testid="team-capacity-badge"
+                >
+                  1
+                   / 
+                  3
+                   Members
+                </span>
+              </div>
+              <div
+                class="card-body"
+              >
+                <h5
+                  class="fw-bold text-primary mb-1"
+                  data-testid="my-team-name"
+                >
+                  Synthetic Alpha Team
+                </h5>
+                <p
+                  class="text-muted small mb-3"
+                >
+                  Course: 
+                  CPE334
+                   — Max Team Size: 
+                  3
+                   
+                  (BR-02)
+                </p>
+                <h6
+                  class="fw-semibold"
+                >
+                  Team Roster:
+                </h6>
+                <ul
+                  class="list-group mb-3"
+                  data-testid="team-roster-list"
+                >
+                  <li
+                    class="list-group-item d-flex justify-content-between align-items-center"
+                  >
+                    <div>
+                      <div
+                        class="fw-semibold"
+                      >
+                        Student Alpha
+                      </div>
+                      <div
+                        class="small text-muted"
+                      >
+                        student-a@example.test
+                         
+                        • ID: 67070500001
+                      </div>
+                    </div>
+                    <span
+                      class="badge bg-secondary"
+                    >
+                      LEADER
+                    </span>
+                  </li>
+                </ul>
+                <form>
+                  <label
+                    class="form-label small fw-semibold"
+                  >
+                    Add Teammate by University Email (Enforces BR-01 & BR-02)
+                  </label>
+                  <div
+                    class="input-group"
+                  >
+                    <input
+                      class="form-control form-control-sm"
+                      data-testid="add-member-email"
+                      placeholder="e.g., tatchakorn@mail.kmutt.ac.th"
+                      type="email"
+                      value=""
+                    />
+                    <button
+                      class="btn btn-outline-primary btn-sm fw-semibold"
+                      data-testid="add-member-btn"
+                      type="submit"
+                    >
+                      Add Member
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div
+              class="card shadow-sm border-0"
+            >
+              <div
+                class="card-header bg-white py-3"
+              >
+                <h6
+                  class="mb-0 fw-bold"
+                >
+                  Course Teams Directory
+                </h6>
+              </div>
+              <div
+                class="card-body p-0"
+              >
+                <table
+                  class="table table-sm table-hover mb-0 align-middle"
+                >
+                  <thead
+                    class="table-light"
+                  >
+                    <tr>
+                      <th
+                        class="ps-3"
+                      >
+                        Team
+                      </th>
+                      <th>
+                        Members
+                      </th>
+                      <th>
+                        Status
+                      </th>
+                      <th
+                        class="pe-3 text-end"
+                      >
+                        Proposal
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td
+                        class="ps-3 fw-semibold"
+                      >
+                        Synthetic Alpha Team
+                      </td>
+                      <td>
+                        1
+                        /
+                        3
+                      </td>
+                      <td>
+                        <span
+                          class="badge bg-secondary"
+                        >
+                          DRAFT
+                        </span>
+                      </td>
+                      <td
+                        class="pe-3 text-end"
+                      >
+                        <button
+                          class="btn btn-outline-secondary btn-sm"
+                          data-testid="inspect-proposal-11"
+                          type="button"
+                        >
+                          View Proposal
+                        </button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        class="ps-3 fw-semibold"
+                      >
+                        Synthetic Beta Team
+                      </td>
+                      <td>
+                        1
+                        /
+                        3
+                      </td>
+                      <td>
+                        <span
+                          class="badge bg-secondary"
+                        >
+                          NO_DRAFT
+                        </span>
+                      </td>
+                      <td
+                        class="pe-3 text-end"
+                      >
+                        <button
+                          class="btn btn-outline-secondary btn-sm"
+                          data-testid="inspect-proposal-12"
+                          type="button"
+                        >
+                          View Proposal
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div
+            class="col-lg-7"
+          >
+            <div
+              class="card shadow-sm border-0"
+            >
+              <div
+                class="card-header bg-white py-3 d-flex justify-content-between align-items-center"
+              >
+                <div>
+                  <h5
+                    class="mb-0 fw-bold"
+                  >
+                    Team Project Proposal
+                  </h5>
+                  <small
+                    class="text-muted"
+                  >
+                    State transitions: DRAFT → SUBMITTED → APPROVED / REVISION_REQUESTED
+                  </small>
+                </div>
+                <div
+                  class="text-end"
+                >
+                  <span
+                    class="badge bg-secondary fs-6"
+                    data-testid="proposal-status"
+                  >
+                    DRAFT
+                  </span>
+                  <div
+                    class="small text-muted mt-1"
+                    data-testid="proposal-revision"
+                  >
+                    Revision #
+ Test Files  1 failed | 1 passed (2)
+      Tests  5 failed | 4 passed (9)
+   Start at  12:44:42
+   Duration  5.94s (transform 305ms, setup 0ms, collect 1.53s, tests 3.31s, environment 2.59s, prepare 393ms)
+
+                    0
+                  </div>
+                </div>
+              </div>
+              <div
+                class="card-body"
+              >
+                <div
+                  class="mb-3"
+                >
+                  <label
+                    class="form-label fw-semibold"
+                  >
+                    Project Title 
+                    <span
+                      class="text-danger"
+                    >
+                      * (min 5 chars, BR-04)
+                    </span>
+                  </label>
+                  <input
+                    class="form-control"
+                    data-testid="proposal-title"
+                    type="text"
+                    value="Alpha Unsaved Edit In Progress"
+                  />
+                </div>
+                <div
+                  class="mb-3"
+                >
+                  <label
+                    class="form-label fw-semibold"
+                  >
+                    Problem Statement & Scope
+                     
+                    <span
+                      class="text-danger"
+                    >
+                      * (min 20 chars, BR-04)
+                    </span>
+                  </label>
+                  <textarea
+                    class="form-control"
+                    data-testid="proposal-problem"
+                    rows="4"
+                  >
+                    Alpha private problem statement with sufficient detail.
+                  </textarea>
+                </div>
+                <div
+                  class="row g-3 mb-4"
+                >
+                  <div
+                    class="col-md-6"
+                  >
+                    <label
+                      class="form-label fw-semibold"
+                    >
+                      Selected Tech Stack 
+                      <span
+                        class="text-danger"
+                      >
+                        * (BR-04)
+                      </span>
+                    </label>
+                    <input
+                      class="form-control"
+                      data-testid="proposal-stack"
+                      type="text"
+                      value="React, Node, PostgreSQL"
+                    />
+                  </div>
+                  <div
+                    class="col-md-6"
+                  >
+                    <label
+                      class="form-label fw-semibold"
+                    >
+                      GitHub Repository URL
+                    </label>
+                    <input
+                      class="form-control"
+                      data-testid="proposal-repo"
+                      type="text"
+                      value="https://github.com/example/alpha-private-repo"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="d-flex gap-2"
+                >
+                  <button
+                    class="btn btn-outline-secondary fw-semibold"
+                    data-testid="save-draft-btn"
+                    type="button"
+                  >
+                    Save Draft
+                  </button>
+                  <button
+                    class="btn btn-primary fw-semibold"
+                    data-testid="submit-proposal-btn"
+                    type="button"
+                  >
+                    Submit Proposal for Review
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+ ❯ waitForWrapper ../../../client/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../../client/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/App.sessionIsolation.test.tsx:495:25
+    493|       fireEvent.click(screen.getByTestId('save-draft-btn'));
+    494|     });
+    495|     expect(await screen.findByText('Sign In to CoursePMS')).toBeInTheD…
+       |                         ^
+    496|     expect(screen.getByTestId('auth-error')).toHaveTextContent('TOKEN_…
+    497|     expect(window.localStorage.getItem('course_pms_token')).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+

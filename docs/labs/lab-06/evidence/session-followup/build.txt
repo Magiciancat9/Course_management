@@ -1,0 +1,29 @@
+
+> course-pms@1.0.0 build
+> npm --prefix server run build && npm --prefix client run build
+
+
+> course-pms-server@1.0.0 build
+> prisma generate && tsc
+
+Prisma schema loaded from prisma\schema.prisma
+
+✔ Generated Prisma Client (v5.22.0) to .\..\..\..\server\node_modules\@prisma\client in 153ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+Tip: Easily identify and fix slow SQL queries in your app. Optimize helps you enhance your visibility: https://pris.ly/--optimize
+
+
+> course-pms-client@1.0.0 build
+> tsc && vite build
+
+vite v5.4.21 building for production...
+transforming...
+✓ 31 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.46 kB │ gzip:  0.32 kB
+dist/assets/index-CfkJyshZ.css  231.25 kB │ gzip: 30.69 kB
+dist/assets/index-PoIyiA9Q.js   171.05 kB │ gzip: 52.63 kB
+✓ built in 1.65s

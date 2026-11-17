@@ -1,0 +1,22 @@
+
+> course-pms-server@1.0.0 test
+> vitest run --config vitest.config.ts tests/domain.unit.test.ts
+
+node.exe : The CJS build of Vite's Node API is deprecated. See 
+https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (The CJS bu...e details.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+ RUN  v2.1.9 C:/Users/Kingnine/Documents/Course_management/.worktrees/lab6-response/server
+
+ ✓ tests/domain.unit.test.ts (9 tests) 3ms
+
+ Test Files  1 passed (1)
+      Tests  9 passed (9)
+   Start at  12:44:02
+   Duration  973ms (transform 77ms, setup 0ms, collect 63ms, tests 3ms, environment 0ms, prepare 617ms)
+
