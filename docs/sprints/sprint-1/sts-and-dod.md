@@ -44,7 +44,7 @@ Every Sprint 1 Acceptance Criterion (`AC-01`–`AC-10`) is mapped to executable 
 | TEST-23 | AC-10, BR-06, SDS roster-only directory | `server/tests/api.integration.test.ts::TEST-23 / AC-10: exposes only rosters for foreign teams while retaining authorized proposal details` checks own, foreign, unassigned and instructor responses against disposable PostgreSQL and verifies retained foreign data unchanged. |
 | TEST-03 extension | AC-03, protected proposal namespace | Existing database-backed TEST-03 additionally checks unauthenticated bare collection GET 401 and authenticated unsupported GET JSON 404. |
 | Production routing/privacy suite | AC-03, AC-10, JSON routing, roster-only privacy | `server/tests/routing-privacy.unit.test.ts` exercises the real production Express handlers and auth with a mocked synthetic repository: foreign/null and own/full proposals, unassigned/instructor roles, protected unsupported routes, JSON API fallback and retained frontend SPA behavior. These are 8 mocked-repository HTTP tests, not database integration or deployed UAT. |
-| Directory privacy UI | Roster-only UI semantics | `client/src/App.directoryPrivacy.test.tsx` verifies foreign `PRIVATE`, own `NO_DRAFT`, and the retained denial-inspection control. |
+| Directory privacy UI | Roster-only UI semantics and instructor authorization | `client/src/App.directoryPrivacy.test.tsx` verifies foreign `PRIVATE`, own `NO_DRAFT`, the retained denial-inspection control, and instructor status text/colors, empty state and filtering without team membership. |
 
 The code-head CI for `b29109d` passed 41 backend tests (24 database integration,
 9 domain and 8 mocked-repository routing), 15 client tests and 3 E2E tests,

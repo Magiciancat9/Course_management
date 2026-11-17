@@ -433,6 +433,10 @@ export default function App() {
     ? teams.find((t) => t.members.some((m) => m.userId === user.id))
     : undefined;
 
+  function canViewTeamProposalStatus(teamId: number) {
+    return user?.role === 'INSTRUCTOR' || teamId === myTeam?.id;
+  }
+
   function handleActionFailure(
     status: number,
     data: ApiResponseData,
@@ -974,8 +978,8 @@ export default function App() {
                             {t.members.length}/{t.course.maxTeamSize}
                           </td>
                           <td>
-                            <span className={`badge ${statusBadgeClass(t.id === myTeam?.id ? t.proposal?.status : undefined)}`}>
-                              {t.id === myTeam?.id ? t.proposal?.status || 'NO_DRAFT' : 'PRIVATE'}
+                            <span className={`badge ${statusBadgeClass(canViewTeamProposalStatus(t.id) ? t.proposal?.status : undefined)}`}>
+                              {canViewTeamProposalStatus(t.id) ? t.proposal?.status || 'NO_DRAFT' : 'PRIVATE'}
                             </span>
                           </td>
                           <td className="pe-3 text-end">
@@ -1224,8 +1228,8 @@ export default function App() {
                               {t.members.length}/{t.course.maxTeamSize}
                             </td>
                             <td>
-                              <span className={`badge ${statusBadgeClass(t.proposal?.status)}`}>
-                                {t.proposal?.status || 'NONE'}
+                              <span className={`badge ${statusBadgeClass(canViewTeamProposalStatus(t.id) ? t.proposal?.status : undefined)}`}>
+                                {canViewTeamProposalStatus(t.id) ? t.proposal?.status || 'NONE' : 'PRIVATE'}
                               </span>
                             </td>
                             <td className="pe-3 text-end">

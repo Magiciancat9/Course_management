@@ -21,19 +21,39 @@ Updated 17 November 2026. **Candidate ready for human inspection; release not au
 
 ## Owner actions in order
 
-1. **Pawarit (`martinvadre`)** personally inspects #73, the complete diff, regression outputs and the user's roster-only decision. Record only real review activity. After that decision, incorporate the follow-up into the original feature branch. The prepared [integration helper](../../../tools/lab6-integrate-followup.ps1) requires his authenticated account, a clean intended checkout, exact expected #72/#73 heads and passing current-head CI; it permits only a feature-branch fast-forward/non-force push. **The helper was not run.** It neither approves nor merges a PR.
+1. **Pawarit (`martinvadre`)** personally inspects #73, the complete diff, regression outputs and the user's roster-only decision. Record only real review activity. After that decision, incorporate the follow-up into the original feature branch using the manual steps below. The temporary integration helper was never executed and has been **removed from the candidate** in response to Martin's review before staging integration.
 2. **Tatchakorn (`Magiciancat9`)** personally reviews the complete integrated latest #72 head after new #72 CI, records a substantive current-head approval and merges only when the issue checklists satisfy the existing rule. Pawarit must not merge his #56 correction. #73 remains a proposed patch/evidence reference until handled by the team; do not self-approve or use a self-merge to bypass ownership.
 3. Prepare the **release PR `lab6-staging` -> `main`** after actual reviewed staging integration. Designated #57 driver Tatchakorn prepares it; Pawarit reviews the exact release head and merges only after green CI and the real release decision. No release PR is opened from an unchanged/unintegrated staging baseline here. Reviewable release content is the existing candidate plus the current staging ancestry, not a fabricated main commit.
 4. Let the existing reviewed-main workflow test/build/migrate/deploy normally after that authorized merge. Do not weaken `deploy/verify_reviewed_commit.py`, change IAM/secrets, seed/reset data or manually bypass the approval check. No database schema change is required by these fixes.
 5. Record the actual main/source merge, exact image digest, traffic-serving revision(s)/percentages, dated owner console evidence and matching health/ready/smoke results. Notify fastTrack and agree the retest before changing any identified tested release.
 
-Owner-only helper invocation, after personally inspecting the exact heads:
+Manual integration by the original implementation owner, after personal inspection:
 
 ```powershell
-.\tools\lab6-integrate-followup.ps1 -ExpectedHead <actual-40-character-PR73-head> -ExpectedOriginalHead 2e3f22a34faa53ec87070e61b49d6b35e438a92c
+gh api user --jq .login
+git status --short
+git fetch origin
+gh pr view 72 --repo Magiciancat9/Course_management --json headRefOid,headRefName,baseRefName
+gh pr view 73 --repo Magiciancat9/Course_management --json headRefOid,headRefName,baseRefName,statusCheckRollup
 ```
 
-The helper refuses a different authenticated identity or changed heads. No AI action is labelled as that person's inspection or approval.
+Continue only as `martinvadre` in a clean intended CoursePMS checkout, after
+verifying that the actual #72/#73 heads match the versions personally inspected,
+the PR targets are unchanged, and the current #73 head has successful full CI.
+If a head changed, inspect it again before proceeding. Then fast-forward only
+the original feature branch; do not push directly to staging/main:
+
+```powershell
+git switch fix/lab6-10-l6-out-exp-001-draft-isolation
+git merge --ff-only origin/fix/lab6-10-session-boundary-followup
+git push origin HEAD:refs/heads/fix/lab6-10-l6-out-exp-001-draft-isolation
+```
+
+Stop on any command failure; never force-push. These owner steps were not
+executed by this coding session. They do not approve or merge a PR. Human
+review of the resulting latest #72 head and its fresh CI are still required.
+The retained older `integration-helper-check.json` is historical syntax-only
+evidence for the removed helper, not a current release prerequisite.
 
 ## Deployment evidence to fill after the real release
 

@@ -2,6 +2,11 @@
 
 ## 17 November continuation
 
+Martin's latest integration review is addressed in [review response](review-73-martin.md):
+an explicit shared instructor/own-team status guard, instructor UI coverage and
+removal of the temporary integration helper. Use the current head and CI for
+review; earlier exports remain dated snapshots.
+
 The latest fastTrack follow-up is answered in [follow-up response](followup-response.md).
 Both prior contract clarifications are now resolved and corrected in the candidate:
 [dispositions](contract-dispositions.md). [Acceptance records](acceptance-record.md)
