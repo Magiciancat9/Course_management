@@ -1,5 +1,12 @@
 # Lab 6 independent UAT execution log (`fastTrack`)
 
+> Historical batch record below. On 17 November, the supplied reciprocal
+> archives were reviewed and their later AI-operated API/UI observations and
+> deviations are summarized in [report Part B](report-draft.md) and
+> [return package section E](return-to-fasttrack.md). Earlier BLOCKED entries
+> remain historical; the new evidence is not personal execution by the named
+> students. Real per-case participation and exact-version decision are pending.
+
 **Status: Batch 1 recorded as BLOCKED pending partner credentials and session
 confirmation.** `BLOCKED` is not a pass; do not replace partner-provided UAT
 accounts or independent student execution with unauthenticated or synthetic

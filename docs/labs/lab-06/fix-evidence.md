@@ -1,5 +1,12 @@
 # Lab 6 Part D Fix Evidence — L6-OUT-EXP-001
 
+> 17 November continuation: this document preserves the original #72 record.
+> Review found three further failing cases, corrected in [Draft PR #73](https://github.com/Magiciancat9/Course_management/pull/73).
+> See [new RED/GREEN evidence](session-followup.md) and [return package](return-to-fasttrack.md)
+> for actual replay, 14 passing client tests, current CI and release limits.
+> Original operator/member attribution is historical; this follow-up is
+> AI-operated under authenticated account `Magiciancat9`, not a personal sign-off.
+
 ## 1. Defect Summary, Disposition, and Severity Rationale
 - **Finding ID:** `L6-OUT-EXP-001` (GitHub Issue: [#71](https://github.com/Magiciancat9/Course_management/issues/71), linked to [#55](https://github.com/Magiciancat9/Course_management/issues/55) `[Lab6-09]` and [#56](https://github.com/Magiciancat9/Course_management/issues/56) `[Lab6-10]`)
 - **Reported By:** EN-028 InfaCompany (fastTrack), AI-operated UAT run `CPMS-L6-20261114-155049` (`2026-11-14 ~22:54–23:14 Asia/Bangkok`)

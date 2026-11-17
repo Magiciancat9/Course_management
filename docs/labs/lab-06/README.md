@@ -1,5 +1,17 @@
 # Lab 6: independent UAT
 
+## 17 November continuation
+
+The private fastTrack handoff has been inspected. Existing defect #71 / Draft
+PR #72 is continued by [Draft PR #73](https://github.com/Magiciancat9/Course_management/pull/73),
+which targets the existing fix branch. Start with the [return package](return-to-fasttrack.md),
+[incoming triage](triage.md), [follow-up verification](session-followup.md),
+[member allocation](member-work-plan.md), and [Parts A–D draft](report-draft.md).
+The [simulation example](simulation-example.md) is fictional and is not actual
+student participation or acceptance. Release, independent retest and both
+human acceptance decisions remain pending. Earlier preparation/status records
+below are historical and should be read with this dated continuation.
+
 This package follows the partner team's seven-document structure and uses
 CoursePMS Sprint 1 information. The two teams independently test each other's
 product:
