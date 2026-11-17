@@ -22,10 +22,11 @@ partner's **16 client / 19 selected server** isolated replay is a separate
 verification set; its initial Node 26 localStorage failures are runner
 diagnostics, not original product RED evidence or seven new bugs.
 
-The task's implementation/RED/GREEN/review gates are evidenced. Technical issue
-closure does not supply fastTrack's independent human acceptance, retrospective
-pre-deployment notification or a student's personal UAT signature. The original
-sections below preserve the pre-integration snapshots and their dated limits.
+The task's implementation/RED/GREEN/review gates are evidenced. The later
+[private-source joint A/B confirmation](coursepms-acceptance-confirmed.md) now
+supplies **CoursePMS ACCEPTED** for this release; technical issue closure itself
+does not fabricate that decision, a pre-deployment notice or a personal UAT
+signature. The original sections below preserve their pre-integration snapshots.
 
 > 17 November continuation: this document preserves the original #72 record.
 > Review found three further failing cases, corrected in [Draft PR #73](https://github.com/Magiciancat9/Course_management/pull/73).

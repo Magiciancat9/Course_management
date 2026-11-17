@@ -1,0 +1,35 @@
+{
+  "source_document": "CoursePMS_Acceptance_Confirmation_Supplement_20261117.md",
+  "source_sha256": "762847b91b722011fe93d5cb6b08657f6f6a0f9bbf54fd6dc8b5a9a001a9e30a",
+  "source_handling": "Original kept privately for the two teams/report; no full names, student IDs or private original published in this summary.",
+  "received_from": "user-supplied partner confirmation supplement",
+  "recorded_at_utc": "2026-11-17 15:40:58 UTC",
+  "product": "CoursePMS",
+  "accepting_team": "fastTrack / InfaCompany / EN-028 / Section 31",
+  "decision": "ACCEPTED",
+  "accepted_source": "aeb804ea5bc667399b00cf54df10046a6ded46e0",
+  "accepted_serving_revision": "course-pms-00009-mk2",
+  "service": "https://course-pms-859617270560.asia-southeast1.run.app/",
+  "joint_confirmation_recorded_at": "2026-11-17 22:30:56 Asia/Bangkok (UTC+07:00)",
+  "confirming_members": [
+    "A",
+    "B"
+  ],
+  "full_names_student_ids": "supplied in the private original and retained there for report assembly",
+  "confirmation_method": "Project representative expressly relayed the current joint A/B acceptance in the working conversation.",
+  "separately_observed_personal_submissions_or_signatures_collected": false,
+  "decision_reason": "Completed evidence supports correction of the account-switch private draft exposure and bounded directory privacy, denial, logout replay, saved-state and API/frontend routing checks; retained authorized data unchanged and no new confirmed product failure in the targeted retest.",
+  "additional_product_acceptance_conditions": "none added beyond the documented scope/procedure limits",
+  "scope_limits": [
+    "Applies only to the identified release and recorded targeted plan; original deviations and count reconciliation remain.",
+    "RT-01–06 and RT-08–09 are eight deployed targeted PASS; RT-07 is evidence inspection/isolated replay, not a live race.",
+    "16 client and 19 selected/mocked server isolated tests are separate sets, not full backend/E2E reruns.",
+    "One rejected Student review POST used ID 0 and invalid input, returned 403 BR06_INSTRUCTOR_ROLE_REQUIRED; no Proposal 3 target or successful business/fixture write."
+  ],
+  "human_activity_granularity": "Shared checking/support and joint declaration supplied; exact per-member historical case items/times not supplied. New A/B evidence-review allocation remains assigned, not attested complete.",
+  "activity_limit_changes_accepted_decision": false,
+  "ai_execution_attribution": "Retained original browser/API/local-replay logs remain Codex-operated, not either student's personal execution.",
+  "external_delivery_time_channel": "not supplied; joint decision time is not inferred as message delivery time",
+  "reciprocal_fasttrack_decision": "unchanged and deferred under current user scope",
+  "new_retest_release_or_deployment_performed": false
+}

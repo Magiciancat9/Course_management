@@ -6,7 +6,7 @@
 
 CoursePMS's original Major draft isolation defect and the roster/API contract corrections are implemented, reviewed, integrated and deployed. fastTrack's supplied AI-operated targeted retest now reports **eight deployed PASS plus RT-07 evidence/isolated-replay PASS** on the exact released source. The user acknowledged receipt of that technical result. [Detailed retest and procedure assessment](coursepms-retest-completion.md).
 
-The independent human acceptance field for CoursePMS is **PENDING fastTrack**, even though the product-side technical result is acknowledged. The reciprocal fastTrack outcome is not selected or advanced here.
+The independent acceptance field for CoursePMS is now **ACCEPTED**, from the supplied joint fastTrack A/B declaration recorded **17 November 2026 at 22:30:56 Asia/Bangkok**. [Confirmation/method/limits](coursepms-acceptance-confirmed.md). The declaration is relayed through the project representative, including B; no two separately observed submissions/signatures or completed historical personal case rows are invented. The reciprocal fastTrack outcome is not selected or advanced here.
 
 ## A — CoursePMS preparation and baseline
 
@@ -49,15 +49,15 @@ The staged/main merge SHA difference is explained in [release evidence](release-
 | #55 triage | Technical classifications, linked defect issues, merged triage and partner-returned acknowledgement evidence exist. Driver `Magiciancat9`; **reviewer `martinvadre`** reviews the current closeout/receipt trace and closes the task if its checklist is satisfied. Do not invent external chat timestamps. |
 | #56 correction | RED/GREEN, regressions, contract/test documentation and reviewed correction merge are evidenced. **Reviewer `Magiciancat9`** may update/close the technical correction task based on those existing records at the user's request; that tracker action is not a new human PR approval or independent acceptance. |
 | #57 release | Reviewed release, deployed identity, merged #77 release evidence, public smoke and later partner authenticated retest/readback are evidenced. **Reviewer `martinvadre`** must disposition the notification exception and remaining evidence requirements before closing the task. |
-| #58 CoursePMS-facing portion | The technical partner retest is received and product-side acknowledged. **Formal fastTrack human decision remains pending.** The combined reciprocal task cannot be marked wholly complete from this side alone. |
+| #58 CoursePMS-facing portion | **Partner decision collected: ACCEPTED**, joint A/B declaration recorded 17 November 22:30:56 Asia/Bangkok. Full identities retained privately with method/limits; [CoursePMS-facing record](retest-and-acceptance.md). The combined reciprocal task stays open for its separate fastTrack-facing work. |
 
 Issue #57's requirement to notify **before** deployment was missed in the retained record. A later artifact proves the partner received release information sufficiently to test the identified source, but it does not prove a pre-deployment notice or an external message time/channel. That historical exception remains explicit. A dated owner console screenshot is still not supplied; dated Cloud Run CLI traffic/digest evidence is retained. No checkbox for a missed historical notice is changed to complete.
 
 ## Ready reply for the user — UNSENT
 
-> We acknowledge your completed CoursePMS technical retest on aeb804ea5bc667399b00cf54df10046a6ded46e0: RT-01–06 and RT-08–09 deployed PASS, and RT-07 exact-source evidence/isolated-replay PASS with 16 client and 19 selected/mocked server tests as separate sets. We reviewed the bounded ID-0 Student-denial procedure against the released role guard and retained unchanged-directory evidence; it supports the stated negative-path claim without touching Proposal 3. The earlier runner diagnostics remain historical and are not classified as new product defects. We accept receipt of these technical results on the product side. Please return your actual human exact-version CoursePMS decision, deciding names/date/rationale/conditions when available; we have not signed for your team. We will handle our reciprocal fastTrack work separately in the next phase.
+> Thank you for the CoursePMS acceptance supplement. We recorded your joint A/B ACCEPTED declaration at 17 November 2026, 22:30:56 Asia/Bangkok for aeb804ea5bc667399b00cf54df10046a6ded46e0 / course-pms-00009-mk2, using the completed targeted retest and its stated limits. We preserve the representative-relayed confirmation method and keep private identities in the report evidence rather than public Git. We have not relabelled AI tests or prospective review assignments as completed personal case activity. We will handle the reciprocal fastTrack work separately in the next phase.
 
-This draft has not been sent by the assistant. Actual reply time/channel/receipt are recorded only after real delivery. No acceptance outcome, signature, student attendance or prior appointment is fabricated.
+This draft has not been sent by the assistant. Actual outgoing reply time/channel/receipt are recorded only after real delivery. The supplied ACCEPTED declaration is recorded as evidence, not fabricated; no separate signature, student case attendance or prior appointment is invented. The unitemized personal-review detail remains an activity-record limit, not a pending product acceptance decision.
 
 ## Scope boundary
 

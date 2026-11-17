@@ -2,8 +2,8 @@
 
 CoursePMS corrections #71/#74/#75 are now deployed and the completed partner
 technical retest is received and product-side acknowledged. See [case results](coursepms-retest-completion.md)
-and [product closeout](coursepms-product-closeout.md). Formal independent human
-acceptance is still pending; reciprocal fastTrack work is deferred unchanged.
+and [product closeout](coursepms-product-closeout.md). The later [joint A/B declaration](coursepms-acceptance-confirmed.md)
+records CoursePMS **ACCEPTED**; reciprocal fastTrack work is deferred unchanged.
 
 ## Report and triage
 

@@ -4,7 +4,8 @@
 See [case-by-case result and actual times](coursepms-retest-completion.md).
 Eight deployed cases pass and RT-07 passes in evidence/isolated-replay mode.
 The proposed 20 November appointment below was not booked and is not the actual
-17 November execution. Formal independent human acceptance remains pending.
+17 November execution. The later [joint A/B confirmation](coursepms-acceptance-confirmed.md)
+records **ACCEPTED** for this exact CoursePMS release at 22:30:56 Asia/Bangkok.
 The entry-blocked/NOT RUN wording below preserves the earlier preparation state.
 
 Prepared 17 November 2026 for fastTrack. Proposed appointment: **20 November 2026, 19:00–19:45 Asia/Bangkok**, conditional on a reviewed corrected deployment and privately agreed fixtures. Neither team has confirmed this appointment. No calendar invitation or partner message was sent.

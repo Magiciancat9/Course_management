@@ -6,7 +6,9 @@ both directions: CoursePMS core 36 PASS assertions, full ledger 56 PASS / 1 FAIL
 reciprocal fastTrack evidence has separate denominators and procedure deviations.
 See [report Part B](report-draft.md) and [return package](return-to-fasttrack.md)
 for the updated assessment. This does not retroactively change earlier NOT RUN
-entries into personal student execution. Both human decisions remain PENDING.
+entries into personal student execution. CoursePMS is now **ACCEPTED** under the
+later supplied joint A/B declaration; reciprocal fastTrack decision/state below
+is unchanged. [Accepted record](coursepms-acceptance-confirmed.md).
 
 ## Preparation observations, not UAT
 
@@ -24,8 +26,9 @@ preparation image, not evidence that any UAT case passed.
 
 Current CoursePMS product-side technical outcome: completed partner retest received
 and acknowledged by the user. Operator was Codex AI for fastTrack; no student's
-personal attendance or independent human acceptance is inferred. Formal fastTrack
-acceptance remains PENDING. [Completed result](coursepms-retest-completion.md).
+personal attendance is inferred. The later supplied joint A/B declaration records
+**CoursePMS ACCEPTED at 17 November 22:30:56 Asia/Bangkok**, with representative
+relay and activity-granularity limits retained. [Confirmation](coursepms-acceptance-confirmed.md).
 
 | Historical official case | Actual core assertions on 14 November, source 9c227359 | Limit |
 | --- | --- | --- |
@@ -50,7 +53,7 @@ These are bounded AI observations, not each student's personal execution.
 | RT-01-06 and RT-08-09 | **8 deployed targeted case PASS** in stated bounded procedures |
 | RT-07 | **PASS evidence inspection + isolated replay**, 16 client / 19 selected server, separate sets; no live-race claim |
 | Preservation | Partner authorized directory unchanged; Team 5 / 3 members / Proposal 3 APPROVED revision 2 |
-| Formal decision | **PENDING fastTrack human decision**; current user acknowledges product-side technical receipt |
+| Formal decision | **ACCEPTED**, supplied joint fastTrack A/B declaration at 17 November 22:30:56 Asia/Bangkok; representative relay and private identities retained |
 
 The prior seven anonymous, eight authenticated and fourteen additional records
 are separate observation sets. Node 26 runner diagnostics remain historical;

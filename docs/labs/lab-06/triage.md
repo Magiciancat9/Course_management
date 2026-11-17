@@ -5,8 +5,10 @@ reviewed, deployed and covered by the received targeted retest. The product-side
 user acknowledges the result; [completion record](coursepms-retest-completion.md)
 and [task closure map](coursepms-product-closeout.md) retain the exact source,
 proof and actor boundaries. Former candidate/review-pending statements below
-are the earlier dated triage snapshot. Formal fastTrack human acceptance is
-still pending, and the reciprocal fastTrack work is deferred unchanged.
+are the earlier dated triage snapshot. The later [joint A/B declaration](coursepms-acceptance-confirmed.md)
+now records **CoursePMS ACCEPTED** at 17 November 22:30:56 Asia/Bangkok, with
+its confirmation method/limits retained. Reciprocal fastTrack work is deferred
+unchanged. Earlier acceptance-pending wording below is historical intake status.
 
 Latest continuation: the user's roster-only decision and versioned AC-03
 resolve both former clarifications as corrected candidate defects #74/#75.

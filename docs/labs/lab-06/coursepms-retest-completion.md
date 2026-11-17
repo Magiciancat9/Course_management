@@ -2,6 +2,12 @@
 
 **Scope: CoursePMS as the product under test only.** The user acknowledged the incoming technical result in the current chat on 17 November 2026 and requested that reciprocal testing of fastTrack be deferred. This is a product-side acknowledgement, not fastTrack's independent human acceptance decision or either student's personal case-execution signature.
 
+Later confirmation update: the user has now supplied fastTrack's actual joint
+A/B **ACCEPTED** declaration, recorded 17 November **22:30:56 Asia/Bangkok**
+for this exact release. [Accepted record and limits](coursepms-acceptance-confirmed.md).
+The earlier technical receipt and the later team declaration are distinct events;
+neither is converted into separately observed signatures or historical case attendance.
+
 ## Receipt and integrity
 
 Source: private `FastTrack_CoursePMS_Completed_Retest_20261117.zip` and companion `message (12).txt`, supplied by the user. All **34 payload hashes** in the ZIP manifest match. Original files, screenshots, earlier failures and initial runner diagnostics remain unchanged in the private local archive. No archived runner or executable was run by this intake. No screenshot, credentials or private proposal field values are published here.
@@ -19,7 +25,7 @@ Source: private `FastTrack_CoursePMS_Completed_Retest_20261117.zip` and companio
 | Additional no-team/role-denial execution | 17 November, **21:30–21:33 Asia/Bangkok** |
 | Operator | **Codex AI for fastTrack**, not either student's personal execution |
 | Product-side receipt | User supplied the files and stated “ฉันรับผลเลย” in this chat; exact message timestamp was not supplied by the client |
-| Formal fastTrack decision about CoursePMS | **PENDING** actual independent human decision-maker, time, rationale and confirmation |
+| Formal fastTrack decision about CoursePMS | **ACCEPTED**, joint A/B declaration recorded 17 November 2026 22:30:56 Asia/Bangkok, relayed through the project representative; full private identities and method supplied in the later supplement |
 
 ## Current targeted case results
 
@@ -59,4 +65,4 @@ The partner reports zero successful business writes, memberships, saves, submits
 
 The user accepts receipt of these CoursePMS technical results. The defect/correction/release/targeted-retest chain is ready for task closure review; [CoursePMS product closeout](coursepms-product-closeout.md) maps the evidence and reviewer actions. No new CoursePMS defect is confirmed in this bounded result.
 
-The formal independent decision about CoursePMS still belongs to fastTrack. Actual personal activities and that exact-version decision remain pending. Reciprocal fastTrack execution, findings and CoursePMS's decision about fastTrack are deferred by the user and are not changed by this record.
+The independent decision about CoursePMS is now recorded **ACCEPTED** from fastTrack's later supplement. Exact per-member historical activity detail is still not supplied; that is an activity-granularity limit, not a pending product decision. Reciprocal fastTrack execution, findings and CoursePMS's decision about fastTrack remain deferred and unchanged.

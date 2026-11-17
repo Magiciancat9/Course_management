@@ -1,0 +1,38 @@
+{
+  "comparison_base": "03c3b8b8e5035d9d655e0baf32f8e0ea32b413b7",
+  "reciprocal_scope_checks": [
+    {
+      "scope": "reciprocal acceptance section",
+      "unchanged": true,
+      "normalized_utf8_sha256": "8b05b4c880ac78508880589d34bca8bf981a87f687f316242c1807870595df84"
+    },
+    {
+      "scope": "reciprocal final decision table column",
+      "unchanged": true
+    },
+    {
+      "scope": "reciprocal execution results and following sections",
+      "unchanged": true,
+      "normalized_utf8_sha256": "97bd269bd5d9613b4a98c464884c9f28df5f23a3300adf8d15acde4023ae2076"
+    },
+    {
+      "scope": "execution-log.md",
+      "unchanged": true
+    },
+    {
+      "scope": "member-activity.md",
+      "unchanged": true
+    },
+    {
+      "scope": "report-draft.md",
+      "unchanged": true
+    }
+  ],
+  "tracked_paths_outside_lab6_docs": [],
+  "missing_local_links": [],
+  "private_identity_matches_in_changed_public_files": [],
+  "private_original_and_copy_sha256": "762847b91b722011fe93d5cb6b08657f6f6a0f9bbf54fd6dc8b5a9a001a9e30a",
+  "private_original_byte_identical": true,
+  "new_live_tests_or_deployment": false,
+  "archived_runners_executed": false
+}

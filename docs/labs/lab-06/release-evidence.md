@@ -1,6 +1,6 @@
 # Lab 6 corrected release evidence — 17 November 2026
 
-**Corrected release deployed; later partner technical retest received and product-side acknowledged.** Eight deployed cases and RT-07 evidence/isolated replay pass on the released source; see [completed retest](coursepms-retest-completion.md). Formal independent human decisions remain pending. Original public/pipeline checks below retain their actual operators and limits; no new human signature or pipeline login PASS is inferred.
+**Corrected release deployed, targeted retest received and CoursePMS ACCEPTED.** The later joint fastTrack A/B declaration is recorded at 17 November 22:30:56 Asia/Bangkok; [confirmation/method/limits](coursepms-acceptance-confirmed.md). Eight deployed cases and RT-07 evidence/isolated replay pass. Original public/pipeline checks below retain their actual operators and limits; no separate signature or pipeline login PASS is inferred. Reciprocal fastTrack work remains deferred unchanged.
 
 ## Reviewed integration and deployment identity
 
