@@ -2,6 +2,14 @@
 
 ## 17 November continuation
 
+**Corrected release is now deployed.** [Release evidence](release-evidence.md)
+identifies main `aeb804ea5bc667399b00cf54df10046a6ded46e0`, revision
+`course-pms-00009-mk2`, 100% dated CLI traffic and successful public checks.
+Use the [deployed-release handoff](deployed-release-handoff.md) for actual
+notification and independent retest. Pre-deployment notification was not sent
+in the retained record; the new draft is still unsent. Authenticated smoke,
+fixture readback, actual independent retest and both human decisions remain pending.
+
 Martin's latest integration review is addressed in [review response](review-73-martin.md):
 an explicit shared instructor/own-team status guard, instructor UI coverage and
 removal of the temporary integration helper. Use the current head and CI for

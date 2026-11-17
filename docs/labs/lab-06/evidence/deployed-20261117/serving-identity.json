@@ -1,0 +1,29 @@
+{
+  "source": "Filtered Google Cloud CLI output in GitHub Actions deploy job 134010990970",
+  "workflow_url": "https://github.com/Magiciancat9/Course_management/actions/runs/44074859743",
+  "project_id": "cpe334-kingnine",
+  "project_number": "859617270560",
+  "region": "asia-southeast1",
+  "service": "course-pms",
+  "deployed_main_commit": "aeb804ea5bc667399b00cf54df10046a6ded46e0",
+  "reviewed_release_head": "54ac5ee7678900bde9969b3c0aeac39635aea484",
+  "image_digest": "asia-southeast1-docker.pkg.dev/cpe334-kingnine/course-pms/course-pms@sha256:e5cb29a0cf687cdda01110434528d627cd09057d94e9ab028510e5ad090a89e0",
+  "serving_revision": "course-pms-00009-mk2",
+  "traffic": [
+    {
+      "revision": "course-pms-00009-mk2",
+      "percent": 100,
+      "observed_at_utc": "2026-11-17T11:35:30.966808Z",
+      "provenance": "Actual gcloud run services update-traffic output, not latest-ready-only inference"
+    }
+  ],
+  "pipeline_smoke": {
+    "health": "PASS matching main source",
+    "ready": "PASS db connected",
+    "html": "PASS",
+    "authenticated_login": "SKIPPED: optional smoke credentials not configured"
+  },
+  "owner_console_screenshot": "PENDING; retained CLI evidence is not a console screenshot",
+  "independent_uat": "NOT RUN by this preparation",
+  "predeployment_partner_notification": "Not sent before merge, per user statement; no time or acknowledgement fabricated"
+}
