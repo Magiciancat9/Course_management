@@ -1,0 +1,82 @@
+{
+  "packet": "FastTrack_CoursePMS_Completed_Retest_20261117.zip",
+  "packet_sha256": "2f3c8c33178a14bad687f4e4c76b040c01a140f3bb4fc882e86aeedb84dda0f3",
+  "companion_message": "message (12).txt",
+  "companion_message_sha256": "4f10446bb8cac577e6722eecdbcf6c40ecadcd3b785e3d546bbf813f3c0b1667",
+  "verified_manifest_payload_entries": 34,
+  "original_evidence_policy": "Private original ZIP/screenshots retained locally, unchanged; no archived runner executed and no private screenshot published.",
+  "product": "CoursePMS",
+  "tested_main_source": "aeb804ea5bc667399b00cf54df10046a6ded46e0",
+  "technical_operator": "Codex AI for fastTrack; not either student's personal execution",
+  "deployed_retest_windows_bangkok": [
+    "2026-11-17 19:11–19:15 Asia/Bangkok",
+    "2026-11-17 21:30–21:33 Asia/Bangkok"
+  ],
+  "deployed_cases_passed": [
+    "RT-01",
+    "RT-02",
+    "RT-03",
+    "RT-04",
+    "RT-05",
+    "RT-06",
+    "RT-08",
+    "RT-09"
+  ],
+  "evidence_and_isolated_replay_case": {
+    "case": "RT-07",
+    "result": "PASS",
+    "live_race_claim": false,
+    "local_client_passed": 16,
+    "local_selected_server_passed": 19,
+    "server_scope": {
+      "supplied_domain": 9,
+      "supplied_mocked_routing": 8,
+      "independent_mocked_review_guard": 2
+    }
+  },
+  "separate_observation_counts": {
+    "earlier_anonymous": 7,
+    "earlier_authenticated": 8,
+    "additional_sanitized_records": 14
+  },
+  "initial_runner_attempts": {
+    "runtime": "Node v26.13.0",
+    "attempts": 2,
+    "each_passed": 9,
+    "each_failed": 7,
+    "classification": "runner compatibility diagnostic; unchanged client suite passes 16 on Node v20.20.2; not seven confirmed product defects"
+  },
+  "safe_role_denial": {
+    "method": "POST",
+    "path": "/api/proposals/0/review",
+    "payload": {
+      "decision": "NOT_A_DECISION",
+      "reviewFeedback": ""
+    },
+    "actual_status": 403,
+    "actual_code": "BR06_INSTRUCTOR_ROLE_REQUIRED",
+    "target_proposal_3": false,
+    "scope": "Reported ID 0 absent in authorized baseline; source role guard precedes proposal lookup/update; full authorized directory unchanged afterward",
+    "prior_external_target_agreement": "not claimed"
+  },
+  "retained_state": {
+    "team": 5,
+    "members": 3,
+    "proposal": 3,
+    "status": "APPROVED",
+    "revision": 2,
+    "verification": "partner-reported bounded Instructor-authorized before/after comparison; not a full database audit"
+  },
+  "successful_business_writes": 0,
+  "product_side_user_acknowledgement": {
+    "source": "current user chat",
+    "quoted_words": "ฉันรับผลเลย",
+    "scope": "CoursePMS technical retest receipt/acknowledgement; not a fastTrack human acceptance decision",
+    "recorded_at_utc": "2026-11-17 15:03:24 UTC",
+    "actual_message_timestamp": "not supplied by client"
+  },
+  "formal_fasttrack_decision_about_coursepms": "PENDING actual independent human decision",
+  "reciprocal_fasttrack_work": "DEFERRED by current user instruction; no reciprocal results/decision changed",
+  "actual_external_delivery_channel_time": "not supplied; not inferred from archive/message draft",
+  "predeployment_notice_exception": "preserved; not retrospectively completed"
+}

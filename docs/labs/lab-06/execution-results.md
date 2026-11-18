@@ -6,7 +6,9 @@ both directions: CoursePMS core 36 PASS assertions, full ledger 56 PASS / 1 FAIL
 reciprocal fastTrack evidence has separate denominators and procedure deviations.
 See [report Part B](report-draft.md) and [return package](return-to-fasttrack.md)
 for the updated assessment. This does not retroactively change earlier NOT RUN
-entries into personal student execution. Both human decisions remain PENDING.
+entries into personal student execution. CoursePMS is now **ACCEPTED** under the
+later supplied joint A/B declaration; reciprocal fastTrack decision/state below
+is unchanged. [Accepted record](coursepms-acceptance-confirmed.md).
 
 ## Preparation observations, not UAT
 
@@ -22,24 +24,42 @@ preparation image, not evidence that any UAT case passed.
 
 ## CoursePMS tested by EN-028 InfaCompany
 
-| Session field | Record |
-|---|---|
-| Planned independent testers | Supapanya Yathip and Atip Infa-udom; actual participation not recorded |
-| Application | <https://course-pms-859617270560.asia-southeast1.run.app> |
-| Selected source | `150dc5db3de5c829a7d9ef1adb545191cc37542d`; source at session not yet recorded |
-| Serving revision, date/time and environment | Not confirmed for an actual session |
-| Packet and fixtures | Eight cases in [UAT cases](uat-cases.md); partner receipt not confirmed. Pawarit [reported](https://github.com/Magiciancat9/Course_management/pull/61#issuecomment-6854459046) successful account login and starting-fixture checks; per-alias details and session fixture not recorded. |
+Current CoursePMS product-side technical outcome: completed partner retest received
+and acknowledged by the user. Operator was Codex AI for fastTrack; no student's
+personal attendance is inferred. The later supplied joint A/B declaration records
+**CoursePMS ACCEPTED at 17 November 22:30:56 Asia/Bangkok**, with representative
+relay and activity-granularity limits retained. [Confirmation](coursepms-acceptance-confirmed.md).
 
-| Case | Expected coverage | Result | Actual observation / evidence / finding |
-|---|---|---|---|
-| CPMS-UAT-01 | Authentication, identity and logout | NOT RUN | Not recorded |
-| CPMS-UAT-02 | Team creation and second member | NOT RUN | Not recorded |
-| CPMS-UAT-03 | Duplicate membership and capacity | NOT RUN | Not recorded |
-| CPMS-UAT-04 | Incomplete submission | NOT RUN | Not recorded |
-| CPMS-UAT-05 | Complete submission and lock | NOT RUN | Not recorded |
-| CPMS-UAT-06 | Cross-team and role denial | NOT RUN | Not recorded |
-| CPMS-UAT-07 | Review, revise and approve | NOT RUN | Not recorded |
-| CPMS-UAT-08 | Readback after reload/relogin | NOT RUN | Not recorded |
+| Historical official case | Actual core assertions on 14 November, source 9c227359 | Limit |
+| --- | --- | --- |
+| CPMS-UAT-01 | 7 PASS | Back reached about:blank then return/reload; deviation retained |
+| CPMS-UAT-02 | 2 PASS | Original team creation/membership; no new write rerun claimed |
+| CPMS-UAT-03 | 3 PASS | Original duplicate/capacity checks; no membership recycling |
+| CPMS-UAT-04 | 2 PASS | Original incomplete-submit observations |
+| CPMS-UAT-05 | 2 PASS | Original complete-submit/lock observations |
+| CPMS-UAT-06 | 6 PASS | Original ownership/role observations |
+| CPMS-UAT-07 | 8 PASS | Original review/revise/approve lifecycle, not repeated in read-only retest |
+| CPMS-UAT-08 | 6 PASS | Original persistence observations |
+
+The original full ledger is **56 PASS / 1 FAIL / 57**, including these 36 core
+PASS assertions. The separate original client-state failure remains retained.
+These are bounded AI observations, not each student's personal execution.
+
+| Corrected-release retest | Actual result / version |
+| --- | --- |
+| Deployed source | aeb804ea5bc667399b00cf54df10046a6ded46e0 / dated course-pms-00009-mk2, 100% |
+| Original targeted execution | 17 November 19:11-19:15 Asia/Bangkok, Codex AI for fastTrack |
+| Additional execution | 17 November 21:30-21:33 Asia/Bangkok, no-team and bounded Student review denial |
+| RT-01-06 and RT-08-09 | **8 deployed targeted case PASS** in stated bounded procedures |
+| RT-07 | **PASS evidence inspection + isolated replay**, 16 client / 19 selected server, separate sets; no live-race claim |
+| Preservation | Partner authorized directory unchanged; Team 5 / 3 members / Proposal 3 APPROVED revision 2 |
+| Formal decision | **ACCEPTED**, supplied joint fastTrack A/B declaration at 17 November 22:30:56 Asia/Bangkok; representative relay and private identities retained |
+
+The prior seven anonymous, eight authenticated and fourteen additional records
+are separate observation sets. Node 26 runner diagnostics remain historical;
+the unchanged client suite passed 16/16 on Node 20. They are not seven new
+confirmed product bugs. No lifecycle write/reset/account creation was performed
+by this intake. Private originals remain local; [sanitized provenance](evidence/coursepms-closeout-20261117/partner-retest-summary.json).
 
 ## fastTrack tested by EN-022_P6
 

@@ -2,13 +2,27 @@
 
 ## 17 November continuation
 
+**CoursePMS product-side technical result is now received and acknowledged.**
+The completed partner package reports 8 deployed targeted PASS plus RT-07
+evidence/isolated-replay PASS. Start with [CoursePMS product closeout](coursepms-product-closeout.md)
+and [completed retest record](coursepms-retest-completion.md). The user requests
+one product at a time: reciprocal fastTrack work is deferred, with its existing
+records and decision unchanged. fastTrack's later joint A/B declaration now
+confirms **CoursePMS ACCEPTED** at **17 November 22:30:56 Asia/Bangkok**;
+[actual confirmation](coursepms-acceptance-confirmed.md) and [CoursePMS-facing
+acceptance record](retest-and-acceptance.md) retain its representative-relay
+method and limits. Full private identities are kept outside public Git.
+
 **Corrected release is now deployed.** [Release evidence](release-evidence.md)
 identifies main `aeb804ea5bc667399b00cf54df10046a6ded46e0`, revision
 `course-pms-00009-mk2`, 100% dated CLI traffic and successful public checks.
 Use the [deployed-release handoff](deployed-release-handoff.md) for actual
 notification and independent retest. Pre-deployment notification was not sent
 in the retained record; the new draft is still unsent. Authenticated smoke,
-fixture readback, actual independent retest and both human decisions remain pending.
+fixture/readback limits and historical notification exceptions are retained;
+the later partner technical retest/readback is now recorded in the closeout
+above. The original pipeline login SKIP and actual human decision limits are
+not rewritten as new pipeline passes or signatures.
 
 Martin's latest integration review is addressed in [review response](review-73-martin.md):
 an explicit shared instructor/own-team status guard, instructor UI coverage and
@@ -18,7 +32,8 @@ review; earlier exports remain dated snapshots.
 The latest fastTrack follow-up is answered in [follow-up response](followup-response.md).
 Both prior contract clarifications are now resolved and corrected in the candidate:
 [dispositions](contract-dispositions.md). [Acceptance records](acceptance-record.md)
-are reconciled with dated actual evidence, with human decisions still pending.
+are reconciled with dated actual evidence. CoursePMS is now ACCEPTED under the
+supplied declaration; the reciprocal fastTrack decision remains unchanged/deferred.
 Use [release readiness](release-readiness.md), [actual activity forms](member-activity.md)
 and [proposed targeted retest](retest-request.md) for the remaining owner actions.
 
@@ -28,9 +43,9 @@ which targets the existing fix branch. Start with the [return package](return-to
 [incoming triage](triage.md), [follow-up verification](session-followup.md),
 [member allocation](member-work-plan.md), and [Parts A–D draft](report-draft.md).
 The [simulation example](simulation-example.md) is fictional and is not actual
-student participation or acceptance. Release, independent retest and both
-human acceptance decisions remain pending. Earlier preparation/status records
-below are historical and should be read with this dated continuation.
+student participation or acceptance. The earlier preparation/status records
+below are historical; the deployed CoursePMS retest and ACCEPTED declaration
+above supersede their earlier pending status for CoursePMS only.
 
 This package follows the partner team's seven-document structure and uses
 CoursePMS Sprint 1 information. The two teams independently test each other's
@@ -38,7 +53,7 @@ product:
 
 | Product team | Product | Independent UAT team |
 |---|---|---|
-| EN-022_P6: Tatchakorn Thamnimitr and Pawarit Wongdaeng | CoursePMS | EN-028 InfaCompany: Supapanya Yathip and Atip Infa-udom |
+| EN-022_P6: Tatchakorn Thamnimitr and Pawarit Wongdaeng | CoursePMS | EN-028 InfaCompany: A/B; full confirming identities retained privately |
 | EN-028 InfaCompany | fastTrack | EN-022_P6 |
 
 CoursePMS scope is F-01 authentication and roles, F-02 team management, and

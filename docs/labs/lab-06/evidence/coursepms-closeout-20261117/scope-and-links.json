@@ -1,0 +1,35 @@
+{
+  "base": "13a183558d205e8edada13642c851eb0a27d6963",
+  "reciprocal_scope_checks": [
+    {
+      "scope": "reciprocal fastTrack acceptance section",
+      "unchanged": true,
+      "normalized_utf8_sha256": "101817acf2fe2a0e38cf8311b38b6177f453abfe8927ca28e85c5c85864d89eb"
+    },
+    {
+      "scope": "reciprocal decision template right column",
+      "unchanged": true
+    },
+    {
+      "scope": "reciprocal execution results and later sections",
+      "unchanged": true,
+      "normalized_utf8_sha256": "97bd269bd5d9613b4a98c464884c9f28df5f23a3300adf8d15acde4023ae2076"
+    },
+    {
+      "scope": "docs/labs/lab-06/execution-log.md",
+      "unchanged": true
+    },
+    {
+      "scope": "docs/labs/lab-06/member-activity.md",
+      "unchanged": true
+    },
+    {
+      "scope": "docs/labs/lab-06/report-draft.md",
+      "unchanged": true
+    }
+  ],
+  "missing_local_links": [],
+  "tracked_paths_outside_lab6_docs": [],
+  "source_archive_runners_executed": false,
+  "new_live_uat_performed": false
+}
