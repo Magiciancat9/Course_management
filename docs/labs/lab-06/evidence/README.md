@@ -9,6 +9,7 @@ Use the dated records below when assembling the report. Existing CoursePMS corre
 | [Reported Sprint 1 acceptance](fasttrack-closeout-20261119/reported-sprint1-acceptance.json) | User-declared joint session and Accepted decision; separate human-case artifacts were not retained. |
 | [Partner receipt](fasttrack-closeout-20261119/partner-receipt.json) | User-relayed acknowledgement; partner will identify supporting screenshots as the separate 18 November Codex run. |
 | [Evidence manifest](fasttrack-evidence-manifest-20261119.json) | Original/published SHA-256, transformation and source attribution. |
+| [Full screenshot publication review](image-publication-review-20261119.json) | All 14 exact public-payload images individually viewed; synthetic UI only, no credentials/real identities/private chat, no PNG text/EXIF metadata. |
 | [CoursePMS accepted correction](coursepms-closeout-20261117/acceptance-confirmation-summary.json) | Previously merged sanitized 17 November record; not replaced by reciprocal fastTrack evidence. |
 
 Private account/password documents, original partner ZIPs, reports with student IDs, raw chat transcripts, local automation helpers and duplicate PDF/ZIP exports stay under ignored local artifacts. The PDF submitted to the course can be assembled privately with the students' required identities.

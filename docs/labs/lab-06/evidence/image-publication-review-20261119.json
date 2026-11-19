@@ -1,0 +1,123 @@
+{
+  "reviewedAt": "2026-11-19T07:26:51Z",
+  "actualReviewer": "Codex AI visual inspection",
+  "purpose": "Verify every screenshot in the exact public Git payload after automatic approval review requested complete image inspection",
+  "publicRepository": "Magiciancat9/Course_management",
+  "publicationScope": "The curated docs/labs/lab-06 evidence only; private reports, account/password files and student IDs remain excluded",
+  "inspection": "All 14 exact images were individually opened and viewed in full. No login/password screen, authentication response, DevTools headers, cookie/CSRF/session token, student ID, real email address or private chat content was visible. No PNG text or EXIF metadata chunks were present.",
+  "status": "PASS",
+  "images": [
+    {
+      "file": "evidence/fasttrack-sprint1-20261118/UAT-01-student-normal.png",
+      "sha256": "7981a0a25d1c991ecc1febe02cb12df3d5a75f6ac5a472df693c27a8a09bc559",
+      "visualReview": "PASS — full image opened and inspected using view_image",
+      "content": "Synthetic fastTrack role/fixture UI only; app aliases Student A1 / Supervisor A / Supervisor B, synthetic run titles and example.com/example.edu links as applicable",
+      "sensitiveContentFound": false,
+      "textOrExifMetadataChunks": []
+    },
+    {
+      "file": "evidence/fasttrack-sprint1-20261118/UAT-02-student-two-feedback.png",
+      "sha256": "5f2fec5faadc1bd9866da4aa6559cce36f00aa18a7cf0850a74b35bc61842862",
+      "visualReview": "PASS — full image opened and inspected using view_image",
+      "content": "Synthetic fastTrack role/fixture UI only; app aliases Student A1 / Supervisor A / Supervisor B, synthetic run titles and example.com/example.edu links as applicable",
+      "sensitiveContentFound": false,
+      "textOrExifMetadataChunks": []
+    },
+    {
+      "file": "evidence/fasttrack-sprint1-20261118/UAT-03-existing-submission.png",
+      "sha256": "48d19e91622ab5d65bfa0abcf74dd7fe9e4d5391f751b933875aa708f56d55dc",
+      "visualReview": "PASS — full image opened and inspected using view_image",
+      "content": "Synthetic fastTrack role/fixture UI only; app aliases Student A1 / Supervisor A / Supervisor B, synthetic run titles and example.com/example.edu links as applicable",
+      "sensitiveContentFound": false,
+      "textOrExifMetadataChunks": []
+    },
+    {
+      "file": "evidence/fasttrack-sprint1-20261118/UAT-04-stale-form-before-deadline.png",
+      "sha256": "a57984ed0ac5978d2a28742ac2bf166cc471aadbd66480b4c3fef92d35819351",
+      "visualReview": "PASS — full image opened and inspected using view_image",
+      "content": "Synthetic fastTrack role/fixture UI only; app aliases Student A1 / Supervisor A / Supervisor B, synthetic run titles and example.com/example.edu links as applicable",
+      "sensitiveContentFound": false,
+      "textOrExifMetadataChunks": []
+    },
+    {
+      "file": "evidence/fasttrack-sprint1-20261118/UAT-04-stale-form-after-deadline.png",
+      "sha256": "46febeb0dc412304ee44d658cf308514ae0dc34ca98c1e5317551e9a1f43e4e5",
+      "visualReview": "PASS — full image opened and inspected using view_image",
+      "content": "Synthetic fastTrack role/fixture UI only; app aliases Student A1 / Supervisor A / Supervisor B, synthetic run titles and example.com/example.edu links as applicable",
+      "sensitiveContentFound": false,
+      "textOrExifMetadataChunks": []
+    },
+    {
+      "file": "evidence/fasttrack-sprint1-20261118/UAT-05-foreign-submission.png",
+      "sha256": "13584d0a2f6fd49bac3a7eaa150b1a08ae9fe859672588293fd8724a9737e34f",
+      "visualReview": "PASS — full image opened and inspected using view_image",
+      "content": "Synthetic fastTrack role/fixture UI only; app aliases Student A1 / Supervisor A / Supervisor B, synthetic run titles and example.com/example.edu links as applicable",
+      "sensitiveContentFound": false,
+      "textOrExifMetadataChunks": []
+    },
+    {
+      "file": "evidence/fasttrack-sprint1-20261118/UAT-06-ftp-link.png",
+      "sha256": "033e20c3eaf011ffc5a04a481b09a3659341017e65c905e29b2f3693511f4b10",
+      "visualReview": "PASS — full image opened and inspected using view_image",
+      "content": "Synthetic fastTrack role/fixture UI only; app aliases Student A1 / Supervisor A / Supervisor B, synthetic run titles and example.com/example.edu links as applicable",
+      "sensitiveContentFound": false,
+      "textOrExifMetadataChunks": []
+    },
+    {
+      "file": "evidence/fasttrack-sprint1-20261118/UAT-06-student-create-denied.png",
+      "sha256": "a0974919f57a404502528450ed510440557f3008bee916a07622a0796a3970cb",
+      "visualReview": "PASS — full image opened and inspected using view_image",
+      "content": "Synthetic fastTrack role/fixture UI only; app aliases Student A1 / Supervisor A / Supervisor B, synthetic run titles and example.com/example.edu links as applicable",
+      "sensitiveContentFound": false,
+      "textOrExifMetadataChunks": []
+    },
+    {
+      "file": "evidence/fasttrack-sprint1-20261118/UAT-07-same-profile-switched-to-SB.png",
+      "sha256": "13584d0a2f6fd49bac3a7eaa150b1a08ae9fe859672588293fd8724a9737e34f",
+      "visualReview": "PASS — full image opened and inspected using view_image",
+      "content": "Synthetic fastTrack role/fixture UI only; app aliases Student A1 / Supervisor A / Supervisor B, synthetic run titles and example.com/example.edu links as applicable",
+      "sensitiveContentFound": false,
+      "textOrExifMetadataChunks": []
+    },
+    {
+      "file": "evidence/fasttrack-sprint1-20261118/UAT-08-student-relogin.png",
+      "sha256": "5f2fec5faadc1bd9866da4aa6559cce36f00aa18a7cf0850a74b35bc61842862",
+      "visualReview": "PASS — full image opened and inspected using view_image",
+      "content": "Synthetic fastTrack role/fixture UI only; app aliases Student A1 / Supervisor A / Supervisor B, synthetic run titles and example.com/example.edu links as applicable",
+      "sensitiveContentFound": false,
+      "textOrExifMetadataChunks": []
+    },
+    {
+      "file": "evidence/fasttrack-s35-20261119/S35-01-same-work-after-reload.png",
+      "sha256": "4344ccd8973b0953130aebe441aef7797dd3b4ef203cf17617fdd8be8fa403a8",
+      "visualReview": "PASS — full image opened and inspected using view_image",
+      "content": "Synthetic fastTrack role/fixture UI only; app aliases Student A1 / Supervisor A / Supervisor B, synthetic run titles and example.com/example.edu links as applicable",
+      "sensitiveContentFound": false,
+      "textOrExifMetadataChunks": []
+    },
+    {
+      "file": "evidence/fasttrack-s35-20261119/S35-02-filled-before-deadline.png",
+      "sha256": "2f4019f464c80805035c3d63c7750171e7b61058b23b041ff881f194fdbd3e80",
+      "visualReview": "PASS — full image opened and inspected using view_image",
+      "content": "Synthetic fastTrack role/fixture UI only; app aliases Student A1 / Supervisor A / Supervisor B, synthetic run titles and example.com/example.edu links as applicable",
+      "sensitiveContentFound": false,
+      "textOrExifMetadataChunks": []
+    },
+    {
+      "file": "evidence/fasttrack-s35-20261119/S35-02-stale-form-late-409.png",
+      "sha256": "35421c6c739a1287ff0998bac386462d6975130ab5aa9e3f6906c7a3f9a18766",
+      "visualReview": "PASS — full image opened and inspected using view_image",
+      "content": "Synthetic fastTrack role/fixture UI only; app aliases Student A1 / Supervisor A / Supervisor B, synthetic run titles and example.com/example.edu links as applicable",
+      "sensitiveContentFound": false,
+      "textOrExifMetadataChunks": []
+    },
+    {
+      "file": "evidence/fasttrack-s35-20261119/S35-03-supervisor-late-empty.png",
+      "sha256": "d61b8b6220456b51a4e247d249f86e15e93e0193790e9e9b118e1d6482aeeec1",
+      "visualReview": "PASS — full image opened and inspected using view_image",
+      "content": "Synthetic fastTrack role/fixture UI only; app aliases Student A1 / Supervisor A / Supervisor B, synthetic run titles and example.com/example.edu links as applicable",
+      "sensitiveContentFound": false,
+      "textOrExifMetadataChunks": []
+    }
+  ]
+}

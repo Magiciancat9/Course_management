@@ -12,6 +12,8 @@
 
 [Evidence index](evidence/README.md) and [manifest](evidence/fasttrack-evidence-manifest-20261119.json) identify every newly selected source, transformation and SHA-256. Synthetic fixture UUIDs/app role names are intentionally retained to connect actual responses, screenshots and snapshots.
 
+All 14 selected screenshots were individually opened and visually inspected in full before publication. They show synthetic app role aliases, fixture text and example links, with no visible credentials, real email/student identities, private chat or authentication response. PNG text/EXIF metadata was also checked and absent. The exact file hashes and review scope are retained in the [image publication review](evidence/image-publication-review-20261119.json).
+
 ## Keep local / private
 
 Private account/password handoffs, raw login/authentication responses, cookies/CSRF/session tokens, original partner ZIPs, private chat records, full student identities/IDs, private PDF/ZIP report exports, temporary automation controllers and duplicated working files remain under ignored local artifacts. The selected public evidence lives in docs, not a blanket artifacts upload. Existing unrelated artifacts are not staged by this task.
