@@ -1,5 +1,8 @@
 # Lab 6 independent UAT execution log (`fastTrack`)
 
+**19 November update:** the Batch 1 block below is historical. Later authenticated Codex UAT-01–08 evidence, the user-reported joint human acceptance and partner receipt are now recorded in [current fastTrack closeout](fasttrack-closeout-20261119.md). No old blocked entry is rewritten as a past personal pass.
+
+
 > Historical batch record below. On 17 November, the supplied reciprocal
 > archives were reviewed and their later AI-operated API/UI observations and
 > deviations are summarized in [report Part B](report-draft.md) and

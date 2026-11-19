@@ -1,0 +1,82 @@
+[
+  {
+    "label": "CPMS-S35-01 on-time UI POST",
+    "observedAt": "2026-11-19T03:32:49.398Z",
+    "capture": "Browser UI request forwarded once via Playwright route.fetch; response recorded before navigation",
+    "method": "POST",
+    "url": "https://fasttrack-lab6-970128017651.asia-southeast1.run.app/api/milestones/337e85e9-f190-42fb-a231-ceee30030a28/submissions",
+    "status": 201,
+    "request": {
+      "title": "L6-S35-CPMS-WORK-20261119-103240-7a83",
+      "description": "Synthetic CoursePMS section 3.5 work; 20261119-103240-7a83.",
+      "url": "https://example.edu/?run=20261119-103240-7a83"
+    },
+    "response": {
+      "data": {
+        "id": "e464cfe7-3c6e-4a9d-835c-310fe20b4ede",
+        "milestoneId": "337e85e9-f190-42fb-a231-ceee30030a28",
+        "submittedBy": {
+          "id": "ef626ccf-188d-43b0-842a-3e3f1a1e287e",
+          "displayName": "Student A1"
+        },
+        "version": 1,
+        "title": "L6-S35-CPMS-WORK-20261119-103240-7a83",
+        "description": "Synthetic CoursePMS section 3.5 work; 20261119-103240-7a83.",
+        "url": "https://example.edu/?run=20261119-103240-7a83",
+        "submittedAt": "2026-11-19T03:33:06.911Z"
+      }
+    }
+  },
+  {
+    "label": "CPMS-S35-02 stale-form late UI POST",
+    "observedAt": "2026-11-19T03:49:06.307Z",
+    "capture": "Browser UI request forwarded once via Playwright route.fetch; response recorded before navigation",
+    "method": "POST",
+    "url": "https://fasttrack-lab6-970128017651.asia-southeast1.run.app/api/milestones/1343a467-89fa-4969-b6ce-eb54cc1b0340/submissions",
+    "status": 409,
+    "request": {
+      "title": "L6-S35-CPMS-LATE-WORK-20261119-103240-7a83",
+      "description": "Synthetic CoursePMS section 3.5 work; 20261119-103240-7a83.",
+      "url": "https://example.edu/?run=20261119-103240-7a83"
+    },
+    "response": {
+      "error": {
+        "code": "DEADLINE_PASSED",
+        "message": "The deadline has passed. Your work was not saved.",
+        "fields": {}
+      }
+    }
+  },
+  {
+    "label": "CPMS-S35-03 late list after initial rejection",
+    "method": "GET",
+    "url": "https://fasttrack-lab6-970128017651.asia-southeast1.run.app/api/milestones/1343a467-89fa-4969-b6ce-eb54cc1b0340/submissions",
+    "observedAt": "2026-11-19T03:49:10.927Z",
+    "status": 200,
+    "body": {
+      "data": [],
+      "meta": {
+        "serverTime": "2026-11-19T03:49:28.458Z"
+      }
+    }
+  },
+  {
+    "label": "CPMS-S35-03 authenticated retry once",
+    "observedAt": "2026-11-19T03:49:11.407Z",
+    "method": "POST",
+    "url": "https://fasttrack-lab6-970128017651.asia-southeast1.run.app/api/milestones/1343a467-89fa-4969-b6ce-eb54cc1b0340/submissions",
+    "status": 409,
+    "request": {
+      "title": "L6-S35-CPMS-LATE-WORK-20261119-103240-7a83",
+      "description": "Synthetic CoursePMS section 3.5 work; 20261119-103240-7a83.",
+      "url": "https://example.edu/?run=20261119-103240-7a83"
+    },
+    "response": {
+      "error": {
+        "code": "DEADLINE_PASSED",
+        "message": "The deadline has passed. Your work was not saved.",
+        "fields": {}
+      }
+    }
+  }
+]

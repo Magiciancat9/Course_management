@@ -1,6 +1,6 @@
 # Retest and acceptance — CoursePMS-facing record
 
-This record completes only collection of the independent team's decision about **CoursePMS** in Issue #58. Reciprocal execution/findings and CoursePMS's decision about fastTrack remain deferred and unchanged under the user's one-product-at-a-time instruction.
+This record completes only collection of the independent team's decision about **CoursePMS** in Issue #58. The later reciprocal fastTrack decision is recorded separately in [19 November closeout](fasttrack-closeout-20261119.md); it does not change the original CoursePMS acceptance record below.
 
 | CoursePMS-facing field | Actual record |
 | --- | --- |
@@ -15,4 +15,4 @@ This record completes only collection of the independent team's decision about *
 
 [Full sanitized acceptance record](coursepms-acceptance-confirmed.md), [technical retest](coursepms-retest-completion.md), [release identity/proof](release-evidence.md), [product closeout](coursepms-product-closeout.md).
 
-No outcome, names, activity or date for the opposite product is filled here. #58 as a combined reciprocal task is not closed by this document. The original private acceptance statement and its method/limits remain intact, with no source evidence rewritten.
+This CoursePMS-facing record does not duplicate the reciprocal result. See the later [fastTrack closeout](fasttrack-closeout-20261119.md) and [acceptance ledger](acceptance-record.md) for that user-reported decision and its evidence limits. Issue #58 is not automatically closed by this documentation update. The original private acceptance statement and its method/limits remain intact, with no source evidence rewritten.

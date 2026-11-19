@@ -1,0 +1,61 @@
+{
+  "run": "L6-CPMS-AI-20261118-144203",
+  "submission": "e22b5fc2-4e36-480e-8141-930900aa356b",
+  "work": {
+    "status": 200,
+    "body": {
+      "data": {
+        "id": "e22b5fc2-4e36-480e-8141-930900aa356b",
+        "milestoneId": "09b06c51-48f1-456c-a76a-d2b2be9944c1",
+        "submittedBy": {
+          "id": "03838685-bf47-4dd4-b99b-b689f863cdb3",
+          "displayName": "Student A1"
+        },
+        "version": 1,
+        "title": "L6-CPMS-AI-20261118-144203-WORK",
+        "description": "Synthetic CoursePMS AI-assisted UAT work.",
+        "url": "https://example.com/?run=L6-CPMS-AI-20261118-144203",
+        "submittedAt": "2026-11-18T07:42:55.929Z"
+      },
+      "meta": {
+        "serverTime": "2026-11-18T07:43:01.930Z"
+      }
+    }
+  },
+  "feedback": {
+    "status": 200,
+    "body": {
+      "data": [
+        {
+          "id": "6cdb2835-6d53-4821-bec0-c155771f49c6",
+          "submissionId": "e22b5fc2-4e36-480e-8141-930900aa356b",
+          "supervisor": {
+            "id": "6d467a72-a32c-4eff-a9a5-e7897deb4fd2",
+            "displayName": "Supervisor A"
+          },
+          "content": "L6-CPMS-AI-20261118-144203: Please explain the test evidence.",
+          "clientRequestId": "6c51abc3-78e1-42b0-935f-6c01b6eb1789",
+          "createdAt": "2026-11-18T07:42:59.012Z"
+        },
+        {
+          "id": "2c02cbd2-95cb-4c56-bd23-aff722309c66",
+          "submissionId": "e22b5fc2-4e36-480e-8141-930900aa356b",
+          "supervisor": {
+            "id": "6d467a72-a32c-4eff-a9a5-e7897deb4fd2",
+            "displayName": "Supervisor A"
+          },
+          "content": "L6-CPMS-AI-20261118-144203: Add the acceptance result.",
+          "clientRequestId": "8952ffd1-4ebe-42c1-8e33-97edd688045e",
+          "createdAt": "2026-11-18T07:42:59.205Z"
+        }
+      ],
+      "meta": {
+        "serverTime": "2026-11-18T07:43:01.869Z"
+      }
+    }
+  },
+  "messages": [
+    "L6-CPMS-AI-20261118-144203: Please explain the test evidence.",
+    "L6-CPMS-AI-20261118-144203: Add the acceptance result."
+  ]
+}

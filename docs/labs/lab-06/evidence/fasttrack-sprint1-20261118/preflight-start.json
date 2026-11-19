@@ -1,0 +1,18 @@
+{
+  "time": "2026-11-18T07:37:42.827Z",
+  "health": {
+    "status": 200,
+    "body": {
+      "status": "ok",
+      "version": "8e637e537cd037d630a5fffc1b5672d1b44371a8"
+    }
+  },
+  "ready": {
+    "status": 200,
+    "body": {
+      "status": "ready",
+      "database": "connected",
+      "version": "8e637e537cd037d630a5fffc1b5672d1b44371a8"
+    }
+  }
+}

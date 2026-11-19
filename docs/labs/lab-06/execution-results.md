@@ -7,8 +7,7 @@ reciprocal fastTrack evidence has separate denominators and procedure deviations
 See [report Part B](report-draft.md) and [return package](return-to-fasttrack.md)
 for the updated assessment. This does not retroactively change earlier NOT RUN
 entries into personal student execution. CoursePMS is now **ACCEPTED** under the
-later supplied joint A/B declaration; reciprocal fastTrack decision/state below
-is unchanged. [Accepted record](coursepms-acceptance-confirmed.md).
+later supplied joint A/B declaration; reciprocal fastTrack's later user-reported Accepted decision and directly recorded technical results are now in [19 November fastTrack closeout](fasttrack-closeout-20261119.md). Earlier batch rows below remain historical. [Accepted record](coursepms-acceptance-confirmed.md).
 
 ## Preparation observations, not UAT
 
@@ -61,7 +60,18 @@ the unchanged client suite passed 16/16 on Node 20. They are not seven new
 confirmed product bugs. No lifecycle write/reset/account creation was performed
 by this intake. Private originals remain local; [sanitized provenance](evidence/coursepms-closeout-20261117/partner-retest-summary.json).
 
-## fastTrack tested by EN-022_P6
+## fastTrack — current 18–19 November results
+
+| Evidence mode | Actual scope / result | Provenance and limit |
+| --- | --- | --- |
+| 18 November Codex browser/API run | UAT-01–08: 8 PASS; 18 active recorded observations; source `8e637e537cd037d630a5fffc1b5672d1b44371a8` | 14:37:42–14:50:33 Asia/Bangkok; original screenshot/JSON attribution retained; [case ledger](evidence/fasttrack-sprint1-20261118/case-summary.json) |
+| 19 November reported joint human session | User states all eight cases PASS, no outstanding defects, Accepted | 09:00–approximately 11:44 Asia/Bangkok; Magiciancat9 UAT-01–04 and martinvadre UAT-05–08, jointly worked; no separate human artifacts/IDs/per-case times retained; [declaration](evidence/fasttrack-closeout-20261119/reported-sprint1-acceptance.json) |
+| Section 3.5 isolated retest | CPMS-S35-01/02/03 PASS; original database projections pass 16 comparisons | Source `1bbe187c088b86d104a16e420058f17425f18828`, partner-reported `fasttrack-lab6-00001-74k`; Codex browser operation; user-confirmed joint file review; [verified section 3.5 retest](fasttrack-section35-retest-20261119.md) |
+| Partner receipt | Both returned records acknowledged | User-relayed acknowledgement recorded 12:42:46 on 19 November; supporting screenshots identified as the separate 18 November Codex run; [receipt](evidence/fasttrack-closeout-20261119/partner-receipt.json) |
+
+Source at the declared 09:00 human-session start was not separately retained. Codex observations at 11:24:56 and 11:45:02 on 19 November match the expected Sprint 1 source; they are not backdated. The original older BLOCKED entries below are not erased or relabelled as past personal passes. Full current detail: [19 November fastTrack closeout](fasttrack-closeout-20261119.md).
+
+## Historical fastTrack Batch 1 — 14 November (retained)
 
 | Session field | Record |
 |---|---|

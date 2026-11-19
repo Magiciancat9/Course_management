@@ -1,6 +1,6 @@
 # Independent UAT acceptance records
 
-Updated 17 November 2026 after the supplied partner confirmation: **CoursePMS is ACCEPTED** for `aeb804e…` / `course-pms-00009-mk2`, joint fastTrack A/B declaration recorded **22:30:56 Asia/Bangkok**. The source explicitly identifies representative-relayed confirmation, with no separately observed personal signatures. [Confirmation and limits](coursepms-acceptance-confirmed.md). Reciprocal fastTrack records below remain unchanged and deferred; their decision is not selected here.
+Updated 17 November 2026 after the supplied partner confirmation: **CoursePMS is ACCEPTED** for `aeb804e…` / `course-pms-00009-mk2`, joint fastTrack A/B declaration recorded **22:30:56 Asia/Bangkok**. The source explicitly identifies representative-relayed confirmation, with no separately observed personal signatures. [Confirmation and limits](coursepms-acceptance-confirmed.md). The reciprocal fastTrack team decision was subsequently reported as Accepted on 19 November; its separate user-declaration/evidence limits are recorded below.
 
 ## CoursePMS evidence — decision reserved for fastTrack
 
@@ -25,32 +25,35 @@ Updated 17 November 2026 after the supplied partner confirmation: **CoursePMS is
 
 The older `150dc5db3de5c829a7d9ef1adb545191cc37542d` selection was an earlier preparation baseline, not the later 14 November run. Earlier NOT RECORDED templates remain available in Git history; they do not override these dated observations.
 
-## fastTrack evidence — decision reserved for actual CoursePMS students
+## fastTrack — CoursePMS reported decision and technical evidence
 
-| Field | Verified evidence / limit |
+| Field | Current record / limitation |
 | --- | --- |
 | Product / independent team | EN-028 InfaCompany / EN-022_P6 |
-| URL | <https://fasttrack-app-kpx7au3w2a-as.a.run.app> |
-| Recorded tested source | `8e637e537cd037d630a5fffc1b5672d1b44371a8` |
-| Dated owner revision | `fasttrack-app-00003-rc7`, 100% traffic in the retained 14 November observation; reverify before a new session |
-| AI-operated evidence | Separate denominators: 97 main API assertions; 7 post-UI controls; 26 follow-up UI observations; 25 final controls; 11 saved-state comparisons |
-| Findings / deviations | No confirmed fastTrack product defect in the bounded follow-up. Sequential profiles, duplicate API procedure, deadline setup, validation fixture, session replay/history and other precision limits are retained in [member activity](member-activity.md). This is not exhaustive case acceptance. |
-| Student participation | Original archive preserves an unwitnessed user-reported 13 November 17:30 session for both students. Actual individual case/actions/results were not supplied. New later AI work does not fill those fields. |
-| Accepted minor limitations | None personally confirmed; actual decision-makers must record any conditions |
-| Final exact-version decision | **PENDING**, to be selected and personally confirmed by actual CoursePMS students |
+| Sprint 1 source | `8e637e537cd037d630a5fffc1b5672d1b44371a8` |
+| Directly recorded browser evidence | 18 November 14:37:42–14:50:33 Asia/Bangkok; Codex operator; UAT-01–08 8 PASS, 18 active checks |
+| Reported human review/testing | Magiciancat9 and martinvadre jointly, 19 November 09:00–approximately 11:44 Asia/Bangkok; source of this statement is the user |
+| Reported case results / findings | All eight PASS; no outstanding defects, explicitly user-confirmed |
+| Decision | **Accepted**, reported joint CoursePMS decision |
+| Decision date / confirmation | 19 November 2026; confirmation recorded 11:46:32 Asia/Bangkok, not an invented exact earlier decision time |
+| Evidence limitations | Separate human-session screenshots, fixture IDs and per-case times were not retained; no saved source check at 09:00; current traffic/revision not independently read back |
+| Supporting images | Original 18 November Codex captures; attribution/date unchanged |
+| Section 3.5 | Separate isolated source `1bbe187…`; 3 PASS and 16 database/HTTP comparisons PASS; exact retest Accepted; [verified section 3.5 retest](fasttrack-section35-retest-20261119.md) |
+| Delivery | Partner receipt of both records relayed by user, recorded 19 November 12:42:46; intended report inclusion stated, not instructor approval |
+| Evidence | [19 November fastTrack closeout](fasttrack-closeout-20261119.md); [case summary](evidence/fasttrack-sprint1-20261118/case-summary.json); [reported decision](evidence/fasttrack-closeout-20261119/reported-sprint1-acceptance.json) |
 
 ## Product-specific final decision records
 
-The CoursePMS column records the supplied ACCEPTED declaration and its actual method/limits. The reciprocal fastTrack column remains an uncompleted template, unchanged. No separate signature or personally executed case entry is invented.
+Both columns record the supplied decisions with their evidence modes and limits. User-reported joint human work is not inferred from Codex screenshots, and no separate personal signature is generated.
 
 | Required final field | CoursePMS (fastTrack completes) | fastTrack (CoursePMS students complete) |
 | --- | --- | --- |
-| Exact tested source / serving revision / traffic | Accepted `aeb804e…` / dated `course-pms-00009-mk2` / 100%, for recorded targeted scope | PENDING reverified decision baseline |
-| Actual decision-maker names / IDs | Joint A/B; full identities supplied and retained in the private supplement | PENDING |
-| Actual decision date/time / timezone | 17 November 2026, 22:30:56 Asia/Bangkok (UTC+07:00) | PENDING |
-| Completed cases, actual results and evidence IDs | RT-01–06 and RT-08–09 deployed PASS; RT-07 evidence/isolated-replay PASS; completed evidence accepted in the supplied declaration | PENDING personally confirmed scope/deviation review |
-| Outstanding findings and explicit minor conditions | No new confirmed failure in bounded retest; existing scope/procedure limits retained; no additional product acceptance condition added | PENDING |
-| Decision and reason | ACCEPTED: corrected original exposure; bounded privacy/access/logout/persistence/routing evidence passes with preserved authorized data | PENDING; no option selected |
-| Personal confirmation/channel | Current joint declaration relayed by representative, including B; no two separately observed submissions/signatures. Exact per-member historical case review details remain unitemized. | PENDING |
+| Exact tested source / serving revision / traffic | Accepted `aeb804e…` / dated `course-pms-00009-mk2` / 100%, for recorded targeted scope | Sprint 1 `8e637e5…`; current revision/traffic unknown; separate section 3.5 `1bbe187…` / partner-reported `fasttrack-lab6-00001-74k` |
+| Actual decision-maker names / IDs | Joint A/B; full identities supplied and retained in the private supplement | Magiciancat9 and martinvadre; private full identities retained outside Git |
+| Actual decision date/time / timezone | 17 November 2026, 22:30:56 Asia/Bangkok (UTC+07:00) | 19 November 2026; confirmation 11:46:32 Asia/Bangkok, earlier exact decision time not retained |
+| Completed cases, actual results and evidence IDs | RT-01–06 and RT-08–09 deployed PASS; RT-07 evidence/isolated-replay PASS; completed evidence accepted in the supplied declaration | User reports UAT-01–08 PASS; original 18 November Codex technical evidence separately published |
+| Outstanding findings and explicit minor conditions | No new confirmed failure in bounded retest; existing scope/procedure limits retained; no additional product acceptance condition added | No outstanding defects reported; absent human-session artifacts/source-start evidence retained as documentation limits |
+| Decision and reason | ACCEPTED: corrected original exposure; bounded privacy/access/logout/persistence/routing evidence passes with preserved authorized data | Accepted, as explicitly reported by user; separate section 3.5 technical acceptance corroborated by original snapshots |
+| Personal confirmation/channel | Current joint declaration relayed by representative, including B; no two separately observed submissions/signatures. Exact per-member historical case review details remain unitemized. | User-relayed joint declaration and partner receipt; no independently observed personal action times or signatures |
 
-Available final outcomes: Accepted; Accepted with explicitly documented minor limitations; Not Accepted. Required blocked cases or unresolved Critical/Major findings prevent acceptance. Fictional simulation is excluded from all actual results, activities, dates and signatures.
+Available final outcomes: Accepted; Accepted with explicitly documented minor limitations; Not Accepted. Required blocked cases or unresolved Critical/Major findings prevent acceptance. The earlier fictional practice example is excluded from actual participation and decision records. The executed isolated section 3.5 exercise retains its actual dates, source and operator.

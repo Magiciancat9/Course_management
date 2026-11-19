@@ -1,0 +1,99 @@
+{
+  "product": "fastTrack Sprint 1",
+  "run": "L6-CPMS-AI-20261118-144203",
+  "source": "8e637e537cd037d630a5fffc1b5672d1b44371a8",
+  "browserOperator": "Codex AI",
+  "session": {
+    "start": "2026-11-18T07:37:42.827Z",
+    "end": "2026-11-18T07:50:33.231Z",
+    "timezone": "Asia/Bangkok"
+  },
+  "cases": [
+    {
+      "caseId": "UAT-01",
+      "title": "สร้างและอ่าน milestone",
+      "status": "PASS",
+      "actual": "สร้างผ่าน UI, reload, พบ NORMAL หนึ่งรายการ; นักศึกษาอ่านข้อมูลตรงกัน",
+      "observationTimes": {
+        "first": "2026-11-18T07:42:38.647Z",
+        "last": "2026-11-18T07:42:38.647Z"
+      }
+    },
+    {
+      "caseId": "UAT-02",
+      "title": "ส่งงานและเพิ่ม feedback",
+      "status": "PASS",
+      "actual": "บันทึกงาน version 1; feedback สองข้อความคงอยู่ในมุมมอง Supervisor และ Student",
+      "observationTimes": {
+        "first": "2026-11-18T07:42:45.558Z",
+        "last": "2026-11-18T07:42:46.640Z"
+      }
+    },
+    {
+      "caseId": "UAT-03",
+      "title": "ป้องกันส่งงานซ้ำ",
+      "status": "PASS",
+      "actual": "UI แสดงงานเดิม; คำขอเสริมตอบ 409 ALREADY_SUBMITTED; ID และเนื้อหาไม่เปลี่ยน",
+      "observationTimes": {
+        "first": "2026-11-18T07:43:29.454Z",
+        "last": "2026-11-18T07:47:55.607Z"
+      }
+    },
+    {
+      "caseId": "UAT-04",
+      "title": "ป้องกันส่งงานหลังเส้นตาย",
+      "status": "PASS",
+      "actual": "กรอกฟอร์มก่อนหมดเวลา; รอ server dueAt + 60 วินาที; ตอบ 409 DEADLINE_PASSED และไม่มีงานบันทึก",
+      "observationTimes": {
+        "first": "2026-11-18T07:42:10.582Z",
+        "last": "2026-11-18T07:50:00.724Z"
+      }
+    },
+    {
+      "caseId": "UAT-05",
+      "title": "ป้องกันอ่านข้อมูลข้ามทีม",
+      "status": "PASS",
+      "actual": "Supervisor B ไม่เห็นข้อมูล Team A; team/milestone/submission/feedback API ตอบ 404 NOT_FOUND",
+      "observationTimes": {
+        "first": "2026-11-18T07:44:28.028Z",
+        "last": "2026-11-18T07:47:56.400Z"
+      }
+    },
+    {
+      "caseId": "UAT-06",
+      "title": "สิทธิ์บทบาทและ validation",
+      "status": "PASS",
+      "actual": "Student สร้าง milestone/feedback ถูกปฏิเสธ 403 FORBIDDEN; ช่องว่างและ FTP ไม่บันทึกข้อมูล",
+      "observationTimes": {
+        "first": "2026-11-18T07:43:30.493Z",
+        "last": "2026-11-18T07:44:59.344Z"
+      }
+    },
+    {
+      "caseId": "UAT-07",
+      "title": "ออกจากระบบและสลับบัญชี",
+      "status": "PASS",
+      "actual": "Anonymous และหลัง logout ได้ 401; รหัสผิดหนึ่งครั้งเข้าไม่ได้; A1 สลับเป็น SB ใน profile เดิมได้ 404",
+      "observationTimes": {
+        "first": "2026-11-18T07:50:06.012Z",
+        "last": "2026-11-18T07:50:11.325Z"
+      }
+    },
+    {
+      "caseId": "UAT-08",
+      "title": "ข้อมูลคงอยู่หลัง reload/relogin",
+      "status": "PASS",
+      "actual": "เปรียบเทียบ ID, version, ผู้ส่ง, เวลา, เนื้อหา, link และ feedback สองข้อความตรงกันทุกครั้ง",
+      "observationTimes": {
+        "first": "2026-11-18T07:50:21.784Z",
+        "last": "2026-11-18T07:50:21.784Z"
+      }
+    }
+  ],
+  "activeObservationCount": 18,
+  "limitations": [
+    "Times are original machine observations, not personal student action times.",
+    "Cloud Run traffic/revision was not independently read back for this run.",
+    "Original invalidated harness-count observation is retained as INVALIDATED_AUTOMATION_ERROR, not a product failure."
+  ]
+}

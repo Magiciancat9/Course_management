@@ -1,0 +1,97 @@
+[
+  {
+    "caseId": "UAT-04",
+    "name": "Stale form filled before future deadline",
+    "status": "PASS",
+    "time": "2026-11-18T07:42:10.582Z",
+    "actual": {
+      "time": "2026-11-18T07:42:10.383Z",
+      "server": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": "24821747-1cdd-4b08-9c48-2ceba2dd62b4",
+            "teamId": "7c600ee0-a595-4c52-a093-f0ed5e08fded",
+            "title": "L6-CPMS-AI-20261118-144203-DEADLINE",
+            "description": "Synthetic CoursePMS AI-assisted UAT deadline.",
+            "dueAt": "2026-11-18T07:49:00.000Z",
+            "cancelledAt": null,
+            "createdAt": "2026-11-18T07:42:20.966Z",
+            "latestSubmission": null
+          },
+          "meta": {
+            "serverTime": "2026-11-18T07:42:26.823Z"
+          }
+        }
+      }
+    }
+  },
+  {
+    "caseId": "UAT-04",
+    "name": "Stale form late attempt and server denial leave no saved work",
+    "status": "PASS",
+    "time": "2026-11-18T07:50:00.724Z",
+    "actual": {
+      "filledBefore": {
+        "time": "2026-11-18T07:42:10.383Z",
+        "server": {
+          "status": 200,
+          "body": {
+            "data": {
+              "id": "24821747-1cdd-4b08-9c48-2ceba2dd62b4",
+              "teamId": "7c600ee0-a595-4c52-a093-f0ed5e08fded",
+              "title": "L6-CPMS-AI-20261118-144203-DEADLINE",
+              "description": "Synthetic CoursePMS AI-assisted UAT deadline.",
+              "dueAt": "2026-11-18T07:49:00.000Z",
+              "cancelledAt": null,
+              "createdAt": "2026-11-18T07:42:20.966Z",
+              "latestSubmission": null
+            },
+            "meta": {
+              "serverTime": "2026-11-18T07:42:26.823Z"
+            }
+          }
+        }
+      },
+      "serverAfter": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": "24821747-1cdd-4b08-9c48-2ceba2dd62b4",
+            "teamId": "7c600ee0-a595-4c52-a093-f0ed5e08fded",
+            "title": "L6-CPMS-AI-20261118-144203-DEADLINE",
+            "description": "Synthetic CoursePMS AI-assisted UAT deadline.",
+            "dueAt": "2026-11-18T07:49:00.000Z",
+            "cancelledAt": null,
+            "createdAt": "2026-11-18T07:42:20.966Z",
+            "latestSubmission": null
+          },
+          "meta": {
+            "serverTime": "2026-11-18T07:50:11.629Z"
+          }
+        }
+      },
+      "beforeText": "Skip to content\nfastTrack\nOverview\nMy team\n\nStudent A1\nStudent\n\nSign out\n\nTeam A / L6-CPMS-AI-20261118-144203-DEADLINE\n\nSubmit work\n\nDeadline: 18 Nov 2026, 14:49:00 (Asia/Bangkok).\n\nOne submission is shared by your team for this milestone.\n\nTitle\n31/120 characters\nDescription\n50/4,000 characters\nWork link\nUse a complete http:// or https:// link your supervisor can open. Check its sharing permissions before submitting.\nSubmit work\nBack to milestone",
+      "text": "Skip to content\nfastTrack\nOverview\nMy team\n\nStudent A1\nStudent\n\nSign out\n\nTeam A / L6-CPMS-AI-20261118-144203-DEADLINE\n\nSubmit work\n\nDeadline: 18 Nov 2026, 14:49:00 (Asia/Bangkok).\n\nOne submission is shared by your team for this milestone.\n\nThe deadline has passed. Your work was not saved.\n\nChecking saved work...\nTitle\n31/120 characters\nDescription\n50/4,000 characters\nWork link\nUse a complete http:// or https:// link your supervisor can open. Check its sharing permissions before submitting.\nSubmitting work...\nBack to milestone",
+      "uiResponse": {
+        "status": 409,
+        "code": "DEADLINE_PASSED"
+      },
+      "late": {
+        "mode": "late",
+        "status": 409,
+        "code": "DEADLINE_PASSED",
+        "unexpectedCreatedId": null
+      },
+      "saved": {
+        "status": 200,
+        "body": {
+          "data": [],
+          "meta": {
+            "serverTime": "2026-11-18T07:50:17.009Z"
+          }
+        }
+      }
+    }
+  }
+]

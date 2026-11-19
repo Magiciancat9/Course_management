@@ -12,3 +12,19 @@ playwright-report/
 *.log
 __pycache__/
 *.pyc
+
+# Private partner UAT packages and local report assembly; publish curated docs evidence.
+/artifacts/fasttrack-*/
+/artifacts/FastTrack*/
+/artifacts/FastTrack*.zip
+/artifacts/CoursePMS_*/
+/artifacts/CoursePMS_*.zip
+/artifacts/CoursePMS_*Supplement*.md
+/artifacts/CoursePMS_Lab6_FastTrack_Packet_*_README.md
+/artifacts/FASTTRACK_RECEIPT_*
+/artifacts/LAB6_RETURN_*
+/artifacts/SPRINT1_TEST_PLAN_*
+/artifacts/curate-lab6-public-*.cjs
+/artifacts/update-lab6-docs-*.cjs
+/artifacts/verify-lab6-public-*.cjs
+/artifacts/lab6-docs-pr-body-*.md

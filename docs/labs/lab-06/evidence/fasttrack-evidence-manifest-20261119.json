@@ -1,0 +1,247 @@
+{
+  "generatedAt": "2026-11-19T07:18:51.834Z",
+  "purpose": "Public evidence selected from private working packages; original provenance retained",
+  "publicIdentityPolicy": "Use public GitHub accounts or synthetic app aliases; omit student IDs, real email addresses, credentials, private chat transcripts and raw authentication responses",
+  "files": [
+    {
+      "file": "evidence/fasttrack-sprint1-20261118/case-summary.json",
+      "originalFile": "case-summary.json",
+      "originalSHA256": "e26de3b0038327fd167308b50e35769a66dcfdb81aa851fb383a9db401322e0f",
+      "publishedSHA256": "1d6bc82d74d0c6a89b9fe428db3e5a39414d386f84f1e9cabe149d0e463f837f",
+      "transformation": "Sanitized JSON; private identities/credentials excluded",
+      "origin": "Codex browser/API execution, 18 November 2026"
+    },
+    {
+      "file": "evidence/fasttrack-sprint1-20261118/observations.json",
+      "originalFile": "observations.json",
+      "originalSHA256": "9f6a72287b5af3861b1360ab4eb870a26c8ccf36d9cc780e793be1454e86db20",
+      "publishedSHA256": "1e5772272997a25c9f95b896ac51792948044b455a55435facc038ed273610c9",
+      "transformation": "Sanitized JSON; private identities/credentials excluded",
+      "origin": "Codex browser/API execution, 18 November 2026"
+    },
+    {
+      "file": "evidence/fasttrack-sprint1-20261118/preflight-start.json",
+      "originalFile": "preflight-start.json",
+      "originalSHA256": "46e08b74a8853f766b9bcd37ed4448e7489db135a9451a73dfd87a1034151329",
+      "publishedSHA256": "dc85b133935dfefe75dd58acc903c916e11bea345b6603a92eb90e6e7438fc16",
+      "transformation": "Sanitized JSON; private identities/credentials excluded",
+      "origin": "Codex browser/API execution, 18 November 2026"
+    },
+    {
+      "file": "evidence/fasttrack-sprint1-20261118/session-closeout.json",
+      "originalFile": "session-closeout.json",
+      "originalSHA256": "70c08d38d344eb20cb140199211c60789f5ca239cf37fef34d67e05e742b06f3",
+      "publishedSHA256": "9fc996f3251a48bfa31097fe892580d4308f96c15c463876e8ace840c35b5ba1",
+      "transformation": "Sanitized JSON; private identities/credentials excluded",
+      "origin": "Codex browser/API execution, 18 November 2026"
+    },
+    {
+      "file": "evidence/fasttrack-sprint1-20261118/fixture-ledger.json",
+      "originalFile": "fixture-ledger.json",
+      "originalSHA256": "4d47b30f52f6fd2593cf06a96fa2b0585e70dbee12e061d341fdc3c61a065d17",
+      "publishedSHA256": "1b5bf181f45d9c1557752c6d40ea8e46742a6db44929cd7491d9d73a002b5abc",
+      "transformation": "Sanitized JSON; private identities/credentials excluded",
+      "origin": "Codex browser/API execution, 18 November 2026"
+    },
+    {
+      "file": "evidence/fasttrack-sprint1-20261118/saved-work-ledger.json",
+      "originalFile": "saved-work-ledger.json",
+      "originalSHA256": "4a38cdfd30ac5b6a734404093e6866e0392d9c958a2bb9512235ff14ba6acf4e",
+      "publishedSHA256": "bf0744faea18f5b96b3bfc1ebdd8afef756b9a0f20905193fa67a4bbb8296b92",
+      "transformation": "Sanitized JSON; private identities/credentials excluded",
+      "origin": "Codex browser/API execution, 18 November 2026"
+    },
+    {
+      "file": "evidence/fasttrack-sprint1-20261118/persistence-comparisons.json",
+      "originalFile": "persistence-comparisons.json",
+      "originalSHA256": "9024b0f84558c01cb05eee11598999ed0431368f7f154cc7ae1693a5313f57c9",
+      "publishedSHA256": "8275562945683c64cde97cdec207c0c375baf2e9fe20b86104921ad32a766f8e",
+      "transformation": "Sanitized JSON; private identities/credentials excluded",
+      "origin": "Codex browser/API execution, 18 November 2026"
+    },
+    {
+      "file": "evidence/fasttrack-sprint1-20261118/deadline-observation.json",
+      "originalFile": "deadline-observation.json",
+      "originalSHA256": "d27df76d4ff626862335e9f7b16603b0c3c734690b11e2fc5c7711b680c20186",
+      "publishedSHA256": "a63ed6f22c2ec9f49733cda4c233a99dcbc2eb9aa4b30a9cbd2f6a85cb06f6bd",
+      "transformation": "Sanitized JSON; private identities/credentials excluded",
+      "origin": "Codex browser/API execution, 18 November 2026"
+    },
+    {
+      "file": "evidence/fasttrack-sprint1-20261118/UAT-01-student-normal.png",
+      "originalFile": "UAT-01-student-normal.png",
+      "originalSHA256": "7981a0a25d1c991ecc1febe02cb12df3d5a75f6ac5a472df693c27a8a09bc559",
+      "publishedSHA256": "7981a0a25d1c991ecc1febe02cb12df3d5a75f6ac5a472df693c27a8a09bc559",
+      "transformation": "Unmodified original bytes",
+      "origin": "Synthetic role/fixture UI; captured by Codex on 18 November 2026"
+    },
+    {
+      "file": "evidence/fasttrack-sprint1-20261118/UAT-02-student-two-feedback.png",
+      "originalFile": "UAT-02-student-two-feedback.png",
+      "originalSHA256": "5f2fec5faadc1bd9866da4aa6559cce36f00aa18a7cf0850a74b35bc61842862",
+      "publishedSHA256": "5f2fec5faadc1bd9866da4aa6559cce36f00aa18a7cf0850a74b35bc61842862",
+      "transformation": "Unmodified original bytes",
+      "origin": "Synthetic role/fixture UI; captured by Codex on 18 November 2026"
+    },
+    {
+      "file": "evidence/fasttrack-sprint1-20261118/UAT-03-existing-submission.png",
+      "originalFile": "UAT-03-existing-submission.png",
+      "originalSHA256": "48d19e91622ab5d65bfa0abcf74dd7fe9e4d5391f751b933875aa708f56d55dc",
+      "publishedSHA256": "48d19e91622ab5d65bfa0abcf74dd7fe9e4d5391f751b933875aa708f56d55dc",
+      "transformation": "Unmodified original bytes",
+      "origin": "Synthetic role/fixture UI; captured by Codex on 18 November 2026"
+    },
+    {
+      "file": "evidence/fasttrack-sprint1-20261118/UAT-04-stale-form-before-deadline.png",
+      "originalFile": "UAT-04-stale-form-before-deadline.png",
+      "originalSHA256": "a57984ed0ac5978d2a28742ac2bf166cc471aadbd66480b4c3fef92d35819351",
+      "publishedSHA256": "a57984ed0ac5978d2a28742ac2bf166cc471aadbd66480b4c3fef92d35819351",
+      "transformation": "Unmodified original bytes",
+      "origin": "Synthetic role/fixture UI; captured by Codex on 18 November 2026"
+    },
+    {
+      "file": "evidence/fasttrack-sprint1-20261118/UAT-04-stale-form-after-deadline.png",
+      "originalFile": "UAT-04-stale-form-after-deadline.png",
+      "originalSHA256": "46febeb0dc412304ee44d658cf308514ae0dc34ca98c1e5317551e9a1f43e4e5",
+      "publishedSHA256": "46febeb0dc412304ee44d658cf308514ae0dc34ca98c1e5317551e9a1f43e4e5",
+      "transformation": "Unmodified original bytes",
+      "origin": "Synthetic role/fixture UI; captured by Codex on 18 November 2026"
+    },
+    {
+      "file": "evidence/fasttrack-sprint1-20261118/UAT-05-foreign-submission.png",
+      "originalFile": "UAT-05-foreign-submission.png",
+      "originalSHA256": "13584d0a2f6fd49bac3a7eaa150b1a08ae9fe859672588293fd8724a9737e34f",
+      "publishedSHA256": "13584d0a2f6fd49bac3a7eaa150b1a08ae9fe859672588293fd8724a9737e34f",
+      "transformation": "Unmodified original bytes",
+      "origin": "Synthetic role/fixture UI; captured by Codex on 18 November 2026"
+    },
+    {
+      "file": "evidence/fasttrack-sprint1-20261118/UAT-06-ftp-link.png",
+      "originalFile": "UAT-06-ftp-link.png",
+      "originalSHA256": "033e20c3eaf011ffc5a04a481b09a3659341017e65c905e29b2f3693511f4b10",
+      "publishedSHA256": "033e20c3eaf011ffc5a04a481b09a3659341017e65c905e29b2f3693511f4b10",
+      "transformation": "Unmodified original bytes",
+      "origin": "Synthetic role/fixture UI; captured by Codex on 18 November 2026"
+    },
+    {
+      "file": "evidence/fasttrack-sprint1-20261118/UAT-06-student-create-denied.png",
+      "originalFile": "UAT-06-student-create-denied.png",
+      "originalSHA256": "a0974919f57a404502528450ed510440557f3008bee916a07622a0796a3970cb",
+      "publishedSHA256": "a0974919f57a404502528450ed510440557f3008bee916a07622a0796a3970cb",
+      "transformation": "Unmodified original bytes",
+      "origin": "Synthetic role/fixture UI; captured by Codex on 18 November 2026"
+    },
+    {
+      "file": "evidence/fasttrack-sprint1-20261118/UAT-07-same-profile-switched-to-SB.png",
+      "originalFile": "UAT-07-same-profile-switched-to-SB.png",
+      "originalSHA256": "13584d0a2f6fd49bac3a7eaa150b1a08ae9fe859672588293fd8724a9737e34f",
+      "publishedSHA256": "13584d0a2f6fd49bac3a7eaa150b1a08ae9fe859672588293fd8724a9737e34f",
+      "transformation": "Unmodified original bytes",
+      "origin": "Synthetic role/fixture UI; captured by Codex on 18 November 2026"
+    },
+    {
+      "file": "evidence/fasttrack-sprint1-20261118/UAT-08-student-relogin.png",
+      "originalFile": "UAT-08-student-relogin.png",
+      "originalSHA256": "5f2fec5faadc1bd9866da4aa6559cce36f00aa18a7cf0850a74b35bc61842862",
+      "publishedSHA256": "5f2fec5faadc1bd9866da4aa6559cce36f00aa18a7cf0850a74b35bc61842862",
+      "transformation": "Unmodified original bytes",
+      "origin": "Synthetic role/fixture UI; captured by Codex on 18 November 2026"
+    },
+    {
+      "file": "evidence/fasttrack-s35-20261119/coursepms-before-database-snapshot.json",
+      "originalFile": "coursepms-before-database-snapshot.json",
+      "originalSHA256": "9923924e7a7e78b3fdcc1275ee67b6c01f9db834a264224c642280c54286e16e",
+      "publishedSHA256": "9923924e7a7e78b3fdcc1275ee67b6c01f9db834a264224c642280c54286e16e",
+      "transformation": "Unmodified original bytes",
+      "origin": "Original user-supplied fastTrack Cloud Logging database projection; dedicated Lab 6 database"
+    },
+    {
+      "file": "evidence/fasttrack-s35-20261119/coursepms-after-database-snapshot.json",
+      "originalFile": "coursepms-after-database-snapshot.json",
+      "originalSHA256": "c0ed1f012089a7dca6826932069f68c61789021bcc33a4e38dab75b63c12967d",
+      "publishedSHA256": "c0ed1f012089a7dca6826932069f68c61789021bcc33a4e38dab75b63c12967d",
+      "transformation": "Unmodified original bytes",
+      "origin": "Original user-supplied fastTrack Cloud Logging database projection; dedicated Lab 6 database"
+    },
+    {
+      "file": "evidence/fasttrack-s35-20261119/redacted-network.json",
+      "originalFile": "redacted-network.json",
+      "originalSHA256": "c40e5515ab64cf8fbea48798ba28361c456b7513ee83ffc2c1b214e02a7db4a5",
+      "publishedSHA256": "7b9708210762da0e9878cbf96c3533f552fa589ff3906440d64679c0315234b7",
+      "transformation": "Sanitized JSON; private identities/credentials excluded",
+      "origin": "Actual Codex browser/API requests, 19 November 2026"
+    },
+    {
+      "file": "evidence/fasttrack-s35-20261119/snapshot-comparison.json",
+      "originalFile": "owner-snapshot-comparison.json",
+      "originalSHA256": "b7e6fd94a17d1ae638c747ddc9e963b997f4b94e6e115d24cef45fad4c25f647",
+      "publishedSHA256": "8a3bb6c1370d6052abbf2603dd085fd02cae4cb10bd3973ef10b70709d615de6",
+      "transformation": "Sanitized JSON; private identities/credentials excluded",
+      "origin": "16 local comparisons of supplied original JSON and recorded HTTP evidence"
+    },
+    {
+      "file": "evidence/fasttrack-s35-20261119/saved-state-comparisons.json",
+      "originalFile": "saved-state-comparisons.json",
+      "originalSHA256": "b0322b202756690ca5ae5a6dfb7071058501c20871f355286d5e9630fa39d001",
+      "publishedSHA256": "ce0f4adff99c308845dba68e74d86c02a39af0a97d0d1390683ecb481b4706fe",
+      "transformation": "Sanitized JSON; private identities/credentials excluded",
+      "origin": "Authorized before/after API lists from the same run"
+    },
+    {
+      "file": "evidence/fasttrack-s35-20261119/session-summary.json",
+      "originalFile": "session-state.json",
+      "originalSHA256": "8e077c53f67d74e4218af4cf6fea3a4649f87b70ab3bf05f82b96cfae6eed430",
+      "publishedSHA256": "7d512c26ab2ea58932cfb36d4d38998194a3fa61de132275d15ec7c126b7edfe",
+      "transformation": "Sanitized JSON; private identities/credentials excluded",
+      "origin": "Mixed directly observed machine records and explicitly labelled partner/user declarations"
+    },
+    {
+      "file": "evidence/fasttrack-s35-20261119/S35-01-same-work-after-reload.png",
+      "originalFile": "S35-01-same-work-after-reload.png",
+      "originalSHA256": "4344ccd8973b0953130aebe441aef7797dd3b4ef203cf17617fdd8be8fa403a8",
+      "publishedSHA256": "4344ccd8973b0953130aebe441aef7797dd3b4ef203cf17617fdd8be8fa403a8",
+      "transformation": "Unmodified original bytes",
+      "origin": "Synthetic UI captured by Codex in the dedicated Lab 6 service on 19 November 2026"
+    },
+    {
+      "file": "evidence/fasttrack-s35-20261119/S35-02-filled-before-deadline.png",
+      "originalFile": "S35-02-filled-before-deadline.png",
+      "originalSHA256": "2f4019f464c80805035c3d63c7750171e7b61058b23b041ff881f194fdbd3e80",
+      "publishedSHA256": "2f4019f464c80805035c3d63c7750171e7b61058b23b041ff881f194fdbd3e80",
+      "transformation": "Unmodified original bytes",
+      "origin": "Synthetic UI captured by Codex in the dedicated Lab 6 service on 19 November 2026"
+    },
+    {
+      "file": "evidence/fasttrack-s35-20261119/S35-02-stale-form-late-409.png",
+      "originalFile": "S35-02-stale-form-late-409.png",
+      "originalSHA256": "35421c6c739a1287ff0998bac386462d6975130ab5aa9e3f6906c7a3f9a18766",
+      "publishedSHA256": "35421c6c739a1287ff0998bac386462d6975130ab5aa9e3f6906c7a3f9a18766",
+      "transformation": "Unmodified original bytes",
+      "origin": "Synthetic UI captured by Codex in the dedicated Lab 6 service on 19 November 2026"
+    },
+    {
+      "file": "evidence/fasttrack-s35-20261119/S35-03-supervisor-late-empty.png",
+      "originalFile": "S35-03-supervisor-late-empty.png",
+      "originalSHA256": "d61b8b6220456b51a4e247d249f86e15e93e0193790e9e9b118e1d6482aeeec1",
+      "publishedSHA256": "d61b8b6220456b51a4e247d249f86e15e93e0193790e9e9b118e1d6482aeeec1",
+      "transformation": "Unmodified original bytes",
+      "origin": "Synthetic UI captured by Codex in the dedicated Lab 6 service on 19 November 2026"
+    },
+    {
+      "file": "evidence/fasttrack-closeout-20261119/reported-sprint1-acceptance.json",
+      "originalFile": "USER_REPORTED_HUMAN_SESSION.json",
+      "originalSHA256": "b6204ee00d6f1317c90cf092d0cced9f469d280ae2ba5f917f4bb386ef6c3359",
+      "publishedSHA256": "37f4a4f2b4779888f7315ab4b9e570bb3f3016951ef95696835226a9a8778c19",
+      "transformation": "Sanitized JSON; private identities/credentials excluded",
+      "origin": "User declaration, with private names/student IDs and verbatim chat omitted"
+    },
+    {
+      "file": "evidence/fasttrack-closeout-20261119/partner-receipt.json",
+      "originalFile": "FASTTRACK_RECEIPT_20261119.json",
+      "originalSHA256": "44a1542da692d50ee150aba9ab25661cfd2dcbc82f3097f5b1975ace67f47796",
+      "publishedSHA256": "38635e69fcd80f32b1e846b30acd54915076feea7f477c1ec92ff34f3a0f2294",
+      "transformation": "Sanitized JSON; private identities/credentials excluded",
+      "origin": "Sanitized paraphrase of user-relayed partner receipt; no private message screenshot/transcript"
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "run": "L6-CPMS-AI-20261118-144203",
+  "fixtures": {
+    "DEADLINE": {
+      "id": "24821747-1cdd-4b08-9c48-2ceba2dd62b4",
+      "url": "https://fasttrack-app-kpx7au3w2a-as.a.run.app/milestones/24821747-1cdd-4b08-9c48-2ceba2dd62b4",
+      "created": "2026-11-18T07:42:05.899Z",
+      "saved": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": "24821747-1cdd-4b08-9c48-2ceba2dd62b4",
+            "teamId": "7c600ee0-a595-4c52-a093-f0ed5e08fded",
+            "title": "L6-CPMS-AI-20261118-144203-DEADLINE",
+            "description": "Synthetic CoursePMS AI-assisted UAT deadline.",
+            "dueAt": "2026-11-18T07:49:00.000Z",
+            "cancelledAt": null,
+            "createdAt": "2026-11-18T07:42:20.966Z",
+            "latestSubmission": null
+          },
+          "meta": {
+            "serverTime": "2026-11-18T07:42:22.269Z"
+          }
+        }
+      }
+    },
+    "NORMAL": {
+      "id": "09b06c51-48f1-456c-a76a-d2b2be9944c1",
+      "url": "https://fasttrack-app-kpx7au3w2a-as.a.run.app/milestones/09b06c51-48f1-456c-a76a-d2b2be9944c1",
+      "created": "2026-11-18T07:42:07.396Z",
+      "saved": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": "09b06c51-48f1-456c-a76a-d2b2be9944c1",
+            "teamId": "7c600ee0-a595-4c52-a093-f0ed5e08fded",
+            "title": "L6-CPMS-AI-20261118-144203-NORMAL",
+            "description": "Synthetic CoursePMS AI-assisted UAT normal.",
+            "dueAt": "2026-11-20T07:42:00.000Z",
+            "cancelledAt": null,
+            "createdAt": "2026-11-18T07:42:23.090Z",
+            "latestSubmission": null
+          },
+          "meta": {
+            "serverTime": "2026-11-18T07:42:23.774Z"
+          }
+        }
+      }
+    },
+    "VALIDATION": {
+      "id": "80134cae-0346-4bdc-90dd-fb4dbfb2a18f",
+      "url": "https://fasttrack-app-kpx7au3w2a-as.a.run.app/milestones/80134cae-0346-4bdc-90dd-fb4dbfb2a18f",
+      "created": "2026-11-18T07:42:08.882Z",
+      "saved": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": "80134cae-0346-4bdc-90dd-fb4dbfb2a18f",
+            "teamId": "7c600ee0-a595-4c52-a093-f0ed5e08fded",
+            "title": "L6-CPMS-AI-20261118-144203-VALIDATION",
+            "description": "Synthetic CoursePMS AI-assisted UAT validation.",
+            "dueAt": "2026-11-20T07:42:00.000Z",
+            "cancelledAt": null,
+            "createdAt": "2026-11-18T07:42:24.592Z",
+            "latestSubmission": null
+          },
+          "meta": {
+            "serverTime": "2026-11-18T07:42:25.260Z"
+          }
+        }
+      }
+    }
+  }
+}

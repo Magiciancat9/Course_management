@@ -1,72 +1,53 @@
-# CoursePMS Lab 6 report draft — Parts A–D
+# CoursePMS Lab 6 report assembly draft — Parts A–D
 
-Latest 17 November update: [follow-up response](followup-response.md) records
-the new partner exchange; [contract dispositions](contract-dispositions.md)
-resolve #74/#75 with the user's roster-only policy and versioned AC-03.
-[Acceptance](acceptance-record.md) is reconciled; actual decisions stay pending.
-Current code-head CI: 41 backend / 15 frontend / 3 E2E passed with production
-and Docker builds. Earlier rows below preserve the original #71 proof chain.
+Updated 19 November 2026 for EN-022_P6, Section 31 (public accounts: Magiciancat9 and martinvadre). Add required full identities privately when assembling the course PDF. This is a report source draft, not a submission receipt or a claim that all evidence requirements are independently established.
 
-Team EN-022_P6, Section 31: Tatchakorn Thamnimitr (67070503415), Pawarit Wongdaeng (67070503466). Partner: EN-028 InfaCompany / fastTrack. Prepared as Markdown on 17 November 2026. **Draft; unresolved human work and release/retest dependencies remain.** Submission deadline in supplied material: 22 November 2026, 23:59 Asia/Bangkok, LEB2.
+## Current decision/evidence map
 
-| Part | Evidence location | PDF pages |
+| Product / scope | Decision / result | Evidence mode |
 | --- | --- | --- |
-| A. Preparation and handoff | Existing UAT cases, fixtures, handoff and version observations | Fill after student PDF export |
-| B. Independent execution | Original private reciprocal evidence; bounded case/deviation assessment below | Fill after export |
-| C. Findings and triage | `triage.md`, Issue #71 and correction PRs | Fill after export |
-| D. Correction, release and independent retest | RED/GREEN outputs, CI, return package; pending release/retest | Fill after export |
+| CoursePMS corrected Sprint 1 | Accepted, fastTrack A/B joint declaration on 17 November 22:30:56 Asia/Bangkok | [Retained confirmation](coursepms-acceptance-confirmed.md), representative-relayed; bounded partner retest and correction history unchanged |
+| fastTrack Sprint 1 | Accepted as jointly reported by CoursePMS on 19 November | [Closeout](fasttrack-closeout-20261119.md): user reports all eight PASS; personal-session artifacts not retained; original 18 November Codex evidence attached as technical support |
+| fastTrack section 3.5 | Exact retest Accepted; 3 case PASS / 16 file/HTTP comparisons PASS | [Verified retest](fasttrack-section35-retest-20261119.md): actual Codex browser operation, original supplied database projections, user-confirmed joint file review |
 
-## Part A — Preparation and handoff
+## Part A — Preparation, independent teams and exact versions
 
-CoursePMS Sprint 1 covers authentication/roles, project teams, and proposal submission/review. Eight ordered [UAT cases](uat-cases.md) cover normal journey, business rules/boundaries, ownership/role denial and saved-state persistence across AC-01–AC-10, with recorded coverage limits. [Partner handoff](partner-handoff.md) and [fixture/reset rules](uat-data-and-reset.md) provide the baseline instructions.
+CoursePMS covers F-01 authentication/roles, F-02 teams and F-03 proposal submission/review across the eight ordered [cases](uat-cases.md). The independent partner is fastTrack / EN-028. [Pairing and handoff](partner-and-schedule.md) separates private access, actual versions, reported participation and receipt.
 
-The partner's AI-operated 14 November CoursePMS run tested `9c22735995c985aaa0622b6b179de1ac9c1f80ca`. Fresh public read-only health/ready observations on 17 November still identify that source and connected DB. Serving revision/digest/traffic must be freshly captured by the authorized owner before the corrected-release retest. Current observations are preparation/readback, not new deployed UAT.
+CoursePMS's corrected accepted source is `aeb804ea5bc667399b00cf54df10046a6ded46e0`, dated revision `course-pms-00009-mk2`; [release evidence](release-evidence.md) retains traffic/digest/CI and smoke limitations. fastTrack Sprint 1 uses `8e637e537cd037d630a5fffc1b5672d1b44371a8`. The section 3.5 simulation uses a different isolated service/source `1bbe187c088b86d104a16e420058f17425f18828`, partner-reported `fasttrack-lab6-00001-74k`. Never combine their versions as one acceptance target.
 
-Retain Team 5 / proposal 3 APPROVED revision 2. No production reset, deletion, reseed or lifecycle rerun was performed for this correction. Passwords/tokens and original partner screenshots stay private.
+## Part B — Independent testing, actual observations and reported work
 
-## Part B — Independent execution
+The historical fastTrack check of CoursePMS on `9c227359…` retains **36 core PASS assertions**, full ledger **56 PASS / 1 FAIL / 57**, including the original no-refresh stale-draft defect. Codex operated those checks; the historical Back/return deviation is retained. [Case assessment](execution-results.md) and [original return assessment](return-to-fasttrack.md) preserve the evidence.
 
-Two directions must remain separate:
+The 18 November Codex browser/API run of fastTrack has **8 cases PASS / 18 active observations**, separate role contexts, real 409/403/404/401 checks and unchanged-state controls. The [dated case ledger](evidence/fasttrack-sprint1-20261118/case-summary.json), actual [observations](evidence/fasttrack-sprint1-20261118/observations.json) and selected images are public technical support. Older 13 November denominators remain separate and are not summed into this run.
 
-| Direction | Observed evidence | Limitation / decision |
-| --- | --- | --- |
-| fastTrack testing CoursePMS | CPMS-L6-20261114-155049: 36 core PASS assertions across eight official paths; complete retained ledger 56 PASS / 1 FAIL / 57. Four private fields persisted across account switch. | AI-operated historical evidence; browser Back/return deviation; human participation and final acceptance PENDING. |
-| CoursePMS testing fastTrack | Source `8e637e537cd037d630a5fffc1b5672d1b44371a8`; 97 main API assertions, 7 separate post-UI controls, 26 follow-up UI observations, 25 final controls, 11 saved-state comparisons. | Separate denominators; bounded checks and explicit procedural deviations; no confirmed fastTrack product defect in retained follow-up. Human case records and decision PENDING. |
+The user reports that both CoursePMS members jointly tested/reviewed on 19 November **09:00–approximately 11:44**, all eight PASS, no outstanding defects, Accepted. Responsibility: Magiciancat9 UAT-01–04, martinvadre UAT-05–08. No separate human-session screenshots, fixture IDs, individual case times or 09:00 source observation were retained. Later source observations at 11:24/11:45 are not backdated. [Reported decision and limitations](evidence/fasttrack-closeout-20261119/reported-sprint1-acceptance.json).
 
-Read [return package section E](return-to-fasttrack.md) for all remaining deviations from the original fastTrack procedures. Source snapshots and detailed ledgers remain in the private incoming archives. They were reviewed as source material; no archived runner or new live write was executed here.
+## Part C — Findings, severity and disposition
 
-The reciprocal archive preserves a user-reported statement that both members participated at 17:30 on 13 November. The assistant did not witness that session; individual cases/results were not supplied. Later AI-run evidence must not be relabelled as that earlier personal execution. [Member work plan](member-work-plan.md) provides assignments and real activity forms; the [simulation](simulation-example.md) supplies only explicitly fictional practice examples.
+CoursePMS `L6-OUT-EXP-001` / [#71](https://github.com/Magiciancat9/Course_management/issues/71) is the actual accepted Major defect: previous-account private editor fields remain after a no-refresh account switch. It establishes client memory exposure, not a server-authorization bypass. The correction also addresses Major foreign proposal metadata disclosure [#74](https://github.com/Magiciancat9/Course_management/issues/74) and Minor API routing [#75](https://github.com/Magiciancat9/Course_management/issues/75). [Triage](triage.md), [contract dispositions](contract-dispositions.md) and [fix evidence](fix-evidence.md) retain actual RED/GREEN and scope.
 
-For final PDF, privately select readable original screenshots of a normal journey and forbidden access plus authorized unchanged-state evidence, include their original IDs/capture attribution, and record which evidence each student actually reviewed. A drafted paragraph or image alone is not a personal signature.
+No new natural fastTrack defect is claimed in the bounded 18 November evidence. The isolated section 3.5 late-submission exercise is labelled as a simulation and is not substituted for the real CoursePMS findings. Earlier fictional [practice examples](simulation-example.md) remain fictional and are not actual participation evidence.
 
-## Part C — Findings, impact and triage
+## Part D — Correction, review, deployment and retest
 
-L6-OUT-EXP-001 is an **accepted Major defect** under [#71](https://github.com/Magiciancat9/Course_management/issues/71): prior-account private editor content is visible after a no-refresh account switch. It violates ownership isolation even though reload clears it. Evidence establishes client memory leakage, not server authorization bypass or cross-account saved copying.
+CoursePMS corrections [#72](https://github.com/Magiciancat9/Course_management/pull/72)/[#73](https://github.com/Magiciancat9/Course_management/pull/73), approved release [#76](https://github.com/Magiciancat9/Course_management/pull/76), RED/GREEN history, final **41 backend / 16 frontend / 3 E2E** CI and dated deployment identity are retained in [release evidence](release-evidence.md). The original optional pipeline authenticated smoke was SKIPPED and is not relabelled PASS. Partner's completed correction retest has **8 deployed targeted PASS**, plus RT-07 evidence/isolated replay PASS (**16 client / 19 selected server**, separate observation sets), with actual no-team and bounded role denial controls. [Completion](coursepms-retest-completion.md). Original failures, runner diagnostics and procedure limits remain historical.
 
-The original cause was missing editor resets on logout/empty-state loads and absent session-response guards. Review of the existing correction also exposed an unguarded delayed login, retained private title banners and lost unsaved edits during member refresh. All were reproduced with actual assertion failures and corrected in the follow-up candidate.
+The section 3.5 retest has: on-time UI POST **201** with same saved version 1 after reload; stale pre-deadline form POST after expiry **409 DEADLINE_PASSED**; one retry **409 DEADLINE_PASSED**; empty late lists and unchanged on-time control. BEFORE database time **10:42:36.820** and AFTER **10:51:57.192** Asia/Bangkok correctly bracket the rejected attempts. Both supplied JSON projections have zero late submissions and the same on-time submission ID/version/title/URL/submittedAt; all **16 comparisons PASS**. [Report and originals](fasttrack-section35-retest-20261119.md). Owner-side code review/RED-GREEN proof is distinct from this CoursePMS retest and is not newly certified here.
 
-[Triage](triage.md) records the original accepted defect and the now-resolved contract findings: #74 Major foreign proposal metadata exposure under the user's roster-only decision, and #75 Minor auth/JSON-routing mismatch under versioned AC-03. Both have actual RED/GREEN in [contract dispositions](contract-dispositions.md). The incoming arithmetic error remains a report discrepancy, not a product bug. Formal teammate review/release/retest remain pending; [latest private reply](followup-response.md) is drafted but unsent.
+## Return receipt and final assembly
 
-## Part D — Correction and independent retest
+fastTrack receipt of the Sprint 1 acceptance record and section 3.5 confirmation was relayed by the user and recorded **19 November 12:42:46 Asia/Bangkok**. The partner intends report inclusion and will identify screenshots as supporting evidence from the separate 18 November Codex run. [Receipt](evidence/fasttrack-closeout-20261119/partner-receipt.json). This does not itself prove instructor approval or final report submission.
 
-| Stage | Actual result |
+| Assembly item | Status / remaining work |
 | --- | --- |
-| Original RED replay | `d3ea0116`: 5 failed / 4 passed / 0 skipped |
-| Original fix | `3b7de940`, existing Draft PR #72 |
-| Additional RED | `9834080`: 3 failed / 11 passed / 0 skipped |
-| Follow-up GREEN | `6de3c9a8b3404b831041a9b9fe855d1d52f9cac3`: 14 passed / 0 skipped |
-| Local production build | Passed |
-| Local domain regression | 9 passed / 0 skipped |
-| Full automated CI | Run 44026535153 at `5e11600`: 32 backend / 14 frontend / 3 E2E passed, production/Docker builds passed, zero skipped; [retained CI record](evidence/session-followup/ci-status.json). Later changed heads require fresh CI. |
-| Substantive human review / integration | PENDING; original #56 owner is Pawarit, designated reviewer Tatchakorn; no self-approval or merge performed |
-| Authorized fixed deployment / smoke | PENDING; public source still `9c227359…` |
-| fastTrack independent correction retest / CoursePMS decision | PENDING, reserved for fastTrack |
-| CoursePMS independent fastTrack decision | PENDING, reserved for actual CoursePMS student confirmation |
+| Reciprocal product decisions | Recorded with their evidence modes and limits; see [acceptance ledger](acceptance-record.md) |
+| Technical retest evidence | Publicly indexed, versioned and hashed; [index](evidence/README.md) |
+| Private identities / original exchanges | Retained locally; add required identities to private course report only |
+| Human-session evidence gap | Explicitly documented; not cured by copying Codex images or by receipt acknowledgement |
+| PDF layout/page ranges | Assemble with teammate from this source and permitted evidence |
+| Course rubric/deadline/portal | Verify against actual course handout; this update does not infer a new submission requirement |
+| Final student review / submission receipt | Not recorded as completed by this documentation publication |
 
-The source, test names, exact commands, retained output and limitations are in [follow-up verification](session-followup.md). [Return package](return-to-fasttrack.md) supplies safe independent retest steps and metadata requirements. The existing CI and reviewed-release rules remain intact.
-
-## Contributions, AI use and remaining actions
-
-Codex inspected the private ZIP and current GitHub state, verified 58 manifest entries, inspected existing PR #72, replayed original RED, added and ran synthetic regression tests, made follow-up code/CI changes, checked public read-only endpoints, and prepared Markdown/draft handoff. Those are AI-operated actions. The user requested simulated allocation; it is labelled separately and contributes no actual PASS, attendance, approval or signature.
-
-Actual personal contributions and decisions must be completed by both students using the activity form. Follow [proposed allocation](member-work-plan.md) for reviewer/integration, policy decisions, release identity, retest coordination, report cross-review and student PDF submission. Page ranges, signatures, final decisions and LEB2 submission receipt remain pending. No PDF was generated, external partner message sent, live fixture changed or acceptance selected by the assistant.
+[Publication guide](evidence-publication.md) explains what belongs in public Git and what remains private. No runtime code, workflow, schema, live fixture, deployment or teacher submission is changed by this documentation update.

@@ -1,0 +1,8 @@
+# Retained evidence hashes refer to exact bytes, including original JSON line endings.
+docs/labs/lab-06/evidence/fasttrack-sprint1-20261118/** -text
+docs/labs/lab-06/evidence/fasttrack-s35-20261119/** -text
+docs/labs/lab-06/evidence/fasttrack-closeout-20261119/** -text
+docs/labs/lab-06/evidence/fasttrack-evidence-manifest-20261119.json -text
+docs/labs/lab-06/evidence/image-publication-review-20261119.json -text
+# The two supplied original snapshots use CRLF; retain it without whitespace alarms.
+docs/labs/lab-06/evidence/fasttrack-s35-20261119/coursepms-*-database-snapshot.json whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

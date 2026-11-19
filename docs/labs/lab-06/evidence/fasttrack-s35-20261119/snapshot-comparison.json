@@ -1,0 +1,313 @@
+{
+  "status": "PASS",
+  "comparedAt": "2026-11-19T04:23:18.044Z",
+  "actualTechnicalReviewer": "Codex AI",
+  "humanReviewers": {
+    "reviewers": [
+      {
+        "name": "Magiciancat9"
+      },
+      {
+        "name": "martinvadre"
+      }
+    ],
+    "reviewTime": "19 November 2026, approximately 11:23 Asia/Bangkok (UTC+07:00); joint review with Codex assistance",
+    "timePrecision": "Approximate; user states both reviewed together today during the just-completed AI-assisted comparison. No separate exact personal start/end times supplied.",
+    "provenance": "User confirmation in the current conversation",
+    "confirmationRecordedAt": "2026-11-19T04:28:35.003Z"
+  },
+  "provenance": "User-supplied Cloud Logging JSON snapshots; original bytes retained and compared locally",
+  "originalFiles": [
+    {
+      "file": "coursepms-before-database-snapshot.json",
+      "sha256": "9923924e7a7e78b3fdcc1275ee67b6c01f9db834a264224c642280c54286e16e"
+    },
+    {
+      "file": "coursepms-after-database-snapshot.json",
+      "sha256": "c0ed1f012089a7dca6826932069f68c61789021bcc33a4e38dab75b63c12967d"
+    }
+  ],
+  "snapshotTimes": {
+    "before": "2026-11-19T03:42:36.820Z",
+    "after": "2026-11-19T03:51:57.192Z"
+  },
+  "limitations": [
+    "Snapshot files contain database state, not source SHA or Cloud Run revision; SHA is corroborated by recorded health at browser session start/end and revision remains partner-supplied.",
+    "Database projection excludes submission description and author; those were checked in the original browser/API record.",
+    "Cloud Logging provenance and runtime access were supplied by fastTrack, not independently retrieved from Google Cloud in this workspace.",
+    "Codex operated the original browser session and performs this file comparison; personal student review and human UI execution are separately recorded only when actually performed."
+  ],
+  "checks": [
+    {
+      "label": "recorded run source and reported revision match requested baseline",
+      "status": "PASS",
+      "actual": {
+        "run": "20261119-103240-7a83",
+        "sourceStart": "1bbe187c088b86d104a16e420058f17425f18828",
+        "sourceEnd": "1bbe187c088b86d104a16e420058f17425f18828",
+        "revision": "fasttrack-lab6-00001-74k",
+        "revisionReadback": "partner-supplied, not independently verified"
+      }
+    },
+    {
+      "label": "before dedicated database identity",
+      "status": "PASS",
+      "actual": {
+        "database": "fasttrack_lab6",
+        "instance": "fasttrack-lab6-db"
+      }
+    },
+    {
+      "label": "before database timestamp is valid",
+      "status": "PASS",
+      "actual": "2026-11-19T03:42:36.820Z"
+    },
+    {
+      "label": "before exact two milestone identities titles and deadlines",
+      "status": "PASS",
+      "actual": {
+        "control": {
+          "dueAt": "2026-11-19T04:03:00.000Z",
+          "id": "337e85e9-f190-42fb-a231-ceee30030a28",
+          "submissions": [
+            {
+              "id": "e464cfe7-3c6e-4a9d-835c-310fe20b4ede",
+              "submittedAt": "2026-11-19T03:33:06.911Z",
+              "title": "L6-S35-CPMS-WORK-20261119-103240-7a83",
+              "url": "https://example.edu/?run=20261119-103240-7a83",
+              "version": 1
+            }
+          ],
+          "title": "L6-S35-CPMS-BEFORE-20261119-103240-7a83"
+        },
+        "late": {
+          "dueAt": "2026-11-19T03:38:00.000Z",
+          "id": "1343a467-89fa-4969-b6ce-eb54cc1b0340",
+          "submissions": [],
+          "title": "L6-S35-CPMS-LATE-20261119-103240-7a83"
+        }
+      }
+    },
+    {
+      "label": "before late database row count is zero",
+      "status": "PASS",
+      "actual": []
+    },
+    {
+      "label": "before exact on-time ID version title URL and submitted time match 201",
+      "status": "PASS",
+      "actual": [
+        {
+          "id": "e464cfe7-3c6e-4a9d-835c-310fe20b4ede",
+          "submittedAt": "2026-11-19T03:33:06.911Z",
+          "title": "L6-S35-CPMS-WORK-20261119-103240-7a83",
+          "url": "https://example.edu/?run=20261119-103240-7a83",
+          "version": 1
+        }
+      ]
+    },
+    {
+      "label": "after dedicated database identity",
+      "status": "PASS",
+      "actual": {
+        "database": "fasttrack_lab6",
+        "instance": "fasttrack-lab6-db"
+      }
+    },
+    {
+      "label": "after database timestamp is valid",
+      "status": "PASS",
+      "actual": "2026-11-19T03:51:57.192Z"
+    },
+    {
+      "label": "after exact two milestone identities titles and deadlines",
+      "status": "PASS",
+      "actual": {
+        "control": {
+          "dueAt": "2026-11-19T04:03:00.000Z",
+          "id": "337e85e9-f190-42fb-a231-ceee30030a28",
+          "submissions": [
+            {
+              "id": "e464cfe7-3c6e-4a9d-835c-310fe20b4ede",
+              "submittedAt": "2026-11-19T03:33:06.911Z",
+              "title": "L6-S35-CPMS-WORK-20261119-103240-7a83",
+              "url": "https://example.edu/?run=20261119-103240-7a83",
+              "version": 1
+            }
+          ],
+          "title": "L6-S35-CPMS-BEFORE-20261119-103240-7a83"
+        },
+        "late": {
+          "dueAt": "2026-11-19T03:38:00.000Z",
+          "id": "1343a467-89fa-4969-b6ce-eb54cc1b0340",
+          "submissions": [],
+          "title": "L6-S35-CPMS-LATE-20261119-103240-7a83"
+        }
+      }
+    },
+    {
+      "label": "after late database row count is zero",
+      "status": "PASS",
+      "actual": []
+    },
+    {
+      "label": "after exact on-time ID version title URL and submitted time match 201",
+      "status": "PASS",
+      "actual": [
+        {
+          "id": "e464cfe7-3c6e-4a9d-835c-310fe20b4ede",
+          "submittedAt": "2026-11-19T03:33:06.911Z",
+          "title": "L6-S35-CPMS-WORK-20261119-103240-7a83",
+          "url": "https://example.edu/?run=20261119-103240-7a83",
+          "version": 1
+        }
+      ]
+    },
+    {
+      "label": "recorded on-time response is HTTP 201 for exact milestone and submission",
+      "status": "PASS",
+      "actual": [
+        {
+          "label": "CPMS-S35-01 on-time UI POST",
+          "observedAt": "2026-11-19T03:32:49.398Z",
+          "capture": "Browser UI request forwarded once via Playwright route.fetch; response recorded before navigation",
+          "method": "POST",
+          "url": "https://fasttrack-lab6-970128017651.asia-southeast1.run.app/api/milestones/337e85e9-f190-42fb-a231-ceee30030a28/submissions",
+          "status": 201,
+          "request": {
+            "title": "L6-S35-CPMS-WORK-20261119-103240-7a83",
+            "description": "Synthetic CoursePMS section 3.5 work; 20261119-103240-7a83.",
+            "url": "https://example.edu/?run=20261119-103240-7a83"
+          },
+          "response": {
+            "data": {
+              "id": "e464cfe7-3c6e-4a9d-835c-310fe20b4ede",
+              "milestoneId": "337e85e9-f190-42fb-a231-ceee30030a28",
+              "submittedBy": {
+                "id": "ef626ccf-188d-43b0-842a-3e3f1a1e287e",
+                "displayName": "Student A1"
+              },
+              "version": 1,
+              "title": "L6-S35-CPMS-WORK-20261119-103240-7a83",
+              "description": "Synthetic CoursePMS section 3.5 work; 20261119-103240-7a83.",
+              "url": "https://example.edu/?run=20261119-103240-7a83",
+              "submittedAt": "2026-11-19T03:33:06.911Z"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "label": "recorded stale-form late POST and one retry both returned 409 DEADLINE_PASSED",
+      "status": "PASS",
+      "actual": [
+        {
+          "label": "CPMS-S35-02 stale-form late UI POST",
+          "observedAt": "2026-11-19T03:49:06.307Z",
+          "capture": "Browser UI request forwarded once via Playwright route.fetch; response recorded before navigation",
+          "method": "POST",
+          "url": "https://fasttrack-lab6-970128017651.asia-southeast1.run.app/api/milestones/1343a467-89fa-4969-b6ce-eb54cc1b0340/submissions",
+          "status": 409,
+          "request": {
+            "title": "L6-S35-CPMS-LATE-WORK-20261119-103240-7a83",
+            "description": "Synthetic CoursePMS section 3.5 work; 20261119-103240-7a83.",
+            "url": "https://example.edu/?run=20261119-103240-7a83"
+          },
+          "response": {
+            "error": {
+              "code": "DEADLINE_PASSED",
+              "message": "The deadline has passed. Your work was not saved.",
+              "fields": {}
+            }
+          }
+        },
+        {
+          "label": "CPMS-S35-03 authenticated retry once",
+          "observedAt": "2026-11-19T03:49:11.407Z",
+          "method": "POST",
+          "url": "https://fasttrack-lab6-970128017651.asia-southeast1.run.app/api/milestones/1343a467-89fa-4969-b6ce-eb54cc1b0340/submissions",
+          "status": 409,
+          "request": {
+            "title": "L6-S35-CPMS-LATE-WORK-20261119-103240-7a83",
+            "description": "Synthetic CoursePMS section 3.5 work; 20261119-103240-7a83.",
+            "url": "https://example.edu/?run=20261119-103240-7a83"
+          },
+          "response": {
+            "error": {
+              "code": "DEADLINE_PASSED",
+              "message": "The deadline has passed. Your work was not saved.",
+              "fields": {}
+            }
+          }
+        }
+      ]
+    },
+    {
+      "label": "baseline database snapshot was after saved control and before late POST",
+      "status": "PASS",
+      "actual": {
+        "baseline": "2026-11-19T03:42:36.820Z",
+        "controlSaved": "2026-11-19T03:33:06.911Z",
+        "serverBeforeLatePOST": "2026-11-19T03:49:23.647Z"
+      }
+    },
+    {
+      "label": "after database snapshot was after late POST retry and final saved-list read",
+      "status": "PASS",
+      "actual": {
+        "after": "2026-11-19T03:51:57.192Z",
+        "serverAfterRetry": "2026-11-19T03:49:29.036Z"
+      }
+    },
+    {
+      "label": "database milestone and submission state unchanged across rejected writes",
+      "status": "PASS",
+      "actual": {
+        "before": [
+          {
+            "id": "1343a467-89fa-4969-b6ce-eb54cc1b0340",
+            "title": "L6-S35-CPMS-LATE-20261119-103240-7a83",
+            "dueAt": "2026-11-19T03:38:00.000Z",
+            "submissions": []
+          },
+          {
+            "id": "337e85e9-f190-42fb-a231-ceee30030a28",
+            "title": "L6-S35-CPMS-BEFORE-20261119-103240-7a83",
+            "dueAt": "2026-11-19T04:03:00.000Z",
+            "submissions": [
+              {
+                "id": "e464cfe7-3c6e-4a9d-835c-310fe20b4ede",
+                "version": 1,
+                "title": "L6-S35-CPMS-WORK-20261119-103240-7a83",
+                "url": "https://example.edu/?run=20261119-103240-7a83",
+                "submittedAt": "2026-11-19T03:33:06.911Z"
+              }
+            ]
+          }
+        ],
+        "after": [
+          {
+            "id": "1343a467-89fa-4969-b6ce-eb54cc1b0340",
+            "title": "L6-S35-CPMS-LATE-20261119-103240-7a83",
+            "dueAt": "2026-11-19T03:38:00.000Z",
+            "submissions": []
+          },
+          {
+            "id": "337e85e9-f190-42fb-a231-ceee30030a28",
+            "title": "L6-S35-CPMS-BEFORE-20261119-103240-7a83",
+            "dueAt": "2026-11-19T04:03:00.000Z",
+            "submissions": [
+              {
+                "id": "e464cfe7-3c6e-4a9d-835c-310fe20b4ede",
+                "version": 1,
+                "title": "L6-S35-CPMS-WORK-20261119-103240-7a83",
+                "url": "https://example.edu/?run=20261119-103240-7a83",
+                "submittedAt": "2026-11-19T03:33:06.911Z"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

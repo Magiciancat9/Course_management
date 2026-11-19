@@ -1,5 +1,8 @@
 # Proposed member allocation and actual activity form
 
+**19 November status:** the proposed allocations below are historical. Current user-reported responsibilities and joint review/decision are in [member activity](member-activity.md) and [19 November fastTrack closeout](fasttrack-closeout-20261119.md). Do not treat old assignments as action logs or replace original Codex capture attribution.
+
+
 Prepared 17 November 2026 at the user's request. This is a future work allocation, not proof of student execution. The existing Issue #46 owner/reviewer rules remain in force. Tasks are not marked complete merely because AI prepared a file.
 
 ## Proposed allocation
