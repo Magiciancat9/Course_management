@@ -3,7 +3,7 @@
 CoursePMS corrections #71/#74/#75 are now deployed and the completed partner
 technical retest is received and product-side acknowledged. See [case results](coursepms-retest-completion.md)
 and [product closeout](coursepms-product-closeout.md). The later [joint A/B declaration](coursepms-acceptance-confirmed.md)
-records CoursePMS **ACCEPTED**; reciprocal fastTrack work is deferred unchanged.
+records CoursePMS **ACCEPTED**. Reciprocal fastTrack's later reported Accepted decision and supporting evidence are in [19 November fastTrack closeout](fasttrack-closeout-20261119.md); the separate [verified section 3.5 retest](fasttrack-section35-retest-20261119.md) is a controlled exercise, not a new natural product finding.
 
 ## Report and triage
 
@@ -30,7 +30,7 @@ publish passwords, tokens or authorization headers.
 
 | Direction / finding | Case / tested release | Actual result / evidence | Triage / owner | Independent retest |
 |---|---|---|---|---|
-| CoursePMS `L6-OUT-EXP-001` (reported by fastTrack) | Original account-switch failure on `9c227359`; corrected source `aeb804e…` / `course-pms-00009-mk2` | Original UI-24–26 failure preserved; corrected RT-01–05 and RT-07 now PASS in stated modes | Accepted Major; #71, reviewed #72/#73, release #76; [fix chain](fix-evidence.md) | Completed partner AI-operated technical result received; current user acknowledges receipt; formal fastTrack human decision pending |
+| CoursePMS `L6-OUT-EXP-001` (reported by fastTrack) | Original account-switch failure on `9c227359`; corrected source `aeb804e…` / `course-pms-00009-mk2` | Original UI-24–26 failure preserved; corrected RT-01–05 and RT-07 now PASS in stated modes | Accepted Major; #71, reviewed #72/#73, release #76; [fix chain](fix-evidence.md) | Completed partner AI-operated technical result received; current user acknowledges receipt; later joint fastTrack A/B Accepted declaration recorded 17 November 22:30:56; representative-relay limits retained |
 | CoursePMS foreign proposal metadata | SDS roster-only / BR-06; source `aeb804e…` | Own/Instructor data preserved, foreign/null and no-team PRIVATE; RT-03/08 PASS | Accepted Major; [#74](https://github.com/Magiciancat9/Course_management/issues/74), [contract rationale](contract-dispositions.md) | Technical retest passes; no separate human acceptance invented |
 | CoursePMS bare proposal/unknown API routing | AC-03 and JSON contract; source `aeb804e…` | Expected auth/JSON routing and HTML; RT-09 PASS | Accepted Minor; [#75](https://github.com/Magiciancat9/Course_management/issues/75), [contract rationale](contract-dispositions.md) | Technical retest passes; original report count discrepancy remains separate, not a product bug |
 
@@ -50,3 +50,9 @@ publish passwords, tokens or authorization headers.
 If no genuine defect is found, record the actual UAT outcome and consult the
 instructor/TA about any separate controlled exercise. Never invent a defect
 or deliberately damage the assessed release.
+
+## fastTrack — 18–19 November disposition
+
+The bounded 18 November Codex run confirms no new product defect in its eight tested paths. The user later reports a joint human session, all eight PASS, no outstanding defects and Accepted; missing separate human-session artifacts remain documented. This is not a claim of exhaustive correctness.
+
+Section 3.5 is the partner-requested isolated late-submission simulation. Actual retest returned on-time 201 and two late 409 DEADLINE_PASSED responses. Supplied BEFORE/AFTER database JSON both retain zero late submissions and the exact on-time version 1, verified through 16 comparisons. See [verified section 3.5 retest](fasttrack-section35-retest-20261119.md). Owner-side defect injection, RED/GREEN/code review and deployment history are not recreated or independently approved here.

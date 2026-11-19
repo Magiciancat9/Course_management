@@ -1,0 +1,160 @@
+{
+  "product": "fastTrack Lab 6 simulated exercise section 3.5",
+  "run": "20261119-103240-7a83",
+  "origin": "https://fasttrack-lab6-970128017651.asia-southeast1.run.app",
+  "source": "1bbe187c088b86d104a16e420058f17425f18828",
+  "revision": {
+    "value": "fasttrack-lab6-00001-74k",
+    "basis": "Partner-supplied, not independent Cloud Run control-plane readback"
+  },
+  "browserOperator": "Codex AI",
+  "session": {
+    "start": "2026-11-19T03:32:39.924Z",
+    "end": "2026-11-19T03:49:46.336Z"
+  },
+  "preflightStart": {
+    "observedAt": "2026-11-19T03:32:39.925Z",
+    "health": {
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "version": "1bbe187c088b86d104a16e420058f17425f18828"
+      }
+    },
+    "ready": {
+      "status": 200,
+      "body": {
+        "status": "ready",
+        "database": "connected",
+        "version": "1bbe187c088b86d104a16e420058f17425f18828"
+      }
+    }
+  },
+  "preflightEnd": {
+    "observedAt": "2026-11-19T03:49:46.108Z",
+    "health": {
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "version": "1bbe187c088b86d104a16e420058f17425f18828"
+      }
+    },
+    "ready": {
+      "status": 200,
+      "body": {
+        "status": "ready",
+        "database": "connected",
+        "version": "1bbe187c088b86d104a16e420058f17425f18828"
+      }
+    }
+  },
+  "fixtures": {
+    "BEFORE": {
+      "id": "337e85e9-f190-42fb-a231-ceee30030a28",
+      "title": "L6-S35-CPMS-BEFORE-20261119-103240-7a83",
+      "url": "https://fasttrack-lab6-970128017651.asia-southeast1.run.app/milestones/337e85e9-f190-42fb-a231-ceee30030a28",
+      "dueAt": "2026-11-19T04:03:00.000Z",
+      "createdAt": "2026-11-19T03:33:04.580Z",
+      "detail": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": "337e85e9-f190-42fb-a231-ceee30030a28",
+            "teamId": "4cdfe241-0c43-4870-b98e-1ee69e4fa796",
+            "title": "L6-S35-CPMS-BEFORE-20261119-103240-7a83",
+            "description": "Synthetic CoursePMS section 3.5 independent-team retest before.",
+            "dueAt": "2026-11-19T04:03:00.000Z",
+            "cancelledAt": null,
+            "createdAt": "2026-11-19T03:33:04.580Z",
+            "latestSubmission": null
+          },
+          "meta": {
+            "serverTime": "2026-11-19T03:33:05.103Z"
+          }
+        }
+      }
+    },
+    "LATE": {
+      "id": "1343a467-89fa-4969-b6ce-eb54cc1b0340",
+      "title": "L6-S35-CPMS-LATE-20261119-103240-7a83",
+      "url": "https://fasttrack-lab6-970128017651.asia-southeast1.run.app/milestones/1343a467-89fa-4969-b6ce-eb54cc1b0340",
+      "dueAt": "2026-11-19T03:38:00.000Z",
+      "createdAt": "2026-11-19T03:33:10.149Z",
+      "detail": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": "1343a467-89fa-4969-b6ce-eb54cc1b0340",
+            "teamId": "4cdfe241-0c43-4870-b98e-1ee69e4fa796",
+            "title": "L6-S35-CPMS-LATE-20261119-103240-7a83",
+            "description": "Synthetic CoursePMS section 3.5 independent-team retest late.",
+            "dueAt": "2026-11-19T03:38:00.000Z",
+            "cancelledAt": null,
+            "createdAt": "2026-11-19T03:33:10.149Z",
+            "latestSubmission": null
+          },
+          "meta": {
+            "serverTime": "2026-11-19T03:33:10.712Z"
+          }
+        }
+      }
+    }
+  },
+  "savedSubmission": {
+    "id": "e464cfe7-3c6e-4a9d-835c-310fe20b4ede",
+    "milestoneId": "337e85e9-f190-42fb-a231-ceee30030a28",
+    "submittedBy": {
+      "id": "ef626ccf-188d-43b0-842a-3e3f1a1e287e",
+      "displayName": "Student A1"
+    },
+    "version": 1,
+    "title": "L6-S35-CPMS-WORK-20261119-103240-7a83",
+    "description": "Synthetic CoursePMS section 3.5 work; 20261119-103240-7a83.",
+    "url": "https://example.edu/?run=20261119-103240-7a83",
+    "submittedAt": "2026-11-19T03:33:06.911Z"
+  },
+  "checks": [
+    {
+      "caseId": "CPMS-S35-01",
+      "status": "PASS",
+      "observedAt": "2026-11-19T03:32:51.945Z",
+      "label": "On-time UI POST 201 and same saved version 1 after reload"
+    },
+    {
+      "caseId": "CPMS-S35-02",
+      "status": "PASS",
+      "observedAt": "2026-11-19T03:49:10.839Z",
+      "label": "Stale form sends real late POST and receives 409 DEADLINE_PASSED"
+    },
+    {
+      "caseId": "CPMS-S35-03",
+      "status": "PASS",
+      "observedAt": "2026-11-19T03:49:13.465Z",
+      "label": "API zero-write and single retry preserve on-time control"
+    }
+  ],
+  "snapshotTimes": {
+    "before": "2026-11-19T03:42:36.820Z",
+    "after": "2026-11-19T03:51:57.192Z"
+  },
+  "comparison": {
+    "status": "PASS",
+    "assertions": 16,
+    "comparedAt": "2026-11-19T04:23:18.044Z"
+  },
+  "jointFileReview": {
+    "reviewers": [
+      "Magiciancat9",
+      "martinvadre"
+    ],
+    "reportedTime": "19 November 2026, approximately 11:23 Asia/Bangkok",
+    "basis": "User-confirmed joint file review with Codex assistance"
+  },
+  "decision": "Accepted for this exact section 3.5 retest",
+  "limitations": [
+    "Snapshot files contain database state, not source SHA or Cloud Run revision; SHA is corroborated by recorded health at browser session start/end and revision remains partner-supplied.",
+    "Database projection excludes submission description and author; those were checked in the original browser/API record.",
+    "Cloud Logging provenance and runtime access were supplied by fastTrack, not independently retrieved from Google Cloud in this workspace.",
+    "Codex operated the original browser session and performs this file comparison; personal student review and human UI execution are separately recorded only when actually performed."
+  ]
+}

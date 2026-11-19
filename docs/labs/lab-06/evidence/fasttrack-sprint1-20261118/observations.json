@@ -1,0 +1,864 @@
+[
+  {
+    "caseId": "UAT-04",
+    "name": "Stale form filled before future deadline",
+    "status": "PASS",
+    "time": "2026-11-18T07:42:10.582Z",
+    "actual": {
+      "time": "2026-11-18T07:42:10.383Z",
+      "server": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": "24821747-1cdd-4b08-9c48-2ceba2dd62b4",
+            "teamId": "7c600ee0-a595-4c52-a093-f0ed5e08fded",
+            "title": "L6-CPMS-AI-20261118-144203-DEADLINE",
+            "description": "Synthetic CoursePMS AI-assisted UAT deadline.",
+            "dueAt": "2026-11-18T07:49:00.000Z",
+            "cancelledAt": null,
+            "createdAt": "2026-11-18T07:42:20.966Z",
+            "latestSubmission": null
+          },
+          "meta": {
+            "serverTime": "2026-11-18T07:42:26.823Z"
+          }
+        }
+      }
+    }
+  },
+  {
+    "caseId": "UAT-01",
+    "name": "Create via UI; reload; exactly one list entry; student reads matching milestone",
+    "status": "PASS",
+    "time": "2026-11-18T07:42:38.647Z",
+    "actual": {
+      "count": 1,
+      "studentNormal": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": "09b06c51-48f1-456c-a76a-d2b2be9944c1",
+            "teamId": "7c600ee0-a595-4c52-a093-f0ed5e08fded",
+            "title": "L6-CPMS-AI-20261118-144203-NORMAL",
+            "description": "Synthetic CoursePMS AI-assisted UAT normal.",
+            "dueAt": "2026-11-20T07:42:00.000Z",
+            "cancelledAt": null,
+            "createdAt": "2026-11-18T07:42:23.090Z",
+            "latestSubmission": null
+          },
+          "meta": {
+            "serverTime": "2026-11-18T07:42:54.255Z"
+          }
+        }
+      }
+    }
+  },
+  {
+    "caseId": "UAT-02",
+    "name": "UI submission version 1 and two appended feedback messages survive reload",
+    "status": "PASS",
+    "time": "2026-11-18T07:42:45.558Z",
+    "actual": {
+      "work": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": "e22b5fc2-4e36-480e-8141-930900aa356b",
+            "milestoneId": "09b06c51-48f1-456c-a76a-d2b2be9944c1",
+            "submittedBy": {
+              "id": "03838685-bf47-4dd4-b99b-b689f863cdb3",
+              "displayName": "Student A1"
+            },
+            "version": 1,
+            "title": "L6-CPMS-AI-20261118-144203-WORK",
+            "description": "Synthetic CoursePMS AI-assisted UAT work.",
+            "url": "https://example.com/?run=L6-CPMS-AI-20261118-144203",
+            "submittedAt": "2026-11-18T07:42:55.929Z"
+          },
+          "meta": {
+            "serverTime": "2026-11-18T07:43:01.930Z"
+          }
+        }
+      },
+      "feedbackBefore": {
+        "status": 200,
+        "body": {
+          "data": [],
+          "meta": {
+            "serverTime": "2026-11-18T07:42:57.354Z"
+          }
+        }
+      },
+      "feedbackAfter": {
+        "status": 200,
+        "body": {
+          "data": [
+            {
+              "id": "6cdb2835-6d53-4821-bec0-c155771f49c6",
+              "submissionId": "e22b5fc2-4e36-480e-8141-930900aa356b",
+              "supervisor": {
+                "id": "6d467a72-a32c-4eff-a9a5-e7897deb4fd2",
+                "displayName": "Supervisor A"
+              },
+              "content": "L6-CPMS-AI-20261118-144203: Please explain the test evidence.",
+              "clientRequestId": "6c51abc3-78e1-42b0-935f-6c01b6eb1789",
+              "createdAt": "2026-11-18T07:42:59.012Z"
+            },
+            {
+              "id": "2c02cbd2-95cb-4c56-bd23-aff722309c66",
+              "submissionId": "e22b5fc2-4e36-480e-8141-930900aa356b",
+              "supervisor": {
+                "id": "6d467a72-a32c-4eff-a9a5-e7897deb4fd2",
+                "displayName": "Supervisor A"
+              },
+              "content": "L6-CPMS-AI-20261118-144203: Add the acceptance result.",
+              "clientRequestId": "8952ffd1-4ebe-42c1-8e33-97edd688045e",
+              "createdAt": "2026-11-18T07:42:59.205Z"
+            }
+          ],
+          "meta": {
+            "serverTime": "2026-11-18T07:43:01.869Z"
+          }
+        }
+      },
+      "studentText": "Skip to content\nfastTrack\nOverview\nMy team\n\nStudent A1\nStudent\n\nSign out\n\nTeam A / L6-CPMS-AI-20261118-144203-NORMAL / Saved submission\n\nL6-CPMS-AI-20261118-144203-WORK\n\nVersion 1, submitted by Student A1.\n\n18 Nov 2026, 14:42:55 (Asia/Bangkok)\n\nDescription\n\nSynthetic CoursePMS AI-assisted UAT work.\n\nWork link\nOpen work link\n\nhttps://example.com/?run=L6-CPMS-AI-20261118-144203\n\nFeedback for version 1\nSupervisor A\n18 Nov 2026, 14:42:59 (Asia/Bangkok)\n\nL6-CPMS-AI-20261118-144203: Please explain the test evidence.\n\nSupervisor A\n18 Nov 2026, 14:42:59 (Asia/Bangkok)\n\nL6-CPMS-AI-20261118-144203: Add the acceptance result.",
+      "supervisorText": "Skip to content\nfastTrack\nOverview\nSupervised teams\n\nSupervisor A\nSupervisor\n\nSign out\n\nTeam A / L6-CPMS-AI-20261118-144203-NORMAL / Saved submission\n\nL6-CPMS-AI-20261118-144203-WORK\n\nVersion 1, submitted by Student A1.\n\n18 Nov 2026, 14:42:55 (Asia/Bangkok)\n\nDescription\n\nSynthetic CoursePMS AI-assisted UAT work.\n\nWork link\nOpen work link\n\nhttps://example.com/?run=L6-CPMS-AI-20261118-144203\n\nFeedback for version 1\nSupervisor A\n18 Nov 2026, 14:42:59 (Asia/Bangkok)\n\nL6-CPMS-AI-20261118-144203: Please explain the test evidence.\n\nSupervisor A\n18 Nov 2026, 14:42:59 (Asia/Bangkok)\n\nL6-CPMS-AI-20261118-144203: Add the acceptance result.\n\nYour feedback\nUse 1 to 4,000 characters. Feedback stays with this version.\n\n0 / 4,000 characters\n\nSave feedback"
+    }
+  },
+  {
+    "caseId": "UAT-02",
+    "name": "Milestone saved link returns exact submission",
+    "status": "PASS",
+    "time": "2026-11-18T07:42:46.640Z",
+    "actual": {
+      "url": "https://fasttrack-app-kpx7au3w2a-as.a.run.app/submissions/e22b5fc2-4e36-480e-8141-930900aa356b"
+    }
+  },
+  {
+    "caseId": "UAT-03",
+    "name": "Duplicate UI prevention and server 409 preserve saved work",
+    "status": "PASS",
+    "time": "2026-11-18T07:43:29.454Z",
+    "actual": {
+      "duplicateText": "Skip to content\nfastTrack\nOverview\nMy team\n\nStudent A1\nStudent\n\nSign out\n\nTeam A / L6-CPMS-AI-20261118-144203-NORMAL\n\nSubmit work\n\nDeadline: 20 Nov 2026, 14:42:00 (Asia/Bangkok).\n\nOne submission is shared by your team for this milestone.\n\nYour team has already submitted work\n\nSubmitted by Student A1, version 1, 18 Nov 2026, 14:42:55 (Asia/Bangkok).\n\nOpen saved submission\nTitle\n0/120 characters\nDescription\n0/4,000 characters\nWork link\nUse a complete http:// or https:// link your supervisor can open. Check its sharing permissions before submitting.\nSubmit work\nBack to milestone",
+      "duplicate": {
+        "mode": "duplicate",
+        "status": 409,
+        "code": "ALREADY_SUBMITTED",
+        "unexpectedCreatedId": null
+      },
+      "list": {
+        "status": 200,
+        "body": {
+          "data": [
+            {
+              "id": "e22b5fc2-4e36-480e-8141-930900aa356b",
+              "milestoneId": "09b06c51-48f1-456c-a76a-d2b2be9944c1",
+              "submittedBy": {
+                "id": "03838685-bf47-4dd4-b99b-b689f863cdb3",
+                "displayName": "Student A1"
+              },
+              "version": 1,
+              "title": "L6-CPMS-AI-20261118-144203-WORK",
+              "description": "Synthetic CoursePMS AI-assisted UAT work.",
+              "url": "https://example.com/?run=L6-CPMS-AI-20261118-144203",
+              "submittedAt": "2026-11-18T07:42:55.929Z"
+            }
+          ],
+          "meta": {
+            "serverTime": "2026-11-18T07:43:45.810Z"
+          }
+        }
+      },
+      "after": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": "e22b5fc2-4e36-480e-8141-930900aa356b",
+            "milestoneId": "09b06c51-48f1-456c-a76a-d2b2be9944c1",
+            "submittedBy": {
+              "id": "03838685-bf47-4dd4-b99b-b689f863cdb3",
+              "displayName": "Student A1"
+            },
+            "version": 1,
+            "title": "L6-CPMS-AI-20261118-144203-WORK",
+            "description": "Synthetic CoursePMS AI-assisted UAT work.",
+            "url": "https://example.com/?run=L6-CPMS-AI-20261118-144203",
+            "submittedAt": "2026-11-18T07:42:55.929Z"
+          },
+          "meta": {
+            "serverTime": "2026-11-18T07:43:45.728Z"
+          }
+        }
+      }
+    }
+  },
+  {
+    "caseId": "UAT-06",
+    "name": "Student milestone role guard denies without writes",
+    "status": "PASS",
+    "time": "2026-11-18T07:43:30.493Z",
+    "actual": {
+      "role": {
+        "mode": "role",
+        "status": 403,
+        "code": "FORBIDDEN",
+        "unexpectedCreatedId": null
+      },
+      "beforeCount": 13,
+      "afterCount": 13,
+      "forbiddenFound": false
+    }
+  },
+  {
+    "caseId": "UAT-06",
+    "name": "Whitespace milestone title displays error and creates nothing",
+    "status": "INVALIDATED_AUTOMATION_ERROR",
+    "time": "2026-11-18T07:43:56.243Z",
+    "actual": {
+      "text": "Skip to content\nfastTrack\nOverview\nSupervised teams\n\nSupervisor A\nSupervisor\n\nSign out\n\nOverview / Team A\n\nCreate milestone\n\nSet the work and deadline for Team A.\n\nMilestone details\n\nAll fields are required. Dates use Asia/Bangkok.\n\nCheck the highlighted milestone fields.\n\nTitle\nUse 1-120 characters after trimming.\nDescription\n21/4,000 characters\nDeadline in Asia/Bangkok\nA time entered as HH:mm uses seconds 00, not the end of that minute.\nCreate milestone\nBack to team",
+      "count": 13
+    },
+    "note": "Incorrect harness count expression; rechecked against observed baseline. No product defect observed."
+  },
+  {
+    "caseId": "UAT-05",
+    "name": "Foreign pages show generic recovery, APIs return 404, own overview remains scoped, protected state unchanged",
+    "status": "PASS",
+    "time": "2026-11-18T07:44:28.028Z",
+    "actual": {
+      "pages": [
+        {
+          "route": "/teams/7c600ee0-a595-4c52-a093-f0ed5e08fded",
+          "text": "Skip to content\nfastTrack\nOverview\nSupervised teams\n\nSupervisor B\nSupervisor\n\nSign out\n\nOverview\n\nYour teams\n\nYour team members, deadlines and submitted work.\n\nThe requested resource was not found.\n\nTry again\nBack to overview",
+          "protectedContentVisible": false
+        },
+        {
+          "route": "/milestones/09b06c51-48f1-456c-a76a-d2b2be9944c1",
+          "text": "Skip to content\nfastTrack\nOverview\nSupervised teams\n\nSupervisor B\nSupervisor\n\nSign out\nMilestone unavailable\n\nThe requested resource was not found.\n\nTry again\nBack to overview",
+          "protectedContentVisible": false
+        },
+        {
+          "route": "/submissions/e22b5fc2-4e36-480e-8141-930900aa356b",
+          "text": "Skip to content\nfastTrack\nOverview\nSupervised teams\n\nSupervisor B\nSupervisor\n\nSign out\nSubmission unavailable\n\nThe requested resource was not found.\n\nTry againBack to overview",
+          "protectedContentVisible": false
+        }
+      ],
+      "responses": [
+        {
+          "route": "/api/teams/7c600ee0-a595-4c52-a093-f0ed5e08fded",
+          "status": 404,
+          "body": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "The requested resource was not found.",
+              "fields": {}
+            }
+          }
+        },
+        {
+          "route": "/api/milestones/09b06c51-48f1-456c-a76a-d2b2be9944c1",
+          "status": 404,
+          "body": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "The requested resource was not found.",
+              "fields": {}
+            }
+          }
+        },
+        {
+          "route": "/api/submissions/e22b5fc2-4e36-480e-8141-930900aa356b",
+          "status": 404,
+          "body": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "The requested resource was not found.",
+              "fields": {}
+            }
+          }
+        },
+        {
+          "route": "/api/submissions/e22b5fc2-4e36-480e-8141-930900aa356b/feedback",
+          "status": 404,
+          "body": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "The requested resource was not found.",
+              "fields": {}
+            }
+          }
+        }
+      ],
+      "overview": "Skip to content\nfastTrack\nOverview\nSupervised teams\n\nSupervisor B\nSupervisor\n\nSign out\n\nOverview\n\nYour teams\n\nChoose a team to view its workspace.\n\nTeam B ↗\nSupervisor\nSupervisor B\nTeam members\nStudent B1\nOpen team",
+      "protectedBefore": {
+        "work": {
+          "id": "e22b5fc2-4e36-480e-8141-930900aa356b",
+          "milestoneId": "09b06c51-48f1-456c-a76a-d2b2be9944c1",
+          "submittedBy": {
+            "id": "03838685-bf47-4dd4-b99b-b689f863cdb3",
+            "displayName": "Student A1"
+          },
+          "version": 1,
+          "title": "L6-CPMS-AI-20261118-144203-WORK",
+          "description": "Synthetic CoursePMS AI-assisted UAT work.",
+          "url": "https://example.com/?run=L6-CPMS-AI-20261118-144203",
+          "submittedAt": "2026-11-18T07:42:55.929Z"
+        },
+        "feedback": [
+          {
+            "id": "6cdb2835-6d53-4821-bec0-c155771f49c6",
+            "submissionId": "e22b5fc2-4e36-480e-8141-930900aa356b",
+            "supervisor": {
+              "id": "6d467a72-a32c-4eff-a9a5-e7897deb4fd2",
+              "displayName": "Supervisor A"
+            },
+            "content": "L6-CPMS-AI-20261118-144203: Please explain the test evidence.",
+            "clientRequestId": "6c51abc3-78e1-42b0-935f-6c01b6eb1789",
+            "createdAt": "2026-11-18T07:42:59.012Z"
+          },
+          {
+            "id": "2c02cbd2-95cb-4c56-bd23-aff722309c66",
+            "submissionId": "e22b5fc2-4e36-480e-8141-930900aa356b",
+            "supervisor": {
+              "id": "6d467a72-a32c-4eff-a9a5-e7897deb4fd2",
+              "displayName": "Supervisor A"
+            },
+            "content": "L6-CPMS-AI-20261118-144203: Add the acceptance result.",
+            "clientRequestId": "8952ffd1-4ebe-42c1-8e33-97edd688045e",
+            "createdAt": "2026-11-18T07:42:59.205Z"
+          }
+        ]
+      },
+      "protectedAfter": {
+        "work": {
+          "id": "e22b5fc2-4e36-480e-8141-930900aa356b",
+          "milestoneId": "09b06c51-48f1-456c-a76a-d2b2be9944c1",
+          "submittedBy": {
+            "id": "03838685-bf47-4dd4-b99b-b689f863cdb3",
+            "displayName": "Student A1"
+          },
+          "version": 1,
+          "title": "L6-CPMS-AI-20261118-144203-WORK",
+          "description": "Synthetic CoursePMS AI-assisted UAT work.",
+          "url": "https://example.com/?run=L6-CPMS-AI-20261118-144203",
+          "submittedAt": "2026-11-18T07:42:55.929Z"
+        },
+        "feedback": [
+          {
+            "id": "6cdb2835-6d53-4821-bec0-c155771f49c6",
+            "submissionId": "e22b5fc2-4e36-480e-8141-930900aa356b",
+            "supervisor": {
+              "id": "6d467a72-a32c-4eff-a9a5-e7897deb4fd2",
+              "displayName": "Supervisor A"
+            },
+            "content": "L6-CPMS-AI-20261118-144203: Please explain the test evidence.",
+            "clientRequestId": "6c51abc3-78e1-42b0-935f-6c01b6eb1789",
+            "createdAt": "2026-11-18T07:42:59.012Z"
+          },
+          {
+            "id": "2c02cbd2-95cb-4c56-bd23-aff722309c66",
+            "submissionId": "e22b5fc2-4e36-480e-8141-930900aa356b",
+            "supervisor": {
+              "id": "6d467a72-a32c-4eff-a9a5-e7897deb4fd2",
+              "displayName": "Supervisor A"
+            },
+            "content": "L6-CPMS-AI-20261118-144203: Add the acceptance result.",
+            "clientRequestId": "8952ffd1-4ebe-42c1-8e33-97edd688045e",
+            "createdAt": "2026-11-18T07:42:59.205Z"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "caseId": "UAT-06",
+    "name": "Whitespace milestone title displays error and creates nothing",
+    "status": "PASS",
+    "time": "2026-11-18T07:44:55.600Z",
+    "actual": {
+      "text": "Skip to content\nfastTrack\nOverview\nSupervised teams\n\nSupervisor A\nSupervisor\n\nSign out\n\nOverview / Team A\n\nCreate milestone\n\nSet the work and deadline for Team A.\n\nMilestone details\n\nAll fields are required. Dates use Asia/Bangkok.\n\nCheck the highlighted milestone fields.\n\nTitle\nUse 1-120 characters after trimming.\nDescription\n21/4,000 characters\nDeadline in Asia/Bangkok\nA time entered as HH:mm uses seconds 00, not the end of that minute.\nCreate milestone\nBack to team",
+      "count": 13
+    }
+  },
+  {
+    "caseId": "UAT-06",
+    "name": "Whitespace work title and FTP link display errors and save no work",
+    "status": "PASS",
+    "time": "2026-11-18T07:44:57.402Z",
+    "actual": {
+      "whitespaceText": "Skip to content\nfastTrack\nOverview\nMy team\n\nStudent A1\nStudent\n\nSign out\n\nTeam A / L6-CPMS-AI-20261118-144203-VALIDATION\n\nSubmit work\n\nDeadline: 20 Nov 2026, 14:42:00 (Asia/Bangkok).\n\nOne submission is shared by your team for this milestone.\n\nCheck the highlighted fields.\n\nTitle\nEnter between 1 and 120 characters.\nDescription\n21/4,000 characters\nWork link\nUse a complete http:// or https:// link your supervisor can open. Check its sharing permissions before submitting.\nSubmit work\nBack to milestone",
+      "ftpText": "Skip to content\nfastTrack\nOverview\nMy team\n\nStudent A1\nStudent\n\nSign out\n\nTeam A / L6-CPMS-AI-20261118-144203-VALIDATION\n\nSubmit work\n\nDeadline: 20 Nov 2026, 14:42:00 (Asia/Bangkok).\n\nOne submission is shared by your team for this milestone.\n\nCheck the highlighted fields.\n\nTitle\n39/120 characters\nDescription\n21/4,000 characters\nWork link\nUse a complete http:// or https:// link without embedded credentials.\nSubmit work\nBack to milestone",
+      "invalidState": {
+        "invalid": "true",
+        "native": ""
+      },
+      "saved": {
+        "status": 200,
+        "body": {
+          "data": [],
+          "meta": {
+            "serverTime": "2026-11-18T07:45:13.778Z"
+          }
+        }
+      }
+    }
+  },
+  {
+    "caseId": "UAT-06",
+    "name": "Blank feedback validation and student feedback guard preserve two messages",
+    "status": "PASS",
+    "time": "2026-11-18T07:44:59.344Z",
+    "actual": {
+      "feedbackText": "Skip to content\nfastTrack\nOverview\nSupervised teams\n\nSupervisor A\nSupervisor\n\nSign out\n\nTeam A / L6-CPMS-AI-20261118-144203-NORMAL / Saved submission\n\nL6-CPMS-AI-20261118-144203-WORK\n\nVersion 1, submitted by Student A1.\n\n18 Nov 2026, 14:42:55 (Asia/Bangkok)\n\nDescription\n\nSynthetic CoursePMS AI-assisted UAT work.\n\nWork link\nOpen work link\n\nhttps://example.com/?run=L6-CPMS-AI-20261118-144203\n\nFeedback for version 1\nSupervisor A\n18 Nov 2026, 14:42:59 (Asia/Bangkok)\n\nL6-CPMS-AI-20261118-144203: Please explain the test evidence.\n\nSupervisor A\n18 Nov 2026, 14:42:59 (Asia/Bangkok)\n\nL6-CPMS-AI-20261118-144203: Add the acceptance result.\n\nYour feedback\nFeedback content cannot be empty.\n\n0 / 4,000 characters\n\nSave feedback",
+      "formCount": 0,
+      "feedbackRole": {
+        "mode": "feedback-role",
+        "status": 403,
+        "code": "FORBIDDEN",
+        "unexpectedCreatedId": null
+      },
+      "feedbackAfter": {
+        "status": 200,
+        "body": {
+          "data": [
+            {
+              "id": "6cdb2835-6d53-4821-bec0-c155771f49c6",
+              "submissionId": "e22b5fc2-4e36-480e-8141-930900aa356b",
+              "supervisor": {
+                "id": "6d467a72-a32c-4eff-a9a5-e7897deb4fd2",
+                "displayName": "Supervisor A"
+              },
+              "content": "L6-CPMS-AI-20261118-144203: Please explain the test evidence.",
+              "clientRequestId": "6c51abc3-78e1-42b0-935f-6c01b6eb1789",
+              "createdAt": "2026-11-18T07:42:59.012Z"
+            },
+            {
+              "id": "2c02cbd2-95cb-4c56-bd23-aff722309c66",
+              "submissionId": "e22b5fc2-4e36-480e-8141-930900aa356b",
+              "supervisor": {
+                "id": "6d467a72-a32c-4eff-a9a5-e7897deb4fd2",
+                "displayName": "Supervisor A"
+              },
+              "content": "L6-CPMS-AI-20261118-144203: Add the acceptance result.",
+              "clientRequestId": "8952ffd1-4ebe-42c1-8e33-97edd688045e",
+              "createdAt": "2026-11-18T07:42:59.205Z"
+            }
+          ],
+          "meta": {
+            "serverTime": "2026-11-18T07:45:15.723Z"
+          }
+        }
+      }
+    }
+  },
+  {
+    "caseId": "UAT-03",
+    "name": "Second Team A student shares same single work and receives duplicate denial",
+    "status": "PASS",
+    "time": "2026-11-18T07:47:55.607Z",
+    "actual": {
+      "response": {
+        "mode": "duplicate",
+        "status": 409,
+        "code": "ALREADY_SUBMITTED",
+        "unexpectedCreatedId": null
+      },
+      "list": {
+        "status": 200,
+        "body": {
+          "data": [
+            {
+              "id": "e22b5fc2-4e36-480e-8141-930900aa356b",
+              "milestoneId": "09b06c51-48f1-456c-a76a-d2b2be9944c1",
+              "submittedBy": {
+                "id": "03838685-bf47-4dd4-b99b-b689f863cdb3",
+                "displayName": "Student A1"
+              },
+              "version": 1,
+              "title": "L6-CPMS-AI-20261118-144203-WORK",
+              "description": "Synthetic CoursePMS AI-assisted UAT work.",
+              "url": "https://example.com/?run=L6-CPMS-AI-20261118-144203",
+              "submittedAt": "2026-11-18T07:42:55.929Z"
+            }
+          ],
+          "meta": {
+            "serverTime": "2026-11-18T07:48:11.960Z"
+          }
+        }
+      }
+    }
+  },
+  {
+    "caseId": "UAT-05",
+    "name": "Additional Team B student cannot read Team A work",
+    "status": "PASS",
+    "time": "2026-11-18T07:47:56.400Z",
+    "actual": {
+      "read": {
+        "status": 404,
+        "body": {
+          "error": {
+            "code": "NOT_FOUND",
+            "message": "The requested resource was not found.",
+            "fields": {}
+          }
+        }
+      },
+      "text": "Skip to content\nfastTrack\nOverview\nMy team\n\nStudent B1\nStudent\n\nSign out\nSubmission unavailable\n\nThe requested resource was not found.\n\nTry againBack to overview"
+    }
+  },
+  {
+    "caseId": "UAT-04",
+    "name": "Stale form late attempt and server denial leave no saved work",
+    "status": "PASS",
+    "time": "2026-11-18T07:50:00.724Z",
+    "actual": {
+      "filledBefore": {
+        "time": "2026-11-18T07:42:10.383Z",
+        "server": {
+          "status": 200,
+          "body": {
+            "data": {
+              "id": "24821747-1cdd-4b08-9c48-2ceba2dd62b4",
+              "teamId": "7c600ee0-a595-4c52-a093-f0ed5e08fded",
+              "title": "L6-CPMS-AI-20261118-144203-DEADLINE",
+              "description": "Synthetic CoursePMS AI-assisted UAT deadline.",
+              "dueAt": "2026-11-18T07:49:00.000Z",
+              "cancelledAt": null,
+              "createdAt": "2026-11-18T07:42:20.966Z",
+              "latestSubmission": null
+            },
+            "meta": {
+              "serverTime": "2026-11-18T07:42:26.823Z"
+            }
+          }
+        }
+      },
+      "serverAfter": {
+        "status": 200,
+        "body": {
+          "data": {
+            "id": "24821747-1cdd-4b08-9c48-2ceba2dd62b4",
+            "teamId": "7c600ee0-a595-4c52-a093-f0ed5e08fded",
+            "title": "L6-CPMS-AI-20261118-144203-DEADLINE",
+            "description": "Synthetic CoursePMS AI-assisted UAT deadline.",
+            "dueAt": "2026-11-18T07:49:00.000Z",
+            "cancelledAt": null,
+            "createdAt": "2026-11-18T07:42:20.966Z",
+            "latestSubmission": null
+          },
+          "meta": {
+            "serverTime": "2026-11-18T07:50:11.629Z"
+          }
+        }
+      },
+      "beforeText": "Skip to content\nfastTrack\nOverview\nMy team\n\nStudent A1\nStudent\n\nSign out\n\nTeam A / L6-CPMS-AI-20261118-144203-DEADLINE\n\nSubmit work\n\nDeadline: 18 Nov 2026, 14:49:00 (Asia/Bangkok).\n\nOne submission is shared by your team for this milestone.\n\nTitle\n31/120 characters\nDescription\n50/4,000 characters\nWork link\nUse a complete http:// or https:// link your supervisor can open. Check its sharing permissions before submitting.\nSubmit work\nBack to milestone",
+      "text": "Skip to content\nfastTrack\nOverview\nMy team\n\nStudent A1\nStudent\n\nSign out\n\nTeam A / L6-CPMS-AI-20261118-144203-DEADLINE\n\nSubmit work\n\nDeadline: 18 Nov 2026, 14:49:00 (Asia/Bangkok).\n\nOne submission is shared by your team for this milestone.\n\nThe deadline has passed. Your work was not saved.\n\nChecking saved work...\nTitle\n31/120 characters\nDescription\n50/4,000 characters\nWork link\nUse a complete http:// or https:// link your supervisor can open. Check its sharing permissions before submitting.\nSubmitting work...\nBack to milestone",
+      "uiResponse": {
+        "status": 409,
+        "code": "DEADLINE_PASSED"
+      },
+      "late": {
+        "mode": "late",
+        "status": 409,
+        "code": "DEADLINE_PASSED",
+        "unexpectedCreatedId": null
+      },
+      "saved": {
+        "status": 200,
+        "body": {
+          "data": [],
+          "meta": {
+            "serverTime": "2026-11-18T07:50:17.009Z"
+          }
+        }
+      }
+    }
+  },
+  {
+    "caseId": "UAT-07",
+    "name": "Anonymous private page requires sign-in and API returns 401",
+    "status": "PASS",
+    "time": "2026-11-18T07:50:06.012Z",
+    "actual": {
+      "anonymous": {
+        "status": 401,
+        "body": {
+          "error": {
+            "code": "UNAUTHENTICATED",
+            "message": "Sign in to continue.",
+            "fields": {}
+          }
+        }
+      },
+      "anonymousText": "Skip to content\n\nfastTrack\n\nSign in\n\nTrack your team's milestones, submissions, and feedback.\n\nEmail\nPassword\nSign in\n\nUse the account provided for your course."
+    }
+  },
+  {
+    "caseId": "UAT-07",
+    "name": "One incorrect password fails generically without private data",
+    "status": "PASS",
+    "time": "2026-11-18T07:50:06.351Z",
+    "actual": {
+      "status": 401,
+      "code": "INVALID_CREDENTIALS",
+      "text": "Skip to content\n\nfastTrack\n\nSign in\n\nTrack your team's milestones, submissions, and feedback.\n\nEmail or password is incorrect. Check and try again.\n\nEmail\nPassword\nSign in\n\nUse the account provided for your course."
+    }
+  },
+  {
+    "caseId": "UAT-07",
+    "name": "Sign out then Back and reload do not expose old work",
+    "status": "PASS",
+    "time": "2026-11-18T07:50:08.558Z",
+    "actual": {
+      "signedOut": {
+        "status": 401,
+        "body": {
+          "error": {
+            "code": "UNAUTHENTICATED",
+            "message": "Sign in to continue.",
+            "fields": {}
+          }
+        }
+      },
+      "signedOutText": "Skip to content\n\nfastTrack\n\nSign in\n\nTrack your team's milestones, submissions, and feedback.\n\nEmail\nPassword\nSign in\n\nUse the account provided for your course."
+    }
+  },
+  {
+    "caseId": "UAT-07",
+    "name": "Same browser profile switched from A1 to SB denies stale Team A work",
+    "status": "PASS",
+    "time": "2026-11-18T07:50:11.325Z",
+    "actual": {
+      "switched": {
+        "status": 404,
+        "body": {
+          "error": {
+            "code": "NOT_FOUND",
+            "message": "The requested resource was not found.",
+            "fields": {}
+          }
+        }
+      },
+      "switchedText": "Skip to content\nfastTrack\nOverview\nSupervised teams\n\nSupervisor B\nSupervisor\n\nSign out\nSubmission unavailable\n\nThe requested resource was not found.\n\nTry againBack to overview"
+    }
+  },
+  {
+    "caseId": "UAT-08",
+    "name": "Exact IDs content version author time and two feedback messages persist across reload and relogin",
+    "status": "PASS",
+    "time": "2026-11-18T07:50:21.784Z",
+    "actual": {
+      "baseline": {
+        "work": {
+          "id": "e22b5fc2-4e36-480e-8141-930900aa356b",
+          "milestoneId": "09b06c51-48f1-456c-a76a-d2b2be9944c1",
+          "submittedBy": {
+            "id": "03838685-bf47-4dd4-b99b-b689f863cdb3",
+            "displayName": "Student A1"
+          },
+          "version": 1,
+          "title": "L6-CPMS-AI-20261118-144203-WORK",
+          "description": "Synthetic CoursePMS AI-assisted UAT work.",
+          "url": "https://example.com/?run=L6-CPMS-AI-20261118-144203",
+          "submittedAt": "2026-11-18T07:42:55.929Z"
+        },
+        "feedback": [
+          {
+            "id": "6cdb2835-6d53-4821-bec0-c155771f49c6",
+            "submissionId": "e22b5fc2-4e36-480e-8141-930900aa356b",
+            "supervisor": {
+              "id": "6d467a72-a32c-4eff-a9a5-e7897deb4fd2",
+              "displayName": "Supervisor A"
+            },
+            "content": "L6-CPMS-AI-20261118-144203: Please explain the test evidence.",
+            "clientRequestId": "6c51abc3-78e1-42b0-935f-6c01b6eb1789",
+            "createdAt": "2026-11-18T07:42:59.012Z"
+          },
+          {
+            "id": "2c02cbd2-95cb-4c56-bd23-aff722309c66",
+            "submissionId": "e22b5fc2-4e36-480e-8141-930900aa356b",
+            "supervisor": {
+              "id": "6d467a72-a32c-4eff-a9a5-e7897deb4fd2",
+              "displayName": "Supervisor A"
+            },
+            "content": "L6-CPMS-AI-20261118-144203: Add the acceptance result.",
+            "clientRequestId": "8952ffd1-4ebe-42c1-8e33-97edd688045e",
+            "createdAt": "2026-11-18T07:42:59.205Z"
+          }
+        ]
+      },
+      "observations": [
+        {
+          "stage": "student-before-reload",
+          "ledger": {
+            "work": {
+              "id": "e22b5fc2-4e36-480e-8141-930900aa356b",
+              "milestoneId": "09b06c51-48f1-456c-a76a-d2b2be9944c1",
+              "submittedBy": {
+                "id": "03838685-bf47-4dd4-b99b-b689f863cdb3",
+                "displayName": "Student A1"
+              },
+              "version": 1,
+              "title": "L6-CPMS-AI-20261118-144203-WORK",
+              "description": "Synthetic CoursePMS AI-assisted UAT work.",
+              "url": "https://example.com/?run=L6-CPMS-AI-20261118-144203",
+              "submittedAt": "2026-11-18T07:42:55.929Z"
+            },
+            "feedback": [
+              {
+                "id": "6cdb2835-6d53-4821-bec0-c155771f49c6",
+                "submissionId": "e22b5fc2-4e36-480e-8141-930900aa356b",
+                "supervisor": {
+                  "id": "6d467a72-a32c-4eff-a9a5-e7897deb4fd2",
+                  "displayName": "Supervisor A"
+                },
+                "content": "L6-CPMS-AI-20261118-144203: Please explain the test evidence.",
+                "clientRequestId": "6c51abc3-78e1-42b0-935f-6c01b6eb1789",
+                "createdAt": "2026-11-18T07:42:59.012Z"
+              },
+              {
+                "id": "2c02cbd2-95cb-4c56-bd23-aff722309c66",
+                "submissionId": "e22b5fc2-4e36-480e-8141-930900aa356b",
+                "supervisor": {
+                  "id": "6d467a72-a32c-4eff-a9a5-e7897deb4fd2",
+                  "displayName": "Supervisor A"
+                },
+                "content": "L6-CPMS-AI-20261118-144203: Add the acceptance result.",
+                "clientRequestId": "8952ffd1-4ebe-42c1-8e33-97edd688045e",
+                "createdAt": "2026-11-18T07:42:59.205Z"
+              }
+            ]
+          }
+        },
+        {
+          "stage": "student-after-reload",
+          "ledger": {
+            "work": {
+              "id": "e22b5fc2-4e36-480e-8141-930900aa356b",
+              "milestoneId": "09b06c51-48f1-456c-a76a-d2b2be9944c1",
+              "submittedBy": {
+                "id": "03838685-bf47-4dd4-b99b-b689f863cdb3",
+                "displayName": "Student A1"
+              },
+              "version": 1,
+              "title": "L6-CPMS-AI-20261118-144203-WORK",
+              "description": "Synthetic CoursePMS AI-assisted UAT work.",
+              "url": "https://example.com/?run=L6-CPMS-AI-20261118-144203",
+              "submittedAt": "2026-11-18T07:42:55.929Z"
+            },
+            "feedback": [
+              {
+                "id": "6cdb2835-6d53-4821-bec0-c155771f49c6",
+                "submissionId": "e22b5fc2-4e36-480e-8141-930900aa356b",
+                "supervisor": {
+                  "id": "6d467a72-a32c-4eff-a9a5-e7897deb4fd2",
+                  "displayName": "Supervisor A"
+                },
+                "content": "L6-CPMS-AI-20261118-144203: Please explain the test evidence.",
+                "clientRequestId": "6c51abc3-78e1-42b0-935f-6c01b6eb1789",
+                "createdAt": "2026-11-18T07:42:59.012Z"
+              },
+              {
+                "id": "2c02cbd2-95cb-4c56-bd23-aff722309c66",
+                "submissionId": "e22b5fc2-4e36-480e-8141-930900aa356b",
+                "supervisor": {
+                  "id": "6d467a72-a32c-4eff-a9a5-e7897deb4fd2",
+                  "displayName": "Supervisor A"
+                },
+                "content": "L6-CPMS-AI-20261118-144203: Add the acceptance result.",
+                "clientRequestId": "8952ffd1-4ebe-42c1-8e33-97edd688045e",
+                "createdAt": "2026-11-18T07:42:59.205Z"
+              }
+            ]
+          }
+        },
+        {
+          "stage": "student-after-relogin-via-team-milestone",
+          "ledger": {
+            "work": {
+              "id": "e22b5fc2-4e36-480e-8141-930900aa356b",
+              "milestoneId": "09b06c51-48f1-456c-a76a-d2b2be9944c1",
+              "submittedBy": {
+                "id": "03838685-bf47-4dd4-b99b-b689f863cdb3",
+                "displayName": "Student A1"
+              },
+              "version": 1,
+              "title": "L6-CPMS-AI-20261118-144203-WORK",
+              "description": "Synthetic CoursePMS AI-assisted UAT work.",
+              "url": "https://example.com/?run=L6-CPMS-AI-20261118-144203",
+              "submittedAt": "2026-11-18T07:42:55.929Z"
+            },
+            "feedback": [
+              {
+                "id": "6cdb2835-6d53-4821-bec0-c155771f49c6",
+                "submissionId": "e22b5fc2-4e36-480e-8141-930900aa356b",
+                "supervisor": {
+                  "id": "6d467a72-a32c-4eff-a9a5-e7897deb4fd2",
+                  "displayName": "Supervisor A"
+                },
+                "content": "L6-CPMS-AI-20261118-144203: Please explain the test evidence.",
+                "clientRequestId": "6c51abc3-78e1-42b0-935f-6c01b6eb1789",
+                "createdAt": "2026-11-18T07:42:59.012Z"
+              },
+              {
+                "id": "2c02cbd2-95cb-4c56-bd23-aff722309c66",
+                "submissionId": "e22b5fc2-4e36-480e-8141-930900aa356b",
+                "supervisor": {
+                  "id": "6d467a72-a32c-4eff-a9a5-e7897deb4fd2",
+                  "displayName": "Supervisor A"
+                },
+                "content": "L6-CPMS-AI-20261118-144203: Add the acceptance result.",
+                "clientRequestId": "8952ffd1-4ebe-42c1-8e33-97edd688045e",
+                "createdAt": "2026-11-18T07:42:59.205Z"
+              }
+            ]
+          }
+        },
+        {
+          "stage": "supervisor-independent-reload",
+          "ledger": {
+            "work": {
+              "id": "e22b5fc2-4e36-480e-8141-930900aa356b",
+              "milestoneId": "09b06c51-48f1-456c-a76a-d2b2be9944c1",
+              "submittedBy": {
+                "id": "03838685-bf47-4dd4-b99b-b689f863cdb3",
+                "displayName": "Student A1"
+              },
+              "version": 1,
+              "title": "L6-CPMS-AI-20261118-144203-WORK",
+              "description": "Synthetic CoursePMS AI-assisted UAT work.",
+              "url": "https://example.com/?run=L6-CPMS-AI-20261118-144203",
+              "submittedAt": "2026-11-18T07:42:55.929Z"
+            },
+            "feedback": [
+              {
+                "id": "6cdb2835-6d53-4821-bec0-c155771f49c6",
+                "submissionId": "e22b5fc2-4e36-480e-8141-930900aa356b",
+                "supervisor": {
+                  "id": "6d467a72-a32c-4eff-a9a5-e7897deb4fd2",
+                  "displayName": "Supervisor A"
+                },
+                "content": "L6-CPMS-AI-20261118-144203: Please explain the test evidence.",
+                "clientRequestId": "6c51abc3-78e1-42b0-935f-6c01b6eb1789",
+                "createdAt": "2026-11-18T07:42:59.012Z"
+              },
+              {
+                "id": "2c02cbd2-95cb-4c56-bd23-aff722309c66",
+                "submissionId": "e22b5fc2-4e36-480e-8141-930900aa356b",
+                "supervisor": {
+                  "id": "6d467a72-a32c-4eff-a9a5-e7897deb4fd2",
+                  "displayName": "Supervisor A"
+                },
+                "content": "L6-CPMS-AI-20261118-144203: Add the acceptance result.",
+                "clientRequestId": "8952ffd1-4ebe-42c1-8e33-97edd688045e",
+                "createdAt": "2026-11-18T07:42:59.205Z"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+]

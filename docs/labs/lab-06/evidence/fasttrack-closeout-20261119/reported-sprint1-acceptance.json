@@ -1,0 +1,109 @@
+{
+  "product": "fastTrack Sprint 1",
+  "source": "8e637e537cd037d630a5fffc1b5672d1b44371a8",
+  "reviewers": [
+    {
+      "account": "Magiciancat9",
+      "responsibility": "UAT-01–04"
+    },
+    {
+      "account": "martinvadre",
+      "responsibility": "UAT-05–08"
+    }
+  ],
+  "basis": "User-reported joint human testing/review and acceptance; not independently reconstructed from the earlier Codex run",
+  "reportedSession": {
+    "date": "2026-11-19",
+    "start": "09:00",
+    "end": "approximately 11:44",
+    "timezone": "Asia/Bangkok"
+  },
+  "reportedCaseResults": [
+    {
+      "caseId": "UAT-01",
+      "status": "PASS",
+      "basis": "User explicitly confirms all eight cases passed during joint testing/review",
+      "individualCaseTimes": "Not retained",
+      "humanSessionFixtureIds": "Not retained",
+      "humanSessionEvidence": "Not retained"
+    },
+    {
+      "caseId": "UAT-02",
+      "status": "PASS",
+      "basis": "User explicitly confirms all eight cases passed during joint testing/review",
+      "individualCaseTimes": "Not retained",
+      "humanSessionFixtureIds": "Not retained",
+      "humanSessionEvidence": "Not retained"
+    },
+    {
+      "caseId": "UAT-03",
+      "status": "PASS",
+      "basis": "User explicitly confirms all eight cases passed during joint testing/review",
+      "individualCaseTimes": "Not retained",
+      "humanSessionFixtureIds": "Not retained",
+      "humanSessionEvidence": "Not retained"
+    },
+    {
+      "caseId": "UAT-04",
+      "status": "PASS",
+      "basis": "User explicitly confirms all eight cases passed during joint testing/review",
+      "individualCaseTimes": "Not retained",
+      "humanSessionFixtureIds": "Not retained",
+      "humanSessionEvidence": "Not retained"
+    },
+    {
+      "caseId": "UAT-05",
+      "status": "PASS",
+      "basis": "User explicitly confirms all eight cases passed during joint testing/review",
+      "individualCaseTimes": "Not retained",
+      "humanSessionFixtureIds": "Not retained",
+      "humanSessionEvidence": "Not retained"
+    },
+    {
+      "caseId": "UAT-06",
+      "status": "PASS",
+      "basis": "User explicitly confirms all eight cases passed during joint testing/review",
+      "individualCaseTimes": "Not retained",
+      "humanSessionFixtureIds": "Not retained",
+      "humanSessionEvidence": "Not retained"
+    },
+    {
+      "caseId": "UAT-07",
+      "status": "PASS",
+      "basis": "User explicitly confirms all eight cases passed during joint testing/review",
+      "individualCaseTimes": "Not retained",
+      "humanSessionFixtureIds": "Not retained",
+      "humanSessionEvidence": "Not retained"
+    },
+    {
+      "caseId": "UAT-08",
+      "status": "PASS",
+      "basis": "User explicitly confirms all eight cases passed during joint testing/review",
+      "individualCaseTimes": "Not retained",
+      "humanSessionFixtureIds": "Not retained",
+      "humanSessionEvidence": "Not retained"
+    }
+  ],
+  "reportedDecision": "Accepted",
+  "reportedFindings": "No outstanding defects, as confirmed by user",
+  "decisionDate": "2026-11-19",
+  "confirmationRecordedAt": "2026-11-19T04:46:32Z",
+  "originalDecisionTime": "User reports the joint decision was already made; no separate exact decision time was retained",
+  "knownSourceObservations": {
+    "atPreparedObserverStart": "2026-11-19T04:24:56.232Z",
+    "atReadOnlyEnd": "2026-11-19T04:45:02.155Z",
+    "source": "8e637e537cd037d630a5fffc1b5672d1b44371a8",
+    "reported0900Start": "No saved source observation supplied"
+  },
+  "supportingEvidence": {
+    "run": "L6-CPMS-AI-20261118-144203",
+    "date": "18 November 2026",
+    "operator": "Codex AI",
+    "evidenceDirectory": "../fasttrack-sprint1-20261118/"
+  },
+  "limitations": [
+    "No separate human-session screenshot, fixture ID, Network evidence or individual case timestamp was retained.",
+    "Supporting Codex evidence preserves its original date/operator; it is not proof of personal native UI operation on 19 November.",
+    "Acceptance is the reported team decision; documentation completeness or grading approval is not independently certified."
+  ]
+}

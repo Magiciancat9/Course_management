@@ -1,13 +1,25 @@
 # Lab 6: independent UAT
 
-## 17 November continuation
+## Current report assembly — 19 November 2026
+
+- **CoursePMS: Accepted**, under the retained 17 November partner declaration; [corrected-release acceptance](coursepms-acceptance-confirmed.md) is unchanged.
+- **fastTrack Sprint 1: Accepted as jointly reported by the CoursePMS team.** User-declared human session and missing per-case artifacts are explicit; the separate 18 November Codex run provides dated technical support. Start with [19 November fastTrack closeout](fasttrack-closeout-20261119.md).
+- **fastTrack simulated exercise section 3.5: PASS / Accepted for the exact retest.** Original database JSON matches the on-time 201 and two late 409 responses: [verified section 3.5 retest](fasttrack-section35-retest-20261119.md).
+- **Partner receipt acknowledged**, via user-relayed confirmation recorded 19 November 12:42:46 Asia/Bangkok. fastTrack intends to include both records and preserve screenshot attribution; report integration/grading/submission is not inferred.
+- [Report draft](report-draft.md), [evidence index](evidence/README.md) and [publication/privacy guide](evidence-publication.md) provide the current assembly path. Public Git uses GitHub accounts/synthetic aliases; private report identities and original packages stay local.
+
+The reported human session has no separately retained screenshots, fixture IDs or individual case times. The 18 November images remain Codex captures, not newly created personal-action evidence. These documented limits are retained with the reported Accepted decision.
+
+The 17 November continuation below is historical; its reciprocal fastTrack deferral is superseded by the dated 19 November records above.
+
+## Historical 17 November continuation
 
 **CoursePMS product-side technical result is now received and acknowledged.**
 The completed partner package reports 8 deployed targeted PASS plus RT-07
 evidence/isolated-replay PASS. Start with [CoursePMS product closeout](coursepms-product-closeout.md)
-and [completed retest record](coursepms-retest-completion.md). The user requests
-one product at a time: reciprocal fastTrack work is deferred, with its existing
-records and decision unchanged. fastTrack's later joint A/B declaration now
+and [completed retest record](coursepms-retest-completion.md). At that time the user requested
+one product at a time, so reciprocal fastTrack work was deferred. The dated
+19 November continuation above supersedes that deferral. fastTrack's later joint A/B declaration
 confirms **CoursePMS ACCEPTED** at **17 November 22:30:56 Asia/Bangkok**;
 [actual confirmation](coursepms-acceptance-confirmed.md) and [CoursePMS-facing
 acceptance record](retest-and-acceptance.md) retain its representative-relay
@@ -33,7 +45,7 @@ The latest fastTrack follow-up is answered in [follow-up response](followup-resp
 Both prior contract clarifications are now resolved and corrected in the candidate:
 [dispositions](contract-dispositions.md). [Acceptance records](acceptance-record.md)
 are reconciled with dated actual evidence. CoursePMS is now ACCEPTED under the
-supplied declaration; the reciprocal fastTrack decision remains unchanged/deferred.
+supplied declaration; the later reciprocal fastTrack decision is recorded in the 19 November continuation above.
 Use [release readiness](release-readiness.md), [actual activity forms](member-activity.md)
 and [proposed targeted retest](retest-request.md) for the remaining owner actions.
 

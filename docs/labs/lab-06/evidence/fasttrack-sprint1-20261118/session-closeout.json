@@ -1,0 +1,54 @@
+{
+  "time": "2026-11-18T07:50:33.231Z",
+  "health": {
+    "status": 200,
+    "body": {
+      "status": "ok",
+      "version": "8e637e537cd037d630a5fffc1b5672d1b44371a8"
+    }
+  },
+  "ready": {
+    "status": 200,
+    "body": {
+      "status": "ready",
+      "database": "connected",
+      "version": "8e637e537cd037d630a5fffc1b5672d1b44371a8"
+    }
+  },
+  "logout": [
+    {
+      "alias": "SA",
+      "status": 401,
+      "time": "2026-11-18T07:50:30.313Z"
+    },
+    {
+      "alias": "A1",
+      "status": 401,
+      "time": "2026-11-18T07:50:31.044Z"
+    },
+    {
+      "alias": "A2",
+      "status": 401,
+      "time": "2026-11-18T07:50:31.746Z"
+    },
+    {
+      "alias": "SB",
+      "status": 401,
+      "time": "2026-11-18T07:50:32.547Z"
+    },
+    {
+      "alias": "B1",
+      "status": 401,
+      "time": "2026-11-18T07:50:33.183Z"
+    },
+    {
+      "alias": "ANON",
+      "status": 401,
+      "time": "2026-11-18T07:50:33.231Z"
+    }
+  ],
+  "browserVersion": "153.0.8010.12",
+  "operator": "Codex AI acting for the CoursePMS reviewing team",
+  "humanReview": "not yet confirmed",
+  "servingRevisionAndTraffic": "not owner-verified"
+}
