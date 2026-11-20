@@ -96,4 +96,42 @@ session revision/traffic confirmation from the `fastTrack` Product Team (see
 
 ## Batch 2: `UAT-05` through `UAT-08` (Lab6-07)
 
-*Pending Lab6-07 execution after partner credentials (`SA`, `A1`, `SB`) and session confirmation are received.*
+**Status: recorded from the retained 18 November technical run and the 19
+November user-reported joint human session.** This section does not claim that
+this PR ran a new session, and it does not relabel the historical 14 November
+Batch 1 blocks as personal passes.
+
+### Recorded-session metadata
+
+| Field | Recorded value |
+|---|---|
+| Product under test | `fastTrack` Sprint 1 |
+| Application / source | <https://fasttrack-app-kpx7au3w2a-as.a.run.app> / `8e637e537cd037d630a5fffc1b5672d1b44371a8` |
+| Technical evidence | Codex run `L6-CPMS-AI-20261118-144203`, 18 November 2026 14:37:42--14:50:33 Asia/Bangkok |
+| Reported joint human work | User-declared 19 November 2026, approximately 09:00--11:44 Asia/Bangkok; `martinvadre` responsible for UAT-05--08, with both CoursePMS members jointly participating |
+| Human-evidence limitation | No separate human-session screenshot, fixture ID, Network capture, or per-case time was retained. The dated screenshots below are Codex technical evidence, not personal-action screenshots. |
+| Release limitation | Health/readiness were recorded as HTTP 200 with the expected source; Cloud Run revision/traffic was not independently read back for the technical run. |
+
+The full provenance, including the separate user declaration and its limits, is
+retained in [fastTrack closeout](fasttrack-closeout-20261119.md). All evidence
+references below are sanitized and contain no credentials, tokens, or headers.
+
+| Case | Actual recorded result | Result | Evidence |
+|---|---|---|---|
+| UAT-05: forbidden ownership / disclosure | Supervisor B could not access Team A data. The Team A, milestone, submission, and feedback API reads returned generic `404 NOT_FOUND`; the authorized Team A record remained unchanged. | PASS | [foreign-submission image](evidence/fasttrack-sprint1-20261118/UAT-05-foreign-submission.png); [observation ledger](evidence/fasttrack-sprint1-20261118/observations.json) |
+| UAT-06: forbidden role and invalid input | Student milestone creation and feedback writes were rejected with `403 FORBIDDEN`. Whitespace-only fields and an `ftp://` work link did not create saved records; authorized state remained unchanged. | PASS | [validation image](evidence/fasttrack-sprint1-20261118/UAT-06-ftp-link.png); [observation ledger](evidence/fasttrack-sprint1-20261118/observations.json) |
+| UAT-07: logout, anonymous access, and account switch | Anonymous and post-logout reads returned `401`; one incorrect-password attempt created no session; switching the same profile from A1 to SB could not reveal Team A content and returned generic `404`. | PASS | [account-switch image](evidence/fasttrack-sprint1-20261118/UAT-07-same-profile-switched-to-SB.png); [observation ledger](evidence/fasttrack-sprint1-20261118/observations.json) |
+| UAT-08: persistence / feedback association | The saved ID, version, author, time, work content, link, and two feedback messages matched after reload and relogin in the permitted views. | PASS | [relogin image](evidence/fasttrack-sprint1-20261118/UAT-08-student-relogin.png); [persistence comparisons](evidence/fasttrack-sprint1-20261118/persistence-comparisons.json) |
+
+### Batch 2 summary
+
+| Total cases | PASS | FAIL | BLOCKED |
+|---:|---:|---:|---:|
+| 4 | 4 | 0 | 0 |
+
+There are no Batch 2 FAIL cases to hand to Lab6-08. Evidence coverage for the
+lab's normal-journey screenshot requirement is retained for UAT-01 in the
+[same technical run](fasttrack-closeout-20261119.md); Batch 2 supplies the
+required negative/access evidence through UAT-05 and UAT-06. If any of these
+cases is re-run against a later release, record it as a new session with its
+own release identity and do not overwrite this dated record.
