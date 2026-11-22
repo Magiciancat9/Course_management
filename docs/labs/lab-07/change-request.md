@@ -1,11 +1,13 @@
 # Lab 7 Part A — CR-L7-01: revision-request feedback minimum
 
-**Status: PROPOSED — instructor/TA approval pending.**
+**Status: TA APPROVED — 22 November 2026, 20:18 Asia/Bangkok.**
 
-This is the versioned change request supporting [Issue #85][request]. It does
-not revise the approved product baseline or claim implementation. The user
-will submit the request to the instructor/TA and confirm the outcome before
-implementation starts.
+This is the versioned change request supporting [Issue #85][request].
+[P'Tik's approval and original screenshot](approval-record.md) confirm the
+bounded new requirement and user authorization to proceed. The actual
+[pre-change source is locked](pre-change-baseline.md); the
+[revised engineering contract](revised-contract.md) awaits substantive review
+by martinvadre before any new test/code change. No implementation is claimed.
 
 | Responsibility | Confirmed owner |
 | --- | --- |
@@ -24,7 +26,7 @@ implementation starts.
 | Accepted serving revision | `course-pms-00009-mk2`, as recorded in the [Lab 6 acceptance evidence][acceptance] |
 | GitHub main inspected for this request | `aeb804ea5bc667399b00cf54df10046a6ded46e0` on 22 November 2026 |
 | Documentation branch base | The accepted Lab 6 commit above; request source plus CI routing for `lab7-staging`, with no domain implementation or test changes |
-| Actual implementation pre-change SHA / serving revision | **Pending:** record immediately before implementing the approved request and explain any intervening changes |
+| Actual implementation pre-change SHA / serving revision | Source `dfe5d25ec8934161d3ece5726d7611d64c044c52`, annotated tag `lab7-pre-change-20261122`; see L7-E02 for exact differences. No fresh serving-revision lookup is claimed |
 | Maintained release / new deployed revision | **Pending:** no Lab 7 implementation, release or deployment has occurred |
 
 The original tag and accepted Lab 6 correction are distinct. Lab 5 added
@@ -63,9 +65,9 @@ Evidence at the accepted commit:
 The old 10-character rule is correct under the existing specification. This
 request changes a requirement; it is not another Lab 6 defect report.
 
-## 3. Proposed new rule, reason and scope
+## 3. TA-approved new rule, reason and scope
 
-| Review decision | Existing minimum | Proposed minimum |
+| Review decision | Existing minimum | Approved minimum |
 | --- | ---: | ---: |
 | `REVISION_REQUESTED` | 10 | **20** |
 | `APPROVED` | 10 | **10, unchanged** |
@@ -97,10 +99,10 @@ No schema migration is expected: `ProjectProposal.reviewFeedback` remains
 the same string field. Confirm and justify this in the approved impact
 analysis; do not silently modify stored data.
 
-## 4. Proposed acceptance criteria and test outline
+## 4. Approved-scope acceptance criteria and test outline
 
-These are proposed expectations for TA review, not an approved contract or
-executed new-behavior tests. Except where stated otherwise, preconditions
+TA scope approval is now recorded. These are not yet independently reviewed
+contract criteria or executed new-behavior tests. Except where stated otherwise, preconditions
 are an authenticated instructor, a `SUBMITTED` proposal and valid payload.
 
 | Proposed AC / test | Input and expected outcome | Planned level |
@@ -126,9 +128,9 @@ are an authenticated instructor, a `SUBMITTED` proposal and valid payload.
 | Dependencies | Recheck revision/resubmission and the evolving F-05 prerequisite that consumes `APPROVED`; do not change deliverable eligibility |
 | Preserved regression | BR-03 state locks; BR-04 completeness; BR-06 roles/ownership; auth/logout; team uniqueness/capacity; session isolation; roster privacy; protected JSON routing; persistence |
 
-This preliminary table supports the approval request. The complete revised
-engineering contract and STS, including teammate review before code, remain
-the work of [Issue #86][contract-task] after the approved scope is known.
+This table preserves the request's preliminary impact. The complete
+[revised contract/impact/AC/STS](revised-contract.md) is now prepared under
+[Issue #86][contract-task]; teammate review remains required before code.
 
 The preparation PR targets `lab7-staging`, created from the accepted main
 commit. The existing CI workflow adds that staging branch to its pull-request
@@ -170,21 +172,20 @@ execution, a current live-deployment check, teammate review or TA approval.
 
 | Required record | Current status |
 | --- | --- |
-| Instructor/TA approver | Pending |
-| Approved request revision and conditions | Pending |
-| Approval text/permalink and actual date/time | Pending |
-| User confirmation to begin implementation | Pending |
+| Instructor/TA approver | P'Tik (TA), user-attributed identity |
+| Approved request revision and conditions | REVISION_REQUESTED minimum 20 after trim by the issue's counting method; APPROVED stays 10; record pre-change commit and peer-review revised contract before code |
+| Approval text/permalink and actual date/time | [L7-E01 original screenshot / transcript](approval-record.md), 22 Nov 2026 at 20:18 Asia/Bangkok |
+| User confirmation to proceed | Received in the working conversation with explicit instruction to follow the TA's conditions |
 | Independent review of this request document | Pending; to be recorded on its PR |
 | Reviewed updated engineering contract / STS | Pending in #86, before implementation |
 | New-behavior RED/GREEN | Pending in #87, after approval and contract review |
 
-The user sends [Issue #85][request] to the instructor/TA. After approval is
-recorded and the user confirms it, proceed to #86, then #87. Preserve the
-sequence approved request → reviewed contract → genuine RED → GREEN →
-relevant regression → reviewed integration/main release → GCP deployment →
-changed and preserved post-deployment checks. Leave #85 open while approval
-is pending; do not mark a dependency complete merely because this document
-exists. Deliverable 2 contract/backlog work can continue during the wait.
+TA approval and user confirmation are recorded. Proceed with #86 contract
+review, then #87 only after that review is accepted. Preserve the sequence
+approved request → reviewed contract → genuine RED → GREEN → relevant
+regression → reviewed integration/main release → GCP deployment → changed
+and preserved post-deployment checks. Approval completes the request gate;
+it does not complete contract review or implementation.
 
 ### Short request message the user may send
 
@@ -201,6 +202,7 @@ exists. Deliverable 2 contract/backlog work can continue during the wait.
 | Revision | Date | Meaning |
 | --- | --- | --- |
 | CR-L7-01 v1.0 | 22 November 2026 | Prepared approval request and verified old-rule sources/existing domain suite; no TA approval or code change |
+| CR-L7-01 v1.1 | 22 November 2026 | Recorded actual P'Tik approval at 20:18, original screenshot, user go-ahead and pre-change lock; revised contract prepared for independent review; no runtime/test change |
 
 [request]: https://github.com/Magiciancat9/Course_management/issues/85
 [contract-task]: https://github.com/Magiciancat9/Course_management/issues/86

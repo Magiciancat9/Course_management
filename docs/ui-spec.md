@@ -2,6 +2,14 @@ This document describes the Sprint 1 UI as implemented in PR #8 (as-built). UI b
 
 # Sprint 1 As-Built UI Specification
 
+**Approved Lab 7 design addendum, 22 Nov 2026:** this historical as-built
+record still describes the locked old UI. The revised
+[L7-CONTRACT v1.1](labs/lab-07/revised-contract.md) requires clear minimum-10
+approval / minimum-20 revision guidance after trim while preserving current
+actions, feedback on rejection, session/access protections and backend
+enforcement. TA scope is approved; teammate contract review and code remain
+pending. Update rendered as-built evidence only after real implementation.
+
 Evidence is limited to `client/src/App.tsx`, `client/src/main.tsx`, `client/index.html`, the screenshots in `artifacts/sprint-1/`, and the existing SRS, feature inventory, system SDS, and Sprint 1 feature contracts. Screens and behaviors not shown by that evidence are marked not implemented or not verified.
 
 ## 1. Design tokens
