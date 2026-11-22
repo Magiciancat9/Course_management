@@ -49,11 +49,14 @@ describe('CoursePMS Client UI Component Suite', () => {
     );
   });
 
-  it('populates login inputs when clicking quick-fill demo account buttons', () => {
+  it('does not render demo quick-fill controls or hard-coded demo passwords on the login screen', () => {
     render(<App />);
-    fireEvent.click(screen.getByTestId('quickfill-pawarit'));
-    expect(screen.getByTestId('login-email')).toHaveValue('pawarit@mail.kmutt.ac.th');
-    expect(screen.getByTestId('login-password')).toHaveValue('Password123!');
+    expect(screen.queryByTestId('quickfill-pawarit')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('quickfill-suda')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('quickfill-instructor')).not.toBeInTheDocument();
+    expect(screen.queryByText(/Quick Fill/i)).not.toBeInTheDocument();
+    expect(screen.getByTestId('login-email')).toHaveValue('');
+    expect(screen.getByTestId('login-password')).toHaveValue('');
   });
 
   it('disables login while the request is pending and restores the session after success', async () => {

@@ -74,6 +74,11 @@ export default function App() {
   // Login form state
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
+  // Navigation state
+  const [activeNav, setActiveNav] = useState<'overview' | 'team' | 'proposal' | 'teams' | 'review'>('overview');
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   // Student Team creation & member addition state
   const [newTeamName, setNewTeamName] = useState('');
@@ -93,6 +98,14 @@ export default function App() {
   // Session boundary refs: prevent cross-session stale responses and callbacks
   const sessionGenerationRef = useRef<number>(0);
   const dashboardAbortRef = useRef<AbortController | null>(null);
+  const menuToggleRef = useRef<HTMLButtonElement | null>(null);
+
+  function getInitials(fullName: string): string {
+    const parts = fullName.trim().split(/\s+/).filter(Boolean);
+    if (parts.length === 0) return '?';
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+  }
 
   function clearProposalEditorFields() {
     setPropTitle('');
@@ -110,6 +123,8 @@ export default function App() {
     setStatusFilter('ALL');
     setSelectedTeamId(null);
     setReviewFeedbackInput('');
+    setActiveNav('overview');
+    setMobileNavOpen(false);
   }
 
   function invalidateSessionBoundary(nextToken: string | null = null): number {
@@ -122,6 +137,7 @@ export default function App() {
     setSuccessBanner(null);
     setLoginEmail('');
     setLoginPassword('');
+    setShowPassword(false);
     clearWorkspaceState();
     if (nextToken === null) {
       localStorage.removeItem('course_pms_token');
@@ -343,6 +359,29 @@ export default function App() {
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
   }, [token]);
+
+  useEffect(() => {
+    if (!mobileNavOpen) return;
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        setMobileNavOpen(false);
+        menuToggleRef.current?.focus();
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [mobileNavOpen]);
+
+  function navigateToSection(
+    navKey: 'overview' | 'team' | 'proposal' | 'teams' | 'review',
+    sectionId?: string
+  ) {
+    setActiveNav(navKey);
+    setMobileNavOpen(false);
+    if (sectionId) {
+      document.getElementById(sectionId)?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
+    }
+  }
 
   async function withPendingAction(action: string, operation: () => Promise<void>) {
     if (pendingAction) return;
@@ -626,132 +665,143 @@ export default function App() {
   // ==========================================================================
   if (!user) {
     return (
-      <div className="min-vh-100 d-flex flex-column bg-light">
-        <nav className="navbar navbar-dark bg-dark px-4 py-3 shadow-sm">
-          <span className="navbar-brand fw-bold mb-0 h1">
-            CoursePMS{' '}
-            <span className="badge bg-info text-dark ms-2" data-testid="release-badge">
+      <div className="cpms-login-page">
+        <header className="cpms-login-topbar">
+          <div className="d-flex align-items-center gap-2 flex-wrap">
+            <span className="fw-bold fs-5">CoursePMS</span>
+            <span className="cpms-course-pill" data-testid="release-badge">
               CPE 334 Cloud Release
             </span>
+          </div>
+          <span className="small" style={{ color: 'var(--cpms-navy-muted)' }}>
+            Course Project Management System
           </span>
-          <span className="text-light small">Course Project Management System</span>
-        </nav>
+        </header>
 
-        <div className="container my-5" style={{ maxWidth: 540 }}>
-          {errorBanner && (
-            <div className="alert alert-danger shadow-sm" data-testid="auth-error" role="alert">
-              <div className="fw-bold">Request Rejected {errorBanner.code ? `(${errorBanner.code})` : ''}</div>
-              <div>{errorBanner.error}</div>
-              <button
-                type="button"
-                className="btn-close"
-                aria-label="Dismiss error"
-                onClick={() => setErrorBanner(null)}
-              />
-            </div>
-          )}
-          {successBanner && (
-            <div className="alert alert-success shadow-sm" data-testid="auth-success" role="alert">
-              {successBanner}
-            </div>
-          )}
+        <main className="cpms-login-main">
+          <div className="cpms-login-grid">
+            <section className="cpms-login-hero" aria-label="CoursePMS overview">
+              <div>
+                <p className="text-uppercase small fw-semibold mb-2" style={{ letterSpacing: '0.06em' }}>
+                  Academic Project Workspace
+                </p>
+                <h2 className="fw-bold fs-3 mb-3">
+                  Coordinate project teams, proposals, and instructor reviews in one place.
+                </h2>
+                <p className="mb-0">
+                  Sign in with your university credentials to form your course team, draft and submit
+                  your project proposal, or review team submissions.
+                </p>
+              </div>
+              <ul className="list-unstyled mb-0 small d-flex flex-column gap-2">
+                <li>• Role-aware workspace for Students and Instructors</li>
+                <li>• Team-scoped proposal drafting and revision history</li>
+                <li>• Verified university account authentication</li>
+              </ul>
+            </section>
 
-          <div className="card shadow-sm border-0">
-            <div className="card-header bg-primary text-white py-3">
-              <h4 className="mb-0 fw-bold">Sign In to CoursePMS</h4>
-              <small>Authenticate with your university account (STUDENT or INSTRUCTOR)</small>
-            </div>
-            <div className="card-body p-4">
-              <form onSubmit={handleLogin}>
+            <section className="cpms-login-form-panel" aria-labelledby="login-heading">
+              {errorBanner && (
+                <div className="cpms-alert cpms-alert-danger mb-3" data-testid="auth-error" role="alert">
+                  <div>
+                    <div className="fw-bold">
+                      Request Rejected {errorBanner.code ? `(${errorBanner.code})` : ''}
+                    </div>
+                    <div>{errorBanner.error}</div>
+                  </div>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    aria-label="Dismiss error"
+                    onClick={() => setErrorBanner(null)}
+                  />
+                </div>
+              )}
+              {successBanner && (
+                <div
+                  className="cpms-alert cpms-alert-success mb-3"
+                  data-testid="auth-success"
+                  role="status"
+                  aria-live="polite"
+                >
+                  <div>{successBanner}</div>
+                </div>
+              )}
+
+              <h1 id="login-heading" className="fw-bold fs-3 mb-1">
+                Sign In to CoursePMS
+              </h1>
+              <p className="small mb-4" style={{ color: 'var(--cpms-text-secondary)' }}>
+                Authenticate with your university account (Student or Instructor).
+              </p>
+
+              <form onSubmit={handleLogin} aria-labelledby="login-heading">
                 <div className="mb-3">
-                  <label className="form-label fw-semibold" htmlFor="login-email">
+                  <label className="cpms-label" htmlFor="login-email">
                     University Email
                   </label>
                   <input
                     id="login-email"
+                    name="email"
                     data-testid="login-email"
                     type="email"
-                    className="form-control"
-                    placeholder="e.g., pawarit@mail.kmutt.ac.th"
+                    className="cpms-input"
+                    autoComplete="email"
+                    autoCorrect="off"
+                    autoCapitalize="none"
+                    spellCheck={false}
+                    enterKeyHint="next"
+                    placeholder="name@mail.kmutt.ac.th"
                     value={loginEmail}
                     onChange={(e) => setLoginEmail(e.target.value)}
                   />
                 </div>
-                <div className="mb-3">
-                  <label className="form-label fw-semibold" htmlFor="login-password">
+                <div className="mb-4">
+                  <label className="cpms-label" htmlFor="login-password">
                     Password
                   </label>
-                  <input
-                    id="login-password"
-                    data-testid="login-password"
-                    type="password"
-                    className="form-control"
-                    placeholder="Enter password"
-                    value={loginPassword}
-                    onChange={(e) => setLoginPassword(e.target.value)}
-                  />
+                  <div className="cpms-password-row">
+                    <input
+                      id="login-password"
+                      name="password"
+                      data-testid="login-password"
+                      type={showPassword ? 'text' : 'password'}
+                      className="cpms-input"
+                      autoComplete="current-password"
+                      enterKeyHint="done"
+                      placeholder="Enter your password"
+                      value={loginPassword}
+                      onChange={(e) => setLoginPassword(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      className="cpms-btn cpms-btn-secondary"
+                      aria-pressed={showPassword}
+                      aria-label={showPassword ? 'Hide password' : 'Show password'}
+                      onClick={() => setShowPassword((prev) => !prev)}
+                    >
+                      {showPassword ? 'Hide' : 'Show'}
+                    </button>
+                  </div>
                 </div>
                 <button
                   type="submit"
                   data-testid="login-submit"
-                  className="btn btn-primary w-100 fw-semibold py-2"
+                  className="cpms-btn cpms-btn-primary w-100"
                   disabled={pendingAction !== null}
                 >
                   {pendingAction === 'login' ? 'Signing in…' : 'Sign In'}
                 </button>
               </form>
-
-              <hr className="my-4" />
-              <div className="small text-muted mb-2 fw-semibold">
-                Seeded Local Test Accounts (Quick Fill):
-              </div>
-              <div className="d-grid gap-2">
-                <button
-                  type="button"
-                  data-testid="quickfill-pawarit"
-                  className="btn btn-outline-secondary btn-sm text-start"
-                  disabled={pendingAction !== null}
-                  onClick={() => {
-                    setLoginEmail('pawarit@mail.kmutt.ac.th');
-                    setLoginPassword('Password123!');
-                  }}
-                >
-                  <strong>Student (Team Alpha Leader):</strong> pawarit@mail.kmutt.ac.th
-                </button>
-                <button
-                  type="button"
-                  data-testid="quickfill-suda"
-                  className="btn btn-outline-secondary btn-sm text-start"
-                  disabled={pendingAction !== null}
-                  onClick={() => {
-                    setLoginEmail('suda@mail.kmutt.ac.th');
-                    setLoginPassword('Password123!');
-                  }}
-                >
-                  <strong>Student (Unassigned):</strong> suda@mail.kmutt.ac.th
-                </button>
-                <button
-                  type="button"
-                  data-testid="quickfill-instructor"
-                  className="btn btn-outline-dark btn-sm text-start"
-                  disabled={pendingAction !== null}
-                  onClick={() => {
-                    setLoginEmail('instructor@kmutt.ac.th');
-                    setLoginPassword('Password123!');
-                  }}
-                >
-                  <strong>Instructor (Course Reviewer):</strong> instructor@kmutt.ac.th
-                </button>
-              </div>
-            </div>
+            </section>
           </div>
-        </div>
+        </main>
       </div>
     );
   }
 
   // ==========================================================================
-  // Authenticated View: Top Navbar + Role Workspace
+  // Authenticated View: Sidebar/Topbar + Role Workspace
   // ==========================================================================
   const filteredTeams =
     statusFilter === 'ALL'
@@ -764,607 +814,781 @@ export default function App() {
     myTeam?.proposal?.status === 'SUBMITTED' || myTeam?.proposal?.status === 'APPROVED';
   const teamAtCapacity = Boolean(myTeam && myTeam.members.length >= myTeam.course.maxTeamSize);
   const canReviewSelectedProposal = selectedInstructorTeam?.proposal?.status === 'SUBMITTED';
+  const courseCode = courses[0]?.code || 'CPE334';
+  const courseTerm = courses[0]?.term || '1/2026';
+
+  const navItems: Array<{
+    key: 'overview' | 'team' | 'proposal' | 'teams' | 'review';
+    label: string;
+    sectionId: string;
+  }> =
+    user.role === 'STUDENT'
+      ? [
+          { key: 'overview', label: 'Overview', sectionId: 'main-content' },
+          { key: 'team', label: 'My Team', sectionId: 'section-team' },
+          { key: 'proposal', label: 'Proposal', sectionId: 'section-proposal' },
+        ]
+      : [
+          { key: 'overview', label: 'Overview', sectionId: 'main-content' },
+          { key: 'teams', label: 'Course Teams', sectionId: 'section-teams' },
+          { key: 'review', label: 'Proposal Review', sectionId: 'section-review' },
+        ];
 
   return (
-    <div className="min-vh-100 bg-light">
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-4 py-3 shadow-sm">
-        <div className="container-fluid">
-          <span className="navbar-brand fw-bold">
-            CoursePMS{' '}
-            <span className="badge bg-info text-dark ms-2">
-              {courses[0]?.code || 'CPE334'} ({courses[0]?.term || '1/2026'})
-            </span>
-          </span>
-          <div className="d-flex align-items-center gap-3">
-            <div className="text-light text-end" data-testid="current-user-info">
-              <div className="fw-semibold">
-                {user.fullName}{' '}
-                {user.studentCode ? <span className="text-info">({user.studentCode})</span> : null}
-              </div>
-              <div className="small text-secondary">{user.email}</div>
+    <>
+      <a href="#main-content" className="cpms-skip-link">
+        Skip to main content
+      </a>
+
+      <div className="cpms-app-shell">
+        <aside className="cpms-sidebar">
+          <div className="cpms-brand-row">
+            <div className="d-flex align-items-center gap-2 flex-wrap">
+              <span className="cpms-brand-title">CoursePMS</span>
+              <span className="cpms-course-pill">
+                {courseCode} ({courseTerm})
+              </span>
             </div>
-            <span
-              data-testid="current-user-role"
-              className={`badge ${
-                user.role === 'INSTRUCTOR' ? 'bg-warning text-dark' : 'bg-success'
-              } fs-6`}
-            >
-              {user.role}
-            </span>
             <button
+              ref={menuToggleRef}
               type="button"
-              data-testid="logout-btn"
-              className="btn btn-outline-light btn-sm"
-              onClick={handleLogout}
-              disabled={pendingAction !== null}
+              className="cpms-menu-toggle"
+              aria-expanded={mobileNavOpen}
+              aria-controls="primary-nav"
+              onClick={() => setMobileNavOpen((open) => !open)}
             >
-              {pendingAction === 'logout' ? 'Logging out…' : 'Logout'}
+              {mobileNavOpen ? 'Close' : 'Menu'}
             </button>
           </div>
-        </div>
-      </nav>
 
-      <div className="container py-4">
-        {loading && (
-          <div className="alert alert-info py-2">Loading latest course data from PostgreSQL...</div>
-        )}
-        {errorBanner && (
-          <div className="alert alert-danger shadow-sm" data-testid="error-banner" role="alert">
-            <div className="fw-bold">
-              Operation Rejected {errorBanner.code ? `[${errorBanner.code}]` : ''}
-            </div>
-            <div>{errorBanner.error}</div>
-            <button
-              type="button"
-              className="btn-close"
-              aria-label="Dismiss error"
-              onClick={() => setErrorBanner(null)}
-            />
-          </div>
-        )}
-        {successBanner && (
-          <div className="alert alert-success shadow-sm" data-testid="success-banner" role="alert">
-            {successBanner}
-          </div>
-        )}
+          <nav
+            id="primary-nav"
+            aria-label="Primary"
+            className="cpms-nav-container"
+            data-open={mobileNavOpen ? 'true' : 'false'}
+          >
+            <ul className="cpms-nav-list">
+              {navItems.map((item) => (
+                <li key={item.key}>
+                  <button
+                    type="button"
+                    className="cpms-nav-link"
+                    aria-current={activeNav === item.key ? 'page' : undefined}
+                    onClick={() => navigateToSection(item.key, item.sectionId)}
+                  >
+                    {item.label}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </aside>
 
-        {/* ================================================================== */}
-        {/* STUDENT WORKSPACE (F-02 Team Formation & F-03 Proposal Workflow)   */}
-        {/* ================================================================== */}
-        {user.role === 'STUDENT' && (
-          <div className="row g-4">
-            <div className="col-lg-5">
-              {/* My Team Card */}
-              <div className="card shadow-sm border-0 mb-4">
-                <div className="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                  <h5 className="mb-0 fw-bold">My Project Team</h5>
-                  {myTeam && (
-                    <span className="badge bg-dark" data-testid="team-capacity-badge">
-                      {myTeam.members.length} / {myTeam.course.maxTeamSize} Members
-                    </span>
-                  )}
-                </div>
-                <div className="card-body">
-                  {myTeam ? (
-                    <>
-                      <h5 className="fw-bold text-primary mb-1" data-testid="my-team-name">
-                        {myTeam.name}
-                      </h5>
-                      <p className="text-muted small mb-3">
-                        Course: {myTeam.course.code} — Max Team Size: {myTeam.course.maxTeamSize}{' '}
-                        (BR-02)
-                      </p>
-
-                      <h6 className="fw-semibold">Team Roster:</h6>
-                      <ul className="list-group mb-3" data-testid="team-roster-list">
-                        {myTeam.members.map((m) => (
-                          <li
-                            key={m.id}
-                            className="list-group-item d-flex justify-content-between align-items-center"
-                          >
-                            <div>
-                              <div className="fw-semibold">{m.user.fullName}</div>
-                              <div className="small text-muted">
-                                {m.user.email}{' '}
-                                {m.user.studentCode ? `• ID: ${m.user.studentCode}` : ''}
-                              </div>
-                            </div>
-                            <span className="badge bg-secondary">{m.memberRole}</span>
-                          </li>
-                        ))}
-                      </ul>
-
-                      <form onSubmit={(e) => handleAddMember(e, myTeam.id)}>
-                        <label className="form-label small fw-semibold">
-                          Add Teammate by University Email (Enforces BR-01 & BR-02)
-                        </label>
-                        <div className="input-group">
-                          <input
-                            type="email"
-                            data-testid="add-member-email"
-                            className="form-control form-control-sm"
-                            placeholder="e.g., tatchakorn@mail.kmutt.ac.th"
-                            value={addMemberEmail}
-                            onChange={(e) => setAddMemberEmail(e.target.value)}
-                            disabled={pendingAction !== null || teamAtCapacity || proposalLocked}
-                          />
-                          <button
-                            type="submit"
-                            data-testid="add-member-btn"
-                            className="btn btn-outline-primary btn-sm fw-semibold"
-                            disabled={pendingAction !== null || teamAtCapacity || proposalLocked}
-                          >
-                            {pendingAction === 'add-member' ? 'Adding…' : 'Add Member'}
-                          </button>
-                        </div>
-                        {teamAtCapacity && (
-                          <div className="small text-muted mt-1">This team has reached its member limit.</div>
-                        )}
-                        {proposalLocked && (
-                          <div className="small text-muted mt-1">
-                            Team changes are locked while this proposal is under review or approved.
-                          </div>
-                        )}
-                      </form>
-                    </>
-                  ) : (
-                    <div className="text-muted">
-                      <p className="small mb-2">
-                        You are not currently assigned to a team in{' '}
-                        <strong>{courses[0]?.code || 'CPE334'}</strong>. Create a new project team
-                        below. To join an existing team, ask one of its members to add your university email.
-                      </p>
-                    </div>
-                  )}
-
-                  {!myTeam && (
-                    <>
-                      <hr className="my-3" />
-                      <form onSubmit={handleCreateTeam}>
-                        <label className="form-label small fw-semibold">
-                          Create New Project Team in {courses[0]?.code || 'CPE334'}
-                        </label>
-                        <div className="input-group">
-                          <input
-                            type="text"
-                            data-testid="create-team-name"
-                            className="form-control form-control-sm"
-                            placeholder="New team name (e.g., Team Gamma)"
-                            value={newTeamName}
-                            onChange={(e) => setNewTeamName(e.target.value)}
-                            disabled={pendingAction !== null}
-                          />
-                          <button
-                            type="submit"
-                            data-testid="create-team-btn"
-                            className="btn btn-dark btn-sm"
-                            disabled={pendingAction !== null}
-                          >
-                            {pendingAction === 'create-team' ? 'Creating…' : 'Create Team'}
-                          </button>
-                        </div>
-                      </form>
-                    </>
-                  )}
-                </div>
-              </div>
-
-              {/* Course Teams Directory & Cross-Team Isolation Test Card */}
-              <div className="card shadow-sm border-0">
-                <div className="card-header bg-white py-3">
-                  <h6 className="mb-0 fw-bold">Course Teams Directory</h6>
-                </div>
-                <div className="card-body p-0">
-                  <table className="table table-sm table-hover mb-0 align-middle">
-                    <thead className="table-light">
-                      <tr>
-                        <th className="ps-3">Team</th>
-                        <th>Members</th>
-                        <th>Status</th>
-                        <th className="pe-3 text-end">Proposal</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {teams.length === 0 ? (
-                        <tr>
-                          <td colSpan={4} className="text-center text-muted py-3">
-                            No project teams are available in this course yet.
-                          </td>
-                        </tr>
-                      ) : teams.map((t) => (
-                        <tr key={t.id}>
-                          <td className="ps-3 fw-semibold">{t.name}</td>
-                          <td>
-                            {t.members.length}/{t.course.maxTeamSize}
-                          </td>
-                          <td>
-                            <span className={`badge ${statusBadgeClass(canViewTeamProposalStatus(t.id) ? t.proposal?.status : undefined)}`}>
-                              {canViewTeamProposalStatus(t.id) ? t.proposal?.status || 'NO_DRAFT' : 'PRIVATE'}
-                            </span>
-                          </td>
-                          <td className="pe-3 text-end">
-                            <button
-                              type="button"
-                              data-testid={`inspect-proposal-${t.id}`}
-                              className="btn btn-outline-secondary btn-sm"
-                              onClick={() => handleInspectTeamProposal(t.id)}
-                              disabled={pendingAction !== null}
-                            >
-                              {pendingAction === 'inspect-proposal' ? 'Loading…' : 'View Proposal'}
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+        <div className="cpms-workspace-column">
+          <header className="cpms-topbar">
+            <div>
+              <h1 className="h4 fw-bold mb-0">
+                {user.role === 'INSTRUCTOR' ? 'Instructor Review Console' : 'Student Workspace'}
+              </h1>
+              <div className="small" style={{ color: 'var(--cpms-text-secondary)' }}>
+                {courses[0]?.name || 'Course Project Management System'}
               </div>
             </div>
 
-            {/* Right Column: F-03 Project Proposal Editor */}
-            <div className="col-lg-7">
-              <div className="card shadow-sm border-0">
-                <div className="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                  <div>
-                    <h5 className="mb-0 fw-bold">Team Project Proposal</h5>
-                    <small className="text-muted">
-                      State transitions: DRAFT → SUBMITTED → APPROVED / REVISION_REQUESTED
-                    </small>
+            <div className="cpms-topbar-actions">
+              <div className="text-end" data-testid="current-user-info">
+                <div className="fw-semibold">
+                  {user.fullName}{' '}
+                  {user.studentCode ? (
+                    <span style={{ color: 'var(--cpms-action)' }}>({user.studentCode})</span>
+                  ) : null}
+                </div>
+                <div className="small cpms-wrap-anywhere" style={{ color: 'var(--cpms-text-secondary)' }}>
+                  {user.email}
+                </div>
+              </div>
+              <span
+                data-testid="current-user-role"
+                className={`badge ${
+                  user.role === 'INSTRUCTOR' ? 'bg-warning text-dark' : 'bg-success'
+                }`}
+              >
+                {user.role}
+              </span>
+              <button
+                type="button"
+                data-testid="logout-btn"
+                className="cpms-btn cpms-btn-outline-dark"
+                onClick={handleLogout}
+                disabled={pendingAction !== null}
+              >
+                {pendingAction === 'logout' ? 'Logging out…' : 'Logout'}
+              </button>
+            </div>
+          </header>
+
+          <main id="main-content" tabIndex={-1} className="cpms-main-content">
+            {loading && (
+              <div className="cpms-alert cpms-alert-info" role="status">
+                <div>Loading latest course data…</div>
+              </div>
+            )}
+            {errorBanner && (
+              <div className="cpms-alert cpms-alert-danger" data-testid="error-banner" role="alert">
+                <div>
+                  <div className="fw-bold">
+                    Operation Rejected {errorBanner.code ? `[${errorBanner.code}]` : ''}
                   </div>
-                  {myTeam?.proposal && (
-                    <div className="text-end">
-                      <span
-                        data-testid="proposal-status"
-                        className={`badge ${statusBadgeClass(myTeam.proposal.status)} fs-6`}
-                      >
-                        {myTeam.proposal.status}
-                      </span>
-                      <div className="small text-muted mt-1" data-testid="proposal-revision">
-                        Revision #{myTeam.proposal.revisionCount}
-                      </div>
-                    </div>
-                  )}
+                  <div>{errorBanner.error}</div>
                 </div>
+                <button
+                  type="button"
+                  className="btn-close"
+                  aria-label="Dismiss error"
+                  onClick={() => setErrorBanner(null)}
+                />
+              </div>
+            )}
+            {successBanner && (
+              <div
+                className="cpms-alert cpms-alert-success"
+                data-testid="success-banner"
+                role="status"
+                aria-live="polite"
+              >
+                <div>{successBanner}</div>
+              </div>
+            )}
 
-                <div className="card-body">
-                  {!myTeam ? (
-                    <div className="alert alert-secondary mb-0">
-                      Create a project team first. To join an existing team, ask one of its members
-                      to add your university email.
-                    </div>
-                  ) : (
-                    <>
-                      {myTeam.proposal?.reviewFeedback && (
-                        <div
-                          className={`alert ${
-                            myTeam.proposal.status === 'APPROVED'
-                              ? 'alert-success'
-                              : 'alert-warning'
-                          }`}
-                          data-testid="review-feedback-box"
-                        >
-                          <div className="fw-bold">
-                            Instructor Review Decision: {myTeam.proposal.status}
-                            {myTeam.proposal.reviewedBy
-                              ? ` (by ${myTeam.proposal.reviewedBy.fullName})`
-                              : ''}
-                          </div>
-                          <div className="mt-1">{myTeam.proposal.reviewFeedback}</div>
-                        </div>
+            {/* ================================================================== */}
+            {/* STUDENT WORKSPACE                                                  */}
+            {/* ================================================================== */}
+            {user.role === 'STUDENT' && (
+              <div className="cpms-two-col">
+                <div className="d-flex flex-column gap-4">
+                  {/* My Team Card */}
+                  <section id="section-team" className="cpms-card" aria-labelledby="my-team-heading">
+                    <div className="cpms-card-header">
+                      <h2 id="my-team-heading" className="h5 mb-0 fw-bold">
+                        My Project Team
+                      </h2>
+                      {myTeam && (
+                        <span className="badge bg-dark" data-testid="team-capacity-badge">
+                          {myTeam.members.length} / {myTeam.course.maxTeamSize} Members
+                        </span>
                       )}
+                    </div>
+                    <div className="cpms-card-body">
+                      {myTeam ? (
+                        <>
+                          <div className="fw-bold fs-5 mb-1" style={{ color: 'var(--cpms-action)' }} data-testid="my-team-name">
+                            {myTeam.name}
+                          </div>
+                          <p className="small mb-3" style={{ color: 'var(--cpms-text-secondary)' }}>
+                            Course: {myTeam.course.code} — Maximum team size: {myTeam.course.maxTeamSize}
+                          </p>
 
-                      <div className="mb-3">
-                        <label className="form-label fw-semibold">
-                          Project Title <span className="text-danger">* (min 5 chars, BR-04)</span>
-                        </label>
-                        <input
-                          type="text"
-                          data-testid="proposal-title"
-                          className="form-control"
-                          value={propTitle}
-                          onChange={(e) => setPropTitle(e.target.value)}
-                          disabled={proposalLocked || pendingAction !== null}
-                        />
-                      </div>
-
-                      <div className="mb-3">
-                        <label className="form-label fw-semibold">
-                          Problem Statement & Scope{' '}
-                          <span className="text-danger">* (min 20 chars, BR-04)</span>
-                        </label>
-                        <textarea
-                          rows={4}
-                          data-testid="proposal-problem"
-                          className="form-control"
-                          value={propProblem}
-                          onChange={(e) => setPropProblem(e.target.value)}
-                          disabled={proposalLocked || pendingAction !== null}
-                        />
-                      </div>
-
-                      <div className="row g-3 mb-4">
-                        <div className="col-md-6">
-                          <label className="form-label fw-semibold">
-                            Selected Tech Stack <span className="text-danger">* (BR-04)</span>
-                          </label>
-                          <input
-                            type="text"
-                            data-testid="proposal-stack"
-                            className="form-control"
-                            value={propStack}
-                            onChange={(e) => setPropStack(e.target.value)}
-                            disabled={proposalLocked || pendingAction !== null}
-                          />
-                        </div>
-                        <div className="col-md-6">
-                          <label className="form-label fw-semibold">GitHub Repository URL</label>
-                          <input
-                            type="text"
-                            data-testid="proposal-repo"
-                            className="form-control"
-                            value={propRepo}
-                            onChange={(e) => setPropRepo(e.target.value)}
-                            disabled={proposalLocked || pendingAction !== null}
-                          />
-                        </div>
-                      </div>
-
-                      <div className="d-flex gap-2">
-                        <button
-                          type="button"
-                          data-testid="save-draft-btn"
-                          className="btn btn-outline-secondary fw-semibold"
-                          onClick={handleSaveDraft}
-                          disabled={proposalLocked || pendingAction !== null}
-                        >
-                          {pendingAction === 'save-draft' ? 'Saving…' : 'Save Draft'}
-                        </button>
-                        <button
-                          type="button"
-                          data-testid="submit-proposal-btn"
-                          className="btn btn-primary fw-semibold"
-                          onClick={handleSubmitProposal}
-                          disabled={proposalLocked || pendingAction !== null}
-                        >
-                          {pendingAction === 'submit-proposal' ? 'Submitting…' : 'Submit Proposal for Review'}
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ================================================================== */}
-        {/* INSTRUCTOR REVIEW CONSOLE (F-03 Proposal Review & Course Roster)   */}
-        {/* ================================================================== */}
-        {user.role === 'INSTRUCTOR' && (
-          <div>
-            {/* Summary Metrics */}
-            <div className="row g-3 mb-4">
-              <div className="col-md-3">
-                <div className="card border-0 shadow-sm text-center p-3">
-                  <div className="text-muted small fw-semibold">Total Registered Teams</div>
-                  <div className="fs-3 fw-bold">{teams.length}</div>
-                </div>
-              </div>
-              <div className="col-md-3">
-                <div className="card border-0 shadow-sm text-center p-3">
-                  <div className="text-primary small fw-semibold">Submitted (Pending Review)</div>
-                  <div className="fs-3 fw-bold text-primary">
-                    {teams.filter((t) => t.proposal?.status === 'SUBMITTED').length}
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-3">
-                <div className="card border-0 shadow-sm text-center p-3">
-                  <div className="text-success small fw-semibold">Approved Proposals</div>
-                  <div className="fs-3 fw-bold text-success">
-                    {teams.filter((t) => t.proposal?.status === 'APPROVED').length}
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-3">
-                <div className="card border-0 shadow-sm text-center p-3">
-                  <div className="text-warning small fw-semibold">Revision Requested</div>
-                  <div className="fs-3 fw-bold text-warning">
-                    {teams.filter((t) => t.proposal?.status === 'REVISION_REQUESTED').length}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="row g-4">
-              <div className="col-lg-6">
-                <div className="card shadow-sm border-0">
-                  <div className="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                    <h5 className="mb-0 fw-bold">All Course Project Teams</h5>
-                    <select
-                      data-testid="instructor-status-filter"
-                      className="form-select form-select-sm w-auto"
-                      value={statusFilter}
-                      onChange={(e) => setStatusFilter(e.target.value)}
-                    >
-                      <option value="ALL">All Statuses</option>
-                      <option value="SUBMITTED">SUBMITTED</option>
-                      <option value="APPROVED">APPROVED</option>
-                      <option value="REVISION_REQUESTED">REVISION_REQUESTED</option>
-                      <option value="DRAFT">DRAFT</option>
-                    </select>
-                  </div>
-                  <div className="card-body p-0">
-                    <table className="table table-hover mb-0 align-middle">
-                      <thead className="table-light">
-                        <tr>
-                          <th className="ps-3">Team</th>
-                          <th>Members</th>
-                          <th>Proposal Status</th>
-                          <th className="pe-3 text-end">Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {filteredTeams.length === 0 ? (
-                          <tr>
-                            <td colSpan={4} className="text-center text-muted py-3">
-                              No teams match this status filter.
-                            </td>
-                          </tr>
-                        ) : filteredTeams.map((t) => (
-                          <tr
-                            key={t.id}
-                            className={
-                              selectedInstructorTeam?.id === t.id ? 'table-active' : undefined
-                            }
-                          >
-                            <td className="ps-3">
-                              <div className="fw-bold">{t.name}</div>
-                              <div className="small text-muted">
-                                {t.proposal?.title || 'No proposal'}
-                              </div>
-                            </td>
-                            <td>
-                              {t.members.length}/{t.course.maxTeamSize}
-                            </td>
-                            <td>
-                              <span className={`badge ${statusBadgeClass(canViewTeamProposalStatus(t.id) ? t.proposal?.status : undefined)}`}>
-                                {canViewTeamProposalStatus(t.id) ? t.proposal?.status || 'NONE' : 'PRIVATE'}
-                              </span>
-                            </td>
-                            <td className="pe-3 text-end">
-                              <button
-                                type="button"
-                                data-testid={`select-team-${t.id}`}
-                                className="btn btn-sm btn-outline-primary"
-                                onClick={() => setSelectedTeamId(t.id)}
+                          <h3 className="h6 fw-semibold mb-2">Team Roster</h3>
+                          <ul className="list-group mb-3" data-testid="team-roster-list">
+                            {myTeam.members.map((m) => (
+                              <li
+                                key={m.id}
+                                className="list-group-item d-flex justify-content-between align-items-center gap-2"
                               >
-                                Inspect / Review
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
+                                <div className="d-flex align-items-center gap-2 min-w-0">
+                                  <span className="cpms-avatar" aria-hidden="true">
+                                    {getInitials(m.user.fullName)}
+                                  </span>
+                                  <div className="min-w-0">
+                                    <div className="fw-semibold">{m.user.fullName}</div>
+                                    <div className="small cpms-wrap-anywhere" style={{ color: 'var(--cpms-text-secondary)' }}>
+                                      {m.user.email}{' '}
+                                      {m.user.studentCode ? `• ID: ${m.user.studentCode}` : ''}
+                                    </div>
+                                  </div>
+                                </div>
+                                <span className="badge bg-secondary">{m.memberRole}</span>
+                              </li>
+                            ))}
+                          </ul>
 
-              <div className="col-lg-6">
-                <div className="card shadow-sm border-0">
-                  <div className="card-header bg-white py-3">
-                    <h5 className="mb-0 fw-bold">
-                      Instructor Proposal Review Panel (F-03 / BR-05)
-                    </h5>
+                          <form onSubmit={(e) => handleAddMember(e, myTeam.id)}>
+                            <label className="cpms-label" htmlFor="add-member-email">
+                              Add Teammate by University Email
+                            </label>
+                            <div className="cpms-inline-form">
+                              <input
+                                id="add-member-email"
+                                type="email"
+                                data-testid="add-member-email"
+                                className="cpms-input"
+                                autoComplete="off"
+                                autoCorrect="off"
+                                autoCapitalize="none"
+                                spellCheck={false}
+                                placeholder="teammate@mail.kmutt.ac.th"
+                                value={addMemberEmail}
+                                onChange={(e) => setAddMemberEmail(e.target.value)}
+                                disabled={pendingAction !== null || teamAtCapacity || proposalLocked}
+                              />
+                              <button
+                                type="submit"
+                                data-testid="add-member-btn"
+                                className="cpms-btn cpms-btn-secondary cpms-btn-full-mobile"
+                                disabled={pendingAction !== null || teamAtCapacity || proposalLocked}
+                              >
+                                {pendingAction === 'add-member' ? 'Adding…' : 'Add Member'}
+                              </button>
+                            </div>
+                            {teamAtCapacity && (
+                              <div className="cpms-hint">This team has reached its member limit.</div>
+                            )}
+                            {proposalLocked && (
+                              <div className="cpms-hint">
+                                Team changes are locked while this proposal is under review or approved.
+                              </div>
+                            )}
+                          </form>
+                        </>
+                      ) : (
+                        <>
+                          <p className="small mb-3" style={{ color: 'var(--cpms-text-secondary)' }}>
+                            You are not currently assigned to a team in <strong>{courseCode}</strong>.
+                            Create a new project team below, or ask an existing team member to add
+                            your university email.
+                          </p>
+                          <form onSubmit={handleCreateTeam}>
+                            <label className="cpms-label" htmlFor="create-team-name">
+                              Create New Project Team in {courseCode}
+                            </label>
+                            <div className="cpms-inline-form">
+                              <input
+                                id="create-team-name"
+                                type="text"
+                                data-testid="create-team-name"
+                                className="cpms-input"
+                                placeholder="New team name (e.g., Team Gamma)"
+                                value={newTeamName}
+                                onChange={(e) => setNewTeamName(e.target.value)}
+                                disabled={pendingAction !== null}
+                              />
+                              <button
+                                type="submit"
+                                data-testid="create-team-btn"
+                                className="cpms-btn cpms-btn-primary cpms-btn-full-mobile"
+                                disabled={pendingAction !== null}
+                              >
+                                {pendingAction === 'create-team' ? 'Creating…' : 'Create Team'}
+                              </button>
+                            </div>
+                          </form>
+                        </>
+                      )}
+                    </div>
+                  </section>
+
+                  {/* Course Teams Directory */}
+                  <section className="cpms-card" aria-labelledby="directory-heading">
+                    <div className="cpms-card-header">
+                      <h2 id="directory-heading" className="h5 mb-0 fw-bold">
+                        Course Teams Directory
+                      </h2>
+                    </div>
+                    <div
+                      className="cpms-table-scroll"
+                      role="region"
+                      tabIndex={0}
+                      aria-label="Course teams directory"
+                    >
+                      <table className="cpms-table">
+                        <caption className="visually-hidden">
+                          Registered teams in the selected course and their proposal visibility
+                        </caption>
+                        <thead>
+                          <tr>
+                            <th scope="col">Team</th>
+                            <th scope="col">Members</th>
+                            <th scope="col">Status</th>
+                            <th scope="col" className="text-end">
+                              Proposal
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {teams.length === 0 ? (
+                            <tr>
+                              <td colSpan={4} className="text-center py-4" style={{ color: 'var(--cpms-text-secondary)' }}>
+                                No project teams are available in this course yet.
+                              </td>
+                            </tr>
+                          ) : (
+                            teams.map((t) => (
+                              <tr key={t.id}>
+                                <td className="fw-semibold">{t.name}</td>
+                                <td>
+                                  {t.members.length}/{t.course.maxTeamSize}
+                                </td>
+                                <td>
+                                  <span
+                                    className={`badge ${statusBadgeClass(
+                                      canViewTeamProposalStatus(t.id) ? t.proposal?.status : undefined
+                                    )}`}
+                                  >
+                                    {canViewTeamProposalStatus(t.id)
+                                      ? t.proposal?.status || 'NO_DRAFT'
+                                      : 'PRIVATE'}
+                                  </span>
+                                </td>
+                                <td className="text-end">
+                                  <button
+                                    type="button"
+                                    data-testid={`inspect-proposal-${t.id}`}
+                                    className="cpms-btn cpms-btn-secondary"
+                                    onClick={() => handleInspectTeamProposal(t.id)}
+                                    disabled={pendingAction !== null}
+                                  >
+                                    {pendingAction === 'inspect-proposal' ? 'Loading…' : 'View Proposal'}
+                                  </button>
+                                </td>
+                              </tr>
+                            ))
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </section>
+                </div>
+
+                {/* Right Column: Project Proposal Editor */}
+                <section id="section-proposal" className="cpms-card" aria-labelledby="proposal-heading">
+                  <div className="cpms-card-header">
+                    <div>
+                      <h2 id="proposal-heading" className="h5 mb-0 fw-bold">
+                        Team Project Proposal
+                      </h2>
+                      <div className="small" style={{ color: 'var(--cpms-text-secondary)' }}>
+                        Draft your proposal, save progress, and submit for instructor review.
+                      </div>
+                    </div>
+                    {myTeam?.proposal && (
+                      <div className="text-end">
+                        <span
+                          data-testid="proposal-status"
+                          className={`badge ${statusBadgeClass(myTeam.proposal.status)} fs-6`}
+                        >
+                          {myTeam.proposal.status}
+                        </span>
+                        <div className="small mt-1" style={{ color: 'var(--cpms-text-secondary)' }} data-testid="proposal-revision">
+                          Revision #{myTeam.proposal.revisionCount}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                  <div className="card-body">
-                    {!selectedInstructorTeam || !selectedInstructorTeam.proposal ? (
-                      <div className="text-muted">Select a team with a proposal to inspect.</div>
+
+                  <div className="cpms-card-body">
+                    {!myTeam ? (
+                      <div className="cpms-alert cpms-alert-info mb-0">
+                        <div>
+                          Create a project team first, or ask an existing team member to add your
+                          university email before drafting a proposal.
+                        </div>
+                      </div>
                     ) : (
                       <>
-                        <div className="d-flex justify-content-between align-items-start mb-3">
-                          <div>
-                            <h5 className="fw-bold mb-1" data-testid="review-panel-team">
-                              {selectedInstructorTeam.name}: {selectedInstructorTeam.proposal.title}
-                            </h5>
-                            <div className="small text-muted">
-                              Members:{' '}
-                              {selectedInstructorTeam.members
-                                .map((m) => `${m.user.fullName} (${m.user.studentCode || ''})`)
-                                .join(', ')}
-                            </div>
-                          </div>
-                          <span
-                            data-testid="review-panel-status"
-                            className={`badge ${statusBadgeClass(
-                              selectedInstructorTeam.proposal.status
-                            )} fs-6`}
+                        {myTeam.proposal?.reviewFeedback && (
+                          <div
+                            className={`cpms-alert mb-4 ${
+                              myTeam.proposal.status === 'APPROVED'
+                                ? 'cpms-alert-success'
+                                : 'cpms-alert-warning'
+                            }`}
+                            data-testid="review-feedback-box"
                           >
-                            {selectedInstructorTeam.proposal.status}
-                          </span>
-                        </div>
-
-                        <div className="bg-light p-3 rounded mb-3 border">
-                          <div className="fw-semibold small text-uppercase text-muted mb-1">
-                            Problem Statement
-                          </div>
-                          <p className="mb-2">{selectedInstructorTeam.proposal.problemStatement}</p>
-                          <div className="small">
-                            <strong>Tech Stack:</strong> {selectedInstructorTeam.proposal.techStack}{' '}
-                            | <strong>Repo:</strong> {selectedInstructorTeam.proposal.repoUrl} |{' '}
-                            <strong>Revision:</strong> #
-                            {selectedInstructorTeam.proposal.revisionCount}
-                          </div>
-                        </div>
-
-                        {selectedInstructorTeam.proposal.reviewFeedback && (
-                          <div className="alert alert-secondary small">
-                            <strong>Latest Recorded Feedback:</strong>{' '}
-                            {selectedInstructorTeam.proposal.reviewFeedback}
+                            <div>
+                              <div className="fw-bold">
+                                Instructor Review Decision: {myTeam.proposal.status}
+                                {myTeam.proposal.reviewedBy
+                                  ? ` (by ${myTeam.proposal.reviewedBy.fullName})`
+                                  : ''}
+                              </div>
+                              <div className="mt-1">{myTeam.proposal.reviewFeedback}</div>
+                            </div>
                           </div>
                         )}
 
                         <div className="mb-3">
-                          <label className="form-label fw-semibold">
-                            Instructor Review Feedback{' '}
-                            <span className="text-danger">* (min 10 chars, BR-05)</span>
+                          <label className="cpms-label" htmlFor="proposal-title">
+                            Project Title <span className="text-danger">*</span>
                           </label>
-                          <textarea
-                            rows={3}
-                            data-testid="review-feedback-input"
-                            className="form-control"
-                            placeholder="Provide specific engineering feedback (minimum 10 characters)..."
-                            value={reviewFeedbackInput}
-                            onChange={(e) => setReviewFeedbackInput(e.target.value)}
-                            disabled={!canReviewSelectedProposal || pendingAction !== null}
+                          <div id="proposal-title-hint" className="cpms-hint mb-1">
+                            Required, minimum 5 characters.
+                          </div>
+                          <input
+                            id="proposal-title"
+                            type="text"
+                            data-testid="proposal-title"
+                            className="cpms-input"
+                            aria-describedby="proposal-title-hint"
+                            value={propTitle}
+                            onChange={(e) => setPropTitle(e.target.value)}
+                            disabled={proposalLocked || pendingAction !== null}
                           />
                         </div>
 
-                        {canReviewSelectedProposal ? (
-                          <div className="d-flex gap-2">
-                            <button
-                              type="button"
-                              data-testid="approve-proposal-btn"
-                              className="btn btn-success fw-semibold"
-                              onClick={() =>
-                                handleInstructorDecision(
-                                  selectedInstructorTeam.proposal!.id,
-                                  'APPROVED'
-                                )
-                              }
-                              disabled={pendingAction !== null}
-                            >
-                              {pendingAction === 'review-proposal' ? 'Recording…' : 'Approve Proposal'}
-                            </button>
-                            <button
-                              type="button"
-                              data-testid="revision-proposal-btn"
-                              className="btn btn-warning fw-semibold"
-                              onClick={() =>
-                                handleInstructorDecision(
-                                  selectedInstructorTeam.proposal!.id,
-                                  'REVISION_REQUESTED'
-                                )
-                              }
-                              disabled={pendingAction !== null}
-                            >
-                              {pendingAction === 'review-proposal' ? 'Recording…' : 'Request Revision'}
-                            </button>
+                        <div className="mb-3">
+                          <label className="cpms-label" htmlFor="proposal-problem">
+                            Problem Statement &amp; Scope <span className="text-danger">*</span>
+                          </label>
+                          <div id="proposal-problem-hint" className="cpms-hint mb-1">
+                            Required, minimum 20 characters.
                           </div>
-                        ) : (
-                          <div className="small text-muted">
-                            Instructor decisions are available only while a proposal is submitted for review.
+                          <textarea
+                            id="proposal-problem"
+                            rows={4}
+                            data-testid="proposal-problem"
+                            className="cpms-textarea"
+                            aria-describedby="proposal-problem-hint"
+                            value={propProblem}
+                            onChange={(e) => setPropProblem(e.target.value)}
+                            disabled={proposalLocked || pendingAction !== null}
+                          />
+                        </div>
+
+                        <div className="row g-3 mb-4">
+                          <div className="col-md-6">
+                            <label className="cpms-label" htmlFor="proposal-stack">
+                              Selected Tech Stack <span className="text-danger">*</span>
+                            </label>
+                            <input
+                              id="proposal-stack"
+                              type="text"
+                              data-testid="proposal-stack"
+                              className="cpms-input"
+                              value={propStack}
+                              onChange={(e) => setPropStack(e.target.value)}
+                              disabled={proposalLocked || pendingAction !== null}
+                            />
                           </div>
-                        )}
+                          <div className="col-md-6">
+                            <label className="cpms-label" htmlFor="proposal-repo">
+                              GitHub Repository URL
+                            </label>
+                            <input
+                              id="proposal-repo"
+                              type="url"
+                              data-testid="proposal-repo"
+                              className="cpms-input"
+                              value={propRepo}
+                              onChange={(e) => setPropRepo(e.target.value)}
+                              disabled={proposalLocked || pendingAction !== null}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="d-flex flex-wrap gap-2">
+                          <button
+                            type="button"
+                            data-testid="save-draft-btn"
+                            className="cpms-btn cpms-btn-secondary cpms-btn-full-mobile"
+                            onClick={handleSaveDraft}
+                            disabled={proposalLocked || pendingAction !== null}
+                          >
+                            {pendingAction === 'save-draft' ? 'Saving…' : 'Save Draft'}
+                          </button>
+                          <button
+                            type="button"
+                            data-testid="submit-proposal-btn"
+                            className="cpms-btn cpms-btn-primary cpms-btn-full-mobile"
+                            onClick={handleSubmitProposal}
+                            disabled={proposalLocked || pendingAction !== null}
+                          >
+                            {pendingAction === 'submit-proposal'
+                              ? 'Submitting…'
+                              : 'Submit Proposal for Review'}
+                          </button>
+                        </div>
                       </>
                     )}
                   </div>
+                </section>
+              </div>
+            )}
+
+            {/* ================================================================== */}
+            {/* INSTRUCTOR REVIEW CONSOLE                                          */}
+            {/* ================================================================== */}
+            {user.role === 'INSTRUCTOR' && (
+              <div className="d-flex flex-column gap-4">
+                <section className="cpms-metrics-grid" aria-label="Course proposal summary">
+                  <div className="cpms-card">
+                    <div className="cpms-card-body text-center">
+                      <div className="small fw-semibold" style={{ color: 'var(--cpms-text-secondary)' }}>
+                        Total Registered Teams
+                      </div>
+                      <div className="fs-3 fw-bold mt-1">{teams.length}</div>
+                    </div>
+                  </div>
+                  <div className="cpms-card">
+                    <div className="cpms-card-body text-center">
+                      <div className="small fw-semibold" style={{ color: 'var(--cpms-action)' }}>
+                        Submitted (Pending Review)
+                      </div>
+                      <div className="fs-3 fw-bold mt-1" style={{ color: 'var(--cpms-action)' }}>
+                        {teams.filter((t) => t.proposal?.status === 'SUBMITTED').length}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="cpms-card">
+                    <div className="cpms-card-body text-center">
+                      <div className="small fw-semibold text-success">Approved Proposals</div>
+                      <div className="fs-3 fw-bold text-success mt-1">
+                        {teams.filter((t) => t.proposal?.status === 'APPROVED').length}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="cpms-card">
+                    <div className="cpms-card-body text-center">
+                      <div className="small fw-semibold" style={{ color: '#92400e' }}>
+                        Revision Requested
+                      </div>
+                      <div className="fs-3 fw-bold mt-1" style={{ color: '#92400e' }}>
+                        {teams.filter((t) => t.proposal?.status === 'REVISION_REQUESTED').length}
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                <div className="cpms-two-col cpms-two-col--equal">
+                  <section id="section-teams" className="cpms-card" aria-labelledby="all-teams-heading">
+                    <div className="cpms-card-header">
+                      <h2 id="all-teams-heading" className="h5 mb-0 fw-bold">
+                        All Course Project Teams
+                      </h2>
+                      <div>
+                        <label htmlFor="instructor-status-filter" className="visually-hidden">
+                          Filter teams by proposal status
+                        </label>
+                        <select
+                          id="instructor-status-filter"
+                          data-testid="instructor-status-filter"
+                          className="cpms-select"
+                          value={statusFilter}
+                          onChange={(e) => setStatusFilter(e.target.value)}
+                        >
+                          <option value="ALL">All Statuses</option>
+                          <option value="SUBMITTED">SUBMITTED</option>
+                          <option value="APPROVED">APPROVED</option>
+                          <option value="REVISION_REQUESTED">REVISION_REQUESTED</option>
+                          <option value="DRAFT">DRAFT</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div
+                      className="cpms-table-scroll"
+                      role="region"
+                      tabIndex={0}
+                      aria-label="All course project teams"
+                    >
+                      <table className="cpms-table">
+                        <caption className="visually-hidden">
+                          All course teams and their current proposal review status
+                        </caption>
+                        <thead>
+                          <tr>
+                            <th scope="col">Team</th>
+                            <th scope="col">Members</th>
+                            <th scope="col">Proposal Status</th>
+                            <th scope="col" className="text-end">
+                              Action
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {filteredTeams.length === 0 ? (
+                            <tr>
+                              <td colSpan={4} className="text-center py-4" style={{ color: 'var(--cpms-text-secondary)' }}>
+                                No teams match this status filter.
+                              </td>
+                            </tr>
+                          ) : (
+                            filteredTeams.map((t) => (
+                              <tr
+                                key={t.id}
+                                className={
+                                  selectedInstructorTeam?.id === t.id ? 'cpms-row-active' : undefined
+                                }
+                              >
+                                <td>
+                                  <div className="fw-bold">{t.name}</div>
+                                  <div className="small" style={{ color: 'var(--cpms-text-secondary)' }}>
+                                    {t.proposal?.title || 'No proposal'}
+                                  </div>
+                                </td>
+                                <td>
+                                  {t.members.length}/{t.course.maxTeamSize}
+                                </td>
+                                <td>
+                                  <span
+                                    className={`badge ${statusBadgeClass(
+                                      canViewTeamProposalStatus(t.id) ? t.proposal?.status : undefined
+                                    )}`}
+                                  >
+                                    {canViewTeamProposalStatus(t.id)
+                                      ? t.proposal?.status || 'NONE'
+                                      : 'PRIVATE'}
+                                  </span>
+                                </td>
+                                <td className="text-end">
+                                  <button
+                                    type="button"
+                                    data-testid={`select-team-${t.id}`}
+                                    className="cpms-btn cpms-btn-secondary"
+                                    onClick={() => setSelectedTeamId(t.id)}
+                                  >
+                                    Inspect / Review
+                                  </button>
+                                </td>
+                              </tr>
+                            ))
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </section>
+
+                  <section id="section-review" className="cpms-card" aria-labelledby="review-panel-heading">
+                    <div className="cpms-card-header">
+                      <h2 id="review-panel-heading" className="h5 mb-0 fw-bold">
+                        Instructor Proposal Review Panel
+                      </h2>
+                    </div>
+                    <div className="cpms-card-body">
+                      {!selectedInstructorTeam || !selectedInstructorTeam.proposal ? (
+                        <div style={{ color: 'var(--cpms-text-secondary)' }}>
+                          Select a team with a proposal to inspect.
+                        </div>
+                      ) : (
+                        <>
+                          <div className="d-flex justify-content-between align-items-start gap-2 mb-3 flex-wrap">
+                            <div>
+                              <h3 className="h5 fw-bold mb-1" data-testid="review-panel-team">
+                                {selectedInstructorTeam.name}: {selectedInstructorTeam.proposal.title}
+                              </h3>
+                              <div className="small" style={{ color: 'var(--cpms-text-secondary)' }}>
+                                Members:{' '}
+                                {selectedInstructorTeam.members
+                                  .map((m) => `${m.user.fullName} (${m.user.studentCode || ''})`)
+                                  .join(', ')}
+                              </div>
+                            </div>
+                            <span
+                              data-testid="review-panel-status"
+                              className={`badge ${statusBadgeClass(
+                                selectedInstructorTeam.proposal.status
+                              )} fs-6`}
+                            >
+                              {selectedInstructorTeam.proposal.status}
+                            </span>
+                          </div>
+
+                          <div
+                            className="p-3 rounded mb-3 border"
+                            style={{ backgroundColor: 'var(--cpms-surface-subtle)' }}
+                          >
+                            <div
+                              className="fw-semibold small text-uppercase mb-1"
+                              style={{ color: 'var(--cpms-text-secondary)' }}
+                            >
+                              Problem Statement
+                            </div>
+                            <p className="mb-2">{selectedInstructorTeam.proposal.problemStatement}</p>
+                            <div className="small cpms-wrap-anywhere">
+                              <strong>Tech Stack:</strong> {selectedInstructorTeam.proposal.techStack}{' '}
+                              | <strong>Repo:</strong> {selectedInstructorTeam.proposal.repoUrl} |{' '}
+                              <strong>Revision:</strong> #{selectedInstructorTeam.proposal.revisionCount}
+                            </div>
+                          </div>
+
+                          {selectedInstructorTeam.proposal.reviewFeedback && (
+                            <div className="cpms-alert cpms-alert-info small mb-3">
+                              <div>
+                                <strong>Latest Recorded Feedback:</strong>{' '}
+                                {selectedInstructorTeam.proposal.reviewFeedback}
+                              </div>
+                            </div>
+                          )}
+
+                          <div className="mb-3">
+                            <label className="cpms-label" htmlFor="review-feedback-input">
+                              Instructor Review Feedback <span className="text-danger">*</span>
+                            </label>
+                            <div id="review-feedback-hint" className="cpms-hint mb-1">
+                              Minimum 10 characters required for approval or revision requests.
+                            </div>
+                            <textarea
+                              id="review-feedback-input"
+                              rows={3}
+                              data-testid="review-feedback-input"
+                              className="cpms-textarea"
+                              aria-describedby="review-feedback-hint"
+                              placeholder="Provide specific engineering feedback (minimum 10 characters)..."
+                              value={reviewFeedbackInput}
+                              onChange={(e) => setReviewFeedbackInput(e.target.value)}
+                              disabled={!canReviewSelectedProposal || pendingAction !== null}
+                            />
+                          </div>
+
+                          {canReviewSelectedProposal ? (
+                            <div className="d-flex flex-wrap gap-2">
+                              <button
+                                type="button"
+                                data-testid="approve-proposal-btn"
+                                className="cpms-btn cpms-btn-success cpms-btn-full-mobile"
+                                onClick={() =>
+                                  handleInstructorDecision(
+                                    selectedInstructorTeam.proposal!.id,
+                                    'APPROVED'
+                                  )
+                                }
+                                disabled={pendingAction !== null}
+                              >
+                                {pendingAction === 'review-proposal'
+                                  ? 'Recording…'
+                                  : 'Approve Proposal'}
+                              </button>
+                              <button
+                                type="button"
+                                data-testid="revision-proposal-btn"
+                                className="cpms-btn cpms-btn-warning cpms-btn-full-mobile"
+                                onClick={() =>
+                                  handleInstructorDecision(
+                                    selectedInstructorTeam.proposal!.id,
+                                    'REVISION_REQUESTED'
+                                  )
+                                }
+                                disabled={pendingAction !== null}
+                              >
+                                {pendingAction === 'review-proposal'
+                                  ? 'Recording…'
+                                  : 'Request Revision'}
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="small" style={{ color: 'var(--cpms-text-secondary)' }}>
+                              Instructor decisions are available only while a proposal is submitted
+                              for review.
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  </section>
                 </div>
               </div>
-            </div>
-          </div>
-        )}
+            )}
+          </main>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
