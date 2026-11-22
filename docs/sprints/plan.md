@@ -38,7 +38,7 @@ independent review and implementation remain separate statuses.
 | F-05 submission, F-07 tasks/peer evaluation | Magiciancat9 | martinvadre reviews contracts/code; integrated prerequisites and actual tests required |
 | SRS/SDS/traceability/continuity and assessed PDF | Magiciancat9 | martinvadre reviews; final RC evidence and real submission receipt required |
 | RC/deployment | martinvadre | Magiciancat9 reviews; exact candidate checks and GCP version identity required |
-| UI refresh / Quick Fill removal | Magiciancat9 | [UIR v1.0](../ui-refresh-spec.md) first; implementation explicitly deferred to Sprint 2–3 |
+| UI refresh / Quick Fill removal | martinvadre | Magiciancat9 reviews implementation; original specification accepted via PR #107; [UIR v1.1 ownership handoff](../ui-refresh-spec.md) records the user's reassignment on 22 Nov 2026 |
 
 Proposed targets: contract review 22–24 Nov; F-04 by 25 Nov; F-05/F-06 by
 26 Nov; accepted Sprint 2 plus tested F-07 task progress by 27 Nov; RC checks,

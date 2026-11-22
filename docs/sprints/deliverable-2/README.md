@@ -40,8 +40,13 @@ or approval is inferred from this document's existence.
 
 | Member | Confirmed delivery responsibility |
 | --- | --- |
-| `Magiciancat9` | F-05, F-07; continuity, shared documentation/traceability and assessed PDF coordination; requested UI implementation after review |
-| `martinvadre` | F-04, F-06, F-08; integrated RC/deployment |
+| `Magiciancat9` | F-05, F-07; continuity, shared documentation/traceability and assessed PDF coordination; independent review of #106 UI implementation |
+| `martinvadre` | F-04, F-06, F-08; integrated RC/deployment; #106 UI refresh / Quick Fill removal implementation, reassigned by the user on 22 Nov 2026 |
+
+UI specification authorship stays with `Magiciancat9`; `martinvadre` reviewed
+the original specification through merged PR #107. See the
+[UIR v1.1 ownership record](../../ui-refresh-spec.md) for the implementation
+handoff. This assignment change does not mark any UI AC implemented/tested.
 
 This package's draft author is `Magiciancat9`, including drafts for the
 teammate-owned features. `martinvadre` must substantively review these drafts;

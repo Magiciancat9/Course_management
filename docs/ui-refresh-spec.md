@@ -1,8 +1,15 @@
-# CoursePMS UI refresh — UIR v1.0
+# CoursePMS UI refresh — UIR v1.1
 
 **Date:** 22 Nov 2026. **Phase:** specification only; implementation deferred
-to Sprint 2–3. **Owner/author:** `Magiciancat9`; requested reviewer
-`martinvadre`. **Issue:** [#106](https://github.com/Magiciancat9/Course_management/issues/106).
+to Sprint 2–3. **Implementation owner:** `martinvadre`; independent
+implementation reviewer: `Magiciancat9`. **Original specification author:**
+`Magiciancat9`; specification reviewed by `martinvadre` in
+[PR #107](https://github.com/Magiciancat9/Course_management/pull/107).
+**Issue:** [#106](https://github.com/Magiciancat9/Course_management/issues/106).
+
+The user reassigned implementation to `martinvadre` on 22 Nov 2026. This v1.1
+update changes ownership only; the reviewed UI/AC/STS and original authorship
+remain intact. Reassignment does not indicate that implementation has begun.
 
 The user requested a sharper, modern interface and clarified that the **demo
 Quick Fill account box**, not email authentication, should be removed. The
@@ -177,3 +184,5 @@ This phase creates no tests, screenshots of a new UI or compatibility claims.
 | Revision | Decision / status |
 | --- | --- |
 | UIR v1.0, 22 Nov 2026 | User requested the redesign and specifically Quick Fill removal; implementation explicitly deferred. Concrete design/AC/STS proposed by Magiciancat9; teammate review pending |
+| UIR v1.0 accepted, 22 Nov 2026 | martinvadre approved the pre-implementation specification in PR #107, subsequently merged into sprint-2-staging; implementation/tests remain outstanding |
+| UIR v1.1, 22 Nov 2026 | User reassigned #106 implementation to martinvadre; Magiciancat9 independently reviews future UI/code changes. No AC/STS or application behavior changed |
