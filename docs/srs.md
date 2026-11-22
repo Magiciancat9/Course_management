@@ -77,7 +77,7 @@ In university software engineering and capstone courses, managing student projec
 | **BR-02** | Maximum Team Capacity Enforcement | A project team cannot exceed the course's configured `maxTeamSize` (default: 3 students; minimum: 1). Any attempt to add a member beyond `maxTeamSize` is rejected (`400 Bad Request` / `409 Conflict`). | Sprint 1 |
 | **BR-03** | Proposal State Transition Matrix | A Project Proposal must follow valid state transitions: `DRAFT` → `SUBMITTED`; `SUBMITTED` → `APPROVED` or `REVISION_REQUESTED`; `REVISION_REQUESTED` → `SUBMITTED`. Students cannot edit or re-submit a proposal that is currently `SUBMITTED` or already `APPROVED` (`409 Conflict`). | Sprint 1 |
 | **BR-04** | Proposal Content Completeness Gate | Submitting a proposal (`DRAFT`/`REVISION_REQUESTED` → `SUBMITTED`) requires a non-empty `title` (≥ 5 chars), `problemStatement` (≥ 20 chars), and `techStack` (≥ 3 chars). Incomplete submissions are rejected (`400 Bad Request`). | Sprint 1 |
-| **BR-05** | Mandatory Instructor Review Feedback | When an Instructor transitions a `SUBMITTED` proposal to `APPROVED` or `REVISION_REQUESTED`, a review comment (`reviewFeedback`) of at least 10 characters is mandatory, and only proposals currently in `SUBMITTED` state may be reviewed (`400`/`409`). | Sprint 1 |
+| **BR-05** | Mandatory Instructor Review Feedback | Approved Lab 7 requirement: for a `SUBMITTED` proposal, `REVISION_REQUESTED` requires `reviewFeedback.trim().length >= 20`; `APPROVED` retains `>= 10`, using JavaScript UTF-16 length. Preserve existing `400`/`409` validation/state behavior. Contract v1.1 was reviewed before code; the #87 candidate enforces these minima with executed tests. Maintained main release/deployment remain pending; the locked old runtime used 10 for both. | Sprint 1 maintenance |
 | **BR-06** | Team Ownership & Role Isolation | Only members of Team $X$ (or an `INSTRUCTOR`) may view or mutate Team $X$'s private proposal details and feedback; a Student from Team $Y$ attempting to view or modify Team $X$'s proposal is rejected (`403 Forbidden`). Only `INSTRUCTOR` users may execute proposal review endpoints (`403 Forbidden` for `STUDENT`). | Sprint 1 |
 | **BR-07** | Approved Proposal Prerequisite for Deliverables | A team cannot submit a Sprint/Milestone Deliverable (`FR-07`) unless its Project Proposal is in `APPROVED` status (`409 Conflict`). | Sprint 2 |
 | **BR-08** | Grade Bounds & Self-Peer-Review Prevention | Milestone scores must be within `0–100` inclusive (`FR-08`), and a Student cannot submit a peer evaluation rating for themselves (`FR-10`). | Sprint 3 |
@@ -85,6 +85,13 @@ In university software engineering and capstone courses, managing student projec
 ---
 
 ## 6. Non-Functional Requirements (NFR)
+
+**Lab 7 version note:** P'Tik (TA) approved CR-L7-01 on 22 Nov 2026 at
+20:18 Asia/Bangkok. [Approval/source](labs/lab-07/approval-record.md),
+[pre-change checkpoint](labs/lab-07/pre-change-baseline.md) and
+[revised contract/AC/STS](labs/lab-07/revised-contract.md) preserve the
+old/new distinction and review-before-code gate. This specification revision
+records the approved contract; [candidate implementation evidence](labs/lab-07/implementation-evidence.md) separately identifies the tested code and remaining release gates.
 
 | ID | Category | Measurable Target | Practical Verification Method | Target Sprint |
 | :--- | :--- | :--- | :--- | :---: |

@@ -85,12 +85,13 @@ export function validateInstructorReview(
   }
 
   const feedback = typeof reviewFeedback === 'string' ? reviewFeedback.trim() : '';
-  if (feedback.length < 10) {
+  const minimumFeedbackLength = decision === 'REVISION_REQUESTED' ? 20 : 10;
+  if (feedback.length < minimumFeedbackLength) {
     return {
       valid: false,
       status: 400,
       code: 'BR05_FEEDBACK_TOO_SHORT',
-      error: 'Instructor review feedback must be at least 10 characters.',
+      error: `${decision} feedback must be at least ${minimumFeedbackLength} characters after trim.`,
     };
   }
 

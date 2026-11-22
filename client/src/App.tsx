@@ -1305,15 +1305,19 @@ export default function App() {
                         )}
 
                         <div className="mb-3">
-                          <label className="form-label fw-semibold">
-                            Instructor Review Feedback{' '}
-                            <span className="text-danger">* (min 10 chars, BR-05)</span>
+                          <label className="form-label fw-semibold" htmlFor="review-feedback-input">
+                            Instructor Review Feedback <span className="text-danger">*</span>
                           </label>
+                          <div id="review-feedback-hint" data-testid="review-feedback-hint" className="form-text mb-2">
+                            Approve: minimum 10 after trim. Request revision: minimum 20 after trim.
+                          </div>
                           <textarea
+                            id="review-feedback-input"
                             rows={3}
                             data-testid="review-feedback-input"
+                            aria-describedby="review-feedback-hint"
                             className="form-control"
-                            placeholder="Provide specific engineering feedback (minimum 10 characters)..."
+                            placeholder="Provide feedback: 10 for approval, 20 for revision, after trim."
                             value={reviewFeedbackInput}
                             onChange={(e) => setReviewFeedbackInput(e.target.value)}
                             disabled={!canReviewSelectedProposal || pendingAction !== null}
@@ -1325,6 +1329,7 @@ export default function App() {
                             <button
                               type="button"
                               data-testid="approve-proposal-btn"
+                              aria-describedby="review-feedback-hint"
                               className="btn btn-success fw-semibold"
                               onClick={() =>
                                 handleInstructorDecision(
@@ -1339,6 +1344,7 @@ export default function App() {
                             <button
                               type="button"
                               data-testid="revision-proposal-btn"
+                              aria-describedby="review-feedback-hint"
                               className="btn btn-warning fw-semibold"
                               onClick={() =>
                                 handleInstructorDecision(
