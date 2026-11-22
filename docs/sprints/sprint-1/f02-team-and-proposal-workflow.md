@@ -1,6 +1,6 @@
 # Part E: Sprint 1 Feature Contracts — F-02 Team Formation & F-03 Proposal Workflow
 
-**Contract Version:** `v1.1` (Lab 7 CR-L7-01 approved scope; teammate review pending before implementation)
+**Contract Version:** `v1.1` (Lab 7 CR-L7-01; independently approved in PR #105 before implementation)
 **Feature IDs:** `F-02` (Team Formation & Capacity), `F-03` (Proposal Lifecycle & Instructor Review)  
 **Linked Requirements:** `FR-02`, `FR-03`, `FR-04`, `FR-05`, `BR-01`, `BR-02`, `BR-03`, `BR-04`, `BR-05`, `BR-06`, `NFR-01`, `NFR-02`, `NFR-04`  
 **Dependencies:** `F-01`
@@ -10,7 +10,7 @@ only the approved F-03 feedback minimum: revision 20 / approval 10 after JS
 trim/UTF-16 count. [Approval](../../labs/lab-07/approval-record.md),
 [locked old runtime](../../labs/lab-07/pre-change-baseline.md) and the complete
 [impact/AC/STS contract](../../labs/lab-07/revised-contract.md) record scope
-and sequence. New behavior is not implemented/executed by this document.
+and sequence. [Candidate implementation/results](../../labs/lab-07/implementation-evidence.md) are recorded separately; independent code review/main release remain pending.
 
 ---
 
@@ -87,5 +87,5 @@ stateDiagram-v2
 | **AC-06** | `BR-02` | **Enforce Maximum Team Size Capacity:** When a team reaches `course.maxTeamSize` (`3` members), attempting to add a 4th member is rejected with `409 Conflict` (`BR02_MAX_TEAM_SIZE_EXCEEDED`) and the roster count remains `3`. |
 | **AC-07** | `FR-03`, `FR-04`, `NFR-04` | **Proposal Draft Persistence & Submission:** A team member can save a proposal draft (`PUT /api/teams/:id/proposal`, status `DRAFT`) and submit a complete proposal (`POST /api/teams/:id/proposal/submit`), persisting status `SUBMITTED`, `submittedAt`, and `revisionCount = 1`. |
 | **AC-08** | `BR-03`, `BR-04` | **Proposal Completeness & State-Lock Validation:** Submitting a proposal with a missing/short title (< 5 chars) or short problem statement (< 20 chars) is rejected with `400 Bad Request` (`BR04_INCOMPLETE_PROPOSAL`). Attempting to edit or re-submit a proposal already in `SUBMITTED` or `APPROVED` state is rejected with `409 Conflict` (`BR03_INVALID_STATUS_TRANSITION`). |
-| **AC-09** | `FR-05`, `BR-03`, `BR-05` | **Instructor Review Lifecycle & Feedback Validation, Lab 7 v1.1:** A SUBMITTED proposal requires trimmed feedback ≥20 UTF-16 units for REVISION_REQUESTED and ≥10 for APPROVED. Test 19/20/21 revision and 9/10/11 approval boundaries, invalid input, preserved state/access precedence, unchanged rejected rows, saved readback and historical feedback. Revision/resubmission remains valid. Elaborated by L7-AC01–06 / L7-T01–06; implementation and new execution pending. |
+| **AC-09** | `FR-05`, `BR-03`, `BR-05` | **Instructor Review Lifecycle & Feedback Validation, Lab 7 v1.1:** A SUBMITTED proposal requires trimmed feedback ≥20 UTF-16 units for REVISION_REQUESTED and ≥10 for APPROVED. Test 19/20/21 revision and 9/10/11 approval boundaries, invalid input, preserved state/access precedence, unchanged rejected rows, saved readback and historical feedback. Revision/resubmission remains valid. Elaborated by L7-AC01–06 / L7-T01–06; candidate execution recorded in L7-E05–E08; independent code review and release pending. |
 | **AC-10** | `BR-06`, `NFR-02` | **Role & Cross-Team Ownership Isolation:** A `STUDENT` from Team A attempting to view (`GET`) or modify (`PUT`/`POST`) Team B's private proposal is rejected with `403 Forbidden` without leaking Team B's proposal data. A `STUDENT` attempting to call `POST /api/proposals/:id/review` is rejected with `403 Forbidden`. |

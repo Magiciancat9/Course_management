@@ -3,9 +3,9 @@
 **Scope approved:** P'Tik (TA), 22 Nov 2026, 20:18 Asia/Bangkok;
 [L7-E01 approval](approval-record.md). **Contract author/driver:**
 `Magiciancat9`. **Independent reviewer:** `martinvadre`.
-**Contract review status:** PENDING, [#86](https://github.com/Magiciancat9/Course_management/issues/86)
+**Contract review status:** APPROVED by martinvadre on 22 Nov 2026 at 21:22:38 Asia/Bangkok, reviewed source `947b914`; merged PR #105. Work: [#86](https://github.com/Magiciancat9/Course_management/issues/86)
 / [PR #105](https://github.com/Magiciancat9/Course_management/pull/105).
-No implementation or new-behavior test is created by this contract revision.
+The contract was approved before implementation. Current candidate results and unchanged RED/GREEN test proof are in [L7-E05–E08](implementation-evidence.md); code review/release remain separate gates.
 
 ## 1. Version and exact old/new rule
 
@@ -90,15 +90,16 @@ its affected dependency on that exact version.
 | BR-06 / NFR-01/02 | F-03 authorization; System SDS role/DTO rules | L7-AC04/06; L7-T04/06; TEST-03/10/14/19/23 | `requireAuth`, INSTRUCTOR guard, authorized proposal GET and roster serialization; no new access policy |
 | NFR-04 / F-03 | F-03 data/write contract; this contract §2 | L7-AC05; L7-T05; TEST-07/09/18 | ProjectProposal fields / transaction; historical reads preserved, no schema or migration change |
 | FR-05 / UI | [UI specification](../../ui-spec.md), instructor feedback section; System SDS §3.1 | L7-AC06; L7-T06; session/privacy regression | `client/src/App.tsx`, `handleInstructorDecision`, common textarea/action hints; retain auth/session boundary |
-| AC/STS / assessment | [STS addendum](../../sprints/sprint-1/sts-and-dod.md); [traceability](../../traceability.md) | All L7-AC01–06 → L7-T01–06 | Actual new tests/files/commands/results remain pending until #87; no coverage invented |
+| AC/STS / assessment | [STS addendum](../../sprints/sprint-1/sts-and-dod.md); [traceability](../../traceability.md) | All L7-AC01–06 → L7-T01–06 | Actual tests/files/commands/results are mapped in [implementation evidence](implementation-evidence.md); no release/deployed result is inferred |
 | F-05 / BR-07 downstream | Existing approved-proposal prerequisite | L7-AC03/05; regression on actual integrated scope if present | APPROVED enum/eligibility unchanged; no operational F-05 at locked baseline |
 | Data migration / infrastructure | N/A to rule change | L7-T05 historical-data assertions | Same string/state columns and delivery process; no migration, new subsystem, auth refactor or deployment now |
 
 ## 5. Approved-scope acceptance criteria
 
-All criteria are **NOT IMPLEMENTED / NOT RUN** for the changed behavior.
-TA scope approval is recorded; independent review of this exact contract is
-still required before writing new test/code changes.
+The criteria below were versioned and independently approved before tests/code.
+The #87 candidate now implements them with executed unit/API/DB/UI/E2E evidence
+in [L7-E05–E08](implementation-evidence.md); independent code review/merge and
+release verification remain pending.
 
 | AC | Required observable behavior | STS |
 | --- | --- | --- |
@@ -125,9 +126,10 @@ and after; do not derive expected results from the implementation function.
 | L7-T05 / API/DB + selected E2E | Snapshot all P fields; rejected 19-unit revision, accepted padded 20-unit revision, own-team/instructor GET then reload. Seed previously valid 10–19-unit historical APPROVED and REVISION_REQUESTED rows directly in disposable fixture | Rejection preserves full stored row; success stores trimmed feedback, correct actor/time/state and reads back. Legacy rows remain readable/unmodified; no production seed/migration. L7-AC05 | New real API/DB suite; planned `e2e/lab7-review.spec.ts` for changed/preserved UI journey |
 | L7-T06 / component + API + E2E | Instructor sees both action thresholds; sends revision with 19 then 20; retains rejected text, sees real error, valid result after reload. Approval with 10; student/foreign-team and delayed A→B session fixtures | Explicit 20 revision / 10 approval guidance, correct backend rejection independent of UI, no false success/draft loss/private leakage; unauthorized requests denied. L7-AC06 | Planned `client/src/App.lab7Review.test.tsx`, new API/E2E suites; retained session/directory suites |
 
-The new paths are **planned and do not exist yet**. No test source is written
-before the contract reviewer accepts this revision. Existing unchanged files
-are named separately rather than represented as new executed cases.
+The named Lab 7 test paths now exist, created only after actual contract review.
+See [execution evidence](implementation-evidence.md) for exact files/cases,
+versions and results; the inputs/expected outcomes above remain unchanged.
+Existing unchanged files are distinguished from new cases.
 
 ## 7. RED/GREEN, regression and delivery sequence
 
@@ -157,11 +159,11 @@ are named separately rather than represented as new executed cases.
 
 | Field | Actual status |
 | --- | --- |
-| Reviewer | martinvadre requested; not yet approved |
-| Contract revision / commit | L7-CONTRACT v1.1; fill immutable commit after publication |
-| Review permalink / actual time | PENDING |
+| Reviewer | martinvadre, actual APPROVED review before implementation |
+| Contract revision / commit | L7-CONTRACT v1.1 / `947b914dc6b7915b6d825e52f18299191ffe6cb0`; merge `6429479316f7f156ecb49bb106630ab80fa6096c` |
+| Review permalink / actual time | [Review 6012714738](https://github.com/Magiciancat9/Course_management/pull/105#pullrequestreview-6012714738), 22 Nov 2026 21:22:38 Asia/Bangkok; reviewer merged at 22:16:10 |
 | Required substance | Confirm 20-only revision / 10 approval, trim/UTF-16 boundaries, API precedence, unchanged data/access, complete AC/STS mapping, pre-change source and regression selection |
-| Implementation authorization condition | TA scope and user go-ahead are recorded; **wait for the actual teammate contract review before #87 test/code changes** |
+| Implementation authorization condition | Satisfied before #87 test/code: TA approval, user go-ahead, pre-change lock and actual teammate review recorded. PR #111 implementation still awaits its own independent code review and merge |
 
 Keep the review as an actual GitHub review/comment, not an AI-created claim
 on the teammate's behalf. Later accepted amendments get their own revision.

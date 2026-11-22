@@ -24,7 +24,7 @@ This document maps every baseline Functional Requirement (`FR`), Business Rule (
 | **BR-02** | Enforce course `maxTeamSize` capacity limit | `F-02` Course Project Team Formation | **Sprint 1** | `AC-06` / `TEST-06`, `TEST-15` |
 | **BR-03** | Enforce valid Proposal state transition matrix | `F-03` Proposal Drafting, Submission & Review | **Sprint 1** | `AC-08`, `AC-09` / `TEST-08`, `TEST-09`, `TEST-16`, `TEST-17`, `TEST-18` |
 | **BR-04** | Proposal completeness validation before `SUBMITTED` | `F-03` Proposal Drafting, Submission & Review | **Sprint 1** | `AC-08` / `TEST-08` |
-| **BR-05** | Lab 7 approved requirement: REVISION_REQUESTED ≥20 / APPROVED ≥10 after JS trim/UTF-16 count; old runtime still 10/10 pending reviewed implementation | `F-03` Proposal Drafting, Submission & Review | **Sprint 1 maintenance** | `AC-09` / historical `TEST-09`; revised `L7-AC01–06` → `L7-T01–06`, NOT CREATED / NOT RUN |
+| **BR-05** | Lab 7 approved requirement: REVISION_REQUESTED ≥20 / APPROVED ≥10 after JS trim/UTF-16 count; candidate implements 20/10 after contract review; maintained release pending | `F-03` Proposal Drafting, Submission & Review | **Sprint 1 maintenance** | `AC-09` / historical `TEST-09`; revised `L7-AC01–06` → actual `L7-T01–06`, [RED/GREEN and candidate results](labs/lab-07/implementation-evidence.md); release pending |
 | **BR-06** | Team ownership isolation & `INSTRUCTOR` role restriction | `F-01`, `F-02`, `F-03` (Cross-cutting RBAC) | **Sprint 1** | `AC-03`, `AC-10` / `TEST-03`, `TEST-10`, `TEST-12` |
 | **BR-07** | Require `APPROVED` proposal before milestone submission | `F-05` Team Milestone Deliverable Submission | **Sprint 2** | Allocated to Sprint 2 contract (`F-05`) |
 | **BR-08** | Grade bounds (`0–100`) and no self-peer-evaluation | `F-06` Grading, `F-07` Peer Evaluation | **Sprint 2 & 3** | Allocated to Sprint 2 (`F-06`) & Sprint 3 (`F-07`) |
@@ -55,12 +55,13 @@ This document maps every baseline Functional Requirement (`FR`), Business Rule (
 | **CHG-03** | 2026-11-06 | `F-01`, `AC-03`, `AD-02`, `NFR-03` | Require an explicitly configured JWT secret and persist logged-out token identifiers in PostgreSQL, so startup fails safely and revocation survives server restarts. | Pawarit & Tatchakorn |
 | **CHG-04** | 2026-11-06 | `NFR-01`, `NFR-04` | Replaced unverified timing targets with observable authentication rejection and PostgreSQL persistence requirements; timing targets had no measuring test. | Pawarit & Tatchakorn |
 | **CHG-05** | 2026-11-08 | `FR-02`, `F-02` UI | Approved deferring self-service team joining from Sprint 1. Students join an existing team when a current team member adds them by university email, matching the implemented ownership-guarded API and UI. | Tatchakorn Thamnimitr |
-| **CR-L7-01** | 2026-11-22, 20:18 Asia/Bangkok | `FR-05`, `BR-05`, `F-03`, `AC-09` | Increase only REVISION_REQUESTED feedback minimum from 10 to 20 after trim/UTF-16 count; APPROVED stays 10. [Approval image/transcript](labs/lab-07/approval-record.md), [pre-change lock](labs/lab-07/pre-change-baseline.md) and [revised contract](labs/lab-07/revised-contract.md) record rationale, scope and conditions. No implementation/test result is claimed. | P'Tik (TA), user-supplied identity/date; user confirms progress. Teammate contract review remains pending before code |
+| **CR-L7-01** | 2026-11-22, 20:18 Asia/Bangkok | `FR-05`, `BR-05`, `F-03`, `AC-09` | Increase only REVISION_REQUESTED feedback minimum from 10 to 20 after trim/UTF-16 count; APPROVED stays 10. [Approval image/transcript](labs/lab-07/approval-record.md), [pre-change lock](labs/lab-07/pre-change-baseline.md) and [revised contract](labs/lab-07/revised-contract.md) record rationale, scope and conditions. No implementation/test result is claimed. | P'Tik (TA), user-supplied identity/date; user confirms progress. Teammate contract review completed in PR #105 before code; implementation evidence tracked separately |
 
 ## 4. Proposed Changes Pending Approval
 
 CR-L7-01 has actual TA scope approval and user confirmation. The revised
-engineering contract/STS still requires substantive martinvadre review before
-new test/code edits. New L7 tests, RED/GREEN, regression, release and deployment
-are pending. Original Sprint 1 allocation above is historical mapping, not a
+engineering contract/STS received substantive martinvadre review before
+new test/code edits. [L7-E05–E08](labs/lab-07/implementation-evidence.md) record
+actual new tests, RED/GREEN and candidate regression. Independent code review,
+reviewed main release and deployment are pending. Original Sprint 1 allocation above is historical mapping, not a
 claim of executed new-behavior coverage.

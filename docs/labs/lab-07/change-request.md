@@ -6,8 +6,10 @@ This is the versioned change request supporting [Issue #85][request].
 [P'Tik's approval and original screenshot](approval-record.md) confirm the
 bounded new requirement and user authorization to proceed. The actual
 [pre-change source is locked](pre-change-baseline.md); the
-[revised engineering contract](revised-contract.md) awaits substantive review
-by martinvadre before any new test/code change. No implementation is claimed.
+[revised engineering contract](revised-contract.md) received substantive
+martinvadre approval before any new test/code change. Later #87 candidate
+[implementation and RED/GREEN](implementation-evidence.md) are recorded
+separately; maintained main release/deployment remain pending.
 
 | Responsibility | Confirmed owner |
 | --- | --- |
@@ -176,9 +178,9 @@ execution, a current live-deployment check, teammate review or TA approval.
 | Approved request revision and conditions | REVISION_REQUESTED minimum 20 after trim by the issue's counting method; APPROVED stays 10; record pre-change commit and peer-review revised contract before code |
 | Approval text/permalink and actual date/time | [L7-E01 original screenshot / transcript](approval-record.md), 22 Nov 2026 at 20:18 Asia/Bangkok |
 | User confirmation to proceed | Received in the working conversation with explicit instruction to follow the TA's conditions |
-| Independent review of this request document | Pending; to be recorded on its PR |
-| Reviewed updated engineering contract / STS | Pending in #86, before implementation |
-| New-behavior RED/GREEN | Pending in #87, after approval and contract review |
+| Independent review of this request document | martinvadre APPROVED PR #105 at 21:22:38 Asia/Bangkok, 22 Nov 2026; merged at 22:16:10 |
+| Reviewed updated engineering contract / STS | Completed in #86 / reviewed head `947b914`, before implementation |
+| New-behavior RED/GREEN | Recorded in #87 [L7-E05–E08](implementation-evidence.md); independent code review/integration remain pending |
 
 TA approval and user confirmation are recorded. Proceed with #86 contract
 review, then #87 only after that review is accepted. Preserve the sequence

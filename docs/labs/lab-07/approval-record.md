@@ -17,7 +17,10 @@ Work: [#85](https://github.com/Magiciancat9/Course_management/issues/85).
 
 The TA approved this bounded requirement change; approval does not claim
 contract peer review, implementation, RED/GREEN, regression, release or
-deployment. The review-before-code condition remains an active gate for #87.
+deployment. That condition was subsequently satisfied by martinvadre's actual
+PR #105 review before #87 test/code changes; the separate
+[implementation evidence](implementation-evidence.md) records those later
+events without changing this approval's original provenance.
 
 ## Original evidence and provenance
 
