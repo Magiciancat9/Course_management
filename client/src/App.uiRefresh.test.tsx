@@ -115,6 +115,23 @@ describe('CoursePMS UI Refresh (UIR v1.0)', () => {
       fireEvent.keyDown(window, { key: 'Escape' });
     });
     expect(menuToggle).toHaveAttribute('aria-expanded', 'false');
+
+    const scrollSpy = vi.fn();
+    const teamSection = document.getElementById('section-team');
+    expect(teamSection).not.toBeNull();
+    teamSection!.scrollIntoView = scrollSpy;
+    vi.stubGlobal(
+      'matchMedia',
+      vi.fn().mockImplementation((query: string) => ({
+        matches: query === '(prefers-reduced-motion: reduce)',
+        media: query,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+      }))
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'My Team' }));
+    expect(scrollSpy).toHaveBeenCalledWith({ behavior: 'auto', block: 'start' });
   });
 
   it('UIR-T05/T10: renders instructor navigation and keeps BR-05 10-character hint', async () => {

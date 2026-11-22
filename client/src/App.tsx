@@ -379,7 +379,14 @@ export default function App() {
     setActiveNav(navKey);
     setMobileNavOpen(false);
     if (sectionId) {
-      document.getElementById(sectionId)?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
+      const prefersReducedMotion =
+        typeof window !== 'undefined' &&
+        typeof window.matchMedia === 'function' &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      document.getElementById(sectionId)?.scrollIntoView?.({
+        behavior: prefersReducedMotion ? 'auto' : 'smooth',
+        block: 'start',
+      });
     }
   }
 
