@@ -75,8 +75,8 @@ describe('Lab 7: real API/PostgreSQL review validation and retained data/access'
     expect(await row()).toEqual(before);
   });
 
-  it.each([undefined, null, 42, false, [], {}, '', ' \t\n '])(
-    'L7-T02/T05: rejects invalid revision feedback %j without any persisted change', async (feedback) => {
+  it.each([undefined, null, 42, false, [], {}, '', ' \t\n '].map(feedback => ({ feedback })))(
+    'L7-T02/T05: rejects invalid revision feedback %j without any persisted change', async ({ feedback }) => {
       const before = await row();
       const response = await review('REVISION_REQUESTED', feedback);
       expect(response.status).toBe(400);
