@@ -1,50 +1,69 @@
-# Part B: Requirements-to-Feature-to-Sprint Traceability Matrix
+# Complete requirements-to-verification traceability — D2 draft v1.0
 
-This document maps every baseline Functional Requirement (`FR`), Business Rule (`BR`), and Non-Functional Requirement (`NFR`) from `docs/srs.md` to its owning Feature (`docs/features.md`), target Sprint, and verification artifacts (`AC-*` and `TEST-*` for Sprint 1).
+**22 Nov 2026; documentation-only phase.** Complete baseline scope comes from
+[SRS](srs.md) and [feature inventory](features.md). Sprint 1 AC/TEST identifiers
+are retained. New contract IDs are planned, not executed coverage. No new
+domain/UI feature or accepted D2 release is created by this matrix.
 
----
+## 1. Full baseline matrix
 
-## 1. Full Requirements Traceability Table
+S1/S2/S3 mean Sprint 1/2/3. Ranges refer to the explicit numbered tables in
+the linked contracts, not a claim that a test file exists. The [verification
+register](sprints/deliverable-2/verification-register.md) lists each new AC,
+its test IDs, levels and proposed actual locations separately.
 
-| Requirement ID | Requirement Summary | Feature or System Responsibility | Planned Sprint | Verification (Sprint 1 AC & Test IDs / Later Sprint Allocation) |
-| :--- | :--- | :--- | :---: | :--- |
-| **FR-01** | User login, `/api/auth/me` identity, and logout | `F-01` Auth, Session & Role Access Control | **Sprint 1** | `AC-01`, `AC-02`, `AC-03` / `TEST-01`, `TEST-02`, `TEST-03`, `TEST-11` |
-| **FR-02** | Create project team and add/join student members | `F-02` Course Project Team Formation | **Sprint 1** | `AC-04` / `TEST-04`, `TEST-11`, `TEST-15`, `TEST-21`, `TEST-22` |
-| **FR-03** | Retrieve team details, roster, and proposal status | `F-02` Team Formation, `F-03` Proposal Workflow | **Sprint 1** | `AC-04`, `AC-07`, `AC-10` / `TEST-04`, `TEST-07`, `TEST-10`, `TEST-11` |
-| **FR-04** | Draft, update, and submit team Project Proposal | `F-03` Proposal Drafting, Submission & Review | **Sprint 1** | `AC-07`, `AC-08` / `TEST-07`, `TEST-08`, `TEST-11` |
-| **FR-05** | Instructor review (`APPROVED` / `REVISION_REQUESTED`) | `F-03` Proposal Drafting, Submission & Review | **Sprint 1** | `AC-09` / `TEST-09`, `TEST-11` |
-| **FR-06** | Instructor creates and publishes course milestones | `F-04` Course Milestone Management | **Sprint 2** | Allocated to Sprint 2 contract (`F-04`) |
-| **FR-07** | Team submits milestone deliverables | `F-05` Team Milestone Deliverable Submission | **Sprint 2** | Allocated to Sprint 2 contract (`F-05`) |
-| **FR-08** | Instructor grades milestone deliverables (`0–100`) | `F-06` Instructor Deliverable Grading | **Sprint 2** | Allocated to Sprint 2 contract (`F-06`) |
-| **FR-09** | Intra-team sprint task board (`TODO`/`IN_PROGRESS`/`DONE`) | `F-07` Intra-Team Task Board & Peer Eval | **Sprint 3** | Allocated to Sprint 3 contract (`F-07`) |
-| **FR-10** | Student confidential peer contribution evaluation | `F-07` Intra-Team Task Board & Peer Eval | **Sprint 3** | Allocated to Sprint 3 contract (`F-07`) |
-| **FR-11** | Instructor course progress & analytics dashboard | `F-08` Instructor Analytics & Grade Export | **Sprint 3** | Allocated to Sprint 3 contract (`F-08`) |
-| **FR-12** | Instructor CSV gradebook & team summary export | `F-08` Instructor Analytics & Grade Export | **Sprint 3** | Allocated to Sprint 3 contract (`F-08`) |
-| **BR-01** | Prevent student from joining/creating >1 team per course | `F-02` Course Project Team Formation | **Sprint 1** | `AC-05` / `TEST-05`, `TEST-12`, `TEST-21`, `TEST-22` |
-| **BR-02** | Enforce course `maxTeamSize` capacity limit | `F-02` Course Project Team Formation | **Sprint 1** | `AC-06` / `TEST-06`, `TEST-15` |
-| **BR-03** | Enforce valid Proposal state transition matrix | `F-03` Proposal Drafting, Submission & Review | **Sprint 1** | `AC-08`, `AC-09` / `TEST-08`, `TEST-09`, `TEST-16`, `TEST-17`, `TEST-18` |
-| **BR-04** | Proposal completeness validation before `SUBMITTED` | `F-03` Proposal Drafting, Submission & Review | **Sprint 1** | `AC-08` / `TEST-08` |
-| **BR-05** | Mandatory Instructor review feedback (≥ 10 chars) | `F-03` Proposal Drafting, Submission & Review | **Sprint 1** | `AC-09` / `TEST-09` |
-| **BR-06** | Team ownership isolation & `INSTRUCTOR` role restriction | `F-01`, `F-02`, `F-03` (Cross-cutting RBAC) | **Sprint 1** | `AC-03`, `AC-10` / `TEST-03`, `TEST-10`, `TEST-12` |
-| **BR-07** | Require `APPROVED` proposal before milestone submission | `F-05` Team Milestone Deliverable Submission | **Sprint 2** | Allocated to Sprint 2 contract (`F-05`) |
-| **BR-08** | Grade bounds (`0–100`) and no self-peer-evaluation | `F-06` Grading, `F-07` Peer Evaluation | **Sprint 2 & 3** | Allocated to Sprint 2 (`F-06`) & Sprint 3 (`F-07`) |
-| **NFR-01** | Protected endpoints reject unauthenticated requests with `401` and no private data | `F-01` Auth & Cross-cutting API Middleware | **Sprint 1** | `AC-03` / `TEST-03`, `TEST-14`, `TEST-19` |
-| **NFR-02** | Backend enforcement of role & team-ownership (`403`) | `F-01`, `F-02`, `F-03` Authorization Guards | **Sprint 1** | `AC-10` / `TEST-10`, `TEST-12` |
-| **NFR-03** | Bcrypt password hashing & zero credential leakage | `F-01` Auth & User Serialization | **Sprint 1** | `AC-01`, `AC-02` / `TEST-01`, `TEST-02`, `TEST-19` |
-| **NFR-04** | State changes persist in PostgreSQL and can be retrieved on a later request | `F-02`, `F-03` Persistence & API Layer | **Sprint 1** | `AC-04`, `AC-07`, `AC-09` / `TEST-04`, `TEST-07`, `TEST-09` |
-| **NFR-05** | Container readiness, env config & `/api/health` (`200 OK`) | System Responsibility (`F-01` / Infrastructure) | **Sprint 1 & 2** | `AC-01` (`/api/health` verified in `TEST-01`; Cloud Run in Lab 5) |
+| Requirement | Feature / sprint | AC / verification responsibility | Planned test IDs | Actual file / source or planned location | Result and version status |
+| --- | --- | --- | --- | --- | --- |
+| FR-01 | F-01 / S1 | AC-01–03 | TEST-01/02/03/11/13/14/19 | [API/DB](../server/tests/api.integration.test.ts); [E2E](../e2e/sprint1.spec.ts) | Implemented baseline; historical verification exists; new D2 RC NOT RUN |
+| FR-02 | F-02 / S1 | AC-04–06 | TEST-04/05/06/15/21/22 | [API/DB](../server/tests/api.integration.test.ts) | Implemented baseline; historical verification exists; new D2 RC NOT RUN |
+| FR-03 | F-02/F-03 / S1 | AC-04/07/10 | TEST-04/07/10/23 | [API/DB](../server/tests/api.integration.test.ts); [routing/privacy](../server/tests/routing-privacy.unit.test.ts) | Implemented baseline; historical verification exists; new D2 RC NOT RUN |
+| FR-04 | F-03 / S1 | AC-07/08 | TEST-07/08/11/16/17 | [API/DB](../server/tests/api.integration.test.ts); [E2E](../e2e/sprint1.spec.ts) | Implemented baseline; historical verification exists; new D2 RC NOT RUN |
+| FR-05 | F-03 / S1 | AC-09 | TEST-09/11/18 | [API/DB](../server/tests/api.integration.test.ts); [domain unit](../server/tests/domain.unit.test.ts); [E2E](../e2e/sprint1.spec.ts) | Implemented baseline; historical verification exists; new D2 RC NOT RUN |
+| FR-06 | F-04 / S2 | S2-F04-AC01–08 | S2-F04-T01–11 | [F-04 STS](sprints/sprint-2/f04-milestones.md); actual new case: none | Proposed contract; not implemented; test IDs NOT CREATED / NOT RUN; no accepted release |
+| FR-07 | F-05 / S2 | S2-F05-AC01–10 | S2-F05-T01–12 | [F-05 STS](sprints/sprint-2/f05-submissions.md); actual new case: none | Proposed contract; not implemented; test IDs NOT CREATED / NOT RUN; no accepted release |
+| FR-08 | F-06 / S2 | S2-F06-AC01–09 | S2-F06-T01–11 | [F-06 STS](sprints/sprint-2/f06-grading.md); actual new case: none | Proposed contract; not implemented; test IDs NOT CREATED / NOT RUN; no accepted release |
+| FR-09 | F-07 tasks / S3 | S3-F07-AC01–06 | S3-F07-T01–08 | [F-07 STS](sprints/sprint-3/f07-collaboration.md); actual new case: none | Proposed contract; not implemented; test IDs NOT CREATED / NOT RUN; no accepted release |
+| FR-10 | F-07 peer / S3 | S3-F07-AC07–12 | S3-F07-T09–15 | [F-07 STS](sprints/sprint-3/f07-collaboration.md); actual new case: none | Proposed contract; not implemented; test IDs NOT CREATED / NOT RUN; no accepted release |
+| FR-11 | F-08 analytics / S3 | S3-F08-AC01–06/09/10 | S3-F08-T01–06/10–12 | [F-08 STS](sprints/sprint-3/f08-analytics-export.md); actual new case: none | Proposed contract; not implemented; test IDs NOT CREATED / NOT RUN; no accepted release |
+| FR-12 | F-08 CSV / S3 | S3-F08-AC06–10 | S3-F08-T06–12 | [F-08 STS](sprints/sprint-3/f08-analytics-export.md); actual new case: none | Proposed contract; not implemented; test IDs NOT CREATED / NOT RUN; no accepted release |
+| BR-01 | F-02 / S1 | AC-05 | TEST-05/12/21/22 | [API/DB](../server/tests/api.integration.test.ts); [E2E](../e2e/sprint1.spec.ts) | Implemented baseline; historical verification exists; new D2 RC NOT RUN |
+| BR-02 | F-02 / S1 | AC-06 | TEST-06/15 | [API/DB](../server/tests/api.integration.test.ts); [domain unit](../server/tests/domain.unit.test.ts) | Implemented baseline; historical verification exists; new D2 RC NOT RUN |
+| BR-03 | F-03 / S1 | AC-08/09 | TEST-08/09/16/17/18 | [API/DB](../server/tests/api.integration.test.ts); [domain unit](../server/tests/domain.unit.test.ts) | Implemented baseline; historical verification exists; new D2 RC NOT RUN |
+| BR-04 | F-03 / S1 | AC-08 | TEST-08 | [API/DB](../server/tests/api.integration.test.ts); [domain unit](../server/tests/domain.unit.test.ts) | Implemented baseline; historical verification exists; new D2 RC NOT RUN |
+| BR-05 | F-03 / S1 | AC-09, minimum 10 for both decisions | TEST-09 | [API/DB](../server/tests/api.integration.test.ts); [domain unit](../server/tests/domain.unit.test.ts) | Implemented baseline; historical verification exists; new D2 RC NOT RUN; Lab 7 10→20 proposal not approved/implemented |
+| BR-06 | F-01–08 / all sprints | Existing AC-03/10; S2-F04-AC05; S2-F05-AC07/10; S2-F06-AC05; S3-F07-AC04/10; S3-F08-AC06 | TEST-03/10/23; new feature negative/session tests | [API/DB](../server/tests/api.integration.test.ts); [routing/privacy](../server/tests/routing-privacy.unit.test.ts); [client privacy/session](../client/src/App.sessionIsolation.test.tsx); new locations in register | Existing protection implemented; new access paths NOT RUN |
+| BR-07 | F-05 / S2 | S2-F05-AC02 | S2-F05-T02 | [F-05 STS](sprints/sprint-2/f05-submissions.md) | Proposed contract; not implemented; test IDs NOT CREATED / NOT RUN; no accepted release |
+| BR-08 | F-06 grading / S2; F-07 peer / S3 | S2-F06-AC02; S3-F07-AC08 | S2-F06-T02; S3-F07-T10 | [F-06](sprints/sprint-2/f06-grading.md) / [F-07](sprints/sprint-3/f07-collaboration.md) | Proposed contract; not implemented; test IDs NOT CREATED / NOT RUN; no accepted release |
+| NFR-01 | Auth + every protected new route / all sprints | AC-03; all new route authentication cases | TEST-03/14/19; S2-F04-T07; S2-F05-T07; S2-F06-T05; S3-F07-T04/12; S3-F08-T06 | [API/DB](../server/tests/api.integration.test.ts); [routing/privacy](../server/tests/routing-privacy.unit.test.ts); [new locations](sprints/deliverable-2/verification-register.md) | Baseline verified historically; new routes NOT RUN |
+| NFR-02 | Role/ownership + private DTOs / all sprints | AC-10; every new role/ownership path | TEST-10/23; S2-F04-T07; S2-F05-T07/12; S2-F06-T05; S3-F07-T04/12; S3-F08-T06 | [API/DB](../server/tests/api.integration.test.ts); [routing/privacy](../server/tests/routing-privacy.unit.test.ts); client directory/session suites; new tests planned | Existing protection retained; every new route still requires direct backend negative checks |
+| NFR-03 | Credential handling / serializers / UI | AC-01/02; UIR-AC01/06 | TEST-01/02/19; UIR-T01/07; explicit changed-source/DTO review | [API/DB](../server/tests/api.integration.test.ts); [UIR STS](ui-refresh-spec.md) | Baseline credential checks exist; Quick Fill removal NOT implemented; no global zero-secrets claim from a green test |
+| NFR-04 | Persistence/version transactions / F-02–08 | AC-04/07/09 + new feature save/readback/history/race AC | TEST-04/07/09/15–18/21/22; per-feature I/E checks | [API/DB](../server/tests/api.integration.test.ts); [E2E](../e2e/sprint1.spec.ts); new planned paths in register | Historical persistence verified; new migrations/transactions/candidate NOT RUN |
+| NFR-05 | Build/container/GCP/health / system | Existing AC-01 + timed startup measurement | TEST-01; production/Docker CI; D2-SYS-T01 | [API/DB](../server/tests/api.integration.test.ts); [CI workflow](../.github/workflows/ci-docker.yml); planned startup record | Historical health/build checks; ≤10s startup NOT MEASURED here; new RC/deployment pending |
 
----
+### Existing baseline results and their limits
 
-## 2. Uncovered Requirements and Coverage Gaps
+Accepted source: `aeb804ea5bc667399b00cf54df10046a6ded46e0` after Lab 6.
+[Preparation CI 45001981946](https://github.com/Magiciancat9/Course_management/actions/runs/45001981946)
+passed on `dfe5d25...` (Lab 7 request/CI-routing changes, domain unchanged).
+That is historical preparation evidence, not an implemented F-04–08 or
+submitted D2 candidate result. Do not reuse an unrelated green check for a
+new AC. Existing client files also include `App.directoryPrivacy.test.tsx`,
+`App.sessionReview.test.tsx` and `App.sessionIsolation.test.tsx`.
 
-- **Sprint 1 Baseline Traceability:** All in-scope requirements map to Sprint 1 features, acceptance criteria, and named executable tests. This mapping is not a claim that every test has passed; run results and environment blockers are recorded separately.
-- **Deferred to Later Sprints (Planned & Scoped, Not Yet Implemented in Sprint 1):**
-  - `FR-06`–`FR-08` and `BR-07` (Milestone definitions, deliverable submissions, and rubric grading) are intentionally allocated to **Sprint 2** (`F-04`–`F-06`).
-  - `FR-09`–`FR-12` and `BR-08` (Intra-team task board, peer evaluations, course analytics, and CSV grade export) are intentionally allocated to **Sprint 3** (`F-07`–`F-08`).
-- **Uncovered Requirements:** **None (0 uncovered requirements).** Every requirement in `docs/srs.md` is mapped to a concrete feature and sprint.
+## 2. Allocation versus executable coverage gaps
 
----
+- Every FR-01–12, BR-01–08 and important NFR-01–05 is allocated above.
+  This is not “zero untested requirements”: FR-06–12, BR-07, new BR-08
+  behavior and new access/persistence paths remain unimplemented/unexecuted.
+- All new feature/UI AC are explicitly NO implementation / NOT RUN in the
+  register. Their proposed STS is not a substituted executable test.
+- Original Sprint 1 continuity must rerun on the integrated candidate,
+  including migration/version effects, roles/ownership and session privacy.
+- NFR-05's ≤10s startup goal needs actual timed evidence; a health 200 or
+  Docker build alone does not measure it. Planned D2-SYS-T01 records it.
+- Independent contract review, genuine RED/GREEN, accepted Sprint 2 main/tag,
+  implemented/tested Sprint 3 progress, current RC/CI/GCP checks and final
+  assessed PDF/receipt are still pending. See [continuity and finish plan](sprints/deliverable-2/continuity-and-status.md).
 
 ## 3. Approved Changes Log
 
@@ -55,7 +74,16 @@ This document maps every baseline Functional Requirement (`FR`), Business Rule (
 | **CHG-03** | 2026-11-06 | `F-01`, `AC-03`, `AD-02`, `NFR-03` | Require an explicitly configured JWT secret and persist logged-out token identifiers in PostgreSQL, so startup fails safely and revocation survives server restarts. | Pawarit & Tatchakorn |
 | **CHG-04** | 2026-11-06 | `NFR-01`, `NFR-04` | Replaced unverified timing targets with observable authentication rejection and PostgreSQL persistence requirements; timing targets had no measuring test. | Pawarit & Tatchakorn |
 | **CHG-05** | 2026-11-08 | `FR-02`, `F-02` UI | Approved deferring self-service team joining from Sprint 1. Students join an existing team when a current team member adds them by university email, matching the implemented ownership-guarded API and UI. | Tatchakorn Thamnimitr |
+| **CHG-06** | 2026-11-22 | F-01 UI / shared presentation | User requested modern UI and removal of the demo Quick Fill box; real email/password auth remains. Detailed [UIR plan](ui-refresh-spec.md) awaits review; implementation explicitly deferred. This is approved direction, not an implemented/reviewed design claim. | Tatchakorn (user instruction); teammate design review pending |
 
-## 4. Proposed Changes Pending Approval
+## 4. Proposed changes / policy decisions pending review
 
-No proposed changes are currently pending approval.
+| Item | Scope / current decision |
+| --- | --- |
+| CR-L7-01 / [#85](https://github.com/Magiciancat9/Course_management/issues/85) | BR-05 revision-feedback minimum 10→20, APPROVED remains 10. User reports sent to TA; actual approval pending. Baseline stays minimum 10 for both decisions. |
+| DD-S2-01–04 / DD-S3-01–04 | Concrete proposed contract clarifications in [shared contract](sprints/deliverable-2/shared-contract.md): URL/late/version/role, peer completion/rating and metric/CSV policies. Independent review pending; preserve justified revisions before implementation. |
+| UIR v1.0 detailed design | User-approved direction above; screen/token/AC/STS details await independent review. Existing Quick Fill/UI code has not changed. |
+
+No instructor/TA approval, independent teammate review, test run, feature
+completion or release is inferred from document authorship. Keep all
+approved baseline change rationale/history; do not rewrite it after code.

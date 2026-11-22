@@ -80,7 +80,7 @@ In university software engineering and capstone courses, managing student projec
 | **BR-05** | Mandatory Instructor Review Feedback | When an Instructor transitions a `SUBMITTED` proposal to `APPROVED` or `REVISION_REQUESTED`, a review comment (`reviewFeedback`) of at least 10 characters is mandatory, and only proposals currently in `SUBMITTED` state may be reviewed (`400`/`409`). | Sprint 1 |
 | **BR-06** | Team Ownership & Role Isolation | Only members of Team $X$ (or an `INSTRUCTOR`) may view or mutate Team $X$'s private proposal details and feedback; a Student from Team $Y$ attempting to view or modify Team $X$'s proposal is rejected (`403 Forbidden`). Only `INSTRUCTOR` users may execute proposal review endpoints (`403 Forbidden` for `STUDENT`). | Sprint 1 |
 | **BR-07** | Approved Proposal Prerequisite for Deliverables | A team cannot submit a Sprint/Milestone Deliverable (`FR-07`) unless its Project Proposal is in `APPROVED` status (`409 Conflict`). | Sprint 2 |
-| **BR-08** | Grade Bounds & Self-Peer-Review Prevention | Milestone scores must be within `0–100` inclusive (`FR-08`), and a Student cannot submit a peer evaluation rating for themselves (`FR-10`). | Sprint 3 |
+| **BR-08** | Grade Bounds & Self-Peer-Review Prevention | Milestone scores must be within `0–100` inclusive (`FR-08`), and a Student cannot submit a peer evaluation rating for themselves (`FR-10`). | Sprint 2 (grading) & Sprint 3 (peer evaluation) |
 
 ---
 
@@ -105,3 +105,33 @@ In university software engineering and capstone courses, managing student projec
 | **AD-03** | Design Decision | Proposal-to-Team Relationship (`1:1` per Team) | Question: *Can a team have multiple active project proposals at once?* Resolution: Each `ProjectTeam` has at most one active `ProjectProposal` (`1:1` unique foreign key `teamId`), which evolves through `DRAFT` → `SUBMITTED` → `REVISION_REQUESTED` / `APPROVED` while preserving revision count and review history. |
 | **AD-04** | Design Decision | Handling Rejected / Unsatisfactory Proposals | Question: *If an instructor rejects a proposal, is the team permanently locked out?* Resolution: The rejection state is modeled as `REVISION_REQUESTED`. This rejects the current submission while allowing team members to revise the proposal and re-submit (`REVISION_REQUESTED` → `SUBMITTED`), whereas `APPROVED` locks the proposal from further student edits. |
 | **AD-05** | Design Decision | Database Engine & ORM | We use **PostgreSQL** with **Prisma ORM** across local development, automated testing, and planned GCP Cloud SQL deployment to ensure identical relational constraints (unique indexes on `(courseId, userId)` for team membership) in all environments. |
+
+## 8. Deliverable 2 contract elaboration and current status
+
+The baseline FR-01–12, BR-01–08 and NFR-01–05 above remain the product scope.
+BR-08's sprint label now explicitly includes its existing Sprint 2 grading
+responsibility; the grade/self-rating rule itself is unchanged.
+
+[S2-F04](sprints/sprint-2/f04-milestones.md),
+[S2-F05](sprints/sprint-2/f05-submissions.md),
+[S2-F06](sprints/sprint-2/f06-grading.md),
+[S3-F07](sprints/sprint-3/f07-collaboration.md) and
+[S3-F08](sprints/sprint-3/f08-analytics-export.md) provide concrete proposed
+feature SDS, UI/API/data, numbered AC and STS. Their [shared decision
+table](sprints/deliverable-2/shared-contract.md) explicitly proposes late
+flagging, immutable submission/grade binding, peer completion/rating/privacy
+and analytics/CSV semantics where the earlier SRS did not fix a boundary.
+Those decisions await independent review; they are not retroactively approved
+or implemented by this SRS link. Actual new verification is NOT RUN.
+
+The user requested a [UI refresh](ui-refresh-spec.md), specifically removing
+the demo Quick Fill box while retaining real email/password authentication
+and existing team/member functions. Detailed UI design review and
+implementation are deferred; the old UI still exists. This presentation
+direction does not alter the domain baseline or approve Lab 7 maintenance.
+
+CR-L7-01 / [#85](https://github.com/Magiciancat9/Course_management/issues/85)
+proposes a separate BR-05 revision-feedback minimum 10→20. The user reports
+sending it to the TA, but approval remains pending; **BR-05 stays 10 for both
+proposal decisions in this baseline**. Retain approved-change history and
+planned versus executed coverage in [traceability](traceability.md).
