@@ -2,6 +2,11 @@
 
 This document defines the complete feature inventory (`F-01` through `F-08`) across Sprints 1, 2, and 3 for **CoursePMS (Course Project Management System)**, including linked requirements (`FR`, `BR`, `NFR`), dependencies, and planned sprint allocation.
 
+**22 November 2026 status:** F-01–03 have the accepted Sprint 1/Lab 6
+implementation. F-04–08 now have concrete proposed contracts/AC/STS below;
+they are not implemented or verified complete by writing the contracts.
+Independent review is pending. Required Sprint 2 allocation is unchanged.
+
 ---
 
 ## 1. Feature Inventory Table
@@ -46,3 +51,21 @@ flowchart LR
   F06 --> F08
   F07 --> F08
 ```
+
+## 3. Current contract and implementation status
+
+| Feature | Owner | Versioned planned contract | Implementation / new verification |
+| --- | --- | --- | --- |
+| F-01–03 | Existing confirmed Sprint 1 allocation | Existing Sprint 1 contracts; [continuity record](sprints/deliverable-2/continuity-and-status.md) | Implemented historically; new D2 candidate checks pending |
+| F-04 | martinvadre | [S2-F04 v1.0](sprints/sprint-2/f04-milestones.md) | Not implemented / NOT RUN |
+| F-05 | Magiciancat9 | [S2-F05 v1.0](sprints/sprint-2/f05-submissions.md) | Not implemented / NOT RUN |
+| F-06 | martinvadre | [S2-F06 v1.0](sprints/sprint-2/f06-grading.md) | Not implemented / NOT RUN |
+| F-07 | Magiciancat9 | [S3-F07 v1.0](sprints/sprint-3/f07-collaboration.md) | Task checkpoint and remaining peer work both unimplemented / NOT RUN |
+| F-08 | martinvadre | [S3-F08 v1.0](sprints/sprint-3/f08-analytics-export.md) | Not implemented / NOT RUN |
+
+All v1.0 contracts are drafted by Magiciancat9 for teammate review, including
+teammate-owned feature contracts; no authorship/approval is attributed to
+martinvadre. The [UI refresh](ui-refresh-spec.md) is a cross-cutting planned
+presentation change, not an extra completed domain feature. The [verification
+register](sprints/deliverable-2/verification-register.md) distinguishes planned
+test IDs/locations from actual execution and accepted releases.

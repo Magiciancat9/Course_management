@@ -2,6 +2,7 @@
 
 **Course:** CPE 334 Software Engineering in the Age of AI Agents (Semester 1/2026)  
 **Deliverable:** Project Deliverable 1 — Engineering Baseline and Working Sprint 1  
+**Current planning:** Deliverable 2 Sprint 2–3 contracts and UI-refresh specification are drafted for review; the new features and redesigned UI are not implemented by the documentation package.
 **Team Members:**
 - **Pawarit Wongdaeng** (`67070503466`, GitHub: `martinvadre`)
 - **Tatchakorn Thamnimitr** (`67070503415`, GitHub: `Magiciancat9`)
@@ -29,6 +30,8 @@
 | **Part D** | Three-Sprint Plan | [`docs/sprints/plan.md`](docs/sprints/plan.md) |
 | **Part E** | Sprint 1 Engineering Contracts & STS/DoD | [`docs/sprints/sprint-1/f01-auth-and-roles.md`](docs/sprints/sprint-1/f01-auth-and-roles.md), [`docs/sprints/sprint-1/f02-team-and-proposal-workflow.md`](docs/sprints/sprint-1/f02-team-and-proposal-workflow.md), [`docs/sprints/sprint-1/sts-and-dod.md`](docs/sprints/sprint-1/sts-and-dod.md) |
 | **Lab 5** | Cloud deployment configuration and GCP project record | [`docs/labs/lab-05/deployment.md`](docs/labs/lab-05/deployment.md), [`docs/labs/lab-05/gcp-project.md`](docs/labs/lab-05/gcp-project.md) |
+| **Deliverable 2** | Proposed complete Sprint 2–3 feature contracts, AC, STS, shared DoD and status/verification registers | [`docs/sprints/deliverable-2/README.md`](docs/sprints/deliverable-2/README.md) |
+| **UI refresh** | Planned modern layout, Quick Fill removal, responsive/accessibility criteria and tests; implementation deferred | [`docs/ui-refresh-spec.md`](docs/ui-refresh-spec.md) |
 
 ---
 
@@ -74,7 +77,12 @@ npm --prefix server run prisma:migrate
 # 3. Seed reproducible synthetic demo data (development/test databases only)
 npm --prefix server run prisma:seed
 ```
-The Sprint 1 `prisma:migrate` script runs `prisma db push` and does not maintain a migration history. Real Prisma migrations are planned for Sprint 2.
+The local `prisma:migrate` convenience script still runs `prisma db push`; it
+does not create migration history. The current post-Lab-5 tree already has
+`server/prisma/migrations/20261110000000_init` and the separate
+`npm --prefix server run prisma:migrate:deploy` command for reviewed migration
+deployment. New Sprint 2–3 schema changes must add migrations and test populated
+upgrades; do not edit the existing init history or use `db push` on production.
 
 The local/test seed resets its target database and must only be run against a disposable database. In `NODE_ENV=production`, the seed requires `DEMO_USER_PASSWORD` and only creates missing demo users/data; it does not delete or overwrite existing records. Supply the password to a one-time seed job from Secret Manager, never from committed source or the public web service. Do not run `prisma db push` against production; the production schema/migration procedure must be reviewed and documented before deployment.
 

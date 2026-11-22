@@ -25,3 +25,34 @@ Sprint 1 delivers the foundational workflow that every subsequent course project
 ### 2.2. Team Workload Allocation for Sprint 1
 - **Pawarit Wongdaeng (`67070503466`):** System-Level SDS & Data Model, `F-01` Auth/Session/RBAC middleware, `F-02` Team Formation & Capacity API + UI workspace, Unit/API tests (`TEST-01`–`TEST-06`), and PR reviews for `F-03`.
 - **Tatchakorn Thamnimitr (`67070503415`):** SRS & Traceability matrix, `F-03` Proposal Lifecycle & Instructor Review API + Console UI, API/E2E tests (`TEST-07`–`TEST-12`), and PR reviews for `F-01`/`F-02`.
+
+## 3. Confirmed Sprint 2–3 allocation and documentation-first gates
+
+The user confirmed the following allocation on 22 November 2026. The
+[Deliverable 2 contract package](deliverable-2/README.md) specifies the work;
+independent review and implementation remain separate statuses.
+
+| Scope | Driver | Review / next gate |
+| --- | --- | --- |
+| F-04 milestones, F-06 grading, F-08 analytics/export | martinvadre | The other member reviews code; initial shared contract drafts are authored by Magiciancat9 and await martinvadre's actual document review |
+| F-05 submission, F-07 tasks/peer evaluation | Magiciancat9 | martinvadre reviews contracts/code; integrated prerequisites and actual tests required |
+| SRS/SDS/traceability/continuity and assessed PDF | Magiciancat9 | martinvadre reviews; final RC evidence and real submission receipt required |
+| RC/deployment | martinvadre | Magiciancat9 reviews; exact candidate checks and GCP version identity required |
+| UI refresh / Quick Fill removal | Magiciancat9 | [UIR v1.0](../ui-refresh-spec.md) first; implementation explicitly deferred to Sprint 2–3 |
+
+Proposed targets: contract review 22–24 Nov; F-04 by 25 Nov; F-05/F-06 by
+26 Nov; accepted Sprint 2 plus tested F-07 task progress by 27 Nov; RC checks,
+deployment and document reconciliation by 28 Nov; assessed PDF by 29 Nov
+23:59 Asia/Bangkok. Remaining peer/analytics targets are 5/7 Dec, bounded
+around examinations 1–11 Dec, with final verification/video/release by 13 Dec.
+These dates are a plan, not proof of completion.
+
+All F-04–06 remain Sprint 2 requirements. Every remaining Sprint 3 feature
+needs reviewed contracts/AC/STS at the checkpoint and at least one meaningful
+implemented/tested Sprint 3 workflow in the RC. Keep exact missing AC, owner,
+dependency and next action in the [finish record](deliverable-2/continuity-and-status.md).
+
+Lab 7 #85 is awaiting a TA response after the user's reported submission.
+Its BR-05 change is not included by this package; contract/backlog work here
+can proceed while approval is pending. The current phase changes documents
+only, including the UI plan; no feature or visual implementation is claimed.
