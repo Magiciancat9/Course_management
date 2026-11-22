@@ -99,7 +99,9 @@ Owner `martinvadre`; contract v1.0 / review pending.
 
 ### UIR — [ui-refresh-spec.md](../../ui-refresh-spec.md)
 
-Owner `Magiciancat9`; contract v1.0 / review pending.
+Implementation owner `martinvadre`; reviewer `Magiciancat9`. Original UIR v1.0
+specification accepted through PR #107; UIR v1.1 records the user's 22 Nov 2026
+ownership handoff. All UI implementation/execution statuses below remain pending.
 
 | AC | Planned test IDs | Implemented | Actual verification / version |
 | --- | --- | --- | --- |

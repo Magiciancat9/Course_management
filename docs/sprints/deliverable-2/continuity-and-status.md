@@ -73,7 +73,7 @@ nonexistent new F-04–08 implementation or submitted D2 candidate.
 | F-07 tasks / S3-F07-AC01–06 | Proposed v1.0; review pending | Not implemented | NOT RUN / NONE | Magiciancat9: first meaningful checkpoint workflow, #98 |
 | F-07 peer / S3-F07-AC07–12 | Proposed v1.0; review pending | Not implemented | NOT RUN / NONE | Magiciancat9: completion/privacy/rating policy review, #101 |
 | F-08 / S3-F08-AC01–10 | Proposed v1.0; review pending | Not implemented | NOT RUN / NONE | martinvadre: contract #99, implementation #102 |
-| UIR / UIR-AC01–10 | User direction confirmed; detailed spec review pending | Existing Bootstrap/Quick Fill still present | New UIR checks NOT RUN | Magiciancat9: implement later per #106, not during this phase |
+| UIR / UIR-AC01–10 | Original spec accepted via PR #107; ownership-only update in UIR v1.1 | Existing Bootstrap/Quick Fill still present | New UIR checks NOT RUN | martinvadre: implement #106; Magiciancat9 independently reviews; user reassigned 22 Nov 2026 |
 
 Prepared Milestone/MilestoneSubmission tables do not make F-04–06 complete.
 The F-08 contract does not satisfy implemented Sprint 3 progress. Keep all
@@ -114,7 +114,7 @@ with actual achieved/tested SHA, missing work/defect and next action.
 | Sprint 2 acceptance | Magiciancat9 | All F-04–06 AC/CI/reviews and integration | 27 Nov |
 | F-07 AC01–06 | Magiciancat9 | Reviewed complete F-07 contract/F-05 context → tested task lifecycle | 27 Nov |
 | Full F-08 contract | martinvadre | Review this v1.0, including data/CSV policy | 24 Nov |
-| UIR AC01–10 | Magiciancat9 | Review UI plan; implement during Sprint 2–3 and verify preserved behavior | 26 Nov / align with integrated feature availability |
+| UIR AC01–10 | martinvadre | Reviewed UI plan → implementation and preserved-behavior verification; Magiciancat9 reviews code/UI | 26 Nov / align with integrated feature availability |
 | RC/traceability/readiness | martinvadre + Magiciancat9 | Integrated actual progress → full candidate checks, deploy and source reconciliation | 28 Nov |
 | D2 assessed PDF/submission | Magiciancat9; martinvadre review | All required material + real exact-version evidence | 29 Nov, 23:59 Asia/Bangkok |
 | F-07 AC07–12 and any unachieved task AC | Magiciancat9 | Completed milestone/submission + reviewed peer contract → confidential evaluation | 5 Dec |
