@@ -55,6 +55,28 @@ complete human review, release, independent retest or acceptance.
 
 ## 2. Product Definition of Done (DoD)
 
+### Lab 7 versioned STS addendum — v1.1, before maintenance code
+
+The [complete reviewed-scope draft](../../labs/lab-07/revised-contract.md)
+contains concrete L7-T01–06 fixtures, inputs/expected results, levels and
+planned executable files. It revises only BR-05's REVISION_REQUESTED minimum
+20; APPROVED stays 10. [TA approval](../../labs/lab-07/approval-record.md)
+is recorded; actual teammate contract review remains pending before #87.
+
+| Existing criterion | Additional planned verification | Status |
+| --- | --- | --- |
+| AC-09 / BR-05 | L7-AC01–03 → L7-T01–03: revision 19/20/21, approval 9/10/11, trim/UTF-16/invalid types/decision | NOT CREATED / NOT RUN |
+| AC-09 / BR-03 / AC-10 | L7-AC04 → L7-T04: auth/role/state precedence and competing review protection | New cases NOT CREATED / NOT RUN; retain original TEST-03/09/10/18 |
+| AC-09 / NFR-04 | L7-AC05 → L7-T05: full rejected-row equality, trimmed successful readback and readable legacy reviews | NOT CREATED / NOT RUN |
+| UI / AC-09/10 | L7-AC06 → L7-T06: action-specific guidance, authoritative direct API validation, rejection input retention and privacy/session regression | NOT CREATED / NOT RUN |
+
+The earlier TEST tables remain historical baseline specifications/results,
+not new-behavior passes. After independent contract review, retain the actual
+19-unit behavioral RED on old code before implementation, then the same
+test's GREEN. Explain legitimate UI-hint expectation changes; preserve all
+unaffected regression tests. Original Sprint 1 DoD below remains historical;
+Lab 7 uses its own reviewed integration/release chain described in the addendum.
+
 A Sprint 1 feature (`F-01`, `F-02`, `F-03`) and the Sprint 1 release increment are considered **Done** only when all of the following criteria are objectively verified with retained evidence:
 
 1. **Contract-First Specification:** The feature's engineering contract (SDS, UI/API/DB design, `AC-*`, and `TEST-*` in `docs/sprints/sprint-1/`) is committed to Git prior to feature implementation.
