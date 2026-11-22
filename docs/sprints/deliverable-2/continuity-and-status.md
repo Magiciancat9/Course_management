@@ -1,4 +1,4 @@
-# Deliverable 2 continuity, status and finish record — v1.0
+# Deliverable 2 continuity, status and finish record — v1.1
 
 **Recorded:** 22 Nov 2026; documentation-only phase. Author/driver
 `Magiciancat9`; independent review pending. Work: [#93](https://github.com/Magiciancat9/Course_management/issues/93)
@@ -6,6 +6,15 @@ and [#100](https://github.com/Magiciancat9/Course_management/issues/100).
 
 This is the checkpoint record to update with actual candidate evidence, not a
 claim that planned Sprint 2/3 features, tests, reviews or release exist.
+
+**#93 progress update, 22 Nov 2026:** the initial contract package was
+independently approved and merged via PR #107. The
+[detailed change/defect register](change-defect-register.md) now records
+owners, dispositions and remaining actions. Fresh current-staging execution
+and public health/readiness checks are in
+[Sprint 1 continuity evidence](sprint1-continuity-evidence.md). These checks
+advance #93 now; final integrated-RC verification remains outstanding. This
+new evidence/document update requires its own teammate review.
 
 ## 1. Version register
 
