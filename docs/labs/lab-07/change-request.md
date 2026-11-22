@@ -23,7 +23,7 @@ implementation starts.
 | Accepted Sprint 1 after Lab 6 | [`aeb804ea5bc667399b00cf54df10046a6ded46e0`][baseline], released through [PR #76][release] |
 | Accepted serving revision | `course-pms-00009-mk2`, as recorded in the [Lab 6 acceptance evidence][acceptance] |
 | GitHub main inspected for this request | `aeb804ea5bc667399b00cf54df10046a6ded46e0` on 22 November 2026 |
-| Documentation branch base | The accepted Lab 6 commit above; this request adds documentation only |
+| Documentation branch base | The accepted Lab 6 commit above; request source plus CI routing for `lab7-staging`, with no domain implementation or test changes |
 | Actual implementation pre-change SHA / serving revision | **Pending:** record immediately before implementing the approved request and explain any intervening changes |
 | Maintained release / new deployed revision | **Pending:** no Lab 7 implementation, release or deployment has occurred |
 
@@ -129,6 +129,12 @@ are an authenticated instructor, a `SUBMITTED` proposal and valid payload.
 This preliminary table supports the approval request. The complete revised
 engineering contract and STS, including teammate review before code, remain
 the work of [Issue #86][contract-task] after the approved scope is known.
+
+The preparation PR targets `lab7-staging`, created from the accepted main
+commit. The existing CI workflow adds that staging branch to its pull-request
+filter so preparation and later Lab 7 PRs can receive the normal checks.
+The test steps and main deployment trigger are unchanged. Publishing this
+preparation branch does not merge main or deploy a maintained rule change.
 
 ## 6. Preparation verification and evidence limits
 
