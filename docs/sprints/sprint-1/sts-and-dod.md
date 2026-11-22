@@ -57,18 +57,20 @@ complete human review, release, independent retest or acceptance.
 
 ### Lab 7 versioned STS addendum — v1.1, before maintenance code
 
-The [complete reviewed-scope draft](../../labs/lab-07/revised-contract.md)
+The [complete reviewed contract](../../labs/lab-07/revised-contract.md)
 contains concrete L7-T01–06 fixtures, inputs/expected results, levels and
 planned executable files. It revises only BR-05's REVISION_REQUESTED minimum
 20; APPROVED stays 10. [TA approval](../../labs/lab-07/approval-record.md)
-is recorded; actual teammate contract review remains pending before #87.
+and actual teammate contract review are recorded before #87 tests/code.
+[Candidate execution evidence](../../labs/lab-07/implementation-evidence.md)
+provides real files, RED/GREEN and full CI results; release is still pending.
 
 | Existing criterion | Additional planned verification | Status |
 | --- | --- | --- |
-| AC-09 / BR-05 | L7-AC01–03 → L7-T01–03: revision 19/20/21, approval 9/10/11, trim/UTF-16/invalid types/decision | NOT CREATED / NOT RUN |
-| AC-09 / BR-03 / AC-10 | L7-AC04 → L7-T04: auth/role/state precedence and competing review protection | New cases NOT CREATED / NOT RUN; retain original TEST-03/09/10/18 |
-| AC-09 / NFR-04 | L7-AC05 → L7-T05: full rejected-row equality, trimmed successful readback and readable legacy reviews | NOT CREATED / NOT RUN |
-| UI / AC-09/10 | L7-AC06 → L7-T06: action-specific guidance, authoritative direct API validation, rejection input retention and privacy/session regression | NOT CREATED / NOT RUN |
+| AC-09 / BR-05 | L7-AC01–03 → L7-T01–03: revision 19/20/21, approval 9/10/11, trim/UTF-16/invalid types/decision | PASS in candidate unit/API suites; see L7-E05–E08 |
+| AC-09 / BR-03 / AC-10 | L7-AC04 → L7-T04: auth/role/state precedence and competing review protection | PASS in new unit/API checks and retained TEST-03/09/10/18 |
+| AC-09 / NFR-04 | L7-AC05 → L7-T05: full rejected-row equality, trimmed successful readback and readable legacy reviews | PASS in real API/PostgreSQL and browser readback |
+| UI / AC-09/10 | L7-AC06 → L7-T06: action-specific guidance, authoritative direct API validation, rejection input retention and privacy/session regression | PASS in component/API/browser and retained privacy/session suites |
 
 The earlier TEST tables remain historical baseline specifications/results,
 not new-behavior passes. After independent contract review, retain the actual

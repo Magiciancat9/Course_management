@@ -7,8 +7,11 @@ record still describes the locked old UI. The revised
 [L7-CONTRACT v1.1](labs/lab-07/revised-contract.md) requires clear minimum-10
 approval / minimum-20 revision guidance after trim while preserving current
 actions, feedback on rejection, session/access protections and backend
-enforcement. TA scope is approved; teammate contract review and code remain
-pending. Update rendered as-built evidence only after real implementation.
+enforcement. TA scope and teammate contract review are complete; the #87
+candidate now implements the distinct hints, associated labels and backend
+rule. [Actual execution evidence](labs/lab-07/implementation-evidence.md)
+records tests; the unchanged sections below remain the historical pre-change
+UI snapshot. Maintained release/deployed evidence are still pending.
 
 Evidence is limited to `client/src/App.tsx`, `client/src/main.tsx`, `client/index.html`, the screenshots in `artifacts/sprint-1/`, and the existing SRS, feature inventory, system SDS, and Sprint 1 feature contracts. Screens and behaviors not shown by that evidence are marked not implemented or not verified.
 
