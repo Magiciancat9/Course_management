@@ -29,6 +29,7 @@
 | **Part D** | Three-Sprint Plan | [`docs/sprints/plan.md`](docs/sprints/plan.md) |
 | **Part E** | Sprint 1 Engineering Contracts & STS/DoD | [`docs/sprints/sprint-1/f01-auth-and-roles.md`](docs/sprints/sprint-1/f01-auth-and-roles.md), [`docs/sprints/sprint-1/f02-team-and-proposal-workflow.md`](docs/sprints/sprint-1/f02-team-and-proposal-workflow.md), [`docs/sprints/sprint-1/sts-and-dod.md`](docs/sprints/sprint-1/sts-and-dod.md) |
 | **Lab 5** | Cloud deployment configuration and GCP project record | [`docs/labs/lab-05/deployment.md`](docs/labs/lab-05/deployment.md), [`docs/labs/lab-05/gcp-project.md`](docs/labs/lab-05/gcp-project.md) |
+| **Lab 7** | Approved BR-05 maintenance, release readiness and retrospective | [`docs/labs/lab-07/revised-contract.md`](docs/labs/lab-07/revised-contract.md), [`docs/labs/lab-07/readiness-and-retrospective.md`](docs/labs/lab-07/readiness-and-retrospective.md) |
 
 ---
 
@@ -74,7 +75,7 @@ npm --prefix server run prisma:migrate
 # 3. Seed reproducible synthetic demo data (development/test databases only)
 npm --prefix server run prisma:seed
 ```
-The Sprint 1 `prisma:migrate` script runs `prisma db push` and does not maintain a migration history. Real Prisma migrations are planned for Sprint 2.
+The local `prisma:migrate` script runs `prisma db push` for a disposable development database. The repository also contains versioned Prisma migrations; the production release job uses `npm --prefix server run prisma:migrate:deploy` (`prisma migrate deploy`), as described in the [deployment instructions](docs/labs/lab-05/deployment.md).
 
 The local/test seed resets its target database and must only be run against a disposable database. In `NODE_ENV=production`, the seed requires `DEMO_USER_PASSWORD` and only creates missing demo users/data; it does not delete or overwrite existing records. Supply the password to a one-time seed job from Secret Manager, never from committed source or the public web service. Do not run `prisma db push` against production; the production schema/migration procedure must be reviewed and documented before deployment.
 
@@ -139,8 +140,11 @@ Editing or submitting a `SUBMITTED` or `APPROVED` proposal returns
 `409 BR03_INVALID_STATUS_TRANSITION`. Submission requires a trimmed title of at
 least 5 characters, problem statement of at least 20 characters, and tech stack
 of at least 3 characters; otherwise it returns `400 BR04_INCOMPLETE_PROPOSAL`.
-Instructor review requires a valid decision and feedback of at least 10 trimmed
-characters (`400 BR05_FEEDBACK_TOO_SHORT`); an invalid decision returns
+Instructor review requires a valid decision. Under the TA-approved Lab 7 change,
+`REVISION_REQUESTED` requires at least **20**, while `APPROVED` requires at least
+**10**, JavaScript UTF-16 code units after `trim()`
+(`400 BR05_FEEDBACK_TOO_SHORT` below the selected minimum). Existing historical
+reviews remain readable without rewriting stored feedback; an invalid decision returns
 `400 VALIDATION_ERROR`. A proposal not in `SUBMITTED` returns
 `409 BR03_INVALID_STATUS_TRANSITION`. Review status is checked before review
 payload validation, so a non-submitted proposal returns 409 even when its
@@ -151,6 +155,6 @@ data.
 
 ## 6. Known Limitations
 
-- Sprint 1 applies the Prisma schema with `prisma db push`; it does not yet have a Prisma migration history.
+- Local schema synchronization uses `prisma db push`; production uses the committed migration history through `prisma migrate deploy`. Never use the local schema-sync or test reset commands on production.
 - Students cannot self-join an existing team. A current team member adds an eligible student by university email; a self-service join workflow remains a proposed scope change pending team approval.
 - PostgreSQL integration and E2E suites are destructive to their configured database and must only run against a disposable test database.
