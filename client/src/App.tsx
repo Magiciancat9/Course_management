@@ -1529,8 +1529,8 @@ export default function App() {
                             <label className="cpms-label" htmlFor="review-feedback-input">
                               Instructor Review Feedback <span className="text-danger">*</span>
                             </label>
-                            <div id="review-feedback-hint" className="cpms-hint mb-1">
-                              Minimum 10 characters required for approval or revision requests.
+                            <div id="review-feedback-hint" data-testid="review-feedback-hint" className="cpms-hint mb-1">
+                              Approve: minimum 10 after trim. Request revision: minimum 20 after trim.
                             </div>
                             <textarea
                               id="review-feedback-input"
@@ -1538,7 +1538,7 @@ export default function App() {
                               data-testid="review-feedback-input"
                               className="cpms-textarea"
                               aria-describedby="review-feedback-hint"
-                              placeholder="Provide specific engineering feedback (minimum 10 characters)..."
+                              placeholder="Provide feedback: 10 for approval, 20 for revision, after trim."
                               value={reviewFeedbackInput}
                               onChange={(e) => setReviewFeedbackInput(e.target.value)}
                               disabled={!canReviewSelectedProposal || pendingAction !== null}
@@ -1550,6 +1550,7 @@ export default function App() {
                               <button
                                 type="button"
                                 data-testid="approve-proposal-btn"
+                                aria-describedby="review-feedback-hint"
                                 className="cpms-btn cpms-btn-success cpms-btn-full-mobile"
                                 onClick={() =>
                                   handleInstructorDecision(
@@ -1566,6 +1567,7 @@ export default function App() {
                               <button
                                 type="button"
                                 data-testid="revision-proposal-btn"
+                                aria-describedby="review-feedback-hint"
                                 className="cpms-btn cpms-btn-warning cpms-btn-full-mobile"
                                 onClick={() =>
                                   handleInstructorDecision(

@@ -30,7 +30,7 @@ its test IDs, levels and proposed actual locations separately.
 | BR-02 | F-02 / S1 | AC-06 | TEST-06/15 | [API/DB](../server/tests/api.integration.test.ts); [domain unit](../server/tests/domain.unit.test.ts) | Implemented baseline; historical verification exists; new D2 RC NOT RUN |
 | BR-03 | F-03 / S1 | AC-08/09 | TEST-08/09/16/17/18 | [API/DB](../server/tests/api.integration.test.ts); [domain unit](../server/tests/domain.unit.test.ts) | Implemented baseline; historical verification exists; new D2 RC NOT RUN |
 | BR-04 | F-03 / S1 | AC-08 | TEST-08 | [API/DB](../server/tests/api.integration.test.ts); [domain unit](../server/tests/domain.unit.test.ts) | Implemented baseline; historical verification exists; new D2 RC NOT RUN |
-| BR-05 | F-03 / S1 | AC-09, minimum 10 for both decisions | TEST-09 | [API/DB](../server/tests/api.integration.test.ts); [domain unit](../server/tests/domain.unit.test.ts) | Implemented baseline; historical verification exists; new D2 RC NOT RUN; Lab 7 10→20 proposal not approved/implemented |
+| BR-05 | F-03 / S1 maintenance | AC-09 / L7-AC01?06, revision minimum 20 / approval minimum 10 after trim (UTF-16) | TEST-09; L7-T01?06 | [Lab 7 unit](../server/tests/lab7-review.unit.test.ts), [API/DB](../server/tests/lab7-review.integration.test.ts), [UI](../client/src/App.lab7Review.test.tsx), [browser](../e2e/lab7-review.spec.ts) | Approved/reviewed/released on main b92b434; [Lab 7 execution](labs/lab-07/implementation-evidence.md); combined D2 RC NOT RUN |
 | BR-06 | F-01–08 / all sprints | Existing AC-03/10; S2-F04-AC05; S2-F05-AC07/10; S2-F06-AC05; S3-F07-AC04/10; S3-F08-AC06 | TEST-03/10/23; new feature negative/session tests | [API/DB](../server/tests/api.integration.test.ts); [routing/privacy](../server/tests/routing-privacy.unit.test.ts); [client privacy/session](../client/src/App.sessionIsolation.test.tsx); new locations in register | Existing protection implemented; new access paths NOT RUN |
 | BR-07 | F-05 / S2 | S2-F05-AC02 | S2-F05-T02 | [F-05 STS](sprints/sprint-2/f05-submissions.md) | Proposed contract; not implemented; test IDs NOT CREATED / NOT RUN; no accepted release |
 | BR-08 | F-06 grading / S2; F-07 peer / S3 | S2-F06-AC02; S3-F07-AC08 | S2-F06-T02; S3-F07-T10 | [F-06](sprints/sprint-2/f06-grading.md) / [F-07](sprints/sprint-3/f07-collaboration.md) | Proposed contract; not implemented; test IDs NOT CREATED / NOT RUN; no accepted release |
@@ -55,13 +55,13 @@ new AC. Existing client files also include `App.directoryPrivacy.test.tsx`,
 - Every FR-01–12, BR-01–08 and important NFR-01–05 is allocated above.
   This is not “zero untested requirements”: FR-06–12, BR-07, new BR-08
   behavior and new access/persistence paths remain unimplemented/unexecuted.
-- All new feature/UI AC are explicitly NO implementation / NOT RUN in the
+- New F-04?08 feature AC remain NO implementation / NOT RUN in the
   register. Their proposed STS is not a substituted executable test.
 - Original Sprint 1 continuity must rerun on the integrated candidate,
   including migration/version effects, roles/ownership and session privacy.
 - NFR-05's ≤10s startup goal needs actual timed evidence; a health 200 or
   Docker build alone does not measure it. Planned D2-SYS-T01 records it.
-- Independent contract review, genuine RED/GREEN, accepted Sprint 2 main/tag,
+- Contract review is recorded in PR #107. New-feature genuine RED/GREEN, accepted Sprint 2 main/tag,
   implemented/tested Sprint 3 progress, current RC/CI/GCP checks and final
   assessed PDF/receipt are still pending. See [continuity and finish plan](sprints/deliverable-2/continuity-and-status.md).
 
@@ -74,15 +74,17 @@ new AC. Existing client files also include `App.directoryPrivacy.test.tsx`,
 | **CHG-03** | 2026-11-06 | `F-01`, `AC-03`, `AD-02`, `NFR-03` | Require an explicitly configured JWT secret and persist logged-out token identifiers in PostgreSQL, so startup fails safely and revocation survives server restarts. | Pawarit & Tatchakorn |
 | **CHG-04** | 2026-11-06 | `NFR-01`, `NFR-04` | Replaced unverified timing targets with observable authentication rejection and PostgreSQL persistence requirements; timing targets had no measuring test. | Pawarit & Tatchakorn |
 | **CHG-05** | 2026-11-08 | `FR-02`, `F-02` UI | Approved deferring self-service team joining from Sprint 1. Students join an existing team when a current team member adds them by university email, matching the implemented ownership-guarded API and UI. | Tatchakorn Thamnimitr |
-| **CHG-06** | 2026-11-22 | F-01 UI / shared presentation | User requested modern UI and removal of the demo Quick Fill box; real email/password auth remains. Detailed [UIR plan](ui-refresh-spec.md) awaits review; implementation explicitly deferred. This is approved direction, not an implemented/reviewed design claim. | Tatchakorn (user instruction); teammate design review pending |
+| **CHG-06** | 2026-11-22 | F-01 UI / shared presentation | User requested modern UI and removal of the demo Quick Fill box; real email/password auth remains. Detailed [UIR plan](ui-refresh-spec.md) reviewed via PR #107; UI implementation merged via PR #110. This is approved direction, not an implemented/reviewed design claim. | Tatchakorn (user instruction); PR #107/#110 review history |
 
-## 4. Proposed changes / policy decisions pending review
+| **CR-L7-01** | 2026-11-22, 20:18 Asia/Bangkok | `FR-05`, `BR-05`, `F-03`, `AC-09` | Increase only REVISION_REQUESTED feedback minimum from 10 to 20 after trim/UTF-16 count; APPROVED stays 10. [Approval image/transcript](labs/lab-07/approval-record.md), [pre-change lock](labs/lab-07/pre-change-baseline.md) and [revised contract](labs/lab-07/revised-contract.md) record rationale, scope and conditions. Implemented and released through PR #113; Lab 7 evidence retains real RED/GREEN and release results. | P'Tik (TA), user-supplied identity/date; user confirms progress. Teammate contract review completed in PR #105 before code; implementation/release in PR #111/#113; maintained main b92b434 |
+
+## 4. Reviewed policies and remaining verification
 
 | Item | Scope / current decision |
 | --- | --- |
-| CR-L7-01 / [#85](https://github.com/Magiciancat9/Course_management/issues/85) | BR-05 revision-feedback minimum 10→20, APPROVED remains 10. User reports sent to TA; actual approval pending. Baseline stays minimum 10 for both decisions. |
-| DD-S2-01–04 / DD-S3-01–04 | Concrete proposed contract clarifications in [shared contract](sprints/deliverable-2/shared-contract.md): URL/late/version/role, peer completion/rating and metric/CSV policies. Independent review pending; preserve justified revisions before implementation. |
-| UIR v1.0 detailed design | User-approved direction above; screen/token/AC/STS details await independent review. Existing Quick Fill/UI code has not changed. |
+| CR-L7-01 / [#85](https://github.com/Magiciancat9/Course_management/issues/85) | Approved and released: revision20/approval10; Lab 7 #92 closed Completed and user confirms LEB2 submission. Final D2 candidate regression remains required. |
+| DD-S2-01–04 / DD-S3-01–04 | Concrete proposed contract clarifications in [shared contract](sprints/deliverable-2/shared-contract.md): URL/late/version/role, peer completion/rating and metric/CSV policies. Reviewed/merged in PR #107; preserve justified revisions before implementation. |
+| UIR v1.0 detailed design | Specification reviewed in PR #107; implementation merged in PR #110. Combined Lab 7/UI tests are required on this integration. |
 
 No instructor/TA approval, independent teammate review, test run, feature
 completion or release is inferred from document authorship. Keep all

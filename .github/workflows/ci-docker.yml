@@ -6,6 +6,8 @@ on:
     branches:
       - lab5-staging
       - lab6-staging
+      - lab7-staging
+      - sprint-2-staging
       # Run the full suite for stacked corrections before they enter the fix PR.
       - 'fix/lab6-10-*'
       - main

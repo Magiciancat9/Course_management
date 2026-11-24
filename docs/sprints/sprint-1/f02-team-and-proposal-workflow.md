@@ -1,9 +1,16 @@
 # Part E: Sprint 1 Feature Contracts — F-02 Team Formation & F-03 Proposal Workflow
 
-**Contract Version:** `v1.0` (Prepared prior to Sprint 1 implementation)  
+**Contract Version:** `v1.1` (Lab 7 CR-L7-01; independently approved in PR #105 before implementation)
 **Feature IDs:** `F-02` (Team Formation & Capacity), `F-03` (Proposal Lifecycle & Instructor Review)  
 **Linked Requirements:** `FR-02`, `FR-03`, `FR-04`, `FR-05`, `BR-01`, `BR-02`, `BR-03`, `BR-04`, `BR-05`, `BR-06`, `NFR-01`, `NFR-02`, `NFR-04`  
 **Dependencies:** `F-01`
+
+Original v1.0 was prepared before Sprint 1 implementation. This v1.1 revises
+only the approved F-03 feedback minimum: revision 20 / approval 10 after JS
+trim/UTF-16 count. [Approval](../../labs/lab-07/approval-record.md),
+[locked old runtime](../../labs/lab-07/pre-change-baseline.md) and the complete
+[impact/AC/STS contract](../../labs/lab-07/revised-contract.md) record scope
+and sequence. [Candidate implementation/results](../../labs/lab-07/implementation-evidence.md) are recorded separately; independent code review/main release remain pending.
 
 ---
 
@@ -39,7 +46,7 @@ stateDiagram-v2
   DRAFT --> DRAFT : Team updates draft fields
   DRAFT --> SUBMITTED : Team submits complete proposal (POST /api/teams/:id/proposal/submit) [BR-04]
   SUBMITTED --> APPROVED : Instructor approves with feedback >= 10 chars (POST /api/proposals/:id/review) [BR-05]
-  SUBMITTED --> REVISION_REQUESTED : Instructor requests revision with feedback >= 10 chars [BR-05]
+  SUBMITTED --> REVISION_REQUESTED : Instructor requests revision with trimmed feedback >= 20 UTF-16 units [BR-05]
   REVISION_REQUESTED --> REVISION_REQUESTED : Team updates draft to address feedback
   REVISION_REQUESTED --> SUBMITTED : Team re-submits revised proposal (increments revisionCount)
   APPROVED --> [*]
@@ -50,7 +57,7 @@ stateDiagram-v2
    - **Business Rule `BR-03` (State Transition Matrix):** Submitting or editing a proposal that is already `SUBMITTED` or `APPROVED` is rejected with `409 Conflict` (`BR03_INVALID_STATUS_TRANSITION`).
    - **Business Rule `BR-04` (Completeness Gate):** Submitting requires `title.trim().length >= 5`, `problemStatement.trim().length >= 20`, and `techStack.trim().length >= 3`. Otherwise rejected with `400 Bad Request` (`BR04_INCOMPLETE_PROPOSAL`).
 3. **Instructor Review (`POST /api/proposals/:id/review`):** An `INSTRUCTOR` transitions a `SUBMITTED` proposal to `APPROVED` or `REVISION_REQUESTED`.
-   - **Business Rule `BR-05` (Mandatory Feedback & State Check):** Requires `decision` $\in \{\text{APPROVED}, \text{REVISION\_REQUESTED}\}$, `reviewFeedback.trim().length >= 10` (`400 Bad Request` if shorter), and current status must be `SUBMITTED` (`409 Conflict` if `DRAFT` or already `APPROVED`).
+   - **Business Rule `BR-05` (Mandatory Feedback & State Check):** Requires supported decision, a string trimmed with JavaScript `trim()`, then UTF-16 length at least **20 for REVISION_REQUESTED** or **10 for APPROVED**; shorter feedback returns `400 BR05_FEEDBACK_TOO_SHORT`. State must first be `SUBMITTED` (`409 BR03_INVALID_STATUS_TRANSITION` otherwise); invalid decision retains `400 VALIDATION_ERROR`. Preserve auth/role/state validation precedence and historical reviews. See L7-CONTRACT v1.1 for complete cases.
 4. **Ownership & Role Authorization (`BR-06`):**
    - A `STUDENT` who is **not** a member of Team `:id` attempting `GET`, `PUT`, or `POST /api/teams/:id/proposal*` is rejected with `403 Forbidden` (`BR06_FORBIDDEN_TEAM_ACCESS`) without returning private proposal data.
    - Any `STUDENT` attempting `POST /api/proposals/:id/review` is rejected with `403 Forbidden` (`BR06_INSTRUCTOR_ROLE_REQUIRED`).
@@ -59,6 +66,10 @@ stateDiagram-v2
 - **UI Behavior:**
   - **Student Proposal Editor:** Inputs for `title`, `problemStatement`, `techStack`, `repoUrl`, status badge (`data-testid="proposal-status"`), **Save Draft** button (`data-testid="save-draft-btn"`), **Submit Proposal** button (`data-testid="submit-proposal-btn"`), and Instructor Feedback alert (`data-testid="review-feedback-box"`).
   - **Instructor Review Console:** Table of all teams and proposals, filter by status, and Review Panel (`data-testid="review-feedback-input"`, **Approve Proposal** button `data-testid="approve-proposal-btn"`, **Request Revision** button `data-testid="revision-proposal-btn"`).
+    The revised panel must clearly distinguish approval minimum 10 from
+    revision minimum 20 after trim; preserve typed feedback on rejection and
+    backend enforcement independent of UI. Existing test IDs/session guards
+    and success/error truthfulness remain part of the contract.
 - **API Endpoints:**
   - `GET /api/teams/:id/proposal` → Protected (`Team Member` or `INSTRUCTOR`). Returns `200 OK` `{ proposal }`.
   - `PUT /api/teams/:id/proposal` → Protected (`Team Member` only). Body: `{ title, problemStatement, techStack, repoUrl }`. Returns `200 OK` `{ proposal }`.
@@ -76,5 +87,5 @@ stateDiagram-v2
 | **AC-06** | `BR-02` | **Enforce Maximum Team Size Capacity:** When a team reaches `course.maxTeamSize` (`3` members), attempting to add a 4th member is rejected with `409 Conflict` (`BR02_MAX_TEAM_SIZE_EXCEEDED`) and the roster count remains `3`. |
 | **AC-07** | `FR-03`, `FR-04`, `NFR-04` | **Proposal Draft Persistence & Submission:** A team member can save a proposal draft (`PUT /api/teams/:id/proposal`, status `DRAFT`) and submit a complete proposal (`POST /api/teams/:id/proposal/submit`), persisting status `SUBMITTED`, `submittedAt`, and `revisionCount = 1`. |
 | **AC-08** | `BR-03`, `BR-04` | **Proposal Completeness & State-Lock Validation:** Submitting a proposal with a missing/short title (< 5 chars) or short problem statement (< 20 chars) is rejected with `400 Bad Request` (`BR04_INCOMPLETE_PROPOSAL`). Attempting to edit or re-submit a proposal already in `SUBMITTED` or `APPROVED` state is rejected with `409 Conflict` (`BR03_INVALID_STATUS_TRANSITION`). |
-| **AC-09** | `FR-05`, `BR-03`, `BR-05` | **Instructor Review Lifecycle & Feedback Validation:** An `INSTRUCTOR` can transition a `SUBMITTED` proposal to `REVISION_REQUESTED` or `APPROVED` when providing `reviewFeedback` ≥ 10 chars (`200 OK`), and a team can re-submit a `REVISION_REQUESTED` proposal. Review requests with feedback < 10 chars (`400`) or on a `DRAFT` proposal (`409`) are rejected. |
+| **AC-09** | `FR-05`, `BR-03`, `BR-05` | **Instructor Review Lifecycle & Feedback Validation, Lab 7 v1.1:** A SUBMITTED proposal requires trimmed feedback ≥20 UTF-16 units for REVISION_REQUESTED and ≥10 for APPROVED. Test 19/20/21 revision and 9/10/11 approval boundaries, invalid input, preserved state/access precedence, unchanged rejected rows, saved readback and historical feedback. Revision/resubmission remains valid. Elaborated by L7-AC01–06 / L7-T01–06; candidate execution recorded in L7-E05–E08; independent code review and release pending. |
 | **AC-10** | `BR-06`, `NFR-02` | **Role & Cross-Team Ownership Isolation:** A `STUDENT` from Team A attempting to view (`GET`) or modify (`PUT`/`POST`) Team B's private proposal is rejected with `403 Forbidden` without leaking Team B's proposal data. A `STUDENT` attempting to call `POST /api/proposals/:id/review` is rejected with `403 Forbidden`. |

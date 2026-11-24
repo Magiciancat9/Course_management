@@ -31,7 +31,8 @@
 | **Part E** | Sprint 1 Engineering Contracts & STS/DoD | [`docs/sprints/sprint-1/f01-auth-and-roles.md`](docs/sprints/sprint-1/f01-auth-and-roles.md), [`docs/sprints/sprint-1/f02-team-and-proposal-workflow.md`](docs/sprints/sprint-1/f02-team-and-proposal-workflow.md), [`docs/sprints/sprint-1/sts-and-dod.md`](docs/sprints/sprint-1/sts-and-dod.md) |
 | **Lab 5** | Cloud deployment configuration and GCP project record | [`docs/labs/lab-05/deployment.md`](docs/labs/lab-05/deployment.md), [`docs/labs/lab-05/gcp-project.md`](docs/labs/lab-05/gcp-project.md) |
 | **Deliverable 2** | Proposed complete Sprint 2–3 feature contracts, AC, STS, shared DoD and status/verification registers | [`docs/sprints/deliverable-2/README.md`](docs/sprints/deliverable-2/README.md) |
-| **UI refresh** | Planned modern layout, Quick Fill removal, responsive/accessibility criteria and tests; implementation deferred | [`docs/ui-refresh-spec.md`](docs/ui-refresh-spec.md) |
+| **UI refresh** | Modern layout and Quick Fill removal merged in PR #110; combined Lab 7/UI verification required | [`docs/ui-refresh-spec.md`](docs/ui-refresh-spec.md) |
+| **Lab 7** | Approved BR-05 maintenance, release readiness and retrospective | [`docs/labs/lab-07/revised-contract.md`](docs/labs/lab-07/revised-contract.md), [`docs/labs/lab-07/readiness-and-retrospective.md`](docs/labs/lab-07/readiness-and-retrospective.md) |
 
 ---
 
@@ -147,8 +148,11 @@ Editing or submitting a `SUBMITTED` or `APPROVED` proposal returns
 `409 BR03_INVALID_STATUS_TRANSITION`. Submission requires a trimmed title of at
 least 5 characters, problem statement of at least 20 characters, and tech stack
 of at least 3 characters; otherwise it returns `400 BR04_INCOMPLETE_PROPOSAL`.
-Instructor review requires a valid decision and feedback of at least 10 trimmed
-characters (`400 BR05_FEEDBACK_TOO_SHORT`); an invalid decision returns
+Instructor review requires a valid decision. Under the TA-approved Lab 7 change,
+`REVISION_REQUESTED` requires at least **20**, while `APPROVED` requires at least
+**10**, JavaScript UTF-16 code units after `trim()`
+(`400 BR05_FEEDBACK_TOO_SHORT` below the selected minimum). Existing historical
+reviews remain readable without rewriting stored feedback; an invalid decision returns
 `400 VALIDATION_ERROR`. A proposal not in `SUBMITTED` returns
 `409 BR03_INVALID_STATUS_TRANSITION`. Review status is checked before review
 payload validation, so a non-submitted proposal returns 409 even when its
@@ -159,6 +163,6 @@ data.
 
 ## 6. Known Limitations
 
-- Sprint 1 applies the Prisma schema with `prisma db push`; it does not yet have a Prisma migration history.
+- Local schema synchronization uses `prisma db push`; production uses the committed migration history through `prisma migrate deploy`. Never use the local schema-sync or test reset commands on production.
 - Students cannot self-join an existing team. A current team member adds an eligible student by university email; a self-service join workflow remains a proposed scope change pending team approval.
 - PostgreSQL integration and E2E suites are destructive to their configured database and must only run against a disposable test database.

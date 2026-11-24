@@ -134,7 +134,7 @@ describe('CoursePMS UI Refresh (UIR v1.0)', () => {
     expect(scrollSpy).toHaveBeenCalledWith({ behavior: 'auto', block: 'start' });
   });
 
-  it('UIR-T05/T10: renders instructor navigation and keeps BR-05 10-character hint', async () => {
+  it('UIR-T05/T10: renders instructor navigation and preserves Lab 7 revision20/approval10 hints', async () => {
     const instructor: User = {
       id: 20,
       email: 'instructor@kmutt.ac.th',
@@ -178,6 +178,6 @@ describe('CoursePMS UI Refresh (UIR v1.0)', () => {
     ).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Course Teams' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Proposal Review' })).toBeInTheDocument();
-    expect(screen.getByText(/Minimum 10 characters required/i)).toBeInTheDocument();
+    expect(screen.getByTestId('review-feedback-hint')).toHaveTextContent('Approve: minimum 10 after trim. Request revision: minimum 20 after trim.');
   });
 });

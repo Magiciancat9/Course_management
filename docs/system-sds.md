@@ -164,7 +164,7 @@ erDiagram
 4. **Screen 3 — Instructor Course Review Console (`INSTRUCTOR` role):**
    - Summary metrics bar (Total Teams, Submitted Pending Review, Approved, Revision Requested).
    - All Course Teams & Proposals table with status filter (`ALL`, `SUBMITTED`, `APPROVED`, `REVISION_REQUESTED`, `DRAFT`).
-   - **Instructor Proposal Review Modal/Panel:** Displays full proposal details and provides the decision form (`APPROVED` or `REVISION_REQUESTED`) + mandatory `reviewFeedback` textarea (minimum 10 characters).
+   - **Instructor Proposal Review Modal/Panel:** Displays full proposal details and provides APPROVED / REVISION_REQUESTED actions with a mandatory feedback textarea. Lab 7's approved revised contract requires action-specific guidance: trimmed minimum 10 for APPROVED, 20 for REVISION_REQUESTED, counted as JavaScript UTF-16 units. This design was peer-reviewed before code; the candidate UI/API now implement it with [execution evidence](labs/lab-07/implementation-evidence.md). The locked pre-change UI/API used 10 for both; final maintained release is pending. See [L7-CONTRACT v1.1](labs/lab-07/revised-contract.md) for authoritative validation precedence, API/data impact and STS.
 5. **Shared UI Behavior:**
    - **Loading State:** Dashboard loading indicator, action-specific pending labels, and disabled mutation controls during in-flight requests.
    - **Empty State:** Informative unassigned-student guidance and placeholder rows when team lists are empty.
@@ -285,6 +285,4 @@ silently expose private submission/grade/task/peer details through general
 team lists or replace the existing roster-only privacy policy.
 
 The [UI refresh specification](ui-refresh-spec.md) governs the future
-responsive shell and user-requested Quick Fill removal. Section 3's existing
-screens remain the implemented baseline until that UI change is reviewed,
-implemented and verified; backend authentication and BR-05 stay unchanged.
+responsive shell and user-requested Quick Fill removal. The refreshed F-01?03 shell is implemented by martinvadre in merged PR #110; new domain screens remain pending. This integration retains backend authentication, Lab 6 session/privacy protections and approved BR-05 revision20/approval10. Combined verification is required before release.
