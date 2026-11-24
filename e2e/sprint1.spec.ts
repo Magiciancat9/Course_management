@@ -4,6 +4,7 @@ import path from 'path';
 import fs from 'fs';
 
 const REPO_ROOT = path.resolve(__dirname, '..');
+const DEMO_PASSWORD = process.env.DEMO_USER_PASSWORD || 'Password123!';
 const SCREENSHOT_DIR = process.env.SPRINT1_ARTIFACT_DIR
   ? path.resolve(process.env.SPRINT1_ARTIFACT_DIR)
   : path.join(REPO_ROOT, 'artifacts', 'sprint-1', 'verification');
@@ -27,7 +28,8 @@ test.describe('CoursePMS Sprint 1 — End-to-End Browser Verification (TEST-11, 
     await page.goto('/');
 
     // 1. Login as Student (Pawarit — Team Alpha Leader)
-    await page.getByTestId('quickfill-pawarit').click();
+    await page.getByTestId('login-email').fill('pawarit@mail.kmutt.ac.th');
+    await page.getByTestId('login-password').fill(DEMO_PASSWORD);
     await page.screenshot({
       path: path.join(SCREENSHOT_DIR, '01_login_screen.png'),
       fullPage: true,
@@ -61,7 +63,8 @@ test.describe('CoursePMS Sprint 1 — End-to-End Browser Verification (TEST-11, 
     await expect(page.getByTestId('login-submit')).toBeVisible();
 
     // 5. Login as Instructor and Approve Proposal (F-03 / AC-09)
-    await page.getByTestId('quickfill-instructor').click();
+    await page.getByTestId('login-email').fill('instructor@kmutt.ac.th');
+    await page.getByTestId('login-password').fill(DEMO_PASSWORD);
     await page.getByTestId('login-submit').click();
     await expect(page.getByTestId('current-user-role')).toHaveText('INSTRUCTOR');
 
@@ -80,7 +83,8 @@ test.describe('CoursePMS Sprint 1 — End-to-End Browser Verification (TEST-11, 
 
     // 6. Logout Instructor, Login back as Student, and retrieve persisted APPROVED result
     await page.getByTestId('logout-btn').click();
-    await page.getByTestId('quickfill-pawarit').click();
+    await page.getByTestId('login-email').fill('pawarit@mail.kmutt.ac.th');
+    await page.getByTestId('login-password').fill(DEMO_PASSWORD);
     await page.getByTestId('login-submit').click();
 
     await expect(page.getByTestId('proposal-status')).toHaveText('APPROVED');
@@ -100,7 +104,8 @@ test.describe('CoursePMS Sprint 1 — End-to-End Browser Verification (TEST-11, 
     await page.goto('/');
 
     // 1. Login as Student (Pawarit — already in Team Alpha)
-    await page.getByTestId('quickfill-pawarit').click();
+    await page.getByTestId('login-email').fill('pawarit@mail.kmutt.ac.th');
+    await page.getByTestId('login-password').fill(DEMO_PASSWORD);
     await page.getByTestId('login-submit').click();
     await expect(page.getByTestId('current-user-role')).toHaveText('STUDENT');
 
