@@ -8,10 +8,11 @@
 
 ---
 
-**Current reconciliation:** 25 Nov 2026, #100. This is the complete product
+**Current reconciliation:** 25 Nov 2026, #100 plus #101 implementation. This is the complete product
 baseline, not a claim that every feature is implemented. Deployed main has
-F-01-F-06; reviewed Sprint 3 staging additionally has F-07 tasks. Peer evaluation
-and analytics/export remain planned. [Exact source/result/release register](sprints/deliverable-2/continuity-and-status.md)
+F-01-F-06; reviewed Sprint 3 staging additionally has F-07 tasks. The #101
+feature branch implements/tests peer evaluation, pending independent review and
+integration. Analytics/export remains planned. [Exact source/result/release register](sprints/deliverable-2/continuity-and-status.md)
 separates implementation, executed checks and accepted-release gates.
 
 ## 1. Stakeholder Problem and Context

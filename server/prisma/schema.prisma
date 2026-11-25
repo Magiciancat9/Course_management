@@ -54,6 +54,8 @@ model User {
   updatedTasks        Task[]                 @relation("TaskUpdater")
   assignedTasks       Task[]                 @relation("TaskAssignee")
   taskEvents          TaskEvent[]
+  outgoingPeerEvaluations PeerEvaluation[] @relation("PeerEvaluator")
+  incomingPeerEvaluations PeerEvaluation[] @relation("PeerEvaluatee")
 }
 
 model RevokedToken {
@@ -89,6 +91,7 @@ model ProjectTeam {
   proposal    ProjectProposal?
   submissions MilestoneSubmission[]
   tasks       Task[]
+  peerEvaluations PeerEvaluation[]
 
   @@unique([courseId, name])
 }
@@ -144,6 +147,28 @@ model Milestone {
   course        Course                @relation(fields: [courseId], references: [id], onDelete: Cascade)
   submissions   MilestoneSubmission[]
   tasks         Task[]
+  peerEvaluations PeerEvaluation[]
+}
+
+model PeerEvaluation {
+  id          Int      @id @default(autoincrement())
+  teamId      Int
+  milestoneId Int
+  evaluatorId Int
+  evaluateeId Int
+  rating      Int
+  comment     String   @default("")
+  version     Int      @default(1)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+
+  team        ProjectTeam @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  milestone   Milestone   @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
+  evaluator   User        @relation("PeerEvaluator", fields: [evaluatorId], references: [id])
+  evaluatee   User        @relation("PeerEvaluatee", fields: [evaluateeId], references: [id])
+
+  @@unique([milestoneId, evaluatorId, evaluateeId])
+  @@index([teamId, milestoneId, id])
 }
 
 model Task {

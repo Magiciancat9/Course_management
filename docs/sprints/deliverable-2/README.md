@@ -2,7 +2,8 @@
 
 **25 Nov current snapshot (#100):** S2 implementation is independently
 reviewed and deployed on main; F-07 tasks are reviewed/merged on Sprint 3
-staging. Peer/analytics implementation remains planned. Accepted S2 tag/
+staging. Peer implementation is tested on #101's feature branch, pending
+independent review/integration; analytics remains planned. Accepted S2 tag/
 authenticated release evidence and final combined main RC remain pending.
 
 Read the [current version/result/finish register](continuity-and-status.md),
@@ -25,6 +26,7 @@ letters in source filenames/headings do not define the D2 report structure.
 | [F-05 submissions](../sprint-2/f05-submissions.md) | FR-07 / BR-07; owner `Magiciancat9`; [#95](https://github.com/Magiciancat9/Course_management/issues/95) |
 | [F-06 grading](../sprint-2/f06-grading.md) | FR-08 / BR-08; owner `martinvadre`; [#96](https://github.com/Magiciancat9/Course_management/issues/96) |
 | [F-07 collaboration](../sprint-3/f07-collaboration.md) | FR-09/10; owner `Magiciancat9`; task checkpoint [#98](https://github.com/Magiciancat9/Course_management/issues/98), remaining peer work [#101](https://github.com/Magiciancat9/Course_management/issues/101) |
+| [Peer implementation evidence](../sprint-3/f07-peer-execution-evidence.md) | #101 exact RED/GREEN, real persistence/privacy/concurrency and pending review/release gates |
 | [F-08 analytics/export](../sprint-3/f08-analytics-export.md) | FR-11/12; owner `martinvadre`; contracts [#99](https://github.com/Magiciancat9/Course_management/issues/99), remaining implementation [#102](https://github.com/Magiciancat9/Course_management/issues/102) |
 | [UI refresh plan](../../ui-refresh-spec.md) | Screen changes, design tokens, Quick Fill removal, UIR-AC/STS; implemented in PR #110; integration verification in Sprint 2 ledger |
 | [Continuity and checkpoint status](continuity-and-status.md) | Part A register / Part B–E status / remaining work; [#93](https://github.com/Magiciancat9/Course_management/issues/93), [#100](https://github.com/Magiciancat9/Course_management/issues/100) |

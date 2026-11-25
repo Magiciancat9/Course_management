@@ -70,9 +70,12 @@ and reviewed contract/RED/GREEN are retained in the dated Lab 7 records.
   progress to main, then integrate/deploy/verify the combined RC under #103.
   Complete original continuity/register under #93 and reconcile #100 before
   assembling the assessed Parts A-E PDF under #104, due 29 Nov 23:59.
-- F-07 peer AC07-12 (#101, Magiciancat9, 5 Dec) and F-08 AC01-10
-  (#102, martinvadre, 7 Dec) retain full scope. They are not prerequisites to
-  claiming already executed task checkpoint progress, but remain final work.
+- F-07 peer AC07-12 (#101, Magiciancat9) are now implemented/tested on the
+  feature candidate ahead of the original 5 Dec target; independent review,
+  staging integration and final accepted-release/UAT evidence remain.
+  F-08 AC01-10 (#102, martinvadre, 7 Dec) remains planned in full.
+  [Peer ledger](sprint-3/f07-peer-execution-evidence.md) preserves actual results.
+  The already executed task checkpoint remains independently traceable.
 - Exams 1-11 Dec constrain capacity: prepare interfaces/reviews before then,
   use bounded increments and explicit defect/AC tracking during exams, and
   reserve 12-13 Dec for final regression/UAT retests/video/reviewed release.

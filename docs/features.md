@@ -8,7 +8,8 @@ F-04/F-05/F-06 are implemented, independently reviewed and integrated in the
 deployment is recorded; authenticated release acceptance and immutable tag
 remain explicit gates. F-07/F-08
 contracts were reviewed; F-07 task checkpoint is implemented separately under
-#98, while peer evaluation and F-08 implementation remain planned.
+#98. Peer AC07-12 are implemented/tested on #101's feature branch, pending
+independent code review/integration; F-08 implementation remains planned.
 
 ---
 
@@ -63,7 +64,7 @@ flowchart LR
 | F-04 | martinvadre | [S2-F04 v1.0](sprints/sprint-2/f04-milestones.md) | Implemented/reviewed; combined release results and gates in [S2 ledger](sprints/sprint-2/accepted-release.md) |
 | F-05 | Magiciancat9 | [S2-F05 v1.0 + execution addendum](sprints/sprint-2/f05-submissions.md) | Implemented/reviewed via PR #117; [S2 release ledger](sprints/sprint-2/accepted-release.md) |
 | F-06 | martinvadre | [S2-F06 v1.0](sprints/sprint-2/f06-grading.md) | Implemented/reviewed via PR #118; [S2 release ledger](sprints/sprint-2/accepted-release.md) |
-| F-07 | Magiciancat9 | [S3-F07 v1.0](sprints/sprint-3/f07-collaboration.md) | Task checkpoint AC01-06 implemented/tested/reviewed and merged #120 to S3 staging; [actual results/review gates](sprints/sprint-3/f07-execution-evidence.md). Peer AC07-12 remain #101 / NOT IMPLEMENTED |
+| F-07 | Magiciancat9 | [S3-F07 v1.0](sprints/sprint-3/f07-collaboration.md) | Task checkpoint AC01-06 implemented/tested/reviewed and merged #120 to S3 staging; [actual results/review gates](sprints/sprint-3/f07-execution-evidence.md). Peer AC07-12 implemented/tested on #101 feature branch; [peer evidence](sprints/sprint-3/f07-peer-execution-evidence.md); independent review/integration and accepted release pending |
 | F-08 | martinvadre | [S3-F08 v1.0](sprints/sprint-3/f08-analytics-export.md) | Contract reviewed #107; #99 contract checkpoint closed. Operational implementation NOT IMPLEMENTED / NOT RUN |
 
 Original v1.0 drafts were authored by Magiciancat9; martinvadre independently

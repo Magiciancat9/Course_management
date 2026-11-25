@@ -1,4 +1,4 @@
-# Complete AC and verification register - current #100 snapshot
+# Complete AC and verification register - current #100 plus #101 candidate
 
 **25 November 2026.** Evidence keys S2-CI, S3-CI and their exact SHA/run,
 roles/environment/counts/limits are defined in the
@@ -10,7 +10,9 @@ acceptance or that every planned test ID exists. This ledger retains all
 All feature contracts and shared policy were reviewed in PR #107 before
 implementation. F-04/F-05/F-06 code reviews are #116/#117/#118, integrated main
 #119; F-07 task review/merge is #120 on Sprint 3 staging. Peer/analytics
-contracts are reviewed, but their implementation and cases are NOT RUN.
+contracts were reviewed before code. Peer AC07-12 now have actual #101
+candidate execution in the [peer ledger](../sprint-3/f07-peer-execution-evidence.md);
+independent peer code review/integration remains pending. Analytics is NOT RUN.
 
 ## 1. Sprint 1 maintained baseline and Lab 7
 
@@ -47,7 +49,8 @@ are maintained rules, not the old 10/10 staging snapshot.
 The contract test column preserves the planned IDs. The actual column
 identifies real file/case or suite-name prefixes. S3-CI reruns all implemented
 S1/S2/task cases together; S2-CI independently tests the deployed S2 source.
-No named peer case is inferred to exist just because the task test file exists.
+Peer cases are now separate named executable files. S3-PEER evidence remains
+distinct from old S3-TASK results and pending accepted main/RC evidence.
 
 ### S2-F04 - [full reviewed contract](../sprint-2/f04-milestones.md)
 
@@ -101,12 +104,12 @@ No named peer case is inferred to exist just because the task test file exists.
 | S3-F07-AC04: Foreign-team task/event access, anonymous access and instructor task mutations are denied | S3-F07-T04 | YES; [I](../../../server/tests/collaboration.integration.test.ts) `S3-F07-T04` | PASS S3-CI; reviewed #120 / S3-TASK staging; final main RC pending |
 | S3-F07-AC05: Stale/concurrent task updates cannot overwrite or duplicate events; filters/pagination are correct | S3-F07-T05, S3-F07-T06 | YES; [I](../../../server/tests/collaboration.integration.test.ts) `S3-F07-T05/T06` | PASS S3-CI; reviewed #120 / S3-TASK staging; final main RC pending |
 | S3-F07-AC06: Accessible task create/assign/transition/reload works as meaningful checkpoint progress with session isolation | S3-F07-T07, S3-F07-T08 | YES; [UI](../../../client/src/features/collaboration/Collaboration.test.tsx) suite `S3-F07-T07/AC06: accessible task board and session boundaries`, including `reconciles conflict version while retaining all typed fields and explicitly saving again`; [E](../../../e2e/sprint3-collaboration.spec.ts) `S3-F07-T08/AC06` | PASS S3-CI; reviewed #120 / S3-TASK staging; final main RC pending |
-| S3-F07-AC07: Peer writes require the defined completed milestone and own saved submission | S3-F07-T09 | Planned I/U: `server/tests/collaboration.integration.test.ts`, `collaboration.unit.test.ts`; planned UI: `client/src/features/collaboration/Collaboration.test.tsx`; E per contract. These feature cases do not exist. | NOT IMPLEMENTED / NOT RUN; no actual test/name/result/accepted version. Magiciancat9, #101, 5 Dec; exact action in finish plan |
-| S3-F07-AC08: Rating/comment bounds and no-self-rating/eligible-teammate rules are enforced server-side | S3-F07-T10 | Planned I/U: `server/tests/collaboration.integration.test.ts`, `collaboration.unit.test.ts`; planned UI: `client/src/features/collaboration/Collaboration.test.tsx`; E per contract. These feature cases do not exist. | NOT IMPLEMENTED / NOT RUN; no actual test/name/result/accepted version. Magiciancat9, #101, 5 Dec; exact action in finish plan |
-| S3-F07-AC09: Author can save/update/read only their own outgoing pair; uniqueness and history metadata persist | S3-F07-T11 | Planned I/U: `server/tests/collaboration.integration.test.ts`, `collaboration.unit.test.ts`; planned UI: `client/src/features/collaboration/Collaboration.test.tsx`; E per contract. These feature cases do not exist. | NOT IMPLEMENTED / NOT RUN; no actual test/name/result/accepted version. Magiciancat9, #101, 5 Dec; exact action in finish plan |
-| S3-F07-AC10: Other students cannot read incoming/others' peer details; instructor reads are authorized; no DTO leak | S3-F07-T12 | Planned I/U: `server/tests/collaboration.integration.test.ts`, `collaboration.unit.test.ts`; planned UI: `client/src/features/collaboration/Collaboration.test.tsx`; E per contract. These feature cases do not exist. | NOT IMPLEMENTED / NOT RUN; no actual test/name/result/accepted version. Magiciancat9, #101, 5 Dec; exact action in finish plan |
-| S3-F07-AC11: Concurrent peer updates preserve one pair and expected-version semantics without partial writes | S3-F07-T13 | Planned I/U: `server/tests/collaboration.integration.test.ts`, `collaboration.unit.test.ts`; planned UI: `client/src/features/collaboration/Collaboration.test.tsx`; E per contract. These feature cases do not exist. | NOT IMPLEMENTED / NOT RUN; no actual test/name/result/accepted version. Magiciancat9, #101, 5 Dec; exact action in finish plan |
-| S3-F07-AC12: Peer UI reflects actual eligibility/save/error states and reloads confidential persisted outgoing feedback | S3-F07-T14, S3-F07-T15 | Planned I/U: `server/tests/collaboration.integration.test.ts`, `collaboration.unit.test.ts`; planned UI: `client/src/features/collaboration/Collaboration.test.tsx`; E per contract. These feature cases do not exist. | NOT IMPLEMENTED / NOT RUN; no actual test/name/result/accepted version. Magiciancat9, #101, 5 Dec; exact action in finish plan |
+| S3-F07-AC07: Peer writes require the defined completed milestone and own saved submission | S3-F07-T09 | YES; [API/DB](../../../server/tests/peer-evaluation.integration.test.ts) `S3-F07-T09/AC07`; [U](../../../server/tests/peer-evaluation.unit.test.ts) due-1/equal/+1; [SQL](../../../server/tests/peer-evaluation-migration.integration.test.ts) `S3-F07-T09-M` | PASS S3-PEER candidate (peer ledger); independent implementation review/staging integration and final accepted main/UAT pending |
+| S3-F07-AC08: Rating/comment bounds and no-self-rating/eligible-teammate rules are enforced server-side | S3-F07-T10 | YES; [API/DB](../../../server/tests/peer-evaluation.integration.test.ts) `S3-F07-T10/AC08`; [U](../../../server/tests/peer-evaluation.unit.test.ts) rating/comment/UTF-16/ID bounds | PASS S3-PEER candidate (peer ledger); independent implementation review/staging integration and final accepted main/UAT pending |
+| S3-F07-AC09: Author can save/update/read only their own outgoing pair; uniqueness and history metadata persist | S3-F07-T11 | YES; [API/DB](../../../server/tests/peer-evaluation.integration.test.ts) `S3-F07-T11/AC09`, `S3-F07-T11/T12`; [E](../../../e2e/sprint3-peer-evaluation.spec.ts) `S3-F07-T15/AC12` | PASS S3-PEER candidate (peer ledger); independent implementation review/staging integration and final accepted main/UAT pending |
+| S3-F07-AC10: Other students cannot read incoming/others' peer details; instructor reads are authorized; no DTO leak | S3-F07-T12 | YES; [API/DB](../../../server/tests/peer-evaluation.integration.test.ts) `S3-F07-T12/AC10` all three route/method auth/role/ownership, removed membership, instructor and general DTO checks; [E](../../../e2e/sprint3-peer-evaluation.spec.ts) teammate/foreign denial | PASS S3-PEER candidate (peer ledger); independent implementation review/staging integration and final accepted main/UAT pending |
+| S3-F07-AC11: Concurrent peer updates preserve one pair and expected-version semantics without partial writes | S3-F07-T13 | YES; [API/DB](../../../server/tests/peer-evaluation.integration.test.ts) `S3-F07-T13/AC11` barrier-controlled create/update (versions0/1), one winner/409 and independent readback | PASS S3-PEER candidate (peer ledger); independent implementation review/staging integration and final accepted main/UAT pending |
+| S3-F07-AC12: Peer UI reflects actual eligibility/save/error states and reloads confidential persisted outgoing feedback | S3-F07-T14, S3-F07-T15 | YES; [UI](../../../client/src/features/collaboration/PeerEvaluation.test.tsx) `S3-F07-T14/AC12` nine initial-runtime cases plus follow-up initial-catalogue retry case; [E](../../../e2e/sprint3-peer-evaluation.spec.ts) `S3-F07-T15/AC12` real save/update/reload/role-denial/instructor read | PASS S3-PEER candidate (peer ledger); independent implementation review/staging integration and final accepted main/UAT pending |
 
 ### S3-F08 - [full reviewed contract](../sprint-3/f08-analytics-export.md)
 
@@ -142,18 +145,19 @@ No named peer case is inferred to exist just because the task test file exists.
 
 | Requirement/check | Actual executable/method | Actual result and boundary |
 | --- | --- | --- |
-| NFR-01 authentication | API TEST-03/14/19; each implemented feature's anonymous/expired-session cases; no private payload | Current implemented route checks PASS S2/S3-CI; peer/F-08 paths remain unimplemented/unverified |
-| NFR-02 role/ownership | TEST-10/23; S2-F04-T07, S2-F05-T07/T12, S2-F06-T05, S3-F07-T04/T08; unchanged DB/event assertions | Current implemented routes PASS; this is not a global 100% claim for missing peer/analytics routes |
+| NFR-01 authentication | API TEST-03/14/19; each implemented feature's anonymous/expired-session cases; no private payload | Current implemented route checks PASS S2/S3-CI; peer routes PASS in S3-PEER; F-08 remains unimplemented/unverified |
+| NFR-02 role/ownership | TEST-10/23; S2-F04-T07, S2-F05-T07/T12, S2-F06-T05, S3-F07-T04/T08; unchanged DB/event assertions | Current implemented routes PASS; this is not a global 100% claim for missing analytics routes; peer S3-F07-T12/T15 PASS in S3-PEER |
 | NFR-03 credentials | API TEST-01/02/19 and auth bootstrap checks; bcrypt seed/auth source; UI Quick Fill absence and private env templates | Scoped hash/DTO/login/required-secret checks PASS. No full Git-history zero-secrets certification or production password disclosure is claimed |
-| NFR-04 persistence | Original and feature API/DB readback, real browser reload, actual populated SQL upgrade and row/version/race assertions | Current implemented behavior PASS S2/S3-CI; final deployed RC persistence and missing peer/F-08 remain explicit gaps |
+| NFR-04 persistence | Original and feature API/DB readback, real browser reload, actual populated SQL upgrade and row/version/race assertions | Current implemented behavior PASS S2/S3-CI; final deployed RC persistence and missing F-08 remain explicit gaps; peer persistence/migration PASS in S3-PEER |
 | NFR-05 / D2-SYS-T01 | [measurement](../../../deploy/tests/test_startup_readiness.py): monotonic before `docker run` to valid health200, includes creation overhead/excludes build/download; checks baked source, DB ready and built HTML | PASS S2-CI 1214.25ms and S3-CI 510.48ms <=10,000ms; exact image/host/UTC/source JSON retained in CI. These are CI images, not Cloud Run cold-start measurements |
 | D2-CONT-05 / upgrade | [S2 full SQL](../../../server/tests/sprint2-release-migration.integration.test.ts); [task populated SQL](../../../server/tests/collaboration-migration.integration.test.ts) | PASS real isolated transactional-schema upgrade; 11 existing table snapshots retained after F-07 SQL. Not an API journey against that private schema or a live migration |
 | Production post-deploy smoke | Main run45592525515 / fresh bounded public readback in version register | Public health/source/ready/HTML PASS; authenticated login/me/courses/logout SKIP/not configured. No authenticated business acceptance inferred |
 
 ## 4. Uncovered requirements and final gates
 
-FR-10 / F-07 peer AC07-12, BR-08 self-rating prevention and all their new
-auth/confidentiality/persistence cases remain #101, target5 Dec. FR-11/12 /
+FR-10 / F-07 peer AC07-12 and BR-08 no-self-rating now have actual S3-PEER
+candidate results; independent peer review/integration and final release/UAT
+remain #101's acceptance gates (original target5 Dec). FR-11/12 /
 F-08 AC01-10 (including CSV consumer compatibility/security and coherent
 concurrent snapshots) remain #102, target7 Dec. UI AC03/04/07/10 have the
 specific unverified portions above; they are not silently declared complete.
@@ -165,3 +169,6 @@ including examinations1-11 Dec and final13 Dec. #97 authenticated release/tag,
 remain pending. #100's final snapshot must reconcile those real results before
 #104 PDF freeze. Retain failures/SKIP and historical RT-07 limitations verbatim
 in scope; contract drafting or documentation review does not execute a test.
+
+Only F-08's ten AC remain unimplemented. Independent peer review/integration,
+personal UAT and accepted final release are not claimed.

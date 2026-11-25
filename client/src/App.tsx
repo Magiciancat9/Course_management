@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MilestoneManager from './features/milestones/MilestoneManager';
 import TaskBoard from './features/collaboration/TaskBoard';
+import PeerEvaluation from './features/collaboration/PeerEvaluation';
 
 export interface User {
   id: number;
@@ -79,7 +80,7 @@ export default function App() {
   const [showPassword, setShowPassword] = useState(false);
 
   // Navigation state
-  const [activeNav, setActiveNav] = useState<'overview' | 'team' | 'proposal' | 'teams' | 'review' | 'milestones' | 'tasks'>('overview');
+  const [activeNav, setActiveNav] = useState<'overview' | 'team' | 'proposal' | 'teams' | 'review' | 'milestones' | 'tasks' | 'peers'>('overview');
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   // Student Team creation & member addition state
@@ -375,7 +376,7 @@ export default function App() {
   }, [mobileNavOpen]);
 
   function navigateToSection(
-    navKey: 'overview' | 'team' | 'proposal' | 'teams' | 'review' | 'milestones' | 'tasks',
+    navKey: 'overview' | 'team' | 'proposal' | 'teams' | 'review' | 'milestones' | 'tasks' | 'peers',
     sectionId?: string
   ) {
     setActiveNav(navKey);
@@ -827,7 +828,7 @@ export default function App() {
   const courseTerm = courses[0]?.term || '1/2026';
 
   const navItems: Array<{
-    key: 'overview' | 'team' | 'proposal' | 'teams' | 'review' | 'milestones' | 'tasks';
+    key: 'overview' | 'team' | 'proposal' | 'teams' | 'review' | 'milestones' | 'tasks' | 'peers';
     label: string;
     sectionId: string;
   }> =
@@ -838,6 +839,7 @@ export default function App() {
           { key: 'proposal', label: 'Proposal', sectionId: 'section-proposal' },
           { key: 'milestones', label: 'Milestones', sectionId: 'section-milestones' },
           { key: 'tasks', label: 'Team Tasks', sectionId: 'section-tasks' },
+          { key: 'peers', label: 'Peer Evaluation', sectionId: 'section-peer-evaluation' },
         ]
       : [
           { key: 'overview', label: 'Overview', sectionId: 'main-content' },
@@ -845,6 +847,7 @@ export default function App() {
           { key: 'review', label: 'Proposal Review', sectionId: 'section-review' },
           { key: 'milestones', label: 'Milestones', sectionId: 'section-milestones' },
           { key: 'tasks', label: 'Team Tasks', sectionId: 'section-tasks' },
+          { key: 'peers', label: 'Peer Evaluation', sectionId: 'section-peer-evaluation' },
         ];
 
   return (
@@ -1621,6 +1624,21 @@ export default function App() {
               userRole={user.role}
               teams={teams.filter(team => user.role === 'INSTRUCTOR' || team.members.some(member => member.userId === user.id))
                 .map(team => ({ id: team.id, name: team.name, courseId: team.courseId, proposalStatus: team.proposal?.status || null,
+                  members: team.members.map(member => ({ id: member.userId, name: member.user.fullName })) }))}
+              sessionGeneration={sessionGenerationRef.current}
+              getCurrentGeneration={() => sessionGenerationRef.current}
+              onUnauthorized={(msg, code) => {
+                invalidateSessionBoundary(null);
+                setErrorBanner({ error: msg, code });
+              }}
+            />
+            <PeerEvaluation
+              key={`peers:${user.id}:${sessionGenerationRef.current}`}
+              token={token!}
+              userId={user.id}
+              userRole={user.role}
+              teams={teams.filter(team => user.role === 'INSTRUCTOR' || team.members.some(member => member.userId === user.id))
+                .map(team => ({ id: team.id, name: team.name, courseId: team.courseId,
                   members: team.members.map(member => ({ id: member.userId, name: member.user.fullName })) }))}
               sessionGeneration={sessionGenerationRef.current}
               getCurrentGeneration={() => sessionGenerationRef.current}
