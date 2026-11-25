@@ -24,6 +24,18 @@ function fill() {
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); vi.restoreAllMocks(); });
 
 describe('S3-F07-T14/AC12: confidential peer UI, failures and context isolation', () => {
+  it('allows retry when milestone choices fail before any milestone can be selected', async () => {
+    let choices = 0;
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => {
+      if (url.includes('peer-evaluations')) return page();
+      if (++choices === 1) throw new Error('Offline milestone catalogue');
+      return milestones();
+    }));
+    render(<PeerEvaluation {...props} />);
+    await screen.findByText('Offline milestone catalogue');
+    fireEvent.click(screen.getByRole('button', { name: 'Refresh peer evaluations' }));
+    await screen.findByTestId('peer-form'); expect(screen.queryByTestId('peer-error')).not.toBeInTheDocument();
+  });
   it('uses server eligibility, excludes self and shows saved outgoing feedback with Bangkok time', async () => {
     vi.stubGlobal('fetch', vi.fn(async (url: string) => url.includes('peer-evaluations') ? page([evaluation()], false) : milestones()));
     render(<PeerEvaluation {...props} />);

@@ -3,7 +3,8 @@
 **25 Nov #100 source reconciliation:** this complete shared design was
 reviewed in PR #107 before code. F-04/F-05/F-06 are reviewed/deployed on main;
 Task/TaskEvent are implemented/reviewed on S3 staging via #120. PeerEvaluation
-and analytics/CSV remain future design. [Actual per-AC status](verification-register.md)
+is implemented/tested on the #101 feature candidate, pending independent review
+and integration; analytics/CSV remains future design. [Actual per-AC status](verification-register.md)
 and [current versions/finish plan](continuity-and-status.md) govern execution
 and release claims; old draft-status statements below retain their 22 Nov scope.
 

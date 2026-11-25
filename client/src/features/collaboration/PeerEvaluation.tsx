@@ -26,6 +26,7 @@ export default function PeerEvaluation(props: Props) {
   const [expectedVersion, setExpectedVersion] = useState(0);
   const [loading, setLoading] = useState(true), [loadingMore, setLoadingMore] = useState(false);
   const [choicesLoading, setChoicesLoading] = useState(true), [pending, setPending] = useState(false);
+  const [choiceReload, setChoiceReload] = useState(0);
   const [error, setError] = useState(''), [success, setSuccess] = useState(''), [conflict, setConflict] = useState(false);
   const [loadedContext, setLoadedContext] = useState('');
   const teamContext = `${token}:${userId}:${userRole}:${sessionGeneration}:${teamId}:${team?.courseId ?? 0}`;
@@ -85,7 +86,7 @@ export default function PeerEvaluation(props: Props) {
   useEffect(() => { if (!teams.some(t => t.id === teamId)) setTeamId(teams[0]?.id ?? 0); }, [teams, teamId]);
   useEffect(() => {
     const controller = new AbortController(); let active = true;
-    setMilestones([]); setMilestoneId(0); setChoicesLoading(true);
+    setMilestones([]); setMilestoneId(0); setChoicesLoading(true); setError('');
     if (!team) { setChoicesLoading(false); return () => { active = false; controller.abort(); }; }
     const courseId = team.courseId;
     void (async () => {
@@ -105,7 +106,7 @@ export default function PeerEvaluation(props: Props) {
       finally { if (active) setChoicesLoading(false); }
     })();
     return () => { active = false; controller.abort(); };
-  }, [teamContext]);
+  }, [teamContext, choiceReload]);
   useEffect(() => {
     epoch.current++; boundary.current = new AbortController(); mutation.current = false;
     setEvaluations([]); setEligibility(null); setCursor(null); setLoadedContext(''); resetDraft();
@@ -146,7 +147,7 @@ export default function PeerEvaluation(props: Props) {
     <div className="cpms-card-header"><h2 id="peer-heading" className="h4 fw-bold mb-1">Peer evaluation</h2>
       <p className="cpms-muted mb-0">{student ? 'Reflect on your teammates’ contributions. Your feedback is confidential.' : 'Read confidential team feedback. Instructor access is read-only.'}</p></div>
     <div className="cpms-card-body">
-      {!teams.length ? <p>Join a project team to access peer evaluation.</p> : <>
+      {!teams.length ? <p>{student ? 'Join a project team to access peer evaluation.' : 'No project teams are available.'}</p> : <>
         <div className="row g-3 mb-3"><div className="col-md-6">
           <label className="cpms-label" htmlFor="peer-team">Peer evaluation team</label>
           <select id="peer-team" className="cpms-input" value={teamId} disabled={pending} onChange={e => setTeamId(Number(e.target.value))}>
@@ -158,8 +159,8 @@ export default function PeerEvaluation(props: Props) {
               {milestones.map(m => <option key={m.id} value={m.id}>{m.title}</option>)}</select></div></div>
         {error && <div role="alert" className="alert alert-danger" data-testid="peer-error">{error}</div>}
         {success && ready && <p role="status" className="alert alert-success" data-testid="peer-success">{success}</p>}
-        <button type="button" className="cpms-btn cpms-btn-secondary mb-3" disabled={pending || loading || loadingMore || !milestoneId}
-          onClick={() => { setSuccess(''); void load(false, true); }}>Refresh peer evaluations</button>
+        <button type="button" className="cpms-btn cpms-btn-secondary mb-3" disabled={pending || loading || loadingMore || choicesLoading}
+          onClick={() => { setSuccess(''); if (milestoneId) void load(false, true); else setChoiceReload(value => value + 1); }}>Refresh peer evaluations</button>
         {conflict && <button type="button" className="cpms-btn cpms-btn-secondary mb-3 ms-2" disabled={pending || loading}
           onClick={() => void load(false, true)}>Load latest evaluation version</button>}
         {choicesLoading || loading ? <p role="status">Loading peer evaluations…</p> : !milestoneId ? <p>No published milestones are available for peer evaluation.</p> : ready && <>

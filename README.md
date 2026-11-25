@@ -2,13 +2,14 @@
 
 **25 Nov current snapshot:** reviewed/deployed main contains Sprint 1/Lab 7
 and complete Sprint 2. Reviewed `sprint-3-staging` additionally contains the
-F-07 task checkpoint; peer evaluation and analytics/CSV remain planned.
+F-07 task checkpoint. Issue #101 adds confidential peer evaluation on its feature
+branch with executed tests; independent review/integration is pending. Analytics/CSV remains planned.
 [Current source/release/results and remaining-work plan](docs/sprints/deliverable-2/continuity-and-status.md)
 distinguishes CI PASS, production smoke SKIP and pending accepted-main/tag/RC gates.
 
 **Course:** CPE 334 Software Engineering in the Age of AI Agents (Semester 1/2026)  
 **Deliverable:** Project Deliverable 1 — Engineering Baseline and Working Sprint 1  
-**Current planning:** Sprint 2–3 contracts were reviewed in PR #107; UI refresh and F-04 merged into staging via #110/#116. F-05 is implemented on its feature branch for independent review; accepted Sprint 2/main deployment remains pending. See [F-05 evidence](docs/sprints/sprint-2/f05-execution-evidence.md).
+**Current planning:** Sprint 2 is reviewed/deployed through PR #119; accepted-tag/authenticated-release gates remain #97. Tasks are reviewed on Sprint 3 staging (#120), current documents reviewed via #121, and peer implementation/test evidence is in the [#101 ledger](docs/sprints/sprint-3/f07-peer-execution-evidence.md). Final combined RC remains #103.
 **Team Members:**
 - **Pawarit Wongdaeng** (`67070503466`, GitHub: `martinvadre`)
 - **Tatchakorn Thamnimitr** (`67070503415`, GitHub: `Magiciancat9`)

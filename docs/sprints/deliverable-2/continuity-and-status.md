@@ -6,6 +6,13 @@
 remaining acceptance work. This source package is not a submitted assessed PDF.
 Later releases must update the final snapshot instead of reusing these results.
 
+**#101 candidate addendum, 25 Nov 2026:** peer implementation/actual execution
+is now recorded separately in the [peer ledger](../sprint-3/f07-peer-execution-evidence.md).
+The original 19:09:52 deployed-main observation above is retained with its
+actual timestamp; this addendum does not repeat or extend that live check.
+PR #121 documents were independently approved/merged to S3 staging as
+`e963749` at 19:52:06 Asia/Bangkok; #101 starts from that reviewed source.
+
 ## 1. Evidence keys and version boundaries
 
 | Key | Exact source / integration | Actual evidence and limits |
@@ -17,6 +24,7 @@ Later releases must update the final snapshot instead of reusing these results.
 | S2-CI | [Run 45592525515](https://github.com/Magiciancat9/Course_management/actions/runs/45592525515), exact S2-MAIN | 163 server / 45 client / 7 browser tests PASS; four migrations, production builds and Docker PASS; D2-SYS-T01 1214.25ms PASS on CI Docker, not Cloud Run cold-start timing |
 | S3-TASK | Head `a37ba4084fb84e2393b764950d1b6de61cd2d339`; [PR #120](https://github.com/Magiciancat9/Course_management/pull/120) -> `sprint-3-staging` merge `af47ec44db855859b49c82093066c36f3df4c920` | Independently approved by martinvadre at that head; merged 25 Nov 18:59:08 Asia/Bangkok. #98 closed; task AC01-06 complete at checkpoint, peer AC07-12 remain #101 |
 | S3-CI | [Run 45607208227](https://github.com/Magiciancat9/Course_management/actions/runs/45607208227), branch head above; tested merge ref `965cb174e1baf17e775e187884f70eb1b7934cd0` | 179 server / 54 client / 8 browser tests PASS; five migrations, builds/Docker PASS; D2-SYS-T01 510.48ms PASS. The tested PR merge ref is separate from staging merge and future accepted main |
+| S3-PEER | Runtime head `70beb09d0a190949ea4e914fc84a31195d828b4f`, based on reviewed S3 staging `e963749`; test-only RED `bb32e5982cf916a1102c557087c15c02cf199c74` | #101 feature candidate; [peer ledger](../sprint-3/f07-peer-execution-evidence.md) records actual local/CI execution. Independent peer code review/staging integration and accepted main release remain pending |
 | DOC-SOURCE | This documentation branch starts at S3-TASK staging merge `af47ec44db855859b49c82093066c36f3df4c920` | Documentation changes have their own PR/CI. Runtime verification above remains attributed to its original exact source; it is not relabeled a new RC test |
 | S2-ACCEPTED-TAG | `v1.1.0-sprint2` NOT FOUND at snapshot | #97 remains OPEN. Reviewed/deployed main exists; accepted-release preservation and authenticated post-deploy evidence remain incomplete |
 | D2-RC | Sprint 1/2 + task progress on accepted/deployed main: NOT YET RECORDED | #103 owns integration/deployment; #93 owns final continuity evidence; #100 final reconciliation and #104 PDF depend on the actual RC |
@@ -54,15 +62,16 @@ or independent traffic measurement is claimed here.
 | F-05; S2-F05-AC01-10 | Implemented, reviewed #117, versioned persistence/BR-07/deadline checks PASS | Same #97 gate; F-06 handoff is now actually covered, not still null-only |
 | F-06; S2-F06-AC01-09 | Implemented, reviewed #118, version-bound draft/publication/score/privacy/race tests PASS | Same #97 gate; old publications never grade new content |
 | F-07 tasks; S3-F07-AC01-06 | Implemented, reviewed/merged #120, S3-CI PASS | Main RC integration/deployed evidence remain #103 |
-| F-07 peer; S3-F07-AC07-12 | Full contract reviewed #107; code/models/API/UI/cases NOT IMPLEMENTED / NOT RUN | #101, Magiciancat9, target 5 Dec |
+| F-07 peer; S3-F07-AC07-12 | Pre-code contract #107; #101 candidate now implements model/API/UI and actual U/I/SQL/UI/E cases; S3-PEER results in peer ledger | Magiciancat9; independent review, staging/main integration, final accepted-release/UAT remain; original 5 Dec target preserved |
 | F-08; S3-F08-AC01-10 | Full contract reviewed #107; #99 closed for contract checkpoint; operational analytics/export NOT IMPLEMENTED / NOT RUN | #102, martinvadre, target 7 Dec; depends on #101 as assigned |
 | UI refresh; UIR-AC01-10 | Shell/Quick Fill removal implemented #110; many preserved/new component/browser checks PASS | Full mobile/compact/200% zoom, rendered contrast and final visual acceptance are not yet established; per-AC gaps in verification register |
 
 The [complete verification register](verification-register.md) lists all 59
 Sprint 2/3/UI AC individually. [Traceability](../../traceability.md) maps every
 FR-01-12, BR-01-08 and NFR-01-05 to responsibility, sprint, planned/actual
-verification and exact result/source. An existing test file does not mean a
-planned peer/analytics case inside it exists or ran.
+verification and exact result/source. Dedicated peer cases now exist and are mapped to actual S3-PEER execution.
+An existing task test file never implied that peer cases existed earlier;
+planned analytics cases remain NOT RUN.
 
 ## 4. Part A continuity and change register
 
@@ -99,15 +108,15 @@ record the exact failed/missing AC, impact, owner and revised action.
 | #103 RC integration and deployment | martinvadre; accepted Sprint 2 + reviewed task checkpoint, #99 contract checkpoint, #100 draft | Integrate Sprint 1/2/tasks, full exact-source CI/migrations/build/system checks, deploy, retain source->image->migration->revision plus actual changed/preserved journeys; by 28 Nov |
 | #93 continuity/register | Both; Magiciancat9 evidence, martinvadre RC | Rerun D2-CONT-01-05 on that candidate, record persistence/backend denials and all unresolved dispositions; by 28 Nov |
 | UI UIR-AC03/04/07/10 incomplete acceptance | martinvadre UI/RC; Magiciancat9 independent inspection | Check 1440x900, 1024x768, 375x812 and 200% zoom; body overflow/table-local scrolling, keyboard/focus/copy/contrast and captioned desktop/mobile screenshots; per-test PASS/FAIL and exact source; by 28 Nov under #103/#100 |
-| NFR-01/02/04 planned peer/analytics paths | Respective #101/#102 owners | Add actual new-route auth/ownership/persistence tests with their implementations; keep global coverage partial until then; by 5/7 Dec |
+| NFR-01/02/04 analytics paths / peer review | Respective #101/#102 owners | Peer paths now have actual candidate auth/ownership/persistence tests; independently review/integrate #101. Add missing analytics paths under #102; global product coverage remains partial; by 5/7 Dec |
 | #100 final reconciliation | Magiciancat9, martinvadre reviewer; #97/#93/#103 exact accepted evidence | Fill final snapshot identities/results, reconcile every actual gap and prepare full embeddable document source; by 28 Nov and before PDF freeze |
 | #104 Parts A-E assessed PDF | Both; Magiciancat9 coordination/submission | Embed complete documents, two S2 workflows + task checkpoint + original continuity, actual domain/access excerpts and two substantive review chains; both inspect exact English PDF; user submits/retains receipt outside Git; 29 Nov 23:59 |
-| S3-F07-AC07 | Magiciancat9 / #101; reviewed task/F-05 context | Completed published milestone + own saved submission and exact due-time eligibility tests; 5 Dec |
-| S3-F07-AC08 | Magiciancat9 / #101 | Integer rating1-5, comment bounds, eligible teammate/no self-rating, backend no-write assertions; 5 Dec |
-| S3-F07-AC09 | Magiciancat9 / #101 | Own outgoing create/update/read with immutable author and unique pair/version semantics; 5 Dec |
-| S3-F07-AC10 | Magiciancat9 / #101 | Incoming/other-student confidentiality, instructor read and DTO-negative checks; 5 Dec |
-| S3-F07-AC11 | Magiciancat9 / #101 | Real concurrent pair creates/updates, no partial/lost write; 5 Dec |
-| S3-F07-AC12 | Magiciancat9 / #101 | Eligibility/pending/error/session UI and confidential real reload/E2E; 5 Dec |
+| S3-F07-AC07 | Magiciancat9 / #101; reviewed task/F-05 context | Implemented/executed in #101 candidate (peer ledger); next independent code review and staging integration, then accepted main/final UAT; original target 5 Dec |
+| S3-F07-AC08 | Magiciancat9 / #101 | Implemented/executed in #101 candidate (peer ledger); next independent code review and staging integration, then accepted main/final UAT; original target 5 Dec |
+| S3-F07-AC09 | Magiciancat9 / #101 | Implemented/executed in #101 candidate (peer ledger); next independent code review and staging integration, then accepted main/final UAT; original target 5 Dec |
+| S3-F07-AC10 | Magiciancat9 / #101 | Implemented/executed in #101 candidate (peer ledger); next independent code review and staging integration, then accepted main/final UAT; original target 5 Dec |
+| S3-F07-AC11 | Magiciancat9 / #101 | Implemented/executed in #101 candidate (peer ledger); next independent code review and staging integration, then accepted main/final UAT; original target 5 Dec |
+| S3-F07-AC12 | Magiciancat9 / #101 | Implemented/executed in #101 candidate (peer ledger); next independent code review and staging integration, then accepted main/final UAT; original target 5 Dec |
 | S3-F08-AC01/02 | martinvadre / #102; #99/#96/#101 | Coherent full-course as-of snapshot and exact NONE/proposal partitions, real persisted fixtures; 7 Dec |
 | S3-F08-AC03/04 | martinvadre / #102 | Full denominator/null zero-rate, current submissions, ungraded/current published 0 and late/UNKNOWN rules; 7 Dec |
 | S3-F08-AC05/06 | martinvadre / #102 | Unique flagged-team reasons/deadline boundaries, JSON/CSV auth/role/context/DTO denials; 7 Dec |
@@ -139,7 +148,7 @@ The 22 Nov work-plan PDF is a working plan, not the assessed submission.
 | --- | --- |
 | A - continuity/changes | Current register plus actual original-journey final RC evidence, approved Lab 7 rationale/history and honest historical limitations |
 | B - complete Sprint 2 | Full F-04/F-05/F-06 contracts/AC/STS/shared DoD, all actual mappings/results, independent reviews and accepted immutable Sprint 2 identity |
-| C - Sprint 3 progress | Full F-07/F-08 contracts/STS, achieved task AC01-06 and explicit remaining peer/analytics AC/owner/action/date |
+| C - Sprint 3 progress | Full F-07/F-08 contracts/STS, reviewed task AC01-06, tested peer AC07-12 candidate with pending review/release and explicit remaining analytics AC/owner/action/date |
 | D - complete documentation | Full current SRS, feature inventory, system SDS, all-requirement matrix and per-AC verification/finish plan; links alone do not replace embedding |
 | E - integrated RC | Actual main/tag, CI, migrations, image/revision/traffic, changed/preserved/persistence/access journeys, setup/configuration/debt/readiness |
 
@@ -155,5 +164,7 @@ LEB2 submission; no approval, main promotion or receipt is inferred here.
   Git history, including immutable [22 Nov register](https://github.com/Magiciancat9/Course_management/blob/93c39952d165477391548c8a1d89e49ace35ddef/docs/sprints/deliverable-2/change-defect-register.md).
 - Reviewed runtime/source integrations: #110 UI, #116/#117/#118 S2, #119 main,
   #120 task checkpoint. Their historical test counts keep their exact scope.
-- This #100 current-document reconciliation requires its own opposite-member
-  review/PR CI. It changes document source, not application behavior/schema.
+- The #100 documentation reconciliation received independent review and CI
+  via PR #121, merged to S3 staging. That PR changed documentation only.
+- #101 separately adds peer application/schema/test behavior and current
+  document updates; its own independent implementation review remains pending.
