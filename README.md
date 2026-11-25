@@ -2,7 +2,7 @@
 
 **Course:** CPE 334 Software Engineering in the Age of AI Agents (Semester 1/2026)  
 **Deliverable:** Project Deliverable 1 — Engineering Baseline and Working Sprint 1  
-**Current planning:** Deliverable 2 Sprint 2–3 contracts and UI-refresh specification are drafted for review; the new features and redesigned UI are not implemented by the documentation package.
+**Current planning:** Sprint 2–3 contracts were reviewed in PR #107; UI refresh and F-04 merged into staging via #110/#116. F-05 is implemented on its feature branch for independent review; accepted Sprint 2/main deployment remains pending. See [F-05 evidence](docs/sprints/sprint-2/f05-execution-evidence.md).
 **Team Members:**
 - **Pawarit Wongdaeng** (`67070503466`, GitHub: `martinvadre`)
 - **Tatchakorn Thamnimitr** (`67070503415`, GitHub: `Magiciancat9`)

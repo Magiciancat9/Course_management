@@ -1,5 +1,11 @@
 # Complete requirements-to-verification traceability — D2 draft v1.0
 
+**F-05 update, 25 Nov 2026:** FR-07/BR-07 now map to executed feature-branch
+tests below. Other historical rows remain the initial 22 Nov snapshot for
+final reconciliation under #100. In particular, maintained main's approved
+Lab 7 rule is revision20/approval10; the old staging BR-05 row is not a new
+approval decision. See the [F-05 integration limits](sprints/sprint-2/f05-execution-evidence.md).
+
 **22 Nov 2026; documentation-only phase.** Complete baseline scope comes from
 [SRS](srs.md) and [feature inventory](features.md). Sprint 1 AC/TEST identifiers
 are retained. New contract IDs are planned, not executed coverage. No new
@@ -20,7 +26,7 @@ its test IDs, levels and proposed actual locations separately.
 | FR-04 | F-03 / S1 | AC-07/08 | TEST-07/08/11/16/17 | [API/DB](../server/tests/api.integration.test.ts); [E2E](../e2e/sprint1.spec.ts) | Implemented baseline; historical verification exists; new D2 RC NOT RUN |
 | FR-05 | F-03 / S1 | AC-09 | TEST-09/11/18 | [API/DB](../server/tests/api.integration.test.ts); [domain unit](../server/tests/domain.unit.test.ts); [E2E](../e2e/sprint1.spec.ts) | Implemented baseline; historical verification exists; new D2 RC NOT RUN |
 | FR-06 | F-04 / S2 | S2-F04-AC01–08 | S2-F04-T01–11 | [F-04 STS](sprints/sprint-2/f04-milestones.md); actual new case: none | Proposed contract; not implemented; test IDs NOT CREATED / NOT RUN; no accepted release |
-| FR-07 | F-05 / S2 | S2-F05-AC01–10 | S2-F05-T01–12 | [F-05 STS](sprints/sprint-2/f05-submissions.md); actual new case: none | Proposed contract; not implemented; test IDs NOT CREATED / NOT RUN; no accepted release |
+| FR-07 | F-05 / S2 | S2-F05-AC01–10 | S2-F05-T01–12 | [API/DB](../server/tests/submissions.integration.test.ts), [unit](../server/tests/submissions.unit.test.ts), [actual migration](../server/tests/submissions-migration.integration.test.ts), [component](../client/src/features/submissions/SubmissionWorkspace.test.tsx), [browser](../e2e/sprint2-submissions.spec.ts) | Implemented/tested feature candidate; [results and exact versions](sprints/sprint-2/f05-execution-evidence.md); actual published-grade integration, review and release remain pending |
 | FR-08 | F-06 / S2 | S2-F06-AC01–09 | S2-F06-T01–11 | [F-06 STS](sprints/sprint-2/f06-grading.md); actual new case: none | Proposed contract; not implemented; test IDs NOT CREATED / NOT RUN; no accepted release |
 | FR-09 | F-07 tasks / S3 | S3-F07-AC01–06 | S3-F07-T01–08 | [F-07 STS](sprints/sprint-3/f07-collaboration.md); actual new case: none | Proposed contract; not implemented; test IDs NOT CREATED / NOT RUN; no accepted release |
 | FR-10 | F-07 peer / S3 | S3-F07-AC07–12 | S3-F07-T09–15 | [F-07 STS](sprints/sprint-3/f07-collaboration.md); actual new case: none | Proposed contract; not implemented; test IDs NOT CREATED / NOT RUN; no accepted release |
@@ -32,7 +38,7 @@ its test IDs, levels and proposed actual locations separately.
 | BR-04 | F-03 / S1 | AC-08 | TEST-08 | [API/DB](../server/tests/api.integration.test.ts); [domain unit](../server/tests/domain.unit.test.ts) | Implemented baseline; historical verification exists; new D2 RC NOT RUN |
 | BR-05 | F-03 / S1 | AC-09, minimum 10 for both decisions | TEST-09 | [API/DB](../server/tests/api.integration.test.ts); [domain unit](../server/tests/domain.unit.test.ts) | Implemented baseline; historical verification exists; new D2 RC NOT RUN; Lab 7 10→20 proposal not approved/implemented |
 | BR-06 | F-01–08 / all sprints | Existing AC-03/10; S2-F04-AC05; S2-F05-AC07/10; S2-F06-AC05; S3-F07-AC04/10; S3-F08-AC06 | TEST-03/10/23; new feature negative/session tests | [API/DB](../server/tests/api.integration.test.ts); [routing/privacy](../server/tests/routing-privacy.unit.test.ts); [client privacy/session](../client/src/App.sessionIsolation.test.tsx); new locations in register | Existing protection implemented; new access paths NOT RUN |
-| BR-07 | F-05 / S2 | S2-F05-AC02 | S2-F05-T02 | [F-05 STS](sprints/sprint-2/f05-submissions.md) | Proposed contract; not implemented; test IDs NOT CREATED / NOT RUN; no accepted release |
+| BR-07 | F-05 / S2 | S2-F05-AC02 | S2-F05-T02 | [API/DB](../server/tests/submissions.integration.test.ts), parameterized DRAFT/SUBMITTED/REVISION_REQUESTED denial | PASS in feature candidate; all three return 409 and preserve stored rows; accepted release pending |
 | BR-08 | F-06 grading / S2; F-07 peer / S3 | S2-F06-AC02; S3-F07-AC08 | S2-F06-T02; S3-F07-T10 | [F-06](sprints/sprint-2/f06-grading.md) / [F-07](sprints/sprint-3/f07-collaboration.md) | Proposed contract; not implemented; test IDs NOT CREATED / NOT RUN; no accepted release |
 | NFR-01 | Auth + every protected new route / all sprints | AC-03; all new route authentication cases | TEST-03/14/19; S2-F04-T07; S2-F05-T07; S2-F06-T05; S3-F07-T04/12; S3-F08-T06 | [API/DB](../server/tests/api.integration.test.ts); [routing/privacy](../server/tests/routing-privacy.unit.test.ts); [new locations](sprints/deliverable-2/verification-register.md) | Baseline verified historically; new routes NOT RUN |
 | NFR-02 | Role/ownership + private DTOs / all sprints | AC-10; every new role/ownership path | TEST-10/23; S2-F04-T07; S2-F05-T07/12; S2-F06-T05; S3-F07-T04/12; S3-F08-T06 | [API/DB](../server/tests/api.integration.test.ts); [routing/privacy](../server/tests/routing-privacy.unit.test.ts); client directory/session suites; new tests planned | Existing protection retained; every new route still requires direct backend negative checks |
