@@ -57,19 +57,49 @@ function legacyEvaluation(score: number | null, feedback: string | null, actor: 
     ? { score, feedback, publicationStatus: 'UNKNOWN' as const } : null;
 }
 
-function currentDto(row: MilestoneSubmission, actor: Actor) {
+type PublishedSummary = {
+  id: number;
+  score: number;
+  feedback: string;
+  submissionVersion: number;
+  draftRevision: number;
+  publishedAt: Date;
+} | null;
+
+async function findLatestPublished(
+  tx: Tx | typeof prisma,
+  submissionId: number,
+  submissionVersion: number
+): Promise<PublishedSummary> {
+  const pub = await tx.gradePublication.findFirst({
+    where: { submissionId, submissionVersion },
+    orderBy: { draftRevision: 'desc' },
+  });
+  return pub
+    ? {
+        id: pub.id,
+        score: pub.score,
+        feedback: pub.feedback,
+        submissionVersion: pub.submissionVersion,
+        draftRevision: pub.draftRevision,
+        publishedAt: pub.publishedAt,
+      }
+    : null;
+}
+
+function currentDto(row: MilestoneSubmission, actor: Actor, publishedEvaluation: PublishedSummary = null) {
   return { id: row.id, milestoneId: row.milestoneId, teamId: row.teamId, version: row.version,
     repoUrl: row.artifactUrl, reportUrl: row.reportUrl, releaseTag: row.releaseTag, notes: row.notes,
     submittedAt: row.submittedAt, dueDateSnapshot: row.dueDateSnapshot, lateStatus: row.lateStatus,
     // F-06 supplies verified, current-version GradePublication summaries. Legacy
     // projection fields alone never establish publication to a student.
-    publishedEvaluation: null, legacyEvaluation: legacyEvaluation(row.score, row.feedback, actor) };
+    publishedEvaluation, legacyEvaluation: legacyEvaluation(row.score, row.feedback, actor) };
 }
 
-function versionDto(row: SubmissionVersion, actor: Actor) {
+function versionDto(row: SubmissionVersion, actor: Actor, publishedEvaluation: PublishedSummary = null) {
   return { id: row.id, submissionId: row.submissionId, version: row.version, repoUrl: row.repoUrl,
     reportUrl: row.reportUrl, releaseTag: row.releaseTag, notes: row.notes, submittedAt: row.submittedAt,
-    dueDateSnapshot: row.dueDateSnapshot, lateStatus: row.lateStatus, publishedEvaluation: null,
+    dueDateSnapshot: row.dueDateSnapshot, lateStatus: row.lateStatus, publishedEvaluation,
     legacyEvaluation: legacyEvaluation(row.legacyScore, row.legacyFeedback, actor) };
 }
 
@@ -141,7 +171,8 @@ export async function getSubmission(params: Context) {
       milestoneId_teamId: { milestoneId: params.milestoneId, teamId: params.teamId },
     } });
     if (!row) return fail(404, 'SUBMISSION_NOT_FOUND', 'No submission has been saved for this team and milestone.');
-    return { ok: true as const, data: { submission: currentDto(row, params.actor) } };
+    const published = await findLatestPublished(tx, row.id, row.version);
+    return { ok: true as const, data: { submission: currentDto(row, params.actor, published) } };
   });
 }
 
@@ -167,7 +198,10 @@ export async function listSubmissionVersions(params: Context & Paging) {
       ...(params.afterId === undefined ? {} : { id: { gt: params.afterId } }) }, orderBy: { id: 'asc' }, take: params.limit + 1 });
     const more = rows.length > params.limit;
     const page = more ? rows.slice(0, params.limit) : rows;
-    return { ok: true as const, data: { versions: page.map(v => versionDto(v, params.actor)), nextAfterId: more ? page[page.length - 1].id : null } };
+    const versionsWithPub = await Promise.all(
+      page.map(async v => versionDto(v, params.actor, await findLatestPublished(tx, v.submissionId, v.version)))
+    );
+    return { ok: true as const, data: { versions: versionsWithPub, nextAfterId: more ? page[page.length - 1].id : null } };
   });
 }
 
@@ -180,6 +214,9 @@ export async function listCourseSubmissions(params: { courseId: number; mileston
     include: { team: { select: { id: true, name: true } } }, orderBy: { id: 'asc' }, take: params.limit + 1 });
   const more = rows.length > params.limit;
   const page = more ? rows.slice(0, params.limit) : rows;
-  return { ok: true as const, data: { submissions: page.map(row => ({ ...currentDto(row, params.actor), team: row.team })),
+  const submissionsWithPub = await Promise.all(
+    page.map(async row => ({ ...currentDto(row, params.actor, await findLatestPublished(prisma, row.id, row.version)), team: row.team }))
+  );
+  return { ok: true as const, data: { submissions: submissionsWithPub,
     nextAfterId: more ? page[page.length - 1].id : null } };
 }
