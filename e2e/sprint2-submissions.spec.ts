@@ -56,6 +56,7 @@ test('S2-F05-T11/T12: approved team submits/reloads immutable versions, instruct
   await expect(page.getByTestId('submission-success')).toContainText('version 2');
   await expect(page.getByTestId('submission-history')).toContainText('f05-v1');
   await expect(page.getByTestId('submission-history')).toContainText('f05-v2');
+  await page.screenshot({ path: 'test-results/f05-submission-v2.png', fullPage: true });
   const teamId = await page.evaluate(() => fetch('/api/teams', { headers: { Authorization: `Bearer ${localStorage.getItem('course_pms_token')}` } })
     .then(r => r.json()).then(data => data.teams.find((t: { name: string }) => t.name === 'Team Alpha').id));
   const milestoneId = Number((await page.locator('[data-testid^="milestone-submission-btn-"]').getAttribute('data-testid'))!.split('-').pop());

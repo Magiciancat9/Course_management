@@ -203,4 +203,20 @@ describe('F-05: real API/PostgreSQL submissions, immutable versions and access',
     expect(versions.body.versions[0].dueDateSnapshot).toBe(deadline.toISOString());
     expect(versions.body.versions[0].lateStatus).toBe('ON_TIME');
   });
+
+  it('S2-F05-T09/AC09: simultaneous F-04 deadline edit and F-05 write capture one consistent snapshot', async () => {
+    const [saved, edit] = await Promise.all([
+      put(),
+      request(app).put(`/api/milestones/${milestoneId}`).set('Authorization', `Bearer ${instructor}`)
+        .send({ expectedVersion: 1, dueDate: '2020-01-01T00:00:00Z' }),
+    ]);
+    expect(saved.status).toBe(201);
+    expect(edit.status).toBe(200);
+    const captured = saved.body.submission;
+    expect([deadline.toISOString(), '2020-01-01T00:00:00.000Z']).toContain(captured.dueDateSnapshot);
+    expect(captured.lateStatus).toBe(new Date(captured.submittedAt) > new Date(captured.dueDateSnapshot) ? 'LATE' : 'ON_TIME');
+    const history = await get(student, fixture.teamAlpha.id, '/versions');
+    expect(history.body.versions[0]).toMatchObject({ submittedAt: captured.submittedAt,
+      dueDateSnapshot: captured.dueDateSnapshot, lateStatus: captured.lateStatus });
+  });
 });

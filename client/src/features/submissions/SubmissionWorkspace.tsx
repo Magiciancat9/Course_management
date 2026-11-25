@@ -26,7 +26,9 @@ export interface SubmissionWorkspaceProps extends Session {
   milestone: { id: number; title: string; status: 'DRAFT' | 'PUBLISHED' };
   ownTeam: { id: number; proposalStatus: string | null } | null;
 }
-type Payload = Record<string, any>;
+type TeamSubmission = Submission & { team: { id: number; name: string } };
+type Payload = { error?: unknown; code?: string; submission?: Submission; versions?: Submission[];
+  submissions?: TeamSubmission[]; nextAfterId?: number | null };
 
 // Every read/mutation is tied to both the authenticated session and resource
 // context. An old response cannot clear a new user's draft or pending state.
@@ -53,8 +55,9 @@ function useRequests(session: Session, context: string) {
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.token}`, ...init.headers } });
       let data: Payload;
       try {
-        data = await response.json();
-        if (!data || typeof data !== 'object' || Array.isArray(data)) throw new Error('Invalid response');
+        const payload: unknown = await response.json();
+        if (!payload || typeof payload !== 'object' || Array.isArray(payload)) throw new Error('Invalid response');
+        data = payload as Payload;
       } catch { data = { error: 'The server returned an unreadable response.', code: 'INVALID_RESPONSE' }; }
       if (!isCurrent() || controller.signal.aborted) return null;
       if (response.status === 401) {
@@ -124,8 +127,9 @@ function SubmissionDetail(props: SubmissionWorkspaceProps & { teamId: number }) 
     const response = await request(base + '/versions' + (afterId === undefined ? '' : `?afterId=${afterId}`));
     if (!response || !isCurrent() || epoch !== historyEpoch.current) return;
     if (response.ok && Array.isArray(response.data.versions)) {
-      setHistory(previous => afterId === undefined ? response.data.versions : [...previous,
-        ...response.data.versions.filter((v: Submission) => !previous.some(old => old.id === v.id))]);
+      const versions = response.data.versions;
+      setHistory(previous => afterId === undefined ? versions : [...previous,
+        ...versions.filter(v => !previous.some(old => old.id === v.id))]);
       setHistoryAfter(typeof response.data.nextAfterId === 'number' ? response.data.nextAfterId : null);
     } else setError(String(response.data.error || 'Could not load submission history.'));
     setHistoryLoading(false);
@@ -233,7 +237,7 @@ function SubmissionDetail(props: SubmissionWorkspaceProps & { teamId: number }) 
 function InstructorSubmissions(props: SubmissionWorkspaceProps) {
   const key = `${props.token}:${props.sessionGeneration}:${props.courseId}:${props.milestone.id}`;
   const { request, isCurrent } = useRequests(props, key);
-  const [rows, setRows] = useState<Array<Submission & { team: { id: number; name: string } }>>([]);
+  const [rows, setRows] = useState<TeamSubmission[]>([]);
   const [after, setAfter] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -244,8 +248,9 @@ function InstructorSubmissions(props: SubmissionWorkspaceProps) {
       (cursor === undefined ? '' : `?afterId=${cursor}`));
     if (!response || !isCurrent()) return;
     if (response.ok && Array.isArray(response.data.submissions)) {
-      setRows(previous => cursor === undefined ? response.data.submissions : [...previous,
-        ...response.data.submissions.filter((s: Submission) => !previous.some(old => old.id === s.id))]);
+      const submissions = response.data.submissions;
+      setRows(previous => cursor === undefined ? submissions : [...previous,
+        ...submissions.filter(s => !previous.some(old => old.id === s.id))]);
       setAfter(typeof response.data.nextAfterId === 'number' ? response.data.nextAfterId : null);
     } else setError(String(response.data.error || 'Could not load submissions.'));
     setLoading(false);
