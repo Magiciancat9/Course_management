@@ -1,291 +1,257 @@
-# Part C: System-Level Software Design Specification (SDS)
+# System-Level Software Design Specification
 
----
+**Current source:** 25 Nov 2026 #100 snapshot. The
+[version/release register](sprints/deliverable-2/continuity-and-status.md)
+distinguishes deployed S2-MAIN from reviewed S3-TASK staging and future RC.
+F-01 through F-06 and F-07 tasks are implemented; peer evaluation and F-08
+are reviewed designs, not executable subsystems yet. Baseline FR/BR/NFR
+scope remains in [SRS](srs.md); complete per-feature contracts retain their
+numbered AC/STS and shared DoD.
 
-## 1. Architecture and Technology Stack
+## 1. Architecture and responsibility
 
-### 1.1. Selected Stack and Component Responsibilities
-**CoursePMS** uses a three-tier relational web architecture designed for clear separation of concerns, strict backend domain-rule enforcement, and single-container Cloud Run packaging:
-
-| Layer | Technology Stack | Component Responsibilities & Business Rule Enforcement |
-| :--- | :--- | :--- |
-| **Presentation Layer (UI)** | **React 18**, **TypeScript**, **Vite 5**, **Bootstrap 5** | Renders role-aware navigation and screens (`Login`, `Student Team & Proposal Workspace`, `Instructor Course Review Console`); performs immediate client-side form hints; manages loading, empty, and error banners; stores the session JWT and attaches `Authorization: Bearer <token>`. **Never trusted as the sole authority for business rules or authorization.** |
-| **API & Application Layer** | **Node.js 20**, **Express 4**, **TypeScript** | Exposes RESTful JSON endpoints under `/api/*`; enforces authentication (`requireAuth`), role guards (`requireRole`), and team ownership checks; executes all domain validation and state-transition rules (`BR-01`–`BR-08`) inside service/route handlers before persisting data. |
-| **Data & Persistence Layer** | **PostgreSQL 16**, **Prisma ORM 5** | Enforces relational integrity, foreign keys, and uniqueness constraints (e.g., `@@unique([courseId, userId])` on `TeamMember` so the database itself guarantees `BR-01` single-team membership per course, and `teamId @unique` on `ProjectProposal`). |
-
-### 1.2. System Architecture Diagram
+| Layer | Actual responsibility / source |
+| --- | --- |
+| React 18 / TypeScript / Vite | `client/src/App.tsx` authenticates, owns session boundaries and team/proposal screens; feature components implement milestones, submissions, grading and tasks; shared visual tokens in `styles.css` |
+| Express / TypeScript | `server/src/app.ts` serves auth/course/team/proposal, mounts feature routes, JSON API fallback and production static client |
+| Domain/services | Existing `domainRules.ts` for capacity/completeness/review; milestone/submission/grading/task services own validation, authorization context and transactions |
+| Prisma / PostgreSQL | Typed client, persistent users/team/proposal, revoked JWTs, catalogue, immutable submission content/publications and attributed task events |
+| Delivery | Reusable GitHub CI on disposable PostgreSQL, multi-stage Docker, Artifact Registry, reviewed-main guard and WIF-based Cloud Run/SQL/Secret Manager release |
+| Planned F-07 peer / F-08 | Separate confidential peer API/UI and instructor aggregate/CSV services per reviewed contracts; no routes/model/data-flow completion is claimed |
 
 ```mermaid
 flowchart LR
-  subgraph Client["Browser Client (React 18 + Vite + Bootstrap 5)"]
-    UI_Auth["Login / Session Context"]
-    UI_Student["Student Workspace\n(My Team & Proposal Editor)"]
-    UI_Instructor["Instructor Console\n(All Teams & Proposal Review)"]
-  end
-
-  subgraph Server["Application Server (Node.js + Express + TypeScript)"]
-    MW_Auth["JWT Auth & Revocation Middleware\n(requireAuth / requireRole)"]
-    API_Auth["/api/auth\n(login, logout, me)"]
-    API_Teams["/api/teams\n(create, list, join/add member)"]
-    API_Proposals["/api/proposals\n(draft, submit, review)"]
-    Domain_Rules["Domain Rule Validator\n(BR-01..BR-06 State & Capacity Rules)"]
-  end
-
-  subgraph DB["Database Layer (PostgreSQL + Prisma ORM)"]
-    PG[("PostgreSQL Database\nUsers, Courses, ProjectTeams,\nTeamMembers, ProjectProposals,\nMilestones, Submissions")]
-  end
-
-  UI_Auth -->|HTTPS JSON + Bearer JWT| API_Auth
-  UI_Student -->|HTTPS JSON + Bearer JWT| MW_Auth
-  UI_Instructor -->|HTTPS JSON + Bearer JWT| MW_Auth
-  MW_Auth --> API_Teams
-  MW_Auth --> API_Proposals
-  API_Teams --> Domain_Rules
-  API_Proposals --> Domain_Rules
-  API_Auth --> PG
-  Domain_Rules -->|Prisma Client ACID Queries| PG
+  U[Student or instructor browser] --> R[React application]
+  R -->|Bearer JSON requests| A[Express auth and feature routes]
+  A --> S[Domain validation and transactional services]
+  S --> P[Prisma / PostgreSQL]
+  G[Reviewed main + CI] --> D[Multi-stage image / Artifact Registry]
+  D --> M[Migration job then Cloud Run]
+  M --> P
+  M -->|Serves client and API| U
 ```
 
----
+In native development Vite proxies `/api` to localhost:3000; in production
+Express serves the built client and API from one origin. Tokens are explicitly
+attached as Bearer credentials; there is no cookie/session-based privilege
+inference or public self-registration. Current roles are STUDENT/INSTRUCTOR;
+no new instructor-assignment/enrolment subsystem is silently assumed.
 
-## 2. Data Model, Constraints, Migrations, and Seed Data
+## 2. Current data model and durable invariants
 
-### 2.1. Entity-Relationship Diagram (Whole-Product Baseline)
+The Prisma schema on S3-TASK has 13 models. Deployed S2-MAIN has the first
+11; Task/TaskEvent exist on reviewed Sprint 3 staging only.
 
 ```mermaid
 erDiagram
-  USER {
-    int id PK
-    string email UK "Unique university email"
-    string fullName
-    string studentCode UK "Nullable for instructors"
-    string passwordHash "bcrypt salted hash"
-    enum role "STUDENT | INSTRUCTOR"
-    datetime createdAt
-  }
-  COURSE {
-    int id PK
-    string code UK "e.g., CPE334"
-    string name
-    string term "e.g., 1/2026"
-    int maxTeamSize "Default 3 (BR-02)"
-  }
-  PROJECT_TEAM {
-    int id PK
-    string name "Unique per course"
-    int courseId FK
-    int createdById FK
-    datetime createdAt
-  }
-  TEAM_MEMBER {
-    int id PK
-    int teamId FK
-    int userId FK
-    int courseId FK "Composite UK (courseId, userId) enforces BR-01"
-    string memberRole "LEADER | MEMBER"
-    datetime joinedAt
-  }
-  PROJECT_PROPOSAL {
-    int id PK
-    int teamId FK "1:1 Unique FK"
-    string title
-    string problemStatement
-    string techStack
-    string repoUrl
-    enum status "DRAFT | SUBMITTED | APPROVED | REVISION_REQUESTED"
-    string reviewFeedback "Mandatory on review (BR-05)"
-    int reviewedById FK "Nullable Instructor ID"
-    datetime submittedAt
-    datetime reviewedAt
-    int revisionCount "Default 0"
-    datetime updatedAt
-  }
-  MILESTONE {
-    int id PK
-    int courseId FK
-    string title
-    datetime dueDate
-    int weightPercent
-  }
-  MILESTONE_SUBMISSION {
-    int id PK
-    int milestoneId FK
-    int teamId FK
-    string artifactUrl
-    string releaseTag
-    int score "0-100 (Sprint 2)"
-    string feedback
-  }
-  REVOKED_TOKEN {
-    string jti PK
-    datetime expiresAt
-  }
-
-  COURSE ||--o{ PROJECT_TEAM : "hosts"
-  USER ||--o{ PROJECT_TEAM : "creates"
-  PROJECT_TEAM ||--|{ TEAM_MEMBER : "includes"
-  USER ||--o{ TEAM_MEMBER : "joins"
-  COURSE ||--o{ TEAM_MEMBER : "scopes uniqueness"
-  PROJECT_TEAM ||--o| PROJECT_PROPOSAL : "owns 1:1"
-  USER ||--o{ PROJECT_PROPOSAL : "reviews (INSTRUCTOR)"
-  COURSE ||--o{ MILESTONE : "defines (Sprint 2)"
-  MILESTONE ||--o{ MILESTONE_SUBMISSION : "collects (Sprint 2)"
-  PROJECT_TEAM ||--o{ MILESTONE_SUBMISSION : "submits (Sprint 2)"
-```
-
-### 2.2. Key Relational Constraints and Ownership Links
-- **`User.email` (`@unique`):** Prevents duplicate user accounts.
-- **`ProjectTeam` (`@@unique([courseId, name])`):** Prevents two teams in the same course from using the same team name.
-- **`TeamMember` (`@@unique([courseId, userId])`):** Enforces `BR-01` at both the application layer and PostgreSQL index level—a student can belong to at most one team per course.
-- **`ProjectProposal.teamId` (`@unique`):** Enforces one authoritative proposal record per team (`1:1`), linking ownership directly to `ProjectTeam` and its `TeamMember` roster (`BR-06`).
-- **`RevokedToken.jti` (`@id`):** Stores logged-out JWT identifiers and their expiration timestamps in PostgreSQL so revocation survives server restarts; expired rows are removed opportunistically.
-
-### 2.3. Database Setup, Migrations, and Reproducible Seed Data
-- **Schema Management:** The original Sprint 1 setup used `prisma db push` and the local `prisma:migrate` convenience command still does. The current post-Lab-5 tree already contains `server/prisma/migrations/20261110000000_init` and `prisma:migrate:deploy`. New Sprint 2–3 schema work adds reviewed migrations and verifies populated upgrades; do not rewrite init history or run a production reset/`db push`.
-- **Reproducible Seed (`server/prisma/seed.ts`):** Executed via `npm --prefix server run prisma:seed`. It deterministically resets/upserts synthetic demo data using environment-configurable passwords (`DEMO_USER_PASSWORD`):
-  - **Course:** `CPE334 — Software Engineering in the Age of AI Agents (Semester 1/2026)` with `maxTeamSize = 3`.
-  - **Seeded Accounts:**
-    - `instructor@kmutt.ac.th` (`INSTRUCTOR` — Dr. Piyanit)
-    - `pawarit@mail.kmutt.ac.th` (`STUDENT` — ID `67070503466`, Team Alpha Leader)
-    - `tatchakorn@mail.kmutt.ac.th` (`STUDENT` — ID `67070503415`, available to be added to Team Alpha by a current member)
-    - `somchai@mail.kmutt.ac.th` (`STUDENT` — ID `67070503499`, Team Beta Leader with a private proposal used to test cross-team `403` isolation)
-    - `suda@mail.kmutt.ac.th` (`STUDENT` — ID `67070503488`, Unassigned student for testing team creation & capacity boundaries)
-
----
-
-## 3. UI, API, and Access Control Conventions
-
-### 3.1. Main Screens, Navigation, and Shared UI States
-1. **Top Navigation Bar:** Displays application branding (`CoursePMS`), active course badge (`CPE334`), current authenticated user's full name, email, and role badge (`STUDENT` or `INSTRUCTOR`), and a **Logout** button.
-2. **Screen 1 — Login View (Unauthenticated):** Email and password form, demo quick-fill buttons for local testing, client validation for empty fields, and clear error alert on `401 Invalid credentials`.
-3. **Screen 2 — Student Workspace (`STUDENT` role):**
-   - **My Project Team Panel:** If unassigned, shows the "Create New Team" form and explains that a current team member must add the student's university email to join an existing team; self-service joining is not implemented. If assigned, shows team name, course capacity indicator (e.g., `2 / 3 members`), member roster, and an "Add Teammate by Email" control (disabled when full, while an action is pending, or if the proposal is locked).
-   - **Team Project Proposal Panel:** Displays current status badge (`DRAFT`, `SUBMITTED`, `APPROVED`, `REVISION_REQUESTED`), revision counter, and instructor review feedback banner (if reviewed). Provides the Proposal Editor (`title`, `problemStatement`, `techStack`, `repoUrl`) with **Save Draft** and **Submit Proposal for Review** actions.
-4. **Screen 3 — Instructor Course Review Console (`INSTRUCTOR` role):**
-   - Summary metrics bar (Total Teams, Submitted Pending Review, Approved, Revision Requested).
-   - All Course Teams & Proposals table with status filter (`ALL`, `SUBMITTED`, `APPROVED`, `REVISION_REQUESTED`, `DRAFT`).
-   - **Instructor Proposal Review Modal/Panel:** Displays full proposal details and provides APPROVED / REVISION_REQUESTED actions with a mandatory feedback textarea. Lab 7's approved revised contract requires action-specific guidance: trimmed minimum 10 for APPROVED, 20 for REVISION_REQUESTED, counted as JavaScript UTF-16 units. This design was peer-reviewed before code; the candidate UI/API now implement it with [execution evidence](labs/lab-07/implementation-evidence.md). The locked pre-change UI/API used 10 for both; maintained main includes the reviewed release. See [L7-CONTRACT v1.1](labs/lab-07/revised-contract.md) for authoritative validation precedence, API/data impact and STS.
-5. **Shared UI Behavior:**
-   - **Loading State:** Dashboard loading indicator, action-specific pending labels, and disabled mutation controls during in-flight requests.
-   - **Empty State:** Informative unassigned-student guidance and placeholder rows when team lists are empty.
-   - **Error State:** Dismissible Bootstrap danger alert rendering the backend's structured `{ error, code }` message whenever a business rule (`400`/`403`/`409`) rejects an action.
-
-### 3.2. API Conventions, Validation, and Safe Error Handling
-- **Base Prefix & Content-Type:** All API routes are mounted under `/api/*` and exchange `application/json`.
-- **Standard Success Envelope:** Returns HTTP `200 OK` or `201 Created` with deterministic JSON resource objects (`{ user, token }`, `{ team }`, `{ proposal }`, `{ teams }`).
-- **Standard Error Envelope:** All validation, authorization, and business-rule failures return a uniform JSON shape without exposing stack traces or SQL internals:
-  ```json
-  {
-    "error": "Student is already a member of a team in this course",
-    "code": "BR01_DUPLICATE_TEAM_MEMBERSHIP"
-  }
-  ```
-- **HTTP Status Code Mapping:**
-  - `400 Bad Request`: Missing required fields, proposal completeness gate failure (`BR-04`), or review feedback too short (`BR-05`).
-  - `401 Unauthorized`: Missing, expired, invalid, or logged-out/revoked JWT (`NFR-01`).
-  - `403 Forbidden`: Authenticated user lacks the required role (`STUDENT` calling instructor review) or attempts to view/edit another team's private proposal (`BR-06`, `NFR-02`).
-  - `404 Not Found`: Target team or proposal ID does not exist.
-  - `409 Conflict`: Domain state violation (`BR-01` duplicate team membership, `BR-02` max team size exceeded, `BR-03` invalid proposal status transition).
-
-### 3.3. Role and Ownership Permission Matrix
-
-Roster-only directory privacy is literal: student responses retain complete
-proposals only for the student's own team and set every foreign team's
-`proposal` to `null`. Foreign title, status, identifiers, revision count and
-timestamps are not public summaries. Instructors retain complete proposals.
-The student UI labels foreign proposal state `PRIVATE`; `null` does not imply
-that a foreign team has no draft.
-
-The proposal API namespace remains protected for unsupported routes: an
-unauthenticated `/api/proposals` request receives JSON 401, while an unsupported
-request after valid authentication receives JSON 404 `API_ROUTE_NOT_FOUND`.
-There is no bare collection-list endpoint. Other unknown `/api` requests return
-JSON 404 before the frontend fallback; frontend navigation outside `/api`
-retains SPA HTML behavior.
-
-| Protected Operation | Endpoint | Unauthenticated | `STUDENT` (Own Team) | `STUDENT` (Other Team / Unassigned) | `INSTRUCTOR` |
-| :--- | :--- | :---: | :---: | :---: | :---: |
-| Get current session user | `GET /api/auth/me` | `401` | **Allow (`200`)** | **Allow (`200`)** | **Allow (`200`)** |
-| Revoke current token | `POST /api/auth/logout` | `401` | **Allow (`200`)** | **Allow (`200`)** | **Allow (`200`)** |
-| Create a new project team | `POST /api/teams` | `401` | `409` (`BR-01`) | **Allow (`201`)** | `403` (Students only) |
-| Add/join member to team | `POST /api/teams/:id/members` | `401` | **Allow (`200`)** (up to `maxTeamSize`) | `403` (Only team members may add roster) | `403` |
-| List course teams summary | `GET /api/teams` | `401` | **Allow (`200`)** (Own team full + public roster) | **Allow (`200`)** (Public roster only) | **Allow (`200`)** (All teams & proposals) |
-| View team proposal detail | `GET /api/teams/:id/proposal` | `401` | **Allow (`200`)** | **`403 Forbidden` (`BR-06`)** | **Allow (`200`)** |
-| Save/edit proposal draft | `PUT /api/teams/:id/proposal` | `401` | **Allow (`200`)** (if `DRAFT` or `REVISION_REQUESTED`) | **`403 Forbidden` (`BR-06`)** | `403` (Students draft) |
-| Submit proposal for review | `POST /api/teams/:id/proposal/submit` | `401` | **Allow (`200`)** (if `DRAFT`/`REVISION_REQUESTED` & complete) | **`403 Forbidden` (`BR-06`)** | `403` |
-| Review & approve/reject proposal | `POST /api/proposals/:id/review` | `401` | **`403 Forbidden` (`BR-06`)** | **`403 Forbidden` (`BR-06`)** | **Allow (`200`)** (if `SUBMITTED`) |
-
-### 3.4. Credential Handling, Session/Token Lifecycle, and Logout Design
-- **Password Hashing:** User passwords are hashed with `bcryptjs` (`10` salt rounds) before storage in `User.passwordHash`. Plaintext passwords are never logged or persisted (`NFR-03`).
-- **Token Issuance & Expiry:** `POST /api/auth/login` verifies credentials via `bcrypt.compare`. On success, the server signs a JWT (`HS256`) containing `{ userId, email, role, jti }` with an `8h` expiration (`exp`) using `process.env.JWT_SECRET`.
-- **Secret Configuration:** `JWT_SECRET` is read at startup; startup fails if it is missing or empty. In production, the placeholder `replace-with-secure-random-jwt-secret` is also rejected.
-- **Current-User Retrieval:** `GET /api/auth/me` validates the bearer token, checks PostgreSQL for the token `jti` in `RevokedToken`, and queries PostgreSQL for the fresh user profile (excluding `passwordHash`).
-- **Enforced Logout:** `POST /api/auth/logout` persists the token `jti` and expiration in `RevokedToken` and clears the client stored token. Any subsequent API request reusing that logged-out token, including after a server restart, is rejected by `requireAuth` with `401 Unauthorized`.
-
----
-
-## 4. Configuration and Cloud Delivery Design
-
-### 4.1. Environment Variables and Secret Handling
-All runtime configuration is injected via environment variables. Real secrets are excluded from Git via `.gitignore`, while `.env.example` documents required keys:
-
-| Variable | Purpose | Example / Default (Local Dev) | Production (GCP Cloud Run) |
-| :--- | :--- | :--- | :--- |
-| `PORT` | HTTP server listen port | `3000` | Injected by Cloud Run (`8080`) |
-| `NODE_ENV` | Runtime mode | `development` / `test` | `production` |
-| `DATABASE_URL` | PostgreSQL connection URL | `postgresql://postgres:postgres@localhost:5432/course_pms?schema=public` | GCP Secret Manager (Cloud SQL socket) |
-| `JWT_SECRET` | HMAC secret for signing JWTs | `dev-only-jwt-secret-change-me` | GCP Secret Manager |
-| `CORS_ORIGIN` | Allowed frontend origin | `http://localhost:5173` | Same-origin Cloud Run URL |
-| `DEMO_USER_PASSWORD` | Password used by `prisma/seed.ts` | `<choose local-only value>` | Set via private course handoff / env; not exposed by the public web service |
-
-### 4.2. Existing Docker Packaging and GCP Deployment Architecture (Post-Lab-5)
-- **Single-Container Multi-Stage `Dockerfile`:** Stage 1 builds the React/Vite frontend (`client/dist`); Stage 2 compiles the TypeScript Express backend (`server/dist`) and Prisma client; Stage 3 runs a lean Node 20 Alpine production image where Express serves both `/api/*` and the static `client/dist` bundle, plus `GET /api/health`.
-- **Existing GCP Components (retain the Lab 5 delivery process):**
-  - **Google Artifact Registry:** Stores versioned container images built by GitHub Actions CI/CD.
-  - **Google Cloud Run:** Serverless container runtime hosting the stateless CoursePMS container.
-  - **Google Cloud SQL for PostgreSQL:** Managed durable relational database connected via Cloud SQL Auth Proxy Unix socket.
-  - **Google Secret Manager:** Injects `DATABASE_URL` and `JWT_SECRET` at container startup without baking secrets into images or Git.
-
-## 5. Sprint 2 implementation and Sprint 3 design extension
-
-The release candidate implements F-01 through F-06. The reviewed
-[D2 shared design](sprints/deliverable-2/shared-contract.md) and per-feature
-[contracts](sprints/deliverable-2/README.md) add planned route/service/client
-responsibilities before code. No router, Prisma schema, migration or visual
-implementation is changed by this document revision.
-
-- F-04 adds versioned draft/published milestones and role-aware scheduling.
-- F-05 adds complete artifact/report/tag submission and immutable versions,
-  server-derived time/deadline snapshots and honest late status.
-- F-06 binds draft/published grading and immutable publication history to the
-  exact submitted version, with team-only student readback.
-- F-07 adds own-team task/events and confidential completed-milestone peer
-  evaluations, enforcing no self-rating and restricted visibility.
-- F-08 reads coherent course snapshots and exports published current-version
-  scores with defined rates, empty states and CSV formatting/safety policy.
-
-```mermaid
-erDiagram
+  USER ||--o{ PROJECT_TEAM : creates
+  COURSE ||--o{ PROJECT_TEAM : contains
+  PROJECT_TEAM ||--o{ TEAM_MEMBER : includes
+  USER ||--o{ TEAM_MEMBER : joins
+  COURSE ||--o{ TEAM_MEMBER : scopes
+  PROJECT_TEAM ||--o| PROJECT_PROPOSAL : owns
+  USER ||--o{ PROJECT_PROPOSAL : reviews
   COURSE ||--o{ MILESTONE : defines
-  PROJECT_TEAM ||--o{ MILESTONE_SUBMISSION : owns
   MILESTONE ||--o{ MILESTONE_SUBMISSION : receives
+  PROJECT_TEAM ||--o{ MILESTONE_SUBMISSION : owns
   MILESTONE_SUBMISSION ||--o{ SUBMISSION_VERSION : retains
-  SUBMISSION_VERSION ||--o| SUBMISSION_EVALUATION : evaluated_by
+  SUBMISSION_VERSION ||--o| SUBMISSION_EVALUATION : evaluates
   SUBMISSION_EVALUATION ||--o{ GRADE_PUBLICATION : publishes
   PROJECT_TEAM ||--o{ TASK : owns
+  USER ||--o{ TASK : assigns_or_authors
+  MILESTONE o|--o{ TASK : optionally_links
   TASK ||--o{ TASK_EVENT : records
-  PROJECT_TEAM ||--o{ PEER_EVALUATION : scopes
-  MILESTONE ||--o{ PEER_EVALUATION : scopes
+  USER ||--o{ TASK_EVENT : acts
 ```
 
-The F-04/F-05/F-06 portion is implemented in Prisma and versioned migrations;
-Task, TaskEvent and PeerEvaluation remain proposed Sprint 3 models. See
-the shared contract for exact unique keys, nullable legacy fields/backfill,
-actor/version constraints and non-destructive migration obligations. Do not
-silently expose private submission/grade/task/peer details through general
-team lists or replace the existing roster-only privacy policy.
+`RevokedToken` stores JWT jti/expiry independently, not a foreign-key session
+row to User. The diagram's user/task relation summarizes separate creator,
+updater and nullable assignee FKs; no peer model is present in this diagram.
 
-The [UI refresh specification](ui-refresh-spec.md) was implemented in PR #110.
-The Sprint 2 candidate integrates that shell with F-04/F-05/F-06 and the
-maintained Lab 7 revision20/approval10 rule. The [release ledger](sprints/sprint-2/accepted-release.md)
-records actual verification and independent main acceptance gates.
+| Resource / constraint | Persistence and authorization significance |
+| --- | --- |
+| User email / optional studentCode unique | Provisioned identities; bcrypt hash never appears in public DTOs |
+| ProjectTeam `(courseId,name)` unique; createdBy FK | Team/course context and attributable creation |
+| TeamMember `(courseId,userId)` and `(teamId,userId)` unique | One team per course; current membership is checked by backend before private access |
+| ProjectProposal teamId unique | One evolving proposal; DRAFT/SUBMITTED/REVISION_REQUESTED/APPROVED, revision count and last reviewed actor/time/feedback |
+| RevokedToken jti primary key | Logout remains effective after app restart; JWT verification includes persisted revocation |
+| Milestone | Explicit DRAFT/PUBLISHED, publishedAt, version; only published catalogue is visible to students |
+| MilestoneSubmission `(milestoneId,teamId)` unique | One logical current submission per team/milestone; stores current version, server timestamp and captured deadline/late status |
+| SubmissionVersion `(submissionId,version)` unique | Immutable content/release/report/notes history; legacy score/feedback retained with unknown publication provenance |
+| SubmissionEvaluation `(submissionId,submissionVersion)` unique | Per-content-version draft with expected version and draft revision; composite content-version FK |
+| GradePublication evaluation/draftRevision unique | Immutable published score/feedback/actor/time bound to the evaluated content version; correction drafts do not overwrite prior student-visible publication |
+| Task | Owning team, title/description, sprint1-3, TODO/IN_PROGRESS/DONE, nullable member assignee/published same-course milestone, server creator/updater/time/version |
+| TaskEvent `(taskId,version)` unique | Exactly one attributed change event per accepted task version, including creation; immutable before/after JSON; same transaction as task write |
+
+Backend permission checks, row locks and conditional/versioned transactions
+supplement DB uniqueness/FKs. Do not infer team eligibility from a client
+button, roster label or prepared table. Legacy nullable report/deadline and
+UNKNOWN lateness are preserved rather than backfilled with invented facts.
+
+### 2.1. Migration and seed procedure
+
+| Ordered versioned SQL | Actual boundary |
+| --- | --- |
+| `20261110000000_init` | Original persistent schema |
+| `20261125000000_f04_milestone_status_version` | Explicit catalogue lifecycle; existing milestones remain DRAFT/version1 with NULL publication time |
+| `20261125010000_f05_submission_versions` | Immutable submission versions; preserve existing IDs/content/legacy grading, unknown report/deadline/late provenance |
+| `20261125020000_f06_grading_publications` | Version-bound evaluation/publication; no fabricated historical publication |
+| `20261125030000_f07_task_checkpoint` | New Task/TaskEvent only; existing 11 table snapshots preserved in actual SQL upgrade test |
+
+Use `npm --prefix server run prisma:migrate:deploy` then
+`npm --prefix server run build` (Prisma generation plus TypeScript compilation)
+on a fresh development/test DB.
+The convenience `prisma:migrate` script is actually `prisma db push`; it is
+not migration history and must not be used on production. Existing populated
+DBs require the reviewed migration-history/backfill procedure in
+[Lab 5 deployment](labs/lab-05/deployment.md), not a reset or rewritten init.
+
+Development/test `prisma:seed` resets its target and is for disposable DBs
+only. Resetting test entrypoints enforce localhost/CI PostgreSQL and a DB name
+ending `_test`. Production seed instead requires DEMO_USER_PASSWORD and
+creates missing synthetic demo data without overwriting existing records;
+it is a separate explicitly controlled job, not normal web startup. Password
+values, .env files and generated data dumps stay outside Git/report source.
+
+## 3. UI, API and session/access conventions
+
+### 3.1. Implemented screens and scoped states
+
+- Real labelled email/password login; refreshed shell/sidebar, role context,
+  mobile menu and logout. Quick Fill/demo-password controls removed in #110.
+- Student team creation/current-member email add, roster/capacity, own proposal
+  draft/save/submit/revise; foreign catalogue rows remain roster-only/private.
+- Instructor team/status console and submitted-proposal review. Current Lab 7
+  guidance: approval minimum10, revision minimum20 after trim/UTF-16, with
+  backend state/validation precedence and no false success after rejection.
+- Milestones: instructor draft/edit/publish and student published readback,
+  explicit Asia/Bangkok dates, cursor pages and version conflict reconciliation.
+- Submissions: approved own-team save/update, immutable version/history,
+  deadline snapshot/late state, current published grade only, same-session
+  draft retention and cross-session response isolation.
+- Grading: instructor draft save versus explicit publish, score0-100,
+  unsaved-input publication guard and stale content-version recovery; owning
+  students see only current-version published evaluation.
+- Tasks (S3 staging): own-team create/assign/edit/status/reopen, sprint/status
+  filters, cursor pages, actor/time/field activity, keyboard actions and saved
+  reload; instructor read-only. Token/generation/team guards discard stale
+  list, load-more, mutation and activity responses.
+- Peer evaluation and analytics/export screens remain planned. Existing small
+  proposal-status cards are not the complete F-08 dashboard or CSV workflow.
+
+Full responsive/zoom/rendered-contrast and final desktop/mobile acceptance
+are still bounded gaps in the [verification register](sprints/deliverable-2/verification-register.md).
+
+### 3.2. Actual route families
+
+All below are under `/api`. Lists use the documented resource envelopes;
+new paged feature lists use `{itemsName,nextAfterId}`, default limit50/max100
+and positive afterId. Existing Sprint 1 list shapes remain unchanged.
+
+| Responsibility | Implemented endpoints |
+| --- | --- |
+| Public identity/readiness | GET `/health`, `/ready` |
+| Auth/session | POST `/auth/login`; GET `/auth/me`; POST `/auth/logout` |
+| Courses / teams | GET `/courses`, `/teams`; POST `/teams`, `/teams/:id/members` |
+| Proposal | GET/PUT `/teams/:id/proposal`; POST `/teams/:id/proposal/submit`, `/proposals/:id/review` |
+| F-04 | GET/POST `/courses/:courseId/milestones`; GET/PUT `/milestones/:id`; POST `/milestones/:id/publish` |
+| F-05 | GET/PUT `/teams/:teamId/milestones/:milestoneId/submission`; GET same path + `/versions`; GET `/courses/:courseId/milestones/:milestoneId/submissions` |
+| F-06 | GET/PUT `/submissions/:id/evaluation`; POST same path + `/publish` |
+| F-07 tasks | GET/POST `/teams/:teamId/tasks`; PUT `/tasks/:taskId`; GET `/tasks/:taskId/events` |
+
+Documented feature errors use safe `{error,code}` JSON: 400 invalid data/IDs,
+401 missing/invalid/revoked session, 403 role/ownership, 404 missing/context
+resource, 409 prerequisite/state/version conflict. Private feature responses
+use no-store. Unsupported APIs terminate in JSON before SPA fallback; the
+historical protected proposal namespace correction remains. Do not claim the
+Express parser's malformed-JSON/oversize errors were separately normalized
+by a new feature, or that unimplemented peer/CSV routes exist.
+
+### 3.3. Permission matrix
+
+| Operation | Anonymous | Owning student | Other-team student | Instructor |
+| --- | --- | --- | --- | --- |
+| Health/readiness/login | Public named endpoints | Same | Same | Same |
+| Team catalogue | 401 | Own private detail; other teams roster-only | No foreign private proposal | Authorized course catalogue/proposals |
+| Team create/member add | 401 | Student plus capacity/single-membership/state checks | Cannot add to foreign team | 403 mutation |
+| Proposal private read/write/submit | 401 | Membership and allowed state required | 403 without private payload | Read only; student mutation routes 403 |
+| Proposal review | 401 | 403 | 403 | Submitted state + approval10/revision20 |
+| Milestone list/read | 401 | Published only | Published only | Draft and published |
+| Milestone mutations | 401 | 403 | 403 | Authorized course/context/version validation |
+| Submission read/write/history | 401 | Reads own; writes require APPROVED and published course milestone | 403 | Authorized read/list; student writes 403 |
+| Evaluation draft/write/publish | 401 | No write; own current published grade/null only | 403 private read/write | Draft/history/save/publish with correct content/version |
+| Task list/activity | 401 | Current own membership; retained history remains readable if proposal no longer APPROVED | 403 | Read only |
+| Task create/update | 401 | Current membership + APPROVED; current-member assignee and published same-course milestone if linked | 403 | 403 |
+| Peer/analytics/export | NOT IMPLEMENTED | Future permissions only in reviewed contracts | No current verification claim | No current implementation claim |
+
+Instructor authority is global within the existing catalogue; it is not a new
+per-course enrollment assignment. General roster/task DTOs never substitute
+for authorization to confidential peer details. Peer completion, rating1-5,
+no-self-rating, own outgoing visibility and instructor-only collections remain
+reviewed F-07 design. F-08 coherent snapshot/current-publication CSV, quoting,
+UTF-8 BOM and formula neutralization remain design obligations, not results.
+
+### 3.4. Sessions and transaction boundaries
+
+JWT uses required configured secret, HS256 and 8h expiry; bcrypt checks real
+stored hashes. Client stores the bearer token in localStorage and resolves
+current user with `/auth/me`; logout persists token jti expiry in RevokedToken.
+Session generation, abort controllers and component context checks prevent
+old-session responses/drafts from overwriting the next user's state. Server
+role/membership checks remain authoritative.
+
+Milestone, submission and grading services use real DB transactions/row locks
+and expected versions. Submission writes serialize with the milestone row so
+server submission time and captured deadline agree with a concurrent edit.
+Evaluation/publication is bound to current submission content; new content is
+ungraded, and a correction draft retains prior publication until explicit
+republish. Task writes lock the team and append one attributed TaskEvent in
+the same transaction. Actual race tests and preservation assertions are
+mapped in traceability; UI disabling alone is not concurrency protection.
+
+## 4. Configuration, build and cloud delivery
+
+| Name | Purpose / handling |
+| --- | --- |
+| PORT / NODE_ENV | Runtime listener/mode; production serves built client |
+| DATABASE_URL / JWT_SECRET | Local private .env; GCP Secret Manager in production; no values committed |
+| CORS_ORIGIN | Native Vite origin; production same-origin client/API |
+| DEMO_USER_PASSWORD | Local synthetic seed or separate private production seed job; not browser-delivered config |
+| APP_COMMIT_SHA / VITE_APP_COMMIT_SHA | Baked full source identity for health/client build |
+| GCP_PROJECT_ID / GCP_REGION / WIF_PROVIDER / WIF_SERVICE_ACCOUNT | GitHub demo environment metadata for WIF/keyless deploy |
+| SMOKE_EMAIL / SMOKE_PASSWORD | Optional pipeline authenticated smoke names; unset at snapshot, actual SKIP; release acceptance still needs named authenticated checks |
+
+[README](../README.md) contains reproducible install/dev/test/build steps.
+CI uses Node20, PostgreSQL16 and explicit disposable `course_pms_test`, then
+server/client/browser tests, production build, Docker and measured startup.
+Synthetic program/startup artifacts are retained for 90 days. No production
+reset/seed is used by CI.
+
+Docker builds the Vite client and generated/compiled server, then a production
+Node20 Alpine image serves both. Reviewed main pushes run reusable full CI,
+verify an independently approved merged PR at the exact source, authenticate
+with WIF, push a full-SHA image, resolve digest, run the migration job and only
+then update Cloud Run. Public source/readiness/HTML smoke follows; optional
+login SKIP must be explicit. Cloud SQL supplies durable PostgreSQL; Secret
+Manager injects credentials. App service and migration job retain separate
+service identities from the Lab 5 deployment design.
+
+Rollback selects an already existing full-SHA image and reuses its digest;
+normal CI/build/migration/seed are skipped for rollback. This is application
+rollback, not an automatic destructive database down migration. Compatibility,
+backups and any forward-fix must be reviewed separately. Live/main identity,
+actual digest/revision and remaining final RC gates are in the version register.
+
+## 5. Reviewed extension and change provenance
+
+Full per-feature API/UI/data/error/AC/STS/DoD contracts: F-04/F-05/F-06 in
+`sprints/sprint-2/`; F-07/F-08 in `sprints/sprint-3/`; shared policy in
+[shared contract](sprints/deliverable-2/shared-contract.md). PR #107 reviewed
+these before implementation. Their future peer/analytics logical models do
+not replace the actual Prisma schema. Remaining AC/owners/dates and uncovered
+verification are explicit in the finish plan and verification register.
+
+Approved state/revocation/feedback/UI changes retain dated rationale in the
+[approved changes log](traceability.md#3-approved-changes-log). This document
+reconciles implementation and evidence; it does not change a requirement,
+implement a missing feature, approve a release or close any issue.

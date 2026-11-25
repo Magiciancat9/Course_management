@@ -1,7 +1,10 @@
 # F-07 task checkpoint execution evidence - #98
 
 **Prepared:** 25 November 2026, Asia/Bangkok. Driver: Magiciancat9 (Codex-assisted).
-Independent code reviewer: martinvadre; review/integration are pending.
+Independent code reviewer: martinvadre; approved exact head and merged PR #120
+to sprint-3-staging on25 Nov18:59:08 Asia/Bangkok, merge
+`af47ec44db855859b49c82093066c36f3df4c920`. #98 is closed for the task checkpoint;
+main RC integration remains #103. [Current snapshot](../deliverable-2/continuity-and-status.md).
 This checkpoint implements task AC01-06 only. Full F-07 is NOT complete;
 peer evaluation AC07-12 is explicitly owned by [#101](https://github.com/Magiciancat9/Course_management/issues/101).
 
@@ -132,8 +135,8 @@ The reviewed full scope remains in F-07; no peer grade adjustment is invented.
 If any task AC fails final verification/review, retain it as unresolved under
 #98/#101 with a named action; do not claim full checkpoint completion.
 
-Opposite-member review and merge to Sprint 3 staging remain required. The
+Opposite-member review/merge to Sprint 3 staging are recorded above. The
 driver does not self-approve/self-merge. #103 later integrates tested progress
 with preserved Sprint 1/2 and records exact-main deployment/acceptance evidence.
-Issue #98 remains open for review; the user handles closure. #97/#93 are not
+#98 was closed by the user after the reviewed checkpoint merge. #97/#93 are not
 closed or accepted by this task.
