@@ -1,6 +1,6 @@
 -- Additive F-06 migration: version-bound evaluation aggregates and immutable grade publications.
 -- Legacy MilestoneSubmission.score/feedback and SubmissionVersion.legacyScore/legacyFeedback
--- remain untouched; no unverifiable GradePublication rows are invented for legacy data.
+-- remain untouched, and no unverifiable GradePublication rows are invented for legacy data.
 
 CREATE TABLE "SubmissionEvaluation" (
   "id" SERIAL NOT NULL,

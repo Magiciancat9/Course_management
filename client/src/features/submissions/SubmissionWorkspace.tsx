@@ -248,6 +248,7 @@ function SubmissionDetail(props: SubmissionWorkspaceProps & { teamId: number }) 
         getCurrentGeneration={props.getCurrentGeneration}
         onUnauthorized={props.onUnauthorized}
         onEvaluationPublished={() => void reload(true)}
+        onStaleSubmissionVersion={() => reload(false)}
       />
     )}
     {history.length > 0 && <section className="mt-4" aria-label="Submission history" data-testid="submission-history">

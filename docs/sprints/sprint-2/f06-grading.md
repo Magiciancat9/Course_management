@@ -3,7 +3,7 @@
 **Contract:** S2-F06 v1.1, 25 Nov 2026; contract reviewed via PR #107 (`8eea6f0`), implementation PR pending review.
 **Feature owner:** `martinvadre`; draft author `Magiciancat9`; independent code reviewer `Magiciancat9`. **Issue:** [#96](https://github.com/Magiciancat9/Course_management/issues/96).
 **Links:** FR-08, BR-06/08, NFR-01/02/04; depends on [F-05](f05-submissions.md) (PR #117 / `88fb036`).
-**Implemented / executed / accepted:** YES (branch `feat/96-f06-grading`) / PASS (92 server, 38 client, 6 E2E) / PENDING SPRINT 2 RELEASE.
+**Implemented / executed / accepted:** YES (branch `feat/96-f06-grading`) / PASS (93 server, 40 client, 6 E2E) / PENDING SPRINT 2 RELEASE.
 
 ## 1. Workflow and feature SDS
 
@@ -138,7 +138,7 @@ is silently moved to Sprint 3.
 
 ## 8. AC completion & verification mapping (25 Nov 2026, Asia/Bangkok)
 
-- **Contract → RED → GREEN trace:** Contract `8eea6f0` (22 Nov 2026) → F-05 integration base `88fb036` (PR #117) → RED `b2933bc` (25 Nov 2026, 9/9 `grading.integration.test.ts` failed behaviorally with HTTP 404) → GREEN on `feat/96-f06-grading` (`92` server tests across 10 files, `38` client tests across 8 files, `6` Playwright E2E tests, client/server production builds PASS).
+- **Contract → RED → GREEN trace:** Contract `8eea6f0` (22 Nov 2026) → F-05 integration base `88fb036` (PR #117) → RED `b2933bc` (25 Nov 2026, 9/9 `grading.integration.test.ts` failed behaviorally with HTTP 404) → GREEN on `feat/96-f06-grading` (`93` server tests across 11 files, `40` client tests across 8 files, `6` Playwright E2E tests, client/server production builds PASS).
 
 | AC ID | Test ID(s) | Actual file & test name | Result | Version / Scope |
 | --- | --- | --- | --- | --- |
@@ -149,5 +149,5 @@ is silently moved to Sprint 3.
 | S2-F06-AC05 | S2-F06-T05 | `server/tests/grading.integration.test.ts` — `S2-F06-T05 (S2-F06-AC05)` | PASS | `feat/96-f06-grading` |
 | S2-F06-AC06 | S2-F06-T06 | `server/tests/grading.integration.test.ts` — `S2-F06-T06 (S2-F06-AC06)` | PASS | `feat/96-f06-grading` |
 | S2-F06-AC07 | S2-F06-T07, S2-F06-T08 | `server/tests/grading.integration.test.ts` — `S2-F06-T07`, `S2-F06-T08` | PASS | `feat/96-f06-grading` |
-| S2-F06-AC08 | S2-F06-T09 | `client/src/features/grading/GradingConsole.test.tsx` — `S2-F06-T09a/b` | PASS | `feat/96-f06-grading` (Vitest) |
-| S2-F06-AC09 | S2-F06-T10, S2-F06-T11 | `e2e/sprint2-grading.spec.ts` (`S2-F06-T10`) & `server/tests/grading.integration.test.ts` (`S2-F06-T11`) | PASS | `feat/96-f06-grading` (Chromium + PostgreSQL) |
+| S2-F06-AC08 | S2-F06-T09 | `client/src/features/grading/GradingConsole.test.tsx` — `S2-F06-T09a–d` | PASS | `feat/96-f06-grading` (Vitest) |
+| S2-F06-AC09 | S2-F06-T10, S2-F06-T11 | `e2e/sprint2-grading.spec.ts` (`S2-F06-T10`), `server/tests/grading-migration.integration.test.ts` & `server/tests/grading.integration.test.ts` (`S2-F06-T11`) | PASS | `feat/96-f06-grading` (Chromium + PostgreSQL) |

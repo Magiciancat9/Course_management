@@ -241,4 +241,174 @@ describe('F-06 GradingConsole Component (S2-F06-T09)', () => {
     expect(screen.getByTestId('grading-score-input')).toHaveValue(null);
     expect(screen.getByTestId('grading-feedback-input')).toHaveValue('');
   });
+
+  it('S2-F06-T09c: disables Publish grade while visible inputs differ from the saved draft', async () => {
+    const fetchMock = vi.fn((url: string, init?: RequestInit) => {
+      const method = init?.method || 'GET';
+      if (method === 'GET' && url.includes('/api/submissions/42/evaluation')) {
+        return okJson({ evaluation: DRAFT_EVAL_V1 });
+      }
+      if (method === 'PUT' && url === '/api/submissions/42/evaluation') {
+        const body = JSON.parse(String(init?.body || '{}'));
+        return okJson({
+          evaluation: {
+            ...DRAFT_EVAL_V1,
+            version: 2,
+            draftRevision: 2,
+            draft: {
+              ...DRAFT_EVAL_V1.draft,
+              score: body.score,
+              feedback: body.feedback,
+              draftRevision: 2,
+            },
+          },
+        });
+      }
+      return okJson({});
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    render(
+      <GradingConsole
+        token="instr-token"
+        submission={SAMPLE_SUBMISSION}
+        sessionGeneration={1}
+        getCurrentGeneration={() => 1}
+        onUnauthorized={vi.fn()}
+      />
+    );
+
+    await waitFor(() =>
+      expect(screen.getByTestId('grading-publish-btn')).not.toBeDisabled()
+    );
+    expect(screen.getByTestId('grading-score-input')).toHaveValue(85);
+
+    // Change visible score from 85 to 92 without saving -> Publish must disable immediately
+    fireEvent.change(screen.getByTestId('grading-score-input'), {
+      target: { value: '92' },
+    });
+    expect(screen.getByTestId('grading-publish-btn')).toBeDisabled();
+    expect(screen.getByTestId('grading-unsaved-warning')).toBeInTheDocument();
+
+    // Save draft with 92 -> Publish re-enables for the newly saved draft
+    fireEvent.click(screen.getByTestId('grading-save-draft-btn'));
+    await waitFor(() =>
+      expect(screen.getByTestId('grading-publish-btn')).not.toBeDisabled()
+    );
+  });
+
+  it('S2-F06-T09d: superseded submission recovery refreshes to the newer submission version and clears old draft', async () => {
+    let getCalls = 0;
+    const requestedGetUrls: string[] = [];
+    const putBodies: Array<Record<string, unknown>> = [];
+
+    const fetchMock = vi.fn((url: string, init?: RequestInit) => {
+      const method = init?.method || 'GET';
+      if (method === 'GET' && url.startsWith('/api/submissions/42/evaluation')) {
+        getCalls += 1;
+        requestedGetUrls.push(url);
+        if (getCalls === 1) {
+          return okJson({ evaluation: DRAFT_EVAL_V1, currentSubmissionVersion: 1 });
+        }
+        return okJson({
+          evaluation: null,
+          currentSubmissionVersion: 2,
+          currentSubmission: {
+            ...SAMPLE_SUBMISSION,
+            version: 2,
+            releaseTag: 'v2.0.0',
+            reportUrl: 'https://example.org/report-v2.pdf',
+          },
+        });
+      }
+      if (method === 'POST' && url === '/api/submissions/42/evaluation/publish') {
+        return okJson(
+          {
+            error: 'Cannot publish grade for a superseded submission version.',
+            code: 'STALE_SUBMISSION_VERSION',
+          },
+          409
+        );
+      }
+      if (method === 'PUT' && url === '/api/submissions/42/evaluation') {
+        const parsed = JSON.parse(String(init?.body || '{}'));
+        putBodies.push(parsed);
+        return okJson(
+          {
+            evaluation: {
+              ...DRAFT_EVAL_V1,
+              submissionVersion: 2,
+              version: 1,
+              draftRevision: 1,
+              draft: {
+                ...DRAFT_EVAL_V1.draft,
+                score: parsed.score,
+                feedback: parsed.feedback,
+              },
+            },
+          },
+          201
+        );
+      }
+      return okJson({});
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const onStale = vi.fn();
+    render(
+      <GradingConsole
+        token="instr-token"
+        submission={SAMPLE_SUBMISSION}
+        sessionGeneration={1}
+        getCurrentGeneration={() => 1}
+        onUnauthorized={vi.fn()}
+        onStaleSubmissionVersion={onStale}
+      />
+    );
+
+    await waitFor(() =>
+      expect(screen.getByTestId('grading-publish-btn')).not.toBeDisabled()
+    );
+
+    // Attempt to publish v1 after student submitted v2 -> 409 STALE_SUBMISSION_VERSION
+    fireEvent.click(screen.getByTestId('grading-publish-btn'));
+    expect(await screen.findByTestId('grading-error')).toHaveTextContent(
+      'superseded submission version'
+    );
+
+    const reconcileBtn = screen.getByTestId('grading-reconcile-btn');
+    expect(reconcileBtn).toHaveTextContent('Load newer submission version');
+    fireEvent.click(reconcileBtn);
+
+    expect(await screen.findByTestId('grading-success')).toHaveTextContent(
+      'Loaded newer submission v2'
+    );
+    expect(onStale).toHaveBeenCalledTimes(1);
+    // Recovery GET omits ?submissionVersion=1 so it fetches current v2
+    expect(requestedGetUrls[1]).toBe('/api/submissions/42/evaluation');
+
+    // Old v1 draft (85) is NOT transferred to v2; Publish is disabled until v2 is graded
+    expect(screen.getByTestId('grading-score-input')).toHaveValue(null);
+    expect(screen.getByTestId('grading-feedback-input')).toHaveValue('');
+    expect(screen.getByTestId('grading-publish-btn')).toBeDisabled();
+    expect(
+      screen.getByText(/Instructor Grading — Submission v2 \(v2\.0\.0\)/)
+    ).toBeInTheDocument();
+
+    // New draft saved targets submissionVersion=2, expectedVersion=0
+    fireEvent.change(screen.getByTestId('grading-score-input'), {
+      target: { value: '95' },
+    });
+    fireEvent.change(screen.getByTestId('grading-feedback-input'), {
+      target: { value: 'Fresh grade after reviewing v2 content.' },
+    });
+    fireEvent.click(screen.getByTestId('grading-save-draft-btn'));
+
+    await waitFor(() => expect(putBodies).toHaveLength(1));
+    expect(putBodies[0]).toMatchObject({
+      submissionVersion: 2,
+      expectedVersion: 0,
+      score: 95,
+    });
+  });
 });

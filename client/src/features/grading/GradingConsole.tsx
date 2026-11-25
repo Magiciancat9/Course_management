@@ -34,20 +34,23 @@ export interface InstructorEvaluationDto {
   publications: GradePublicationItem[];
 }
 
+export interface GradingSubmissionTarget {
+  id: number;
+  version: number;
+  repoUrl: string;
+  reportUrl: string | null;
+  releaseTag: string;
+  notes: string;
+}
+
 export interface GradingConsoleProps {
   token: string;
-  submission: {
-    id: number;
-    version: number;
-    repoUrl: string;
-    reportUrl: string | null;
-    releaseTag: string;
-    notes: string;
-  };
+  submission: GradingSubmissionTarget;
   sessionGeneration: number;
   getCurrentGeneration: () => number;
   onUnauthorized: (message: string, code?: string) => void;
   onEvaluationPublished?: () => void;
+  onStaleSubmissionVersion?: () => Promise<void> | void;
 }
 
 function formatBangkokTime(iso: string): string {
@@ -74,8 +77,12 @@ export default function GradingConsole({
   getCurrentGeneration,
   onUnauthorized,
   onEvaluationPublished,
+  onStaleSubmissionVersion,
 }: GradingConsoleProps) {
-  const contextKey = `${token}:${sessionGeneration}:${submission.id}:${submission.version}`;
+  const [activeSubmission, setActiveSubmission] =
+    useState<GradingSubmissionTarget>(submission);
+  const propContextKey = `${token}:${sessionGeneration}:${submission.id}:${submission.version}`;
+  const contextKey = `${token}:${sessionGeneration}:${activeSubmission.id}:${activeSubmission.version}`;
   const currentContextRef = useRef(contextKey);
   currentContextRef.current = contextKey;
 
@@ -88,7 +95,9 @@ export default function GradingConsole({
   const pendingRef = useRef<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
-  const [hasConflict, setHasConflict] = useState<boolean>(false);
+  const [conflictType, setConflictType] = useState<
+    'GRADE_VERSION_CONFLICT' | 'STALE_SUBMISSION_VERSION' | null
+  >(null);
 
   const controllersRef = useRef<Set<AbortController>>(new Set());
   const mountedRef = useRef<boolean>(false);
@@ -104,7 +113,7 @@ export default function GradingConsole({
   async function apiRequest(
     url: string,
     init: RequestInit = {},
-    expectedKey = contextKey,
+    expectedKey = currentContextRef.current,
     expectedGen = sessionGeneration
   ) {
     const controller = new AbortController();
@@ -145,18 +154,42 @@ export default function GradingConsole({
     }
   }
 
-  async function loadEvaluation(preserveDraft = false) {
-    const expectedKey = contextKey;
+  async function loadEvaluation(
+    options: {
+      preserveDraft?: boolean;
+      refreshSupersededSubmission?: boolean;
+      targetSub?: GradingSubmissionTarget;
+    } = {}
+  ) {
+    const {
+      preserveDraft = false,
+      refreshSupersededSubmission = false,
+      targetSub = activeSubmission,
+    } = options;
+
+    const expectedKey = currentContextRef.current;
     const expectedGen = sessionGeneration;
     setLoading(true);
     setErrorMsg(null);
 
-    const res = await apiRequest(
-      `/api/submissions/${submission.id}/evaluation?submissionVersion=${submission.version}`,
-      {},
-      expectedKey,
-      expectedGen
-    );
+    if (refreshSupersededSubmission) {
+      // Clear stale draft immediately so an older version's grade is never transferred to newer work
+      setEvaluation(null);
+      setExpectedVersion(0);
+      setScoreInput('');
+      setFeedbackInput('');
+      setConflictType(null);
+      if (onStaleSubmissionVersion) {
+        await onStaleSubmissionVersion();
+      }
+    }
+
+    // When refreshing after STALE_SUBMISSION_VERSION, omit ?submissionVersion= so the API resolves the current latest version
+    const url = refreshSupersededSubmission
+      ? `/api/submissions/${targetSub.id}/evaluation`
+      : `/api/submissions/${targetSub.id}/evaluation?submissionVersion=${targetSub.version}`;
+
+    const res = await apiRequest(url, {}, expectedKey, expectedGen);
     if (!res || !isCurrent(expectedKey, expectedGen)) return;
 
     if (!res.ok) {
@@ -166,6 +199,25 @@ export default function GradingConsole({
     }
 
     const loaded = (res.data.evaluation as InstructorEvaluationDto | null) ?? null;
+    let nextSub = targetSub;
+
+    if (
+      res.data.currentSubmission &&
+      typeof res.data.currentSubmission === 'object' &&
+      typeof res.data.currentSubmission.version === 'number'
+    ) {
+      nextSub = res.data.currentSubmission as GradingSubmissionTarget;
+    } else if (typeof res.data.currentSubmissionVersion === 'number') {
+      nextSub = { ...targetSub, version: res.data.currentSubmissionVersion };
+    } else if (loaded && typeof loaded.submissionVersion === 'number') {
+      nextSub = { ...targetSub, version: loaded.submissionVersion };
+    } else if (refreshSupersededSubmission) {
+      nextSub = { ...targetSub, version: targetSub.version + 1 };
+    }
+
+    const nextKey = `${token}:${sessionGeneration}:${nextSub.id}:${nextSub.version}`;
+    currentContextRef.current = nextKey;
+    setActiveSubmission(nextSub);
     setEvaluation(loaded);
     setExpectedVersion(loaded?.version ?? 0);
 
@@ -179,8 +231,12 @@ export default function GradingConsole({
       }
     }
 
-    setHasConflict(false);
-    if (preserveDraft) {
+    setConflictType(null);
+    if (refreshSupersededSubmission) {
+      setSuccessMsg(
+        `Loaded newer submission v${nextSub.version}. Review the updated deliverable before entering a grade.`
+      );
+    } else if (preserveDraft) {
       setSuccessMsg(
         `Reloaded latest grade state (v${loaded?.version ?? 0}). Your typed draft is preserved — review and save again.`
       );
@@ -190,6 +246,9 @@ export default function GradingConsole({
 
   useEffect(() => {
     mountedRef.current = true;
+    setActiveSubmission(submission);
+    const initialKey = `${token}:${sessionGeneration}:${submission.id}:${submission.version}`;
+    currentContextRef.current = initialKey;
     setEvaluation(null);
     setExpectedVersion(0);
     setScoreInput('');
@@ -198,15 +257,15 @@ export default function GradingConsole({
     pendingRef.current = false;
     setErrorMsg(null);
     setSuccessMsg(null);
-    setHasConflict(false);
-    void loadEvaluation(false);
+    setConflictType(null);
+    void loadEvaluation({ preserveDraft: false, targetSub: submission });
 
     return () => {
       mountedRef.current = false;
       controllersRef.current.forEach((c) => c.abort());
       controllersRef.current.clear();
     };
-  }, [contextKey]);
+  }, [propContextKey]);
 
   async function handleSaveDraft(e: React.FormEvent) {
     e.preventDefault();
@@ -214,7 +273,7 @@ export default function GradingConsole({
 
     setErrorMsg(null);
     setSuccessMsg(null);
-    setHasConflict(false);
+    setConflictType(null);
 
     const trimmedScore = scoreInput.trim();
     const parsedScore = Number(trimmedScore);
@@ -234,18 +293,18 @@ export default function GradingConsole({
       return;
     }
 
-    const expectedKey = contextKey;
+    const expectedKey = currentContextRef.current;
     const expectedGen = sessionGeneration;
     pendingRef.current = true;
     setPendingAction('save-draft');
 
     try {
       const res = await apiRequest(
-        `/api/submissions/${submission.id}/evaluation`,
+        `/api/submissions/${activeSubmission.id}/evaluation`,
         {
           method: 'PUT',
           body: JSON.stringify({
-            submissionVersion: submission.version,
+            submissionVersion: activeSubmission.version,
             expectedVersion,
             score: parsedScore,
             feedback: feedbackInput,
@@ -258,12 +317,10 @@ export default function GradingConsole({
       if (!res || !isCurrent(expectedKey, expectedGen)) return;
 
       if (!res.ok) {
-        if (
-          res.status === 409 ||
-          res.data.code === 'GRADE_VERSION_CONFLICT' ||
-          res.data.code === 'STALE_SUBMISSION_VERSION'
-        ) {
-          setHasConflict(true);
+        if (res.data.code === 'STALE_SUBMISSION_VERSION') {
+          setConflictType('STALE_SUBMISSION_VERSION');
+        } else if (res.status === 409 || res.data.code === 'GRADE_VERSION_CONFLICT') {
+          setConflictType('GRADE_VERSION_CONFLICT');
         }
         setErrorMsg(String(res.data.error || 'Could not save grading draft.'));
         return;
@@ -290,20 +347,20 @@ export default function GradingConsole({
 
     setErrorMsg(null);
     setSuccessMsg(null);
-    setHasConflict(false);
+    setConflictType(null);
 
-    const expectedKey = contextKey;
+    const expectedKey = currentContextRef.current;
     const expectedGen = sessionGeneration;
     pendingRef.current = true;
     setPendingAction('publish');
 
     try {
       const res = await apiRequest(
-        `/api/submissions/${submission.id}/evaluation/publish`,
+        `/api/submissions/${activeSubmission.id}/evaluation/publish`,
         {
           method: 'POST',
           body: JSON.stringify({
-            submissionVersion: submission.version,
+            submissionVersion: activeSubmission.version,
             expectedVersion,
           }),
         },
@@ -314,12 +371,10 @@ export default function GradingConsole({
       if (!res || !isCurrent(expectedKey, expectedGen)) return;
 
       if (!res.ok) {
-        if (
-          res.status === 409 ||
-          res.data.code === 'GRADE_VERSION_CONFLICT' ||
-          res.data.code === 'STALE_SUBMISSION_VERSION'
-        ) {
-          setHasConflict(true);
+        if (res.data.code === 'STALE_SUBMISSION_VERSION') {
+          setConflictType('STALE_SUBMISSION_VERSION');
+        } else if (res.status === 409 || res.data.code === 'GRADE_VERSION_CONFLICT') {
+          setConflictType('GRADE_VERSION_CONFLICT');
         }
         setErrorMsg(String(res.data.error || 'Could not publish grade.'));
         return;
@@ -329,7 +384,7 @@ export default function GradingConsole({
       setEvaluation(published);
       setExpectedVersion(published.version);
       setSuccessMsg(
-        `Published grade (${published.published?.score}/100) for submission v${submission.version}.`
+        `Published grade (${published.published?.score}/100) for submission v${activeSubmission.version}.`
       );
       onEvaluationPublished?.();
     } finally {
@@ -340,9 +395,19 @@ export default function GradingConsole({
     }
   }
 
+  const trimmedScore = scoreInput.trim();
+  const parsedScore = Number(trimmedScore);
+  const hasUnsavedDraftChanges =
+    evaluation === null ||
+    trimmedScore === '' ||
+    !Number.isInteger(parsedScore) ||
+    parsedScore !== evaluation.draft.score ||
+    feedbackInput.trim() !== evaluation.draft.feedback;
+
   const canPublishDraft =
     evaluation !== null &&
     evaluation.publishedDraftRevision !== evaluation.draftRevision &&
+    !hasUnsavedDraftChanges &&
     !loading &&
     pendingAction === null;
 
@@ -351,12 +416,12 @@ export default function GradingConsole({
   return (
     <section
       className="mt-4 p-3 border rounded"
-      aria-label={`Instructor grading for submission version ${submission.version}`}
+      aria-label={`Instructor grading for submission version ${activeSubmission.version}`}
       data-testid="grading-console"
     >
       <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
         <h4 className="h6 mb-0 fw-bold">
-          Instructor Grading — Submission v{submission.version} ({submission.releaseTag})
+          Instructor Grading — Submission v{activeSubmission.version} ({activeSubmission.releaseTag})
         </h4>
         <span className="cpms-badge cpms-badge-muted" data-testid="grading-status-badge">
           {badgeLabel}
@@ -364,11 +429,11 @@ export default function GradingConsole({
       </div>
 
       <div className="small mb-3" style={{ color: 'var(--cpms-text-secondary)' }}>
-        Evaluating artifact <code>{submission.repoUrl}</code>
-        {submission.reportUrl ? (
+        Evaluating artifact <code>{activeSubmission.repoUrl}</code>
+        {activeSubmission.reportUrl ? (
           <>
             {' '}
-            and report <code>{submission.reportUrl}</code>
+            and report <code>{activeSubmission.reportUrl}</code>
           </>
         ) : null}
         . Saving a draft does not publish the grade to students.
@@ -383,15 +448,23 @@ export default function GradingConsole({
           data-testid="grading-error"
         >
           <span>{errorMsg}</span>
-          {hasConflict && (
+          {conflictType !== null && (
             <button
               type="button"
               className="cpms-btn cpms-btn-secondary ms-2"
               data-testid="grading-reconcile-btn"
               disabled={loading || pendingAction !== null}
-              onClick={() => void loadEvaluation(true)}
+              onClick={() =>
+                void loadEvaluation(
+                  conflictType === 'STALE_SUBMISSION_VERSION'
+                    ? { preserveDraft: false, refreshSupersededSubmission: true }
+                    : { preserveDraft: true, refreshSupersededSubmission: false }
+                )
+              }
             >
-              Reload latest and keep my draft
+              {conflictType === 'STALE_SUBMISSION_VERSION'
+                ? 'Load newer submission version'
+                : 'Reload latest and keep my draft'}
             </button>
           )}
         </div>
@@ -451,6 +524,16 @@ export default function GradingConsole({
             </div>
           </div>
 
+          {evaluation !== null && hasUnsavedDraftChanges && (
+            <div
+              className="small mt-2"
+              data-testid="grading-unsaved-warning"
+              style={{ color: 'var(--cpms-text-secondary)' }}
+            >
+              Save your modified draft before publishing so the published grade matches the form.
+            </div>
+          )}
+
           <div className="mt-3 d-flex flex-wrap gap-2">
             <button
               type="submit"
@@ -475,7 +558,7 @@ export default function GradingConsole({
 
       {evaluation && evaluation.publications.length > 1 && (
         <div className="mt-3 small" data-testid="grading-publication-history">
-          <strong>Publication history for submission v{submission.version}:</strong>
+          <strong>Publication history for submission v{activeSubmission.version}:</strong>
           <ul className="mb-0 mt-1">
             {evaluation.publications.map((pub) => (
               <li key={pub.id}>

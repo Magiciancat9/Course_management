@@ -230,7 +230,20 @@ export async function getEvaluation(params: {
   submissionId: number;
   submissionVersion?: number;
   actor: Actor;
-}): Promise<GradingOutcome<{ evaluation: unknown }>> {
+}): Promise<
+  GradingOutcome<{
+    evaluation: unknown;
+    currentSubmissionVersion?: number;
+    currentSubmission?: {
+      id: number;
+      version: number;
+      repoUrl: string;
+      reportUrl: string | null;
+      releaseTag: string;
+      notes: string;
+    };
+  }>
+> {
   const submission = await prisma.milestoneSubmission.findUnique({
     where: { id: params.submissionId },
     include: {
@@ -314,6 +327,15 @@ export async function getEvaluation(params: {
     ok: true,
     data: {
       evaluation: evalRow ? formatInstructorEvaluation(evalRow) : null,
+      currentSubmissionVersion: submission.version,
+      currentSubmission: {
+        id: submission.id,
+        version: submission.version,
+        repoUrl: submission.artifactUrl,
+        reportUrl: submission.reportUrl,
+        releaseTag: submission.releaseTag,
+        notes: submission.notes,
+      },
     },
   };
 }
