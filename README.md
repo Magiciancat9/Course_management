@@ -1,15 +1,17 @@
 # CoursePMS — Course Project Management System
 
-**25 Nov current snapshot:** reviewed/deployed main contains Sprint 1/Lab 7
-and complete Sprint 2. Reviewed `sprint-3-staging` additionally contains the
-F-07 task checkpoint. Issue #101 adds confidential peer evaluation on its feature
-branch with executed tests; independent review/integration is pending. Analytics/CSV remains planned.
+**25 Nov current snapshot:** reviewed/deployed Sprint 2 main (`07ffd8f31c3d61d8d13d5217a1fde39628c6649a`)
+passed full public and authenticated deployment smoke ([run 45645149796](https://github.com/Magiciancat9/Course_management/actions/runs/45645149796),
+revision `course-pms-00014-28n`) and is preserved as immutable tag `v1.1.0-sprint2` (#97).
+Reviewed `sprint-3-staging` (`c35714dc7e9d7ca4e88ae5ab1d65fd3a8707c312`) integrates the
+F-07 task checkpoint (#120), reconciled D2 documentation (#121), and confidential
+F-07 peer evaluation (#122, reviewed at `57045b5`). Analytics/CSV (#102) remains planned.
 [Current source/release/results and remaining-work plan](docs/sprints/deliverable-2/continuity-and-status.md)
-distinguishes CI PASS, production smoke SKIP and pending accepted-main/tag/RC gates.
+tracks the combined Sprint 1/2/3 release candidate promotion (#103).
 
 **Course:** CPE 334 Software Engineering in the Age of AI Agents (Semester 1/2026)  
 **Deliverable:** Project Deliverable 1 — Engineering Baseline and Working Sprint 1  
-**Current planning:** Sprint 2 is reviewed/deployed through PR #119; accepted-tag/authenticated-release gates remain #97. Tasks are reviewed on Sprint 3 staging (#120), current documents reviewed via #121, and peer implementation/test evidence is in the [#101 ledger](docs/sprints/sprint-3/f07-peer-execution-evidence.md). Final combined RC remains #103.
+**Current planning:** Sprint 2 is accepted and tagged `v1.1.0-sprint2` (`07ffd8f3`, #119/#97). Tasks (#120), current documents (#121), and confidential peer evaluation (#122, [#101 ledger](docs/sprints/sprint-3/f07-peer-execution-evidence.md)) are reviewed and merged on Sprint 3 staging (`c35714d`), and promoted for combined main RC review/deployment under #103.
 **Team Members:**
 - **Pawarit Wongdaeng** (`67070503466`, GitHub: `martinvadre`)
 - **Tatchakorn Thamnimitr** (`67070503415`, GitHub: `Magiciancat9`)

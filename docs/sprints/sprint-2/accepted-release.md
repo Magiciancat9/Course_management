@@ -1,15 +1,19 @@
 # Sprint 2 reviewed release ledger - D2-05 / #97
 
-**25 Nov #100 reconciliation:** #119 has been independently approved and
-merged to main `07ffd8f31c3d61d8d13d5217a1fde39628c6649a`; main CI/deployment
-45592525515 succeeded. [Current version/deployment register](../deliverable-2/continuity-and-status.md)
-records digest/migration/revision/public smoke and the actual authenticated
-SKIP. Original candidate evidence below retains its exact source. #97 final
-acceptance/tag remains incomplete; this is not an invented accepted tag.
+**25 Nov #97 acceptance completed:** #119 was independently approved and
+merged to main `07ffd8f31c3d61d8d13d5217a1fde39628c6649a`; after initial main
+deployment 45592525515, `martinvadre` privately configured synthetic
+`SMOKE_EMAIL` (variable) and `SMOKE_PASSWORD` (secret) in GitHub environment
+`demo` (resolving TD-01), ran normal deployment
+[45645149796](https://github.com/Magiciancat9/Course_management/actions/runs/45645149796)
+with all public and authenticated smoke checks (`login`, `/api/auth/me`,
+`/api/courses`, `logout`) passing on revision `course-pms-00014-28n`, and
+preserved `07ffd8f31c3d61d8d13d5217a1fde39628c6649a` with immutable annotated
+tag `v1.1.0-sprint2` before Sprint 3 main promotion.
 
 **Prepared:** 25 November 2026, Asia/Bangkok. Driver: Magiciancat9;
-required independent release reviewer: martinvadre.
-**Decision:** integration candidate, NOT YET an accepted main release.
+independent release reviewer/verifier: martinvadre.
+**Decision:** ACCEPTED Sprint 2 main release (`v1.1.0-sprint2` -> `07ffd8f31c3d61d8d13d5217a1fde39628c6649a`).
 No planned Sprint 2 feature is deferred to Sprint 3.
 Reviewable main promotion: [PR #119](https://github.com/Magiciancat9/Course_management/pull/119).
 
@@ -182,11 +186,12 @@ these names; this PR does not rotate accounts or deploy unreviewed code.
 
 | Accepted identity | Current recorded value |
 | --- | --- |
-| Independent integration review | martinvadre APPROVED exact head in #119 before main merge |
-| Reviewed main SHA / main CI | 07ffd8f31c3d61d8d13d5217a1fde39628c6649a / run45592525515 PASS; final accepted tag/evidence still #97 |
-| Deployment / digest / migration / revision | Actual S2 deployment recorded in current version register; task RC not yet deployed |
-| Authenticated post-deploy smoke | Actual S2 pipeline SKIP; demo configuration missing at snapshot; acceptance check remains |
-| Immutable `v1.1.0-sprint2` target | NOT CREATED; reserved name only |
+| Independent integration review | martinvadre APPROVED exact head `2b8e23973389784255d3bdc9d65b7f69d5c64f87` in #119 before main merge |
+| Reviewed main SHA / main CI | `07ffd8f31c3d61d8d13d5217a1fde39628c6649a` / initial run [45592525515](https://github.com/Magiciancat9/Course_management/actions/runs/45592525515) PASS; full authenticated acceptance run [45645149796](https://github.com/Magiciancat9/Course_management/actions/runs/45645149796) PASS (163 server / 45 client / 7 browser, D2-SYS-T01 306.2ms, artifact 15037196864) |
+| Deployment / digest / migration / revision | Run 45645149796 (25 Nov 22:26:16–22:30:25 Asia/Bangkok): digest `asia-southeast1-docker.pkg.dev/cpe334-kingnine/course-pms/course-pms@sha256:ebe8b4a5d06e088b302afd9a61ceefed27bd2cfd4ac2a6ae239874f6d8069591`, migration job `course-pms-migrate-r86x2` SUCCESS, revision `course-pms-00014-28n` at 100% traffic |
+| Authenticated post-deploy smoke | **PASS** in run 45645149796 (`PASS /api/health`, `PASS /api/ready`, `PASS /`, `PASS login, authenticated /api/auth/me, and /api/courses`, `PASS logout`) after privately configuring `SMOKE_EMAIL` variable and `SMOKE_PASSWORD` secret in `demo` (TD-01 resolved) |
+| Immutable `v1.1.0-sprint2` target | Created and pushed before Sprint 3 main promotion: `git rev-parse 'v1.1.0-sprint2^{commit}'` -> `07ffd8f31c3d61d8d13d5217a1fde39628c6649a` ([issue #97 record](https://github.com/Magiciancat9/Course_management/issues/97#issuecomment-7166980735)) |
 
-Issue #97 stays open until these gates are recorded. Issue #93 and the final
-Sprint 2/3 RC/PDF keep their own remaining scope after Sprint 2 acceptance.
+All technical acceptance and immutable tag gates for #97 are recorded. Issue #93
+and the combined Sprint 1/2/3 RC (#103) and PDF (#104) proceed on top of this
+frozen Sprint 2 baseline.
