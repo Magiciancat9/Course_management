@@ -1,3 +1,4 @@
+import { assertDisposableTestDatabase } from './helpers/disposableDatabase';
 import { describe, it, expect, beforeEach, afterAll, vi } from 'vitest';
 import request from 'supertest';
 import app from '../src/app';
@@ -21,6 +22,7 @@ describe('F-04 Course Milestone Management — API & DB Integration (S2-F04-T01 
   let studentToken: string;
 
   beforeEach(async () => {
+    assertDisposableTestDatabase();
     await clearRevokedTokens();
     seeded = await seedDatabase(prisma);
     instructorToken = await loginAs(seeded.instructor.email);

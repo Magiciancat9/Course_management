@@ -1,19 +1,14 @@
 # Deliverable 2 — Sprint 2–3 engineering contracts
 
-**Version:** D2-SPEC v1.0, 22 November 2026.
-**Phase:** documentation only; proposed contracts awaiting independent review.
-**Author:** Tatchakorn Thamnimitr (`Magiciancat9`).
-**Requested reviewer:** Pawarit Wongdaeng (`martinvadre`).
+**Current status, 25 November 2026:** contracts independently reviewed via
+PR #107; refreshed UI and F-04/F-05/F-06 implemented and reviewed via
+PR #110/#116/#117/#118. [Sprint 2 release ledger](../sprint-2/accepted-release.md)
+records all 27 AC, combined verification and outstanding accepted-main gates.
+Sprint 3 contracts are reviewed; implementation remains separate work.
 
-Work board: [CoursePMS - Deliverable 2 (Sprint 2 & 3)](https://github.com/users/Magiciancat9/projects/8).
-Feature ownership and Sprint fields remain on the existing issues. The UI
-plan is tracked separately in [#106](https://github.com/Magiciancat9/Course_management/issues/106).
-
-The user requested complete Sprint 2–3 specifications/acceptance criteria/STS
-and a documented UI refresh before changing the application. This source
-package specifies the planned work; it does not implement the features,
-remove Quick Fill, change the database, execute new feature tests, or release
-a candidate. An unexecuted test below is **PLANNED / NOT RUN**, never a pass.
+Work board: [Deliverable 2](https://github.com/users/Magiciancat9/projects/8).
+Original draft dated 22 November 2026. The contract tables preserve their
+pre-code planning rationale; actual execution is recorded separately.
 
 ## 1. Read and review in this order
 
@@ -25,7 +20,7 @@ a candidate. An unexecuted test below is **PLANNED / NOT RUN**, never a pass.
 | [F-06 grading](../sprint-2/f06-grading.md) | FR-08 / BR-08; owner `martinvadre`; [#96](https://github.com/Magiciancat9/Course_management/issues/96) |
 | [F-07 collaboration](../sprint-3/f07-collaboration.md) | FR-09/10; owner `Magiciancat9`; task checkpoint [#98](https://github.com/Magiciancat9/Course_management/issues/98), remaining peer work [#101](https://github.com/Magiciancat9/Course_management/issues/101) |
 | [F-08 analytics/export](../sprint-3/f08-analytics-export.md) | FR-11/12; owner `martinvadre`; contracts [#99](https://github.com/Magiciancat9/Course_management/issues/99), remaining implementation [#102](https://github.com/Magiciancat9/Course_management/issues/102) |
-| [UI refresh plan](../../ui-refresh-spec.md) | Screen changes, design tokens, Quick Fill removal, UIR-AC/STS; implementation deferred |
+| [UI refresh plan](../../ui-refresh-spec.md) | Screen changes, design tokens, Quick Fill removal, UIR-AC/STS; implemented in PR #110; integration verification in Sprint 2 ledger |
 | [Continuity and checkpoint status](continuity-and-status.md) | Part A register / Part B–E status / remaining work; [#93](https://github.com/Magiciancat9/Course_management/issues/93), [#100](https://github.com/Magiciancat9/Course_management/issues/100) |
 | [Detailed Lab 5–7 change/defect register](change-defect-register.md) | Accepted history, current disposition, owners, release/retest sources and concrete next actions for #93 |
 | [Sprint 1 continuity execution evidence](sprint1-continuity-evidence.md) | Fresh tests on current staging, live commit/readiness checks and the remaining final-RC gate |
@@ -86,11 +81,10 @@ flowchart LR
 
 ## 4. Lab 7 boundary
 
-Lab 7 [#85](https://github.com/Magiciancat9/Course_management/issues/85)
-requests changing revision feedback from 10 to 20. The user reports sending
-it to the TA; actual approval is still pending. This package keeps BR-05 at
-**10 for both proposal decisions**. It neither implements nor approves the
-separate maintenance change. Deliverable 2 contracts can proceed meanwhile.
+Maintained main includes the approved, reviewed Lab 7 change: revision feedback
+minimum 20, approval minimum 10 after trim/UTF-16. The Sprint 2 integration
+preserves it and reruns the Lab 7 suites. Historical Lab 7 records retain
+their actual dates/results and are not reused as Sprint 2 verification.
 
 ## 5. Revision / review record
 

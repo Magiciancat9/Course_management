@@ -164,7 +164,7 @@ erDiagram
 4. **Screen 3 — Instructor Course Review Console (`INSTRUCTOR` role):**
    - Summary metrics bar (Total Teams, Submitted Pending Review, Approved, Revision Requested).
    - All Course Teams & Proposals table with status filter (`ALL`, `SUBMITTED`, `APPROVED`, `REVISION_REQUESTED`, `DRAFT`).
-   - **Instructor Proposal Review Modal/Panel:** Displays full proposal details and provides the decision form (`APPROVED` or `REVISION_REQUESTED`) + mandatory `reviewFeedback` textarea (minimum 10 characters).
+   - **Instructor Proposal Review Modal/Panel:** Displays full proposal details and provides APPROVED / REVISION_REQUESTED actions with a mandatory feedback textarea. Lab 7's approved revised contract requires action-specific guidance: trimmed minimum 10 for APPROVED, 20 for REVISION_REQUESTED, counted as JavaScript UTF-16 units. This design was peer-reviewed before code; the candidate UI/API now implement it with [execution evidence](labs/lab-07/implementation-evidence.md). The locked pre-change UI/API used 10 for both; maintained main includes the reviewed release. See [L7-CONTRACT v1.1](labs/lab-07/revised-contract.md) for authoritative validation precedence, API/data impact and STS.
 5. **Shared UI Behavior:**
    - **Loading State:** Dashboard loading indicator, action-specific pending labels, and disabled mutation controls during in-flight requests.
    - **Empty State:** Informative unassigned-student guidance and placeholder rows when team lists are empty.
@@ -246,9 +246,9 @@ All runtime configuration is injected via environment variables. Real secrets ar
   - **Google Cloud SQL for PostgreSQL:** Managed durable relational database connected via Cloud SQL Auth Proxy Unix socket.
   - **Google Secret Manager:** Injects `DATABASE_URL` and `JWT_SECRET` at container startup without baking secrets into images or Git.
 
-## 5. Proposed Sprint 2–3 design extension (documentation only)
+## 5. Sprint 2 implementation and Sprint 3 design extension
 
-The current system still implements F-01–03. The complete proposed
+The release candidate implements F-01 through F-06. The reviewed
 [D2 shared design](sprints/deliverable-2/shared-contract.md) and per-feature
 [contracts](sprints/deliverable-2/README.md) add planned route/service/client
 responsibilities before code. No router, Prisma schema, migration or visual
@@ -278,13 +278,14 @@ erDiagram
   MILESTONE ||--o{ PEER_EVALUATION : scopes
 ```
 
-This is the **proposed logical model**, not a generated/current schema. See
+The F-04/F-05/F-06 portion is implemented in Prisma and versioned migrations;
+Task, TaskEvent and PeerEvaluation remain proposed Sprint 3 models. See
 the shared contract for exact unique keys, nullable legacy fields/backfill,
 actor/version constraints and non-destructive migration obligations. Do not
 silently expose private submission/grade/task/peer details through general
 team lists or replace the existing roster-only privacy policy.
 
-The [UI refresh specification](ui-refresh-spec.md) governs the future
-responsive shell and user-requested Quick Fill removal. Section 3's existing
-screens remain the implemented baseline until that UI change is reviewed,
-implemented and verified; backend authentication and BR-05 stay unchanged.
+The [UI refresh specification](ui-refresh-spec.md) was implemented in PR #110.
+The Sprint 2 candidate integrates that shell with F-04/F-05/F-06 and the
+maintained Lab 7 revision20/approval10 rule. The [release ledger](sprints/sprint-2/accepted-release.md)
+records actual verification and independent main acceptance gates.

@@ -1,7 +1,9 @@
 # Shared Sprint 2–3 contract — D2-COMMON v1.0
 
-**Status:** proposed for teammate review, 22 Nov 2026. No implementation or
-new verification is claimed. Applies to F-04–F-08 and their UI integration.
+**Original draft:** 22 Nov 2026; independently reviewed via PR #107 before code.
+**25 Nov update:** F-04/F-05/F-06 implemented and reviewed via PR #116/#117/#118;
+combined results and release gates: [Sprint 2 ledger](../sprint-2/accepted-release.md).
+F-07/F-08 implementation remains Sprint 3 work.
 Read the [package index](README.md) and per-feature AC/STS together.
 
 ## 1. Baseline, boundaries and proposed decisions
@@ -23,8 +25,8 @@ subsystem. Private team operations always verify membership server-side.
 | DD-S3-03 | Submission-rate denominator is all course teams; drafts excluded from milestones; no teams gives a null rate with numerator/denominator shown | Honest, reproducible analytics rather than a misleading zero or hidden eligibility denominator |
 | DD-S3-04 | Export published current-version scores; spreadsheet-oriented quoted CSV with formula-risk neutralization | Unpublished/stale grades and spreadsheet formulas must not be misrepresented |
 
-These are design clarifications proposed for review, not pre-existing
-implemented rules or approvals. A reviewer must accept/revise them explicitly.
+These design clarifications were reviewed in PR #107. Their review does not
+claim implementation of the still-planned Sprint 3 workflows.
 If a decision actually changes agreed product scope, record that separately
 instead of presenting it as a silent clarification.
 
@@ -128,8 +130,9 @@ not an assumed destructive down migration.
 - Keep public foreign rosters only; do not put submissions, grades, task
   details or peer evaluations into general team/course DTOs. Instructor-only
   metrics and CSV cannot be made public by hiding a UI link.
-- Current BR-05 remains 10 for both proposal decisions. Do not apply pending
-  Lab 7 CR-L7-01 while implementing a UI refresh or new feature.
+- Preserve maintained main's approved Lab 7 BR-05: minimum 20 for revision,
+  10 for approval after trim/UTF-16. The initial 10/10 draft preceded TA
+  approval; [approval/source](../../labs/lab-07/approval-record.md) records the change.
 
 ## 6. Test design and common fixtures
 

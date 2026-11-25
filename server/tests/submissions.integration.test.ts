@@ -1,3 +1,4 @@
+import { assertDisposableTestDatabase } from './helpers/disposableDatabase';
 import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import request from 'supertest';
 import app from '../src/app';
@@ -27,12 +28,7 @@ describe('F-05: real API/PostgreSQL submissions, immutable versions and access',
     request(app).get(path(teamId) + suffix).set('Authorization', `Bearer ${token}`);
 
   beforeEach(async () => {
-    const database = new URL(process.env.DATABASE_URL || '');
-    if (process.env.NODE_ENV === 'production' ||
-        !['localhost', '127.0.0.1', 'postgres'].includes(database.hostname) ||
-        !database.pathname.endsWith('_test')) {
-      throw new Error('F-05 integration requires a disposable local/CI database ending in _test.');
-    }
+    assertDisposableTestDatabase();
     await clearRevokedTokens();
     fixture = await seedDatabase(prisma);
     student = signAuthToken(fixture.pawarit);

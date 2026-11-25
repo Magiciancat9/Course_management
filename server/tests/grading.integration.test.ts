@@ -1,3 +1,4 @@
+import { assertDisposableTestDatabase } from './helpers/disposableDatabase';
 import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import request from 'supertest';
 import app from '../src/app';
@@ -31,6 +32,7 @@ describe('F-06 Instructor Grading, Publication & Private Feedback — Integratio
   };
 
   beforeEach(async () => {
+    assertDisposableTestDatabase();
     await clearRevokedTokens();
     seeded = await seedDatabase(prisma);
 

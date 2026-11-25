@@ -1,71 +1,65 @@
-# Deliverable 2 verification register — v1.0
+# Deliverable 2 verification register
 
-**F-05 execution update, 25 Nov 2026:** the F-05 rows now map real tests to
-the candidate's [execution record](../sprint-2/f05-execution-evidence.md).
-Unreconciled sections retain the original planning snapshot below; do not
-interpret them as a new audit of already merged F-04/UI work. #100 owns the
-complete final RC reconciliation.
-
-**22 Nov 2026: documentation only; all new AC/test IDs below are PLANNED.**
-Contracts are proposed, independent review is pending, new domain/UI behavior
-is not implemented, and no new-feature test has run. A planned path is not
-an existing executable test or evidence of coverage. Existing Sprint 1
-verification is mapped separately in [complete traceability](../../traceability.md).
+**25 November 2026 reconciliation (#97):** Sprint 2 F-04/F-05/F-06 are
+implemented and independently reviewed. Contract review: PR #107. Actual
+feature and combined verification: [Sprint 2 release ledger](../sprint-2/accepted-release.md).
+Main acceptance is a separate gate. Sprint 3 implementation remains planned;
+a reviewed specification is not an executed test.
 
 ## 1. Complete AC implementation/execution ledger
 
-For every row: implemented **NO**; actual new test ID **not created**;
-verification **NOT RUN**; tested candidate / accepted release **NONE**.
-Replace these statuses only with actual code, named tests, commands, results
-and versions. Record FAIL/SKIP explicitly instead of converting them to Done.
+Sprint 2 rows below are implemented and passed their independently reviewed
+feature-head CI. [Sprint 2 release ledger](../sprint-2/accepted-release.md)
+records combined regression, exact candidate/run identity and pending main/tag gates.
+Sprint 3 rows remain NOT IMPLEMENTED / NOT RUN.
 
 ### S2-F04 — [f04-milestones.md](../sprint-2/f04-milestones.md)
 
-Owner `martinvadre`; contract v1.0 / review pending.
+Owner `martinvadre`; contract reviewed in PR #107; code reviewed in PR #116/#118.
 
 | AC | Planned test IDs | Implemented | Actual verification / version |
 | --- | --- | --- | --- |
-| S2-F04-AC01 | S2-F04-T01 | NO | NOT RUN / no candidate |
-| S2-F04-AC02 | S2-F04-T02, S2-F04-T03 | NO | NOT RUN / no candidate |
-| S2-F04-AC03 | S2-F04-T04 | NO | NOT RUN / no candidate |
-| S2-F04-AC04 | S2-F04-T05, S2-F04-T06 | NO | NOT RUN / no candidate |
-| S2-F04-AC05 | S2-F04-T07 | NO | NOT RUN / no candidate |
-| S2-F04-AC06 | S2-F04-T08 | NO | NOT RUN / no candidate |
-| S2-F04-AC07 | S2-F04-T09 | NO | NOT RUN / no candidate |
-| S2-F04-AC08 | S2-F04-T10, S2-F04-T11 | NO | NOT RUN / no candidate |
+| S2-F04-AC01 | S2-F04-T01 | YES | Feature-head PASS; [actual files, combined results and accepted release](../sprint-2/accepted-release.md) |
+| S2-F04-AC02 | S2-F04-T02, S2-F04-T03 | YES | Feature-head PASS; [actual files, combined results and accepted release](../sprint-2/accepted-release.md) |
+| S2-F04-AC03 | S2-F04-T04 | YES | Feature-head PASS; [actual files, combined results and accepted release](../sprint-2/accepted-release.md) |
+| S2-F04-AC04 | S2-F04-T05, S2-F04-T06 | YES | Feature-head PASS; [actual files, combined results and accepted release](../sprint-2/accepted-release.md) |
+| S2-F04-AC05 | S2-F04-T07 | YES | Feature-head PASS; [actual files, combined results and accepted release](../sprint-2/accepted-release.md) |
+| S2-F04-AC06 | S2-F04-T08 | YES | Feature-head PASS; [actual files, combined results and accepted release](../sprint-2/accepted-release.md) |
+| S2-F04-AC07 | S2-F04-T09 | YES | Feature-head PASS; [actual files, combined results and accepted release](../sprint-2/accepted-release.md) |
+| S2-F04-AC08 | S2-F04-T10, S2-F04-T11 | YES | Feature-head PASS; [actual files, combined results and accepted release](../sprint-2/accepted-release.md) |
 
 ### S2-F05 — [f05-submissions.md](../sprint-2/f05-submissions.md)
 
-Owner `Magiciancat9`; contract v1.0 reviewed via PR #107; implementation review pending.
+Owner `Magiciancat9`; contract reviewed in PR #107; code reviewed in PR #117.
 
 | AC | Planned test IDs | Implemented | Actual verification / version |
 | --- | --- | --- | --- |
-| S2-F05-AC01 | S2-F05-T01, S2-F05-T11 | YES | PASS in feature candidate; API/DB and browser readback |
-| S2-F05-AC02 | S2-F05-T02 | YES | PASS; all three non-approved states, no rejected mutation |
-| S2-F05-AC03 | S2-F05-T03 | YES | PASS; draft/cross-course/missing resource |
-| S2-F05-AC04 | S2-F05-T04 | YES | PASS; unit/API validation and exact boundaries |
-| S2-F05-AC05 | S2-F05-T05 | YES | PASS; deadline -1ms/equality/+1ms |
-| S2-F05-AC06 | S2-F05-T06 | YES for content/legacy retention | PASS for immutable versions and ungraded current; actual F-06 published-grade integration NOT RUN |
-| S2-F05-AC07 | S2-F05-T07 | YES | PASS; direct backend role/ownership denials |
-| S2-F05-AC08 | S2-F05-T08 | YES | PASS; real concurrent creates/updates and stale retries |
-| S2-F05-AC09 | S2-F05-T09 | YES | Actual SQL populated upgrade and captured historical deadline verified; see exact run for concurrent deadline edit |
-| S2-F05-AC10 | S2-F05-T10, S2-F05-T12 | YES | PASS; pending/draft/conflict/401 and A/B isolation |
+| S2-F05-AC01 | S2-F05-T01, S2-F05-T11 | YES | Feature-head PASS; [actual files, combined results and accepted release](../sprint-2/accepted-release.md) |
+| S2-F05-AC02 | S2-F05-T02 | YES | Feature-head PASS; [actual files, combined results and accepted release](../sprint-2/accepted-release.md) |
+| S2-F05-AC03 | S2-F05-T03 | YES | Feature-head PASS; [actual files, combined results and accepted release](../sprint-2/accepted-release.md) |
+| S2-F05-AC04 | S2-F05-T04 | YES | Feature-head PASS; [actual files, combined results and accepted release](../sprint-2/accepted-release.md) |
+| S2-F05-AC05 | S2-F05-T05 | YES | Feature-head PASS; [actual files, combined results and accepted release](../sprint-2/accepted-release.md) |
+| S2-F05-AC06 | S2-F05-T06 | YES | Feature-head PASS; [actual files, combined results and accepted release](../sprint-2/accepted-release.md) |
+| S2-F05-AC07 | S2-F05-T07 | YES | Feature-head PASS; [actual files, combined results and accepted release](../sprint-2/accepted-release.md) |
+| S2-F05-AC08 | S2-F05-T08 | YES | Feature-head PASS; [actual files, combined results and accepted release](../sprint-2/accepted-release.md) |
+| S2-F05-AC09 | S2-F05-T09 | YES | Feature-head PASS; [actual files, combined results and accepted release](../sprint-2/accepted-release.md) |
+| S2-F05-AC10 | S2-F05-T10, S2-F05-T12 | YES | Feature-head PASS; [actual files, combined results and accepted release](../sprint-2/accepted-release.md) |
 
 ### S2-F06 — [f06-grading.md](../sprint-2/f06-grading.md)
 
-Owner `martinvadre`; contract v1.0 / review pending.
+Owner `martinvadre`; contract reviewed in PR #107; code reviewed in PR #116/#118.
 
 | AC | Planned test IDs | Implemented | Actual verification / version |
 | --- | --- | --- | --- |
-| S2-F06-AC01 | S2-F06-T01 | NO | NOT RUN / no candidate |
-| S2-F06-AC02 | S2-F06-T02 | NO | NOT RUN / no candidate |
-| S2-F06-AC03 | S2-F06-T03 | NO | NOT RUN / no candidate |
-| S2-F06-AC04 | S2-F06-T04 | NO | NOT RUN / no candidate |
-| S2-F06-AC05 | S2-F06-T05 | NO | NOT RUN / no candidate |
-| S2-F06-AC06 | S2-F06-T06 | NO | NOT RUN / no candidate |
-| S2-F06-AC07 | S2-F06-T07, S2-F06-T08 | NO | NOT RUN / no candidate |
-| S2-F06-AC08 | S2-F06-T09 | NO | NOT RUN / no candidate |
-| S2-F06-AC09 | S2-F06-T10, S2-F06-T11 | NO | NOT RUN / no candidate |
+| S2-F06-AC01 | S2-F06-T01 | YES | Feature-head PASS; [actual files, combined results and accepted release](../sprint-2/accepted-release.md) |
+| S2-F06-AC02 | S2-F06-T02 | YES | Feature-head PASS; [actual files, combined results and accepted release](../sprint-2/accepted-release.md) |
+| S2-F06-AC03 | S2-F06-T03 | YES | Feature-head PASS; [actual files, combined results and accepted release](../sprint-2/accepted-release.md) |
+| S2-F06-AC04 | S2-F06-T04 | YES | Feature-head PASS; [actual files, combined results and accepted release](../sprint-2/accepted-release.md) |
+| S2-F06-AC05 | S2-F06-T05 | YES | Feature-head PASS; [actual files, combined results and accepted release](../sprint-2/accepted-release.md) |
+| S2-F06-AC06 | S2-F06-T06 | YES | Feature-head PASS; [actual files, combined results and accepted release](../sprint-2/accepted-release.md) |
+| S2-F06-AC07 | S2-F06-T07, S2-F06-T08 | YES | Feature-head PASS; [actual files, combined results and accepted release](../sprint-2/accepted-release.md) |
+| S2-F06-AC08 | S2-F06-T09 | YES | Feature-head PASS; [actual files, combined results and accepted release](../sprint-2/accepted-release.md) |
+| S2-F06-AC09 | S2-F06-T10, S2-F06-T11 | YES | Feature-head PASS; [actual files, combined results and accepted release](../sprint-2/accepted-release.md) |
 
 ### S3-F07 — [f07-collaboration.md](../sprint-3/f07-collaboration.md)
 

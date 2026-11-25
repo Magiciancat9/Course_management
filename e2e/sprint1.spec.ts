@@ -1,3 +1,4 @@
+import { assertDisposableTestDatabase } from '../server/tests/helpers/disposableDatabase';
 import { test, expect } from '@playwright/test';
 import { execSync } from 'child_process';
 import path from 'path';
@@ -15,6 +16,7 @@ test.describe('CoursePMS Sprint 1 — End-to-End Browser Verification (TEST-11, 
   });
 
   test.beforeEach(() => {
+    assertDisposableTestDatabase();
     execSync('npm --prefix server run prisma:seed', {
       cwd: REPO_ROOT,
       stdio: 'pipe',

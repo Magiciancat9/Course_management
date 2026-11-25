@@ -1,3 +1,4 @@
+import { assertDisposableTestDatabase } from '../server/tests/helpers/disposableDatabase';
 import { test, expect } from '@playwright/test';
 import { execSync } from 'child_process';
 import path from 'path';
@@ -7,6 +8,7 @@ const DEMO_PASSWORD = process.env.DEMO_USER_PASSWORD || 'Password123!';
 
 test.describe('CoursePMS Sprint 2 — F-04 Milestones E2E (S2-F04-T11)', () => {
   test.beforeEach(() => {
+    assertDisposableTestDatabase();
     execSync('npm --prefix server run prisma:seed', {
       cwd: REPO_ROOT,
       stdio: 'pipe',

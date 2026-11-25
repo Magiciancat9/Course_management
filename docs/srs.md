@@ -77,7 +77,7 @@ In university software engineering and capstone courses, managing student projec
 | **BR-02** | Maximum Team Capacity Enforcement | A project team cannot exceed the course's configured `maxTeamSize` (default: 3 students; minimum: 1). Any attempt to add a member beyond `maxTeamSize` is rejected (`400 Bad Request` / `409 Conflict`). | Sprint 1 |
 | **BR-03** | Proposal State Transition Matrix | A Project Proposal must follow valid state transitions: `DRAFT` → `SUBMITTED`; `SUBMITTED` → `APPROVED` or `REVISION_REQUESTED`; `REVISION_REQUESTED` → `SUBMITTED`. Students cannot edit or re-submit a proposal that is currently `SUBMITTED` or already `APPROVED` (`409 Conflict`). | Sprint 1 |
 | **BR-04** | Proposal Content Completeness Gate | Submitting a proposal (`DRAFT`/`REVISION_REQUESTED` → `SUBMITTED`) requires a non-empty `title` (≥ 5 chars), `problemStatement` (≥ 20 chars), and `techStack` (≥ 3 chars). Incomplete submissions are rejected (`400 Bad Request`). | Sprint 1 |
-| **BR-05** | Mandatory Instructor Review Feedback | When an Instructor transitions a `SUBMITTED` proposal to `APPROVED` or `REVISION_REQUESTED`, a review comment (`reviewFeedback`) of at least 10 characters is mandatory, and only proposals currently in `SUBMITTED` state may be reviewed (`400`/`409`). | Sprint 1 |
+| **BR-05** | Mandatory Instructor Review Feedback | Approved Lab 7 requirement: for a `SUBMITTED` proposal, `REVISION_REQUESTED` requires `reviewFeedback.trim().length >= 20`; `APPROVED` retains `>= 10`, using JavaScript UTF-16 length. Preserve existing `400`/`409` validation/state behavior. Contract v1.1 was reviewed before code; the #87 candidate enforces these minima with executed tests. Maintained main includes the reviewed release; the locked pre-change runtime used 10 for both. | Sprint 1 maintenance |
 | **BR-06** | Team Ownership & Role Isolation | Only members of Team $X$ (or an `INSTRUCTOR`) may view or mutate Team $X$'s private proposal details and feedback; a Student from Team $Y$ attempting to view or modify Team $X$'s proposal is rejected (`403 Forbidden`). Only `INSTRUCTOR` users may execute proposal review endpoints (`403 Forbidden` for `STUDENT`). | Sprint 1 |
 | **BR-07** | Approved Proposal Prerequisite for Deliverables | A team cannot submit a Sprint/Milestone Deliverable (`FR-07`) unless its Project Proposal is in `APPROVED` status (`409 Conflict`). | Sprint 2 |
 | **BR-08** | Grade Bounds & Self-Peer-Review Prevention | Milestone scores must be within `0–100` inclusive (`FR-08`), and a Student cannot submit a peer evaluation rating for themselves (`FR-10`). | Sprint 2 (grading) & Sprint 3 (peer evaluation) |
@@ -85,6 +85,13 @@ In university software engineering and capstone courses, managing student projec
 ---
 
 ## 6. Non-Functional Requirements (NFR)
+
+**Lab 7 version note:** P'Tik (TA) approved CR-L7-01 on 22 Nov 2026 at
+20:18 Asia/Bangkok. [Approval/source](labs/lab-07/approval-record.md),
+[pre-change checkpoint](labs/lab-07/pre-change-baseline.md) and
+[revised contract/AC/STS](labs/lab-07/revised-contract.md) preserve the
+old/new distinction and review-before-code gate. This specification revision
+records the approved contract; [candidate implementation evidence](labs/lab-07/implementation-evidence.md) separately identifies the tested code and remaining release gates.
 
 | ID | Category | Measurable Target | Practical Verification Method | Target Sprint |
 | :--- | :--- | :--- | :--- | :---: |
@@ -121,17 +128,15 @@ feature SDS, UI/API/data, numbered AC and STS. Their [shared decision
 table](sprints/deliverable-2/shared-contract.md) explicitly proposes late
 flagging, immutable submission/grade binding, peer completion/rating/privacy
 and analytics/CSV semantics where the earlier SRS did not fix a boundary.
-Those decisions await independent review; they are not retroactively approved
-or implemented by this SRS link. Actual new verification is NOT RUN.
+The shared contracts were independently reviewed in PR #107 before code.
+F-04/F-05/F-06 are implemented and reviewed in PR #116/#117/#118. The
+[Sprint 2 release ledger](sprints/sprint-2/accepted-release.md) maps all AC
+to actual files, results, source identities and pending main acceptance gates.
+Sprint 3 implementation and the combined Sprint 2/3 RC remain separate work.
 
-The user requested a [UI refresh](ui-refresh-spec.md), specifically removing
-the demo Quick Fill box while retaining real email/password authentication
-and existing team/member functions. Detailed UI design review and
-implementation are deferred; the old UI still exists. This presentation
-direction does not alter the domain baseline or approve Lab 7 maintenance.
-
-CR-L7-01 / [#85](https://github.com/Magiciancat9/Course_management/issues/85)
-proposes a separate BR-05 revision-feedback minimum 10→20. The user reports
-sending it to the TA, but approval remains pending; **BR-05 stays 10 for both
-proposal decisions in this baseline**. Retain approved-change history and
-planned versus executed coverage in [traceability](traceability.md).
+The refreshed UI and Quick Fill removal were implemented in PR #110.
+Authenticated email/password, team/member functions and backend access control
+remain. The integrated release preserves maintained main's approved Lab 7
+BR-05: revision minimum 20, approval minimum 10 after trim/UTF-16.
+[Approval history](labs/lab-07/approval-record.md) and historical evidence
+remain dated to their actual releases.

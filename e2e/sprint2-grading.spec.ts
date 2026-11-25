@@ -1,3 +1,4 @@
+import { assertDisposableTestDatabase } from '../server/tests/helpers/disposableDatabase';
 import { test, expect, Page } from '@playwright/test';
 import { execSync } from 'child_process';
 import path from 'path';
@@ -19,6 +20,7 @@ async function logout(page: Page) {
 
 test.describe('CoursePMS Sprint 2 — F-06 Grading & Publication E2E (S2-F06-T10)', () => {
   test.beforeEach(() => {
+    assertDisposableTestDatabase();
     execSync('npm --prefix server run prisma:seed', {
       cwd: REPO_ROOT,
       stdio: 'pipe',
@@ -138,6 +140,7 @@ test.describe('CoursePMS Sprint 2 — F-06 Grading & Publication E2E (S2-F06-T10
     await page.reload();
     await page.getByTestId(`milestone-submission-btn-${milestoneId}`).click();
     await expect(page.getByTestId('submission-published-grade').first()).toContainText('91/100');
+    await page.screenshot({ path: path.join(REPO_ROOT, 'test-results/f06-published-grade.png'), fullPage: true });
 
     // 4. Foreign student (Somchai in Team Beta) direct API access -> 403 BR06_FORBIDDEN_TEAM_ACCESS
     const foreignRes = await request.get(`/api/submissions/${submissionId}/evaluation`, {

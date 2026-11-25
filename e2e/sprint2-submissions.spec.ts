@@ -1,3 +1,4 @@
+import { assertDisposableTestDatabase } from '../server/tests/helpers/disposableDatabase';
 import { expect, test, type Page } from '@playwright/test';
 import { execSync } from 'child_process';
 import path from 'path';
@@ -16,10 +17,7 @@ async function logout(page: Page) {
 }
 
 test('S2-F05-T11/T12: approved team submits/reloads immutable versions, instructor retrieves, foreign student is denied', async ({ page }) => {
-  const url = new URL(process.env.DATABASE_URL || '');
-  expect(['localhost', '127.0.0.1', 'postgres']).toContain(url.hostname);
-  expect(url.pathname.endsWith('_test')).toBe(true);
-  expect(process.env.NODE_ENV).not.toBe('production');
+  assertDisposableTestDatabase();
   execSync('npm --prefix server run prisma:seed', { cwd: root, stdio: 'pipe' });
   await page.goto('/');
   await login(page, 'pawarit@mail.kmutt.ac.th');
