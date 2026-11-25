@@ -58,7 +58,7 @@ flowchart LR
 | --- | --- | --- | --- |
 | F-01–03 | Existing confirmed Sprint 1 allocation | Existing Sprint 1 contracts; [continuity record](sprints/deliverable-2/continuity-and-status.md) | Implemented historically; new D2 candidate checks pending |
 | F-04 | martinvadre | [S2-F04 v1.0](sprints/sprint-2/f04-milestones.md) | Not implemented / NOT RUN |
-| F-05 | Magiciancat9 | [S2-F05 v1.0](sprints/sprint-2/f05-submissions.md) | Not implemented / NOT RUN |
+| F-05 | Magiciancat9 | [S2-F05 v1.0 + execution addendum](sprints/sprint-2/f05-submissions.md) | Implemented feature-branch candidate; [real tests and explicit F-06/release gates](sprints/sprint-2/f05-execution-evidence.md); independent review pending |
 | F-06 | martinvadre | [S2-F06 v1.0](sprints/sprint-2/f06-grading.md) | Not implemented / NOT RUN |
 | F-07 | Magiciancat9 | [S3-F07 v1.0](sprints/sprint-3/f07-collaboration.md) | Task checkpoint and remaining peer work both unimplemented / NOT RUN |
 | F-08 | martinvadre | [S3-F08 v1.0](sprints/sprint-3/f08-analytics-export.md) | Not implemented / NOT RUN |

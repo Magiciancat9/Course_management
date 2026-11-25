@@ -24,6 +24,12 @@ enum MilestoneStatus {
   PUBLISHED
 }
 
+enum SubmissionLateStatus {
+  ON_TIME
+  LATE
+  UNKNOWN
+}
+
 model User {
   id                Int               @id @default(autoincrement())
   email             String            @unique
@@ -136,9 +142,33 @@ model MilestoneSubmission {
   score       Int?
   feedback    String?
   submittedAt DateTime    @default(now())
+  reportUrl   String?
+  version     Int         @default(1)
+  dueDateSnapshot DateTime?
+  lateStatus  SubmissionLateStatus @default(UNKNOWN)
 
   milestone   Milestone   @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
   team        ProjectTeam @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  versions    SubmissionVersion[]
 
   @@unique([milestoneId, teamId])
+}
+
+model SubmissionVersion {
+  id              Int @id @default(autoincrement())
+  submissionId    Int
+  version         Int
+  repoUrl         String
+  reportUrl       String?
+  releaseTag      String
+  notes           String @default("")
+  submittedAt     DateTime
+  dueDateSnapshot DateTime?
+  lateStatus      SubmissionLateStatus @default(UNKNOWN)
+  legacyScore     Int?
+  legacyFeedback  String?
+
+  submission MilestoneSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  @@unique([submissionId, version])
 }

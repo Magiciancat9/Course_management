@@ -1,10 +1,10 @@
 # F-05 — Team milestone deliverable submission
 
-**Contract:** S2-F05 v1.0, 22 Nov 2026; proposed / review pending.
+**Contract:** S2-F05 v1.0, 22 Nov 2026; independently reviewed in PR #107 before implementation. Execution addendum: v1.1, 25 Nov 2026.
 **Feature owner / draft author:** `Magiciancat9`; requested reviewer:
 `martinvadre`. **Issue:** [#95](https://github.com/Magiciancat9/Course_management/issues/95).
 **Links:** FR-07; BR-06/07; NFR-01/02/04/05. Dependencies: F-02/F-03 and
-[F-04](f04-milestones.md). **Implemented / executed / accepted:** NO / NOT RUN / NONE.
+[F-04](f04-milestones.md). **Implemented / executed / accepted:** feature-branch candidate / [executed evidence](f05-execution-evidence.md) / teammate review, integration and accepted Sprint 2 release pending.
 
 ## 1. Workflow and feature SDS
 
@@ -105,7 +105,7 @@ team membership and proposal transitions need no behavior change.
 | S2-F05-AC09 | Historical deadline snapshots and legacy unknowns stay honest during migration/deadline edits | S2-F05-T09 |
 | S2-F05-AC10 | UI pending/error/conflict/session boundaries preserve own draft and prevent foreign/stale state exposure | S2-F05-T10, S2-F05-T12 |
 
-## 6. STS — PLANNED / NOT RUN
+## 6. Versioned STS design (original pre-implementation cases)
 
 Shared synthetic fixtures: I; A1/A2 in approved Team A; Team D not approved;
 Team B foreign; published M1, draft M2, other-course M3. Fixed clock/deadline.
@@ -128,7 +128,7 @@ Team B foreign; published M1, draft M2, other-course M3. Fixed clock/deadline.
 Planned files: U `server/tests/submissions.unit.test.ts`; I
 `server/tests/submissions.integration.test.ts`; UI
 `client/src/features/submissions/SubmissionWorkspace.test.tsx`; E
-`e2e/sprint2-submissions.spec.ts`. None is created or run by this document.
+`e2e/sprint2-submissions.spec.ts`. The initial contract created no executable tests. Actual files/results are now mapped in the addendum below.
 
 ## 7. DoD and version history
 
@@ -142,3 +142,33 @@ claim the integrated dependency is complete while it remains unverified.
 | Revision | Date / status |
 | --- | --- |
 | S2-F05 v1.0 | 22 Nov 2026; proposed late/version/URL policy; teammate review pending; implementation/tests NOT RUN |
+| S2-F05 v1.0 accepted | 22 Nov 2026; martinvadre approved the shared policies and feature contracts through PR #107, merged at `8eea6f0`; precedes F-05 tests/code |
+| S2-F05 v1.1 execution addendum | 25 Nov 2026; original behavior/AC retained; implementation, real RED/GREEN and legacy grading boundary documented below |
+
+## 8. Implemented AC and remaining integration boundary
+
+All implementation results refer to the source/run identities in
+[F-05 execution evidence](f05-execution-evidence.md). They do not establish a
+reviewed main release, production deployment or completion of F-06.
+
+| AC | Actual verification | Candidate status |
+| --- | --- | --- |
+| AC01 | API `S2-F05-T01`; browser `S2-F05-T11/T12` | PASS: server-normalized create, independent DB/GET, reload and instructor readback |
+| AC02 | API parameterized `S2-F05-T02` (DRAFT/SUBMITTED/REVISION_REQUESTED) | PASS: BR-07 denial leaves current row/history unchanged |
+| AC03 | API `S2-F05-T03` | PASS: draft 409, missing/cross-course 404; no inserted rows |
+| AC04 | `submissions.unit.test.ts`; API `S2-F05-T04` | PASS: URL/tag/type/length boundaries, server-field forgery and exact accepted limits |
+| AC05 | Unit/API `S2-F05-T05` | PASS: deadline -1ms/equality/+1ms, actual server timestamp and immutable captured lateness |
+| AC06 | API `S2-F05-T06`; browser two-version readback | PASS for immutable content, legacy-score retention and ungraded current version. Actual published GradePublication integration remains NOT RUN until F-06 / #96 exists |
+| AC07 | API `S2-F05-T07`; browser direct foreign-team denial | PASS: anonymous/foreign-team/student-course-list/instructor-write restrictions |
+| AC08 | API `S2-F05-T08` | PASS: parallel first-create/update and stale replay, one row and contiguous accepted versions |
+| AC09 | Actual SQL `submissions-migration.integration.test.ts`; API `S2-F05-T09` | Populated upgrade, historical unknowns and deadline edits verified; see exact run for the simultaneous F-04/F-05 check |
+| AC10 | Component `S2-F05-T10/T12`; browser workflow | PASS: duplicate prevention, 400/409/network draft retention, version reconciliation, 401 boundary and delayed A/B pending isolation |
+
+The new `SubmissionVersion` stores immutable content. `reportUrl` and
+`dueDateSnapshot` are nullable only for honest legacy backfill; new writes
+require a report URL and server-derived deadline/time. `legacyScore` and
+`legacyFeedback` preserve old projection values without inventing publication.
+Only instructors receive that explicitly UNKNOWN legacy summary. Students
+receive `publishedEvaluation: null` until #96 supplies actual version-bound
+publication records. Do not mark the original T06 published-grade step passed
+from the legacy fixture; F-06 must verify that step and stale-grade publication.

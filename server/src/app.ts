@@ -15,6 +15,7 @@ import {
   validateInstructorReview,
 } from './utils/domainRules';
 import milestonesRouter from './routes/milestones';
+import submissionsRouter from './routes/submissions';
 
 function isUniqueConstraintViolation(err: unknown, fields: string[]): boolean {
   if (
@@ -769,6 +770,7 @@ app.post('/api/proposals/:id/review', requireAuth, async (req, res) => {
 
 // Feature F-04: Course milestone definition and schedule management
 app.use('/api', milestonesRouter);
+app.use('/api', submissionsRouter);
 
 // Unsupported proposal routes still belong to the protected API namespace.
 app.use('/api/proposals', requireAuth);

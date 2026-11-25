@@ -1,5 +1,11 @@
 # Deliverable 2 verification register — v1.0
 
+**F-05 execution update, 25 Nov 2026:** the F-05 rows now map real tests to
+the candidate's [execution record](../sprint-2/f05-execution-evidence.md).
+Unreconciled sections retain the original planning snapshot below; do not
+interpret them as a new audit of already merged F-04/UI work. #100 owns the
+complete final RC reconciliation.
+
 **22 Nov 2026: documentation only; all new AC/test IDs below are PLANNED.**
 Contracts are proposed, independent review is pending, new domain/UI behavior
 is not implemented, and no new-feature test has run. A planned path is not
@@ -30,20 +36,20 @@ Owner `martinvadre`; contract v1.0 / review pending.
 
 ### S2-F05 — [f05-submissions.md](../sprint-2/f05-submissions.md)
 
-Owner `Magiciancat9`; contract v1.0 / review pending.
+Owner `Magiciancat9`; contract v1.0 reviewed via PR #107; implementation review pending.
 
 | AC | Planned test IDs | Implemented | Actual verification / version |
 | --- | --- | --- | --- |
-| S2-F05-AC01 | S2-F05-T01, S2-F05-T11 | NO | NOT RUN / no candidate |
-| S2-F05-AC02 | S2-F05-T02 | NO | NOT RUN / no candidate |
-| S2-F05-AC03 | S2-F05-T03 | NO | NOT RUN / no candidate |
-| S2-F05-AC04 | S2-F05-T04 | NO | NOT RUN / no candidate |
-| S2-F05-AC05 | S2-F05-T05 | NO | NOT RUN / no candidate |
-| S2-F05-AC06 | S2-F05-T06 | NO | NOT RUN / no candidate |
-| S2-F05-AC07 | S2-F05-T07 | NO | NOT RUN / no candidate |
-| S2-F05-AC08 | S2-F05-T08 | NO | NOT RUN / no candidate |
-| S2-F05-AC09 | S2-F05-T09 | NO | NOT RUN / no candidate |
-| S2-F05-AC10 | S2-F05-T10, S2-F05-T12 | NO | NOT RUN / no candidate |
+| S2-F05-AC01 | S2-F05-T01, S2-F05-T11 | YES | PASS in feature candidate; API/DB and browser readback |
+| S2-F05-AC02 | S2-F05-T02 | YES | PASS; all three non-approved states, no rejected mutation |
+| S2-F05-AC03 | S2-F05-T03 | YES | PASS; draft/cross-course/missing resource |
+| S2-F05-AC04 | S2-F05-T04 | YES | PASS; unit/API validation and exact boundaries |
+| S2-F05-AC05 | S2-F05-T05 | YES | PASS; deadline -1ms/equality/+1ms |
+| S2-F05-AC06 | S2-F05-T06 | YES for content/legacy retention | PASS for immutable versions and ungraded current; actual F-06 published-grade integration NOT RUN |
+| S2-F05-AC07 | S2-F05-T07 | YES | PASS; direct backend role/ownership denials |
+| S2-F05-AC08 | S2-F05-T08 | YES | PASS; real concurrent creates/updates and stale retries |
+| S2-F05-AC09 | S2-F05-T09 | YES | Actual SQL populated upgrade and captured historical deadline verified; see exact run for concurrent deadline edit |
+| S2-F05-AC10 | S2-F05-T10, S2-F05-T12 | YES | PASS; pending/draft/conflict/401 and A/B isolation |
 
 ### S2-F06 — [f06-grading.md](../sprint-2/f06-grading.md)
 
@@ -137,18 +143,18 @@ mean its new named case exists or has executed.
 | S2-F04-T09 | I | `server/tests/milestones.integration.test.ts` | NOT CREATED / NOT RUN |
 | S2-F04-T10 | UI | `client/src/features/milestones/MilestoneManager.test.tsx` | NOT CREATED / NOT RUN |
 | S2-F04-T11 | E | `e2e/sprint2-milestones.spec.ts` | NOT CREATED / NOT RUN |
-| S2-F05-T01 | I | `server/tests/submissions.integration.test.ts` | NOT CREATED / NOT RUN |
-| S2-F05-T02 | U+I | `server/tests/submissions.unit.test.ts`<br>`server/tests/submissions.integration.test.ts` | NOT CREATED / NOT RUN |
-| S2-F05-T03 | I | `server/tests/submissions.integration.test.ts` | NOT CREATED / NOT RUN |
-| S2-F05-T04 | U+I | `server/tests/submissions.unit.test.ts`<br>`server/tests/submissions.integration.test.ts` | NOT CREATED / NOT RUN |
-| S2-F05-T05 | U+I | `server/tests/submissions.unit.test.ts`<br>`server/tests/submissions.integration.test.ts` | NOT CREATED / NOT RUN |
-| S2-F05-T06 | I | `server/tests/submissions.integration.test.ts` | NOT CREATED / NOT RUN |
-| S2-F05-T07 | I | `server/tests/submissions.integration.test.ts` | NOT CREATED / NOT RUN |
-| S2-F05-T08 | I | `server/tests/submissions.integration.test.ts` | NOT CREATED / NOT RUN |
-| S2-F05-T09 | I | `server/tests/submissions.integration.test.ts` | NOT CREATED / NOT RUN |
-| S2-F05-T10 | UI | `client/src/features/submissions/SubmissionWorkspace.test.tsx` | NOT CREATED / NOT RUN |
-| S2-F05-T11 | E | `e2e/sprint2-submissions.spec.ts` | NOT CREATED / NOT RUN |
-| S2-F05-T12 | UI+E | `client/src/features/submissions/SubmissionWorkspace.test.tsx`<br>`e2e/sprint2-submissions.spec.ts` | NOT CREATED / NOT RUN |
+| S2-F05-T01 | I | `server/tests/submissions.integration.test.ts` | PASS in candidate; see F-05 execution record |
+| S2-F05-T02 | U+I | `server/tests/submissions.unit.test.ts`<br>`server/tests/submissions.integration.test.ts` | PASS in candidate; see F-05 execution record |
+| S2-F05-T03 | I | `server/tests/submissions.integration.test.ts` | PASS in candidate; see F-05 execution record |
+| S2-F05-T04 | U+I | `server/tests/submissions.unit.test.ts`<br>`server/tests/submissions.integration.test.ts` | PASS in candidate; see F-05 execution record |
+| S2-F05-T05 | U+I | `server/tests/submissions.unit.test.ts`<br>`server/tests/submissions.integration.test.ts` | PASS in candidate; see F-05 execution record |
+| S2-F05-T06 | I | `server/tests/submissions.integration.test.ts` | PASS for content/legacy retention; published-grade step pending F-06 |
+| S2-F05-T07 | I | `server/tests/submissions.integration.test.ts` | PASS in candidate; see F-05 execution record |
+| S2-F05-T08 | I | `server/tests/submissions.integration.test.ts` | PASS in candidate; see F-05 execution record |
+| S2-F05-T09 | I | `server/tests/submissions.integration.test.ts`<br>`server/tests/submissions-migration.integration.test.ts` | PASS in candidate; see F-05 execution record |
+| S2-F05-T10 | UI | `client/src/features/submissions/SubmissionWorkspace.test.tsx` | PASS in candidate; see F-05 execution record |
+| S2-F05-T11 | E | `e2e/sprint2-submissions.spec.ts` | PASS in candidate; see F-05 execution record |
+| S2-F05-T12 | UI+E | `client/src/features/submissions/SubmissionWorkspace.test.tsx`<br>`e2e/sprint2-submissions.spec.ts` | PASS in candidate; see F-05 execution record |
 | S2-F06-T01 | I | `server/tests/grading.integration.test.ts` | NOT CREATED / NOT RUN |
 | S2-F06-T02 | U+I | `server/tests/grading.unit.test.ts`<br>`server/tests/grading.integration.test.ts` | NOT CREATED / NOT RUN |
 | S2-F06-T03 | U+I | `server/tests/grading.unit.test.ts`<br>`server/tests/grading.integration.test.ts` | NOT CREATED / NOT RUN |
