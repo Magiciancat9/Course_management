@@ -6,6 +6,7 @@ on:
     branches:
       - lab5-staging
       - lab6-staging
+      - sprint-2-staging
       - lab7-staging
       # Run the full suite for stacked corrections before they enter the fix PR.
       - 'fix/lab6-10-*'
@@ -79,7 +80,10 @@ jobs:
           npm --prefix client ci
 
       - name: Prepare disposable CI database
-        run: npm --prefix server run prisma:migrate
+        working-directory: server
+        run: |
+          npm run prisma:migrate:deploy
+          npx prisma generate
 
       - name: Run backend tests
         run: npm run test:server
@@ -93,8 +97,30 @@ jobs:
       - name: Run end-to-end tests
         run: npm run test:e2e
 
+      - name: Retain synthetic Sprint 2 program evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: sprint2-program-${{ github.sha }}
+          path: |
+            test-results/f05-submission-v2.png
+            test-results/f06-published-grade.png
+          if-no-files-found: warn
+          retention-days: 90
+
       - name: Build production application
         run: npm run build
 
       - name: Build Docker image
-        run: docker build --tag course-pms:ci .
+        run: docker build --build-arg APP_COMMIT_SHA="${{ github.sha }}" --tag course-pms:ci .
+
+      - name: Measure built-container startup and database readiness
+        run: python3 deploy/tests/test_startup_readiness.py course-pms:ci "${{ github.sha }}" test-results/sprint2-startup.json
+
+      - name: Retain container startup measurement
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: sprint2-startup-${{ github.sha }}
+          path: test-results/sprint2-startup.json
+          if-no-files-found: error
+          retention-days: 90

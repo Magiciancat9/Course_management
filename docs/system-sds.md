@@ -141,7 +141,7 @@ erDiagram
 - **`RevokedToken.jti` (`@id`):** Stores logged-out JWT identifiers and their expiration timestamps in PostgreSQL so revocation survives server restarts; expired rows are removed opportunistically.
 
 ### 2.3. Database Setup, Migrations, and Reproducible Seed Data
-- **Schema Management:** Managed via `server/prisma/schema.prisma`. Sprint 1 applies the schema with `prisma db push`; real Prisma migrations are planned for Sprint 2.
+- **Schema Management:** The original Sprint 1 setup used `prisma db push` and the local `prisma:migrate` convenience command still does. The current post-Lab-5 tree already contains `server/prisma/migrations/20261110000000_init` and `prisma:migrate:deploy`. New Sprint 2–3 schema work adds reviewed migrations and verifies populated upgrades; do not rewrite init history or run a production reset/`db push`.
 - **Reproducible Seed (`server/prisma/seed.ts`):** Executed via `npm --prefix server run prisma:seed`. It deterministically resets/upserts synthetic demo data using environment-configurable passwords (`DEMO_USER_PASSWORD`):
   - **Course:** `CPE334 — Software Engineering in the Age of AI Agents (Semester 1/2026)` with `maxTeamSize = 3`.
   - **Seeded Accounts:**
@@ -164,7 +164,7 @@ erDiagram
 4. **Screen 3 — Instructor Course Review Console (`INSTRUCTOR` role):**
    - Summary metrics bar (Total Teams, Submitted Pending Review, Approved, Revision Requested).
    - All Course Teams & Proposals table with status filter (`ALL`, `SUBMITTED`, `APPROVED`, `REVISION_REQUESTED`, `DRAFT`).
-   - **Instructor Proposal Review Modal/Panel:** Displays full proposal details and provides APPROVED / REVISION_REQUESTED actions with a mandatory feedback textarea. Lab 7's approved revised contract requires action-specific guidance: trimmed minimum 10 for APPROVED, 20 for REVISION_REQUESTED, counted as JavaScript UTF-16 units. This design was peer-reviewed before code; the candidate UI/API now implement it with [execution evidence](labs/lab-07/implementation-evidence.md). The locked pre-change UI/API used 10 for both; final maintained release is pending. See [L7-CONTRACT v1.1](labs/lab-07/revised-contract.md) for authoritative validation precedence, API/data impact and STS.
+   - **Instructor Proposal Review Modal/Panel:** Displays full proposal details and provides APPROVED / REVISION_REQUESTED actions with a mandatory feedback textarea. Lab 7's approved revised contract requires action-specific guidance: trimmed minimum 10 for APPROVED, 20 for REVISION_REQUESTED, counted as JavaScript UTF-16 units. This design was peer-reviewed before code; the candidate UI/API now implement it with [execution evidence](labs/lab-07/implementation-evidence.md). The locked pre-change UI/API used 10 for both; maintained main includes the reviewed release. See [L7-CONTRACT v1.1](labs/lab-07/revised-contract.md) for authoritative validation precedence, API/data impact and STS.
 5. **Shared UI Behavior:**
    - **Loading State:** Dashboard loading indicator, action-specific pending labels, and disabled mutation controls during in-flight requests.
    - **Empty State:** Informative unassigned-student guidance and placeholder rows when team lists are empty.
@@ -236,12 +236,56 @@ All runtime configuration is injected via environment variables. Real secrets ar
 | `DATABASE_URL` | PostgreSQL connection URL | `postgresql://postgres:postgres@localhost:5432/course_pms?schema=public` | GCP Secret Manager (Cloud SQL socket) |
 | `JWT_SECRET` | HMAC secret for signing JWTs | `dev-only-jwt-secret-change-me` | GCP Secret Manager |
 | `CORS_ORIGIN` | Allowed frontend origin | `http://localhost:5173` | Same-origin Cloud Run URL |
-| `DEMO_USER_PASSWORD` | Password used by `prisma/seed.ts` | `Password123!` | Set via private course handoff / env |
+| `DEMO_USER_PASSWORD` | Password used by `prisma/seed.ts` | `<choose local-only value>` | Set via private course handoff / env; not exposed by the public web service |
 
-### 4.2. Planned Docker Packaging and GCP Deployment Architecture (Lab 5 Ready)
+### 4.2. Existing Docker Packaging and GCP Deployment Architecture (Post-Lab-5)
 - **Single-Container Multi-Stage `Dockerfile`:** Stage 1 builds the React/Vite frontend (`client/dist`); Stage 2 compiles the TypeScript Express backend (`server/dist`) and Prisma client; Stage 3 runs a lean Node 20 Alpine production image where Express serves both `/api/*` and the static `client/dist` bundle, plus `GET /api/health`.
-- **Planned GCP Components (for Lab 5 Deployment):**
+- **Existing GCP Components (retain the Lab 5 delivery process):**
   - **Google Artifact Registry:** Stores versioned container images built by GitHub Actions CI/CD.
   - **Google Cloud Run:** Serverless container runtime hosting the stateless CoursePMS container.
   - **Google Cloud SQL for PostgreSQL:** Managed durable relational database connected via Cloud SQL Auth Proxy Unix socket.
   - **Google Secret Manager:** Injects `DATABASE_URL` and `JWT_SECRET` at container startup without baking secrets into images or Git.
+
+## 5. Sprint 2 implementation and Sprint 3 design extension
+
+The release candidate implements F-01 through F-06. The reviewed
+[D2 shared design](sprints/deliverable-2/shared-contract.md) and per-feature
+[contracts](sprints/deliverable-2/README.md) add planned route/service/client
+responsibilities before code. No router, Prisma schema, migration or visual
+implementation is changed by this document revision.
+
+- F-04 adds versioned draft/published milestones and role-aware scheduling.
+- F-05 adds complete artifact/report/tag submission and immutable versions,
+  server-derived time/deadline snapshots and honest late status.
+- F-06 binds draft/published grading and immutable publication history to the
+  exact submitted version, with team-only student readback.
+- F-07 adds own-team task/events and confidential completed-milestone peer
+  evaluations, enforcing no self-rating and restricted visibility.
+- F-08 reads coherent course snapshots and exports published current-version
+  scores with defined rates, empty states and CSV formatting/safety policy.
+
+```mermaid
+erDiagram
+  COURSE ||--o{ MILESTONE : defines
+  PROJECT_TEAM ||--o{ MILESTONE_SUBMISSION : owns
+  MILESTONE ||--o{ MILESTONE_SUBMISSION : receives
+  MILESTONE_SUBMISSION ||--o{ SUBMISSION_VERSION : retains
+  SUBMISSION_VERSION ||--o| SUBMISSION_EVALUATION : evaluated_by
+  SUBMISSION_EVALUATION ||--o{ GRADE_PUBLICATION : publishes
+  PROJECT_TEAM ||--o{ TASK : owns
+  TASK ||--o{ TASK_EVENT : records
+  PROJECT_TEAM ||--o{ PEER_EVALUATION : scopes
+  MILESTONE ||--o{ PEER_EVALUATION : scopes
+```
+
+The F-04/F-05/F-06 portion is implemented in Prisma and versioned migrations;
+Task, TaskEvent and PeerEvaluation remain proposed Sprint 3 models. See
+the shared contract for exact unique keys, nullable legacy fields/backfill,
+actor/version constraints and non-destructive migration obligations. Do not
+silently expose private submission/grade/task/peer details through general
+team lists or replace the existing roster-only privacy policy.
+
+The [UI refresh specification](ui-refresh-spec.md) was implemented in PR #110.
+The Sprint 2 candidate integrates that shell with F-04/F-05/F-06 and the
+maintained Lab 7 revision20/approval10 rule. The [release ledger](sprints/sprint-2/accepted-release.md)
+records actual verification and independent main acceptance gates.

@@ -19,6 +19,17 @@ enum ProposalStatus {
   REVISION_REQUESTED
 }
 
+enum MilestoneStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum SubmissionLateStatus {
+  ON_TIME
+  LATE
+  UNKNOWN
+}
+
 model User {
   id                Int               @id @default(autoincrement())
   email             String            @unique
@@ -28,9 +39,11 @@ model User {
   role              Role              @default(STUDENT)
   createdAt         DateTime          @default(now())
 
-  createdTeams      ProjectTeam[]     @relation("TeamCreator")
-  teamMemberships   TeamMember[]
-  reviewedProposals ProjectProposal[] @relation("ProposalReviewer")
+  createdTeams        ProjectTeam[]          @relation("TeamCreator")
+  teamMemberships     TeamMember[]
+  reviewedProposals   ProjectProposal[]      @relation("ProposalReviewer")
+  updatedEvaluations  SubmissionEvaluation[] @relation("EvaluationUpdater")
+  publishedGrades     GradePublication[]     @relation("GradePublisher")
 }
 
 model RevokedToken {
@@ -111,7 +124,11 @@ model Milestone {
   description   String
   dueDate       DateTime
   weightPercent Int                   @default(20)
+  status        MilestoneStatus       @default(DRAFT)
+  publishedAt   DateTime?
+  version       Int                   @default(1)
   createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @default(now()) @updatedAt
 
   course        Course                @relation(fields: [courseId], references: [id], onDelete: Cascade)
   submissions   MilestoneSubmission[]
@@ -127,9 +144,75 @@ model MilestoneSubmission {
   score       Int?
   feedback    String?
   submittedAt DateTime    @default(now())
+  reportUrl   String?
+  version     Int         @default(1)
+  dueDateSnapshot DateTime?
+  lateStatus  SubmissionLateStatus @default(UNKNOWN)
 
-  milestone   Milestone   @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
-  team        ProjectTeam @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  milestone    Milestone              @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
+  team         ProjectTeam            @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  versions     SubmissionVersion[]
+  evaluations  SubmissionEvaluation[]
+  publications GradePublication[]
 
   @@unique([milestoneId, teamId])
+}
+
+model SubmissionVersion {
+  id              Int @id @default(autoincrement())
+  submissionId    Int
+  version         Int
+  repoUrl         String
+  reportUrl       String?
+  releaseTag      String
+  notes           String @default("")
+  submittedAt     DateTime
+  dueDateSnapshot DateTime?
+  lateStatus      SubmissionLateStatus @default(UNKNOWN)
+  legacyScore     Int?
+  legacyFeedback  String?
+
+  submission MilestoneSubmission   @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  evaluation SubmissionEvaluation?
+
+  @@unique([submissionId, version])
+}
+
+model SubmissionEvaluation {
+  id                     Int                @id @default(autoincrement())
+  submissionId           Int
+  submissionVersion      Int
+  score                  Int
+  feedback               String
+  version                Int                @default(1)
+  draftRevision          Int                @default(1)
+  publishedDraftRevision Int?
+  updatedById            Int
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @default(now()) @updatedAt
+
+  submission             MilestoneSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  contentVersion         SubmissionVersion   @relation(fields: [submissionId, submissionVersion], references: [submissionId, version], onDelete: Cascade)
+  updatedBy              User                @relation("EvaluationUpdater", fields: [updatedById], references: [id])
+  publications           GradePublication[]
+
+  @@unique([submissionId, submissionVersion])
+}
+
+model GradePublication {
+  id                Int                  @id @default(autoincrement())
+  evaluationId      Int
+  submissionId      Int
+  submissionVersion Int
+  draftRevision     Int
+  score             Int
+  feedback          String
+  publishedById     Int
+  publishedAt       DateTime             @default(now())
+
+  evaluation        SubmissionEvaluation @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
+  submission        MilestoneSubmission  @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  publishedBy       User                 @relation("GradePublisher", fields: [publishedById], references: [id])
+
+  @@unique([evaluationId, draftRevision])
 }

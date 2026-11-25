@@ -32,6 +32,15 @@
 ## 2. Layer Specifications (UI, API, Data)
 
 ### 2.1. UI Specification
+
+**Planned presentation revision (22 Nov 2026):** the user requested removal
+of the demo Quick Fill box and a modern layout, documented in
+[UIR v1.0](../../ui-refresh-spec.md). Implementation is deferred. This
+historical Sprint 1 UI section records the existing behavior; email/password
+authentication and all session/permission AC remain unchanged. The later UI
+implementation must version its Quick Fill expectation and preserve required
+auth/security coverage rather than silently deleting those tests.
+
 - **Login Screen:** Email input (`data-testid="login-email"`), Password input (`data-testid="login-password"`), Submit button (`data-testid="login-submit"`), quick demo account selector buttons for local testing, and error alert (`data-testid="auth-error"`).
 - **Authenticated Header:** Displays `user.fullName`, role badge (`STUDENT` or `INSTRUCTOR`), and Logout button (`data-testid="logout-btn"`).
 

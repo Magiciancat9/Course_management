@@ -77,10 +77,10 @@ In university software engineering and capstone courses, managing student projec
 | **BR-02** | Maximum Team Capacity Enforcement | A project team cannot exceed the course's configured `maxTeamSize` (default: 3 students; minimum: 1). Any attempt to add a member beyond `maxTeamSize` is rejected (`400 Bad Request` / `409 Conflict`). | Sprint 1 |
 | **BR-03** | Proposal State Transition Matrix | A Project Proposal must follow valid state transitions: `DRAFT` → `SUBMITTED`; `SUBMITTED` → `APPROVED` or `REVISION_REQUESTED`; `REVISION_REQUESTED` → `SUBMITTED`. Students cannot edit or re-submit a proposal that is currently `SUBMITTED` or already `APPROVED` (`409 Conflict`). | Sprint 1 |
 | **BR-04** | Proposal Content Completeness Gate | Submitting a proposal (`DRAFT`/`REVISION_REQUESTED` → `SUBMITTED`) requires a non-empty `title` (≥ 5 chars), `problemStatement` (≥ 20 chars), and `techStack` (≥ 3 chars). Incomplete submissions are rejected (`400 Bad Request`). | Sprint 1 |
-| **BR-05** | Mandatory Instructor Review Feedback | Approved Lab 7 requirement: for a `SUBMITTED` proposal, `REVISION_REQUESTED` requires `reviewFeedback.trim().length >= 20`; `APPROVED` retains `>= 10`, using JavaScript UTF-16 length. Preserve existing `400`/`409` validation/state behavior. Contract v1.1 was reviewed before code; the #87 candidate enforces these minima with executed tests. Maintained main release/deployment remain pending; the locked old runtime used 10 for both. | Sprint 1 maintenance |
+| **BR-05** | Mandatory Instructor Review Feedback | Approved Lab 7 requirement: for a `SUBMITTED` proposal, `REVISION_REQUESTED` requires `reviewFeedback.trim().length >= 20`; `APPROVED` retains `>= 10`, using JavaScript UTF-16 length. Preserve existing `400`/`409` validation/state behavior. Contract v1.1 was reviewed before code; the #87 candidate enforces these minima with executed tests. Maintained main includes the reviewed release; the locked pre-change runtime used 10 for both. | Sprint 1 maintenance |
 | **BR-06** | Team Ownership & Role Isolation | Only members of Team $X$ (or an `INSTRUCTOR`) may view or mutate Team $X$'s private proposal details and feedback; a Student from Team $Y$ attempting to view or modify Team $X$'s proposal is rejected (`403 Forbidden`). Only `INSTRUCTOR` users may execute proposal review endpoints (`403 Forbidden` for `STUDENT`). | Sprint 1 |
 | **BR-07** | Approved Proposal Prerequisite for Deliverables | A team cannot submit a Sprint/Milestone Deliverable (`FR-07`) unless its Project Proposal is in `APPROVED` status (`409 Conflict`). | Sprint 2 |
-| **BR-08** | Grade Bounds & Self-Peer-Review Prevention | Milestone scores must be within `0–100` inclusive (`FR-08`), and a Student cannot submit a peer evaluation rating for themselves (`FR-10`). | Sprint 3 |
+| **BR-08** | Grade Bounds & Self-Peer-Review Prevention | Milestone scores must be within `0–100` inclusive (`FR-08`), and a Student cannot submit a peer evaluation rating for themselves (`FR-10`). | Sprint 2 (grading) & Sprint 3 (peer evaluation) |
 
 ---
 
@@ -112,3 +112,31 @@ records the approved contract; [candidate implementation evidence](labs/lab-07/i
 | **AD-03** | Design Decision | Proposal-to-Team Relationship (`1:1` per Team) | Question: *Can a team have multiple active project proposals at once?* Resolution: Each `ProjectTeam` has at most one active `ProjectProposal` (`1:1` unique foreign key `teamId`), which evolves through `DRAFT` → `SUBMITTED` → `REVISION_REQUESTED` / `APPROVED` while preserving revision count and review history. |
 | **AD-04** | Design Decision | Handling Rejected / Unsatisfactory Proposals | Question: *If an instructor rejects a proposal, is the team permanently locked out?* Resolution: The rejection state is modeled as `REVISION_REQUESTED`. This rejects the current submission while allowing team members to revise the proposal and re-submit (`REVISION_REQUESTED` → `SUBMITTED`), whereas `APPROVED` locks the proposal from further student edits. |
 | **AD-05** | Design Decision | Database Engine & ORM | We use **PostgreSQL** with **Prisma ORM** across local development, automated testing, and planned GCP Cloud SQL deployment to ensure identical relational constraints (unique indexes on `(courseId, userId)` for team membership) in all environments. |
+
+## 8. Deliverable 2 contract elaboration and current status
+
+The baseline FR-01–12, BR-01–08 and NFR-01–05 above remain the product scope.
+BR-08's sprint label now explicitly includes its existing Sprint 2 grading
+responsibility; the grade/self-rating rule itself is unchanged.
+
+[S2-F04](sprints/sprint-2/f04-milestones.md),
+[S2-F05](sprints/sprint-2/f05-submissions.md),
+[S2-F06](sprints/sprint-2/f06-grading.md),
+[S3-F07](sprints/sprint-3/f07-collaboration.md) and
+[S3-F08](sprints/sprint-3/f08-analytics-export.md) provide concrete proposed
+feature SDS, UI/API/data, numbered AC and STS. Their [shared decision
+table](sprints/deliverable-2/shared-contract.md) explicitly proposes late
+flagging, immutable submission/grade binding, peer completion/rating/privacy
+and analytics/CSV semantics where the earlier SRS did not fix a boundary.
+The shared contracts were independently reviewed in PR #107 before code.
+F-04/F-05/F-06 are implemented and reviewed in PR #116/#117/#118. The
+[Sprint 2 release ledger](sprints/sprint-2/accepted-release.md) maps all AC
+to actual files, results, source identities and pending main acceptance gates.
+Sprint 3 implementation and the combined Sprint 2/3 RC remain separate work.
+
+The refreshed UI and Quick Fill removal were implemented in PR #110.
+Authenticated email/password, team/member functions and backend access control
+remain. The integrated release preserves maintained main's approved Lab 7
+BR-05: revision minimum 20, approval minimum 10 after trim/UTF-16.
+[Approval history](labs/lab-07/approval-record.md) and historical evidence
+remain dated to their actual releases.

@@ -1,5 +1,12 @@
 This document describes the Sprint 1 UI as implemented in PR #8 (as-built). UI behavior contracts are in the F-01 to F-03 feature contracts and docs/system-sds.md section 3.1; this file adds visual conventions and records where the implementation differs from them.
 
+**22 Nov 2026 planning note:** keep this as-built record separate from the
+[UIR v1.0 refresh proposal](ui-refresh-spec.md). The user requested a modern
+layout and removal of the demo Quick Fill box, then explicitly deferred code
+changes while specifications are prepared. The current UI/Quick Fill still
+exists; new visual screenshots, UIR test results and as-built acceptance are
+not claimed. Real email/password authentication is retained.
+
 # Sprint 1 As-Built UI Specification
 
 **Approved Lab 7 design addendum, 22 Nov 2026:** this historical as-built

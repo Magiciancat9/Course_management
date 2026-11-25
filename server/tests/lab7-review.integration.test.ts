@@ -1,4 +1,5 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { assertDisposableTestDatabase } from './helpers/disposableDatabase';
+import { afterAll, beforeEach, describe, expect, it } from 'vitest';
 import request from 'supertest';
 import app from '../src/app';
 import prisma from '../src/prisma';
@@ -10,15 +11,8 @@ describe('Lab 7: real API/PostgreSQL review validation and retained data/access'
   let proposalId: number;
   let instructorToken: string;
 
-  beforeAll(() => {
-    const url = new URL(process.env.DATABASE_URL || '');
-    if (process.env.NODE_ENV === 'production' ||
-        !['localhost', '127.0.0.1', 'postgres'].includes(url.hostname) ||
-        !url.pathname.endsWith('_test')) {
-      throw new Error('Lab 7 integration tests require a disposable local/CI database ending in _test.');
-    }
-  });
   beforeEach(async () => {
+    assertDisposableTestDatabase();
     await clearRevokedTokens();
     seeded = await seedDatabase(prisma);
     const proposal = await prisma.projectProposal.update({

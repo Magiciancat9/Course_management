@@ -1,3 +1,4 @@
+import { assertDisposableTestDatabase } from './helpers/disposableDatabase';
 import { describe, it, expect, beforeEach, afterAll, vi } from 'vitest';
 import request from 'supertest';
 import jwt from 'jsonwebtoken';
@@ -20,6 +21,7 @@ describe('CoursePMS Sprint 1 â€” API & Database Integration Suite (TEST-01 
   let seeded: Awaited<ReturnType<typeof seedDatabase>>;
 
   beforeEach(async () => {
+    assertDisposableTestDatabase();
     await clearRevokedTokens();
     seeded = await seedDatabase(prisma);
   });

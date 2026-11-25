@@ -2,6 +2,7 @@
 
 **Course:** CPE 334 Software Engineering in the Age of AI Agents (Semester 1/2026)  
 **Deliverable:** Project Deliverable 1 — Engineering Baseline and Working Sprint 1  
+**Current planning:** Sprint 2–3 contracts were reviewed in PR #107; UI refresh and F-04 merged into staging via #110/#116. F-05 is implemented on its feature branch for independent review; accepted Sprint 2/main deployment remains pending. See [F-05 evidence](docs/sprints/sprint-2/f05-execution-evidence.md).
 **Team Members:**
 - **Pawarit Wongdaeng** (`67070503466`, GitHub: `martinvadre`)
 - **Tatchakorn Thamnimitr** (`67070503415`, GitHub: `Magiciancat9`)
@@ -29,7 +30,11 @@
 | **Part D** | Three-Sprint Plan | [`docs/sprints/plan.md`](docs/sprints/plan.md) |
 | **Part E** | Sprint 1 Engineering Contracts & STS/DoD | [`docs/sprints/sprint-1/f01-auth-and-roles.md`](docs/sprints/sprint-1/f01-auth-and-roles.md), [`docs/sprints/sprint-1/f02-team-and-proposal-workflow.md`](docs/sprints/sprint-1/f02-team-and-proposal-workflow.md), [`docs/sprints/sprint-1/sts-and-dod.md`](docs/sprints/sprint-1/sts-and-dod.md) |
 | **Lab 5** | Cloud deployment configuration and GCP project record | [`docs/labs/lab-05/deployment.md`](docs/labs/lab-05/deployment.md), [`docs/labs/lab-05/gcp-project.md`](docs/labs/lab-05/gcp-project.md) |
+| **Sprint 2 release** | Integration source, all 27 AC, actual verification and accepted-main/tag gates | [`docs/sprints/sprint-2/accepted-release.md`](docs/sprints/sprint-2/accepted-release.md) |
+| **Deliverable 2** | Reviewed Sprint 2-3 contracts and current Sprint 2 release/AC verification ledger | [`docs/sprints/deliverable-2/README.md`](docs/sprints/deliverable-2/README.md) |
+| **UI refresh** | Modern layout, Quick Fill removal and responsive/accessibility criteria; implemented via PR #110 | [`docs/ui-refresh-spec.md`](docs/ui-refresh-spec.md) |
 | **Lab 7** | Approved BR-05 maintenance, release readiness and retrospective | [`docs/labs/lab-07/revised-contract.md`](docs/labs/lab-07/revised-contract.md), [`docs/labs/lab-07/readiness-and-retrospective.md`](docs/labs/lab-07/readiness-and-retrospective.md) |
+
 
 ---
 
@@ -76,6 +81,7 @@ npm --prefix server run prisma:migrate
 npm --prefix server run prisma:seed
 ```
 The local `prisma:migrate` script runs `prisma db push` for a disposable development database. The repository also contains versioned Prisma migrations; the production release job uses `npm --prefix server run prisma:migrate:deploy` (`prisma migrate deploy`), as described in the [deployment instructions](docs/labs/lab-05/deployment.md).
+
 
 The local/test seed resets its target database and must only be run against a disposable database. In `NODE_ENV=production`, the seed requires `DEMO_USER_PASSWORD` and only creates missing demo users/data; it does not delete or overwrite existing records. Supply the password to a one-time seed job from Secret Manager, never from committed source or the public web service. Do not run `prisma db push` against production; the production schema/migration procedure must be reviewed and documented before deployment.
 
