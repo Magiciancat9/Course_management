@@ -19,6 +19,11 @@ enum ProposalStatus {
   REVISION_REQUESTED
 }
 
+enum MilestoneStatus {
+  DRAFT
+  PUBLISHED
+}
+
 model User {
   id                Int               @id @default(autoincrement())
   email             String            @unique
@@ -111,7 +116,11 @@ model Milestone {
   description   String
   dueDate       DateTime
   weightPercent Int                   @default(20)
+  status        MilestoneStatus       @default(DRAFT)
+  publishedAt   DateTime?
+  version       Int                   @default(1)
   createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @default(now()) @updatedAt
 
   course        Course                @relation(fields: [courseId], references: [id], onDelete: Cascade)
   submissions   MilestoneSubmission[]
