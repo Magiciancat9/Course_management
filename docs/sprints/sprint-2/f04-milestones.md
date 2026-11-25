@@ -1,11 +1,9 @@
 # F-04 — Course milestone definition and schedule management
 
-**Contract:** S2-F04 v1.0, 22 Nov 2026; proposed / review pending.
-**Feature owner:** `martinvadre`; **draft author:** `Magiciancat9`; requested
-independent contract reviewer: `martinvadre`. Future owner-authored code is
-reviewed by `Magiciancat9`. **Issue:** [#94](https://github.com/Magiciancat9/Course_management/issues/94).
+**Contract:** S2-F04 v1.1, 25 Nov 2026; contract reviewed via PR #107 (`8eea6f0`), implementation PR pending review.
+**Feature owner:** `martinvadre`; **draft author:** `Magiciancat9`; independent code reviewer: `Magiciancat9`. **Issue:** [#94](https://github.com/Magiciancat9/Course_management/issues/94).
 **Links:** FR-06; NFR-01/02/04/05; F-01 dependency.
-**Implementation / new tests / accepted release:** NO / NOT RUN / NONE.
+**Implementation / new tests / accepted release:** YES (branch `feat/94-f04-milestones`) / PASS (54 server, 26 client, 4 E2E) / PENDING SPRINT 2 RELEASE.
 
 The [shared contract](../deliverable-2/shared-contract.md) supplies access,
 time, error, transaction, migration and DoD conventions. This feature is
@@ -135,4 +133,21 @@ authentication and proposal/team regression where shared code changes.
 
 | Revision | Date / status |
 | --- | --- |
-| S2-F04 v1.0 | 22 Nov 2026; initial concrete proposal; teammate review pending; no implementation or test result |
+| S2-F04 v1.0 | 22 Nov 2026; initial concrete proposal; reviewed and merged via PR #107 (`8eea6f0`) |
+| S2-F04 v1.1 | 25 Nov 2026; RED integration tests committed at `18a1c0a` (9/9 failed 404); implemented Prisma additive migration, API/service, and UI on `feat/94-f04-milestones` |
+
+## 8. AC completion & verification mapping (25 Nov 2026, Asia/Bangkok)
+
+- **Contract → RED → GREEN trace:** Contract `8eea6f0` (22 Nov 2026) → RED `18a1c0a` (25 Nov 2026, 9/9 `milestones.integration.test.ts` failed behaviorally with HTTP 404) → GREEN on `feat/94-f04-milestones` (`54` server tests, `26` client tests, `4` Playwright E2E tests, client/server production builds PASS).
+- **Populated-database migration check:** Applied `20261110000000_init` on disposable `course_pms_mig_test`, inserted a legacy `Milestone` row, resolved baseline (`prisma migrate resolve --applied 20261110000000_init`), and ran `prisma migrate deploy` (`20261125000000_f04_milestone_status_version`): legacy row preserved with `status = DRAFT`, `publishedAt = NULL`, `version = 1`, `weightPercent = 25`.
+
+| AC ID | Test ID(s) | Actual file & test name | Result | Version / Scope |
+| --- | --- | --- | --- | --- |
+| S2-F04-AC01 | S2-F04-T01 | `server/tests/milestones.integration.test.ts` — `S2-F04-T01 (S2-F04-AC01)` | PASS | `feat/94-f04-milestones` (PostgreSQL `course_pms_test`) |
+| S2-F04-AC02 | S2-F04-T02, S2-F04-T03 | `server/tests/milestones.unit.test.ts` & `server/tests/milestones.integration.test.ts` — `S2-F04-T02`, `S2-F04-T03` | PASS | `feat/94-f04-milestones` |
+| S2-F04-AC03 | S2-F04-T04 | `server/tests/milestones.unit.test.ts` & `server/tests/milestones.integration.test.ts` — `S2-F04-T04` | PASS | `feat/94-f04-milestones` (fake clock `2026-11-22T00:00:00.000Z`) |
+| S2-F04-AC04 | S2-F04-T05, S2-F04-T06 | `server/tests/milestones.integration.test.ts` — `S2-F04-T05`, `S2-F04-T06` | PASS | `feat/94-f04-milestones` |
+| S2-F04-AC05 | S2-F04-T07 | `server/tests/milestones.integration.test.ts` — `S2-F04-T07` | PASS | `feat/94-f04-milestones` |
+| S2-F04-AC06 | S2-F04-T08 | `server/tests/milestones.integration.test.ts` — `S2-F04-T08` | PASS | `feat/94-f04-milestones` |
+| S2-F04-AC07 | S2-F04-T09 | `server/tests/milestones.integration.test.ts` — `S2-F04-T09` | PASS | `feat/94-f04-milestones` |
+| S2-F04-AC08 | S2-F04-T10, S2-F04-T11 | `client/src/features/milestones/MilestoneManager.test.tsx` (`S2-F04-T10a–g`) & `e2e/sprint2-milestones.spec.ts` (`S2-F04-T11`) | PASS | `feat/94-f04-milestones` (Vitest + Chromium) |

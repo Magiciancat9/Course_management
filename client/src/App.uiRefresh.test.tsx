@@ -105,7 +105,8 @@ describe('CoursePMS UI Refresh (UIR v1.0)', () => {
     expect(screen.getByRole('button', { name: 'Overview' })).toHaveAttribute('aria-current', 'page');
     expect(screen.getByRole('button', { name: 'My Team' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Proposal' })).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /Milestones|Grading|Analytics/i })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Milestones' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Grading|Analytics/i })).not.toBeInTheDocument();
 
     const menuToggle = screen.getByRole('button', { name: 'Menu' });
     fireEvent.click(menuToggle);

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import MilestoneManager from './features/milestones/MilestoneManager';
 
 export interface User {
   id: number;
@@ -77,7 +78,7 @@ export default function App() {
   const [showPassword, setShowPassword] = useState(false);
 
   // Navigation state
-  const [activeNav, setActiveNav] = useState<'overview' | 'team' | 'proposal' | 'teams' | 'review'>('overview');
+  const [activeNav, setActiveNav] = useState<'overview' | 'team' | 'proposal' | 'teams' | 'review' | 'milestones'>('overview');
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   // Student Team creation & member addition state
@@ -373,7 +374,7 @@ export default function App() {
   }, [mobileNavOpen]);
 
   function navigateToSection(
-    navKey: 'overview' | 'team' | 'proposal' | 'teams' | 'review',
+    navKey: 'overview' | 'team' | 'proposal' | 'teams' | 'review' | 'milestones',
     sectionId?: string
   ) {
     setActiveNav(navKey);
@@ -825,7 +826,7 @@ export default function App() {
   const courseTerm = courses[0]?.term || '1/2026';
 
   const navItems: Array<{
-    key: 'overview' | 'team' | 'proposal' | 'teams' | 'review';
+    key: 'overview' | 'team' | 'proposal' | 'teams' | 'review' | 'milestones';
     label: string;
     sectionId: string;
   }> =
@@ -834,11 +835,13 @@ export default function App() {
           { key: 'overview', label: 'Overview', sectionId: 'main-content' },
           { key: 'team', label: 'My Team', sectionId: 'section-team' },
           { key: 'proposal', label: 'Proposal', sectionId: 'section-proposal' },
+          { key: 'milestones', label: 'Milestones', sectionId: 'section-milestones' },
         ]
       : [
           { key: 'overview', label: 'Overview', sectionId: 'main-content' },
           { key: 'teams', label: 'Course Teams', sectionId: 'section-teams' },
           { key: 'review', label: 'Proposal Review', sectionId: 'section-review' },
+          { key: 'milestones', label: 'Milestones', sectionId: 'section-milestones' },
         ];
 
   return (
@@ -1593,6 +1596,18 @@ export default function App() {
                 </div>
               </div>
             )}
+
+            <MilestoneManager
+              token={token!}
+              userRole={user.role}
+              courses={courses}
+              sessionGeneration={sessionGenerationRef.current}
+              getCurrentGeneration={() => sessionGenerationRef.current}
+              onUnauthorized={(msg, code) => {
+                invalidateSessionBoundary(null);
+                setErrorBanner({ error: msg, code });
+              }}
+            />
           </main>
         </div>
       </div>
