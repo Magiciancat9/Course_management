@@ -317,4 +317,83 @@ describe('F-04 MilestoneManager Component (S2-F04-T10)', () => {
     expect(formatted).toContain('23:59');
     expect(formatted).not.toContain('T16:59:00.000Z');
   });
+
+  it('S2-F04-T10g: resets loadingMore and discards stale load-more responses when switching courses', async () => {
+    const c1Item: MilestoneItem = {
+      id: 50,
+      courseId: 1,
+      title: 'Course 1 Page 1',
+      description: 'First page of course 1.',
+      dueDate: '2027-05-01T12:00:00.000Z',
+      weightPercent: 10,
+      status: 'PUBLISHED',
+      publishedAt: '2026-11-25T00:00:00.000Z',
+      version: 1,
+    };
+    const c1Page2Item: MilestoneItem = {
+      ...c1Item,
+      id: 51,
+      title: 'Course 1 Stale Page 2',
+    };
+    const c2Item: MilestoneItem = {
+      id: 200,
+      courseId: 2,
+      title: 'Course 2 Page 1',
+      description: 'First page of course 2.',
+      dueDate: '2027-05-02T12:00:00.000Z',
+      weightPercent: 20,
+      status: 'PUBLISHED',
+      publishedAt: '2026-11-25T00:00:00.000Z',
+      version: 1,
+    };
+
+    let resolveC1LoadMore!: (value: Response) => void;
+    const fetchMock = vi.fn((url: string) => {
+      if (url === '/api/courses/1/milestones') {
+        return okJson({ milestones: [c1Item], nextAfterId: 50 });
+      }
+      if (url === '/api/courses/1/milestones?afterId=50') {
+        return new Promise<Response>((resolve) => {
+          resolveC1LoadMore = resolve;
+        });
+      }
+      if (url === '/api/courses/2/milestones') {
+        return okJson({ milestones: [c2Item], nextAfterId: 200 });
+      }
+      return okJson({});
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    render(
+      <MilestoneManager
+        token="instr-token"
+        userRole="INSTRUCTOR"
+        courses={TWO_COURSES}
+        sessionGeneration={1}
+        getCurrentGeneration={() => 1}
+        onUnauthorized={vi.fn()}
+      />
+    );
+
+    expect(await screen.findByText('Course 1 Page 1')).toBeInTheDocument();
+    fireEvent.click(screen.getByTestId('milestone-load-more-btn'));
+    expect(screen.getByTestId('milestone-load-more-btn')).toBeDisabled();
+
+    // Switch to course 2 while course 1's load-more is still pending
+    fireEvent.change(screen.getByTestId('milestone-course-select'), {
+      target: { value: '2' },
+    });
+
+    expect(await screen.findByText('Course 2 Page 1')).toBeInTheDocument();
+    const c2LoadMoreBtn = screen.getByTestId('milestone-load-more-btn');
+    expect(c2LoadMoreBtn).not.toBeDisabled();
+    expect(c2LoadMoreBtn).toHaveTextContent('Load more milestones');
+
+    // Resolve stale course 1 load-more -> must not append to course 2 or affect button
+    resolveC1LoadMore(await okJson({ milestones: [c1Page2Item], nextAfterId: null }));
+    await waitFor(() => {
+      expect(screen.queryByText('Course 1 Stale Page 2')).not.toBeInTheDocument();
+    });
+    expect(screen.getByTestId('milestone-load-more-btn')).not.toBeDisabled();
+  });
 });

@@ -79,6 +79,7 @@ export default function MilestoneManager({
   const [hasConflict, setHasConflict] = useState<boolean>(false);
 
   const abortRef = useRef<AbortController | null>(null);
+  const loadMoreAbortRef = useRef<AbortController | null>(null);
   const selectedCourseIdRef = useRef<number | null>(selectedCourseId);
   selectedCourseIdRef.current = selectedCourseId;
 
@@ -123,14 +124,24 @@ export default function MilestoneManager({
     courseId: number,
     afterId?: number
   ): Promise<MilestoneItem[] | null> {
-    if (afterId === undefined && abortRef.current) {
-      abortRef.current.abort();
+    if (afterId === undefined) {
+      if (abortRef.current) {
+        abortRef.current.abort();
+      }
+      if (loadMoreAbortRef.current) {
+        loadMoreAbortRef.current.abort();
+        loadMoreAbortRef.current = null;
+      }
+      setLoadingMore(false);
+    } else if (loadMoreAbortRef.current) {
+      loadMoreAbortRef.current.abort();
     }
     const controller = new AbortController();
     if (afterId === undefined) {
       abortRef.current = controller;
       setLoading(true);
     } else {
+      loadMoreAbortRef.current = controller;
       setLoadingMore(true);
     }
     const expectedGen = sessionGeneration;
@@ -196,6 +207,9 @@ export default function MilestoneManager({
       if (afterId === undefined && abortRef.current === controller) {
         abortRef.current = null;
       }
+      if (afterId !== undefined && loadMoreAbortRef.current === controller) {
+        loadMoreAbortRef.current = null;
+      }
       if (
         !controller.signal.aborted &&
         expectedGen === getCurrentGeneration() &&
@@ -211,6 +225,8 @@ export default function MilestoneManager({
   }
 
   useEffect(() => {
+    setLoadingMore(false);
+    setNextAfterId(null);
     if (selectedCourseId !== null && token) {
       loadMilestones(selectedCourseId);
     }
@@ -218,6 +234,10 @@ export default function MilestoneManager({
       if (abortRef.current) {
         abortRef.current.abort();
         abortRef.current = null;
+      }
+      if (loadMoreAbortRef.current) {
+        loadMoreAbortRef.current.abort();
+        loadMoreAbortRef.current = null;
       }
     };
   }, [selectedCourseId, token, sessionGeneration]);
