@@ -105,61 +105,63 @@ ownership handoff. All UI implementation/execution statuses below remain pending
 
 | AC | Planned test IDs | Implemented | Actual verification / version |
 | --- | --- | --- | --- |
-| UIR-AC01 | UIR-T01 | NO | NOT RUN / no candidate |
-| UIR-AC02 | UIR-T02, UIR-T03 | NO | NOT RUN / no candidate |
-| UIR-AC03 | UIR-T04 | NO | NOT RUN / no candidate |
-| UIR-AC04 | UIR-T05 | NO | NOT RUN / no candidate |
-| UIR-AC05 | UIR-T06 | NO | NOT RUN / no candidate |
-| UIR-AC06 | UIR-T07 | NO | NOT RUN / no candidate |
-| UIR-AC07 | UIR-T08 | NO | NOT RUN / no candidate |
-| UIR-AC08 | UIR-T09 | NO | NOT RUN / no candidate |
-| UIR-AC09 | UIR-T10 | NO | NOT RUN / no candidate |
-| UIR-AC10 | UIR-T11, UIR-T12 | NO | NOT RUN / no candidate |
+| UIR-AC01 | UIR-T01 | UI implemented via PR #110 | Component/E2E subset exists; full visual/accessibility acceptance remains under #100/#103 |
+| UIR-AC02 | UIR-T02, UIR-T03 | UI implemented via PR #110 | Component/E2E subset exists; full visual/accessibility acceptance remains under #100/#103 |
+| UIR-AC03 | UIR-T04 | UI implemented via PR #110 | Component/E2E subset exists; full visual/accessibility acceptance remains under #100/#103 |
+| UIR-AC04 | UIR-T05 | UI implemented via PR #110 | Component/E2E subset exists; full visual/accessibility acceptance remains under #100/#103 |
+| UIR-AC05 | UIR-T06 | UI implemented via PR #110 | Component/E2E subset exists; full visual/accessibility acceptance remains under #100/#103 |
+| UIR-AC06 | UIR-T07 | UI implemented via PR #110 | Component/E2E subset exists; full visual/accessibility acceptance remains under #100/#103 |
+| UIR-AC07 | UIR-T08 | UI implemented via PR #110 | Component/E2E subset exists; full visual/accessibility acceptance remains under #100/#103 |
+| UIR-AC08 | UIR-T09 | UI implemented via PR #110 | Component/E2E subset exists; full visual/accessibility acceptance remains under #100/#103 |
+| UIR-AC09 | UIR-T10 | UI implemented via PR #110 | Component/E2E subset exists; full visual/accessibility acceptance remains under #100/#103 |
+| UIR-AC10 | UIR-T11, UIR-T12 | UI implemented via PR #110 | Component/E2E subset exists; full visual/accessibility acceptance remains under #100/#103 |
 
-## 2. Planned executable locations by test ID
+## 2. Executable locations and remaining planned checks
 
 U = unit; I = real API/PostgreSQL integration; UI = client component;
 E = end-to-end; M = actual manual/consumer/visual check. Full inputs,
 preconditions and expected outcomes are in the linked feature STS above.
-The location column is a proposal; even an existing baseline file does not
-mean its new named case exists or has executed.
+Sprint 2 locations below exist and are executed; exact results are in the
+release ledger. Sprint 3 locations remain proposals. UI-refresh rows retain
+the original planned full visual/system checks; existing component/Sprint 1
+browser checks do not establish every manual design criterion.
 
 | Test ID | Level | Planned location(s), not execution evidence | Status |
 | --- | --- | --- | --- |
-| S2-F04-T01 | I | `server/tests/milestones.integration.test.ts` | NOT CREATED / NOT RUN |
-| S2-F04-T02 | U+I | `server/tests/milestones.unit.test.ts`<br>`server/tests/milestones.integration.test.ts` | NOT CREATED / NOT RUN |
-| S2-F04-T03 | U+I | `server/tests/milestones.unit.test.ts`<br>`server/tests/milestones.integration.test.ts` | NOT CREATED / NOT RUN |
-| S2-F04-T04 | U+I | `server/tests/milestones.unit.test.ts`<br>`server/tests/milestones.integration.test.ts` | NOT CREATED / NOT RUN |
-| S2-F04-T05 | I | `server/tests/milestones.integration.test.ts` | NOT CREATED / NOT RUN |
-| S2-F04-T06 | I | `server/tests/milestones.integration.test.ts` | NOT CREATED / NOT RUN |
-| S2-F04-T07 | I | `server/tests/milestones.integration.test.ts` | NOT CREATED / NOT RUN |
-| S2-F04-T08 | I | `server/tests/milestones.integration.test.ts` | NOT CREATED / NOT RUN |
-| S2-F04-T09 | I | `server/tests/milestones.integration.test.ts` | NOT CREATED / NOT RUN |
-| S2-F04-T10 | UI | `client/src/features/milestones/MilestoneManager.test.tsx` | NOT CREATED / NOT RUN |
-| S2-F04-T11 | E | `e2e/sprint2-milestones.spec.ts` | NOT CREATED / NOT RUN |
-| S2-F05-T01 | I | `server/tests/submissions.integration.test.ts` | PASS in candidate; see F-05 execution record |
-| S2-F05-T02 | U+I | `server/tests/submissions.unit.test.ts`<br>`server/tests/submissions.integration.test.ts` | PASS in candidate; see F-05 execution record |
-| S2-F05-T03 | I | `server/tests/submissions.integration.test.ts` | PASS in candidate; see F-05 execution record |
-| S2-F05-T04 | U+I | `server/tests/submissions.unit.test.ts`<br>`server/tests/submissions.integration.test.ts` | PASS in candidate; see F-05 execution record |
-| S2-F05-T05 | U+I | `server/tests/submissions.unit.test.ts`<br>`server/tests/submissions.integration.test.ts` | PASS in candidate; see F-05 execution record |
-| S2-F05-T06 | I | `server/tests/submissions.integration.test.ts` | PASS for content/legacy retention; published-grade step pending F-06 |
-| S2-F05-T07 | I | `server/tests/submissions.integration.test.ts` | PASS in candidate; see F-05 execution record |
-| S2-F05-T08 | I | `server/tests/submissions.integration.test.ts` | PASS in candidate; see F-05 execution record |
-| S2-F05-T09 | I | `server/tests/submissions.integration.test.ts`<br>`server/tests/submissions-migration.integration.test.ts` | PASS in candidate; see F-05 execution record |
-| S2-F05-T10 | UI | `client/src/features/submissions/SubmissionWorkspace.test.tsx` | PASS in candidate; see F-05 execution record |
-| S2-F05-T11 | E | `e2e/sprint2-submissions.spec.ts` | PASS in candidate; see F-05 execution record |
-| S2-F05-T12 | UI+E | `client/src/features/submissions/SubmissionWorkspace.test.tsx`<br>`e2e/sprint2-submissions.spec.ts` | PASS in candidate; see F-05 execution record |
-| S2-F06-T01 | I | `server/tests/grading.integration.test.ts` | NOT CREATED / NOT RUN |
-| S2-F06-T02 | U+I | `server/tests/grading.unit.test.ts`<br>`server/tests/grading.integration.test.ts` | NOT CREATED / NOT RUN |
-| S2-F06-T03 | U+I | `server/tests/grading.unit.test.ts`<br>`server/tests/grading.integration.test.ts` | NOT CREATED / NOT RUN |
-| S2-F06-T04 | I | `server/tests/grading.integration.test.ts` | NOT CREATED / NOT RUN |
-| S2-F06-T05 | I | `server/tests/grading.integration.test.ts` | NOT CREATED / NOT RUN |
-| S2-F06-T06 | I | `server/tests/grading.integration.test.ts` | NOT CREATED / NOT RUN |
-| S2-F06-T07 | I | `server/tests/grading.integration.test.ts` | NOT CREATED / NOT RUN |
-| S2-F06-T08 | I | `server/tests/grading.integration.test.ts` | NOT CREATED / NOT RUN |
-| S2-F06-T09 | UI | `client/src/features/grading/GradingConsole.test.tsx` | NOT CREATED / NOT RUN |
-| S2-F06-T10 | E | `e2e/sprint2-grading.spec.ts` | NOT CREATED / NOT RUN |
-| S2-F06-T11 | I | `server/tests/grading.integration.test.ts` | NOT CREATED / NOT RUN |
+| S2-F04-T01 | I | `server/tests/milestones.integration.test.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F04-T02 | U+I | `server/tests/milestones.unit.test.ts`<br>`server/tests/milestones.integration.test.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F04-T03 | U+I | `server/tests/milestones.unit.test.ts`<br>`server/tests/milestones.integration.test.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F04-T04 | U+I | `server/tests/milestones.unit.test.ts`<br>`server/tests/milestones.integration.test.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F04-T05 | I | `server/tests/milestones.integration.test.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F04-T06 | I | `server/tests/milestones.integration.test.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F04-T07 | I | `server/tests/milestones.integration.test.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F04-T08 | I | `server/tests/milestones.integration.test.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F04-T09 | I | `server/tests/milestones.integration.test.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F04-T10 | UI | `client/src/features/milestones/MilestoneManager.test.tsx` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F04-T11 | E | `e2e/sprint2-milestones.spec.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F05-T01 | I | `server/tests/submissions.integration.test.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F05-T02 | U+I | `server/tests/submissions.unit.test.ts`<br>`server/tests/submissions.integration.test.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F05-T03 | I | `server/tests/submissions.integration.test.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F05-T04 | U+I | `server/tests/submissions.unit.test.ts`<br>`server/tests/submissions.integration.test.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F05-T05 | U+I | `server/tests/submissions.unit.test.ts`<br>`server/tests/submissions.integration.test.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F05-T06 | I | `server/tests/submissions.integration.test.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F05-T07 | I | `server/tests/submissions.integration.test.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F05-T08 | I | `server/tests/submissions.integration.test.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F05-T09 | I | `server/tests/submissions.integration.test.ts`<br>`server/tests/submissions-migration.integration.test.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F05-T10 | UI | `client/src/features/submissions/SubmissionWorkspace.test.tsx` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F05-T11 | E | `e2e/sprint2-submissions.spec.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F05-T12 | UI+E | `client/src/features/submissions/SubmissionWorkspace.test.tsx`<br>`e2e/sprint2-submissions.spec.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F06-T01 | I | `server/tests/grading.integration.test.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F06-T02 | U+I | `server/tests/grading.unit.test.ts`<br>`server/tests/grading.integration.test.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F06-T03 | U+I | `server/tests/grading.unit.test.ts`<br>`server/tests/grading.integration.test.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F06-T04 | I | `server/tests/grading.integration.test.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F06-T05 | I | `server/tests/grading.integration.test.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F06-T06 | I | `server/tests/grading.integration.test.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F06-T07 | I | `server/tests/grading.integration.test.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F06-T08 | I | `server/tests/grading.integration.test.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F06-T09 | UI | `client/src/features/grading/GradingConsole.test.tsx` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F06-T10 | E | `e2e/sprint2-grading.spec.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
+| S2-F06-T11 | I | `server/tests/grading.integration.test.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
 | S3-F07-T01 | I | `server/tests/collaboration.integration.test.ts` | NOT CREATED / NOT RUN |
 | S3-F07-T02 | U+I | `server/tests/collaboration.unit.test.ts`<br>`server/tests/collaboration.integration.test.ts` | NOT CREATED / NOT RUN |
 | S3-F07-T03 | I | `server/tests/collaboration.integration.test.ts` | NOT CREATED / NOT RUN |
@@ -204,7 +206,7 @@ mean its new named case exists or has executed.
 
 | ID / requirement | Planned method / expected result | Status |
 | --- | --- | --- |
-| D2-SYS-T01 / NFR-05 | On the exact built image with stated test configuration, measure elapsed monotonic time from process start to first HTTP 200 `/api/health`; target ≤10,000 ms, excluding image download. Retain command/image/host/time and health response. Planned `deploy/tests/test_startup_readiness.py` plus actual container record | NOT CREATED / NOT MEASURED |
+| D2-SYS-T01 / NFR-05 | `deploy/tests/test_startup_readiness.py` measures monotonic elapsed time before `docker run` to first valid health 200 (includes container creation; excludes build/download); limit 10,000ms. Also verifies source SHA, DB readiness and built HTML. Retains image/host/UTC/elapsed JSON. | Implemented; actual exact-source measurement in [S2 ledger](../sprint-2/accepted-release.md); not Cloud Run timing |
 
 Existing health-response and Docker-build checks do not by themselves
 measure the SRS startup-time target. Do not present them as that measurement.

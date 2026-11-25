@@ -1,5 +1,10 @@
 # F-05 implementation and executed verification — 25 November 2026
 
+**25 Nov integration update (#97):** feature implementations were independently
+reviewed and merged in PR #116/#117/#118. The feature-head history below retains
+its original scope; [accepted-release.md](accepted-release.md) records the
+combined maintained-main candidate, all Sprint 2 AC and pending release gates.
+
 Work: [#95](https://github.com/Magiciancat9/Course_management/issues/95).
 Driver: `Magiciancat9`, assisted by Codex. Independent reviewer: `martinvadre`
 (pending). Code/tests and checks were AI-assisted; GitHub Actions executed the

@@ -1,6 +1,11 @@
 # F-06 — Instructor grading and rubric feedback
 
-**Contract:** S2-F06 v1.1, 25 Nov 2026; contract reviewed via PR #107 (`8eea6f0`), implementation PR pending review.
+**25 Nov integration update (#97):** feature implementations were independently
+reviewed and merged in PR #116/#117/#118. The feature-head history below retains
+its original scope; [accepted-release.md](accepted-release.md) records the
+combined maintained-main candidate, all Sprint 2 AC and pending release gates.
+
+**Contract:** S2-F06 v1.1, 25 Nov 2026; contract reviewed via PR #107 (`8eea6f0`), implementation independently reviewed and merged via PR #116.
 **Feature owner:** `martinvadre`; draft author `Magiciancat9`; independent code reviewer `Magiciancat9`. **Issue:** [#96](https://github.com/Magiciancat9/Course_management/issues/96).
 **Links:** FR-08, BR-06/08, NFR-01/02/04; depends on [F-05](f05-submissions.md) (PR #117 / `88fb036`).
 **Implemented / executed / accepted:** YES (branch `feat/96-f06-grading`) / PASS (93 server, 41 client, 6 E2E) / PENDING SPRINT 2 RELEASE.

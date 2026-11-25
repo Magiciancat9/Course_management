@@ -1,5 +1,11 @@
 # Lab 5–7 change and defect register — D2-01 v1.1
 
+**25 Nov release update:** the dated 22 Nov sections below are historical
+planning/continuity evidence, not a current claim that Lab 7/F-04/F-05/F-06
+are still unimplemented. The [Sprint 2 release ledger](../sprint-2/accepted-release.md)
+records their reviewed sources, combined results and remaining main acceptance
+gates. Final Sprint 2/3 RC checks remain #93/#100/#103 work.
+
 **Checked:** 22 Nov 2026. **Owner:** `Magiciancat9`; independent reviewer:
 `martinvadre`. Work item: [#93](https://github.com/Magiciancat9/Course_management/issues/93).
 This register distinguishes accepted history, current source verification,

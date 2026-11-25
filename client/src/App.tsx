@@ -1553,7 +1553,7 @@ export default function App() {
                               <button
                                 type="button"
                                 data-testid="approve-proposal-btn"
-                              aria-describedby="review-feedback-hint"
+                                aria-describedby="review-feedback-hint"
                                 className="cpms-btn cpms-btn-success cpms-btn-full-mobile"
                                 onClick={() =>
                                   handleInstructorDecision(
@@ -1570,7 +1570,7 @@ export default function App() {
                               <button
                                 type="button"
                                 data-testid="revision-proposal-btn"
-                              aria-describedby="review-feedback-hint"
+                                aria-describedby="review-feedback-hint"
                                 className="cpms-btn cpms-btn-warning cpms-btn-full-mobile"
                                 onClick={() =>
                                   handleInstructorDecision(

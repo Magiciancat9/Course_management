@@ -1,6 +1,11 @@
 # F-04 — Course milestone definition and schedule management
 
-**Contract:** S2-F04 v1.1, 25 Nov 2026; contract reviewed via PR #107 (`8eea6f0`), implementation PR pending review.
+**25 Nov integration update (#97):** feature implementations were independently
+reviewed and merged in PR #116/#117/#118. The feature-head history below retains
+its original scope; [accepted-release.md](accepted-release.md) records the
+combined maintained-main candidate, all Sprint 2 AC and pending release gates.
+
+**Contract:** S2-F04 v1.1, 25 Nov 2026; contract reviewed via PR #107 (`8eea6f0`), implementation independently reviewed and merged via PR #116.
 **Feature owner:** `martinvadre`; **draft author:** `Magiciancat9`; independent code reviewer: `Magiciancat9`. **Issue:** [#94](https://github.com/Magiciancat9/Course_management/issues/94).
 **Links:** FR-06; NFR-01/02/04/05; F-01 dependency.
 **Implementation / new tests / accepted release:** YES (branch `feat/94-f04-milestones`) / PASS (54 server, 26 client, 4 E2E) / PENDING SPRINT 2 RELEASE.

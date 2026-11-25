@@ -91,7 +91,8 @@ their actual dates/results and are not reused as Sprint 2 verification.
 | Revision | Date | Decision / evidence |
 | --- | --- | --- |
 | D2-SPEC v1.0 | 22 Nov 2026 | Initial complete draft, UI plan and planned verification; no new runtime behavior/test results |
-| Independent review | Pending | Record reviewer, PR permalink, date, accepted/revised policy IDs and resulting commit before implementation |
+| Independent contract review | 22 Nov 2026 | martinvadre approved and merged PR #107 (`8eea6f0`) before implementation |
+| Sprint 2 release reconciliation | 25 Nov 2026 | All F-04/F-05/F-06 source/reviews, combined verification and pending main/tag gates in the release ledger |
 
 The final assessed PDF must embed the complete required documents and
 selected actual execution evidence. This repository package is the source;
