@@ -1600,6 +1600,8 @@ export default function App() {
             <MilestoneManager
               token={token!}
               userRole={user.role}
+              ownTeams={teams.filter(team => team.members.some(member => member.userId === user.id))
+                .map(team => ({ id: team.id, courseId: team.courseId, proposalStatus: team.proposal?.status || null }))}
               courses={courses}
               sessionGeneration={sessionGenerationRef.current}
               getCurrentGeneration={() => sessionGenerationRef.current}

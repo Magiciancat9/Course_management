@@ -6,6 +6,7 @@ on:
     branches:
       - lab5-staging
       - lab6-staging
+      - sprint-2-staging
       # Run the full suite for stacked corrections before they enter the fix PR.
       - 'fix/lab6-10-*'
       - main
@@ -78,7 +79,10 @@ jobs:
           npm --prefix client ci
 
       - name: Prepare disposable CI database
-        run: npm --prefix server run prisma:migrate
+        working-directory: server
+        run: |
+          npm run prisma:migrate:deploy
+          npx prisma generate
 
       - name: Run backend tests
         run: npm run test:server

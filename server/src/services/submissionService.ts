@@ -19,7 +19,7 @@ const allowed = new Set(['expectedVersion', 'repoUrl', 'reportUrl', 'releaseTag'
 function httpUrl(raw: unknown): string | null {
   if (typeof raw !== 'string') return null;
   const value = raw.trim();
-  if (!value || value.length > 2048) return null;
+  if (!value || value.length > 2048 || !/^https?:\/\//i.test(value)) return null;
   try {
     const url = new URL(value);
     return ['http:', 'https:'].includes(url.protocol) && url.hostname ? value : null;

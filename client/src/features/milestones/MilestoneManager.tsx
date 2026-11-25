@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import type { Course } from '../../App';
+import SubmissionWorkspace from '../submissions/SubmissionWorkspace';
 
 export interface MilestoneItem {
   id: number;
@@ -20,6 +21,7 @@ interface MilestoneManagerProps {
   sessionGeneration: number;
   getCurrentGeneration: () => number;
   onUnauthorized: (message: string, code?: string) => void;
+  ownTeams?: Array<{ id: number; courseId: number; proposalStatus: string | null }>;
 }
 
 function toLocalDateTimeInput(isoString: string): string {
@@ -54,11 +56,13 @@ export default function MilestoneManager({
   sessionGeneration,
   getCurrentGeneration,
   onUnauthorized,
+  ownTeams = [],
 }: MilestoneManagerProps) {
   const [selectedCourseId, setSelectedCourseId] = useState<number | null>(
     courses[0]?.id ?? null
   );
   const [milestones, setMilestones] = useState<MilestoneItem[]>([]);
+  const [submissionMilestone, setSubmissionMilestone] = useState<MilestoneItem | null>(null);
   const [nextAfterId, setNextAfterId] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingMore, setLoadingMore] = useState<boolean>(false);
@@ -715,6 +719,11 @@ export default function MilestoneManager({
                         )}
                       </div>
                       <p className="mb-0 mt-2 small">{m.description}</p>
+                      {(userRole === 'INSTRUCTOR' || m.status === 'PUBLISHED') && <button type="button"
+                        className="cpms-btn cpms-btn-secondary mt-2" data-testid={`milestone-submission-btn-${m.id}`}
+                        onClick={() => setSubmissionMilestone(m)}>
+                        {userRole === 'INSTRUCTOR' ? 'View submissions' : 'View / submit deliverable'}
+                      </button>}
                     </div>
                   ))}
                 </div>
@@ -736,6 +745,13 @@ export default function MilestoneManager({
             )}
           </>
         )}
+        {submissionMilestone && submissionMilestone.courseId === selectedCourseId && <>
+          <button type="button" className="cpms-btn cpms-btn-secondary mt-3" onClick={() => setSubmissionMilestone(null)}>Close submission details</button>
+          <SubmissionWorkspace key={`${sessionGeneration}:${selectedCourseId}:${submissionMilestone.id}`} token={token}
+            userRole={userRole} courseId={selectedCourseId} milestone={submissionMilestone}
+            ownTeam={ownTeams.find(team => team.courseId === selectedCourseId) || null}
+            sessionGeneration={sessionGeneration} getCurrentGeneration={getCurrentGeneration} onUnauthorized={onUnauthorized} />
+        </>}
       </div>
     </section>
   );

@@ -125,7 +125,9 @@ describe('F-05: real API/PostgreSQL submissions, immutable versions and access',
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(new Date(deadline.getTime() + offset));
     try {
-      const saved = await put();
+      // The simulated deadline is days after fixture setup. Issue the real
+      // session at the simulated time instead of using an expired 8h JWT.
+      const saved = await put(body(), signAuthToken(fixture.pawarit));
       expect(saved.status).toBe(201);
       expect(saved.body.submission.submittedAt).toBe(new Date(deadline.getTime() + offset).toISOString());
       expect(saved.body.submission.dueDateSnapshot).toBe(deadline.toISOString());
