@@ -99,7 +99,8 @@ UNKNOWN lateness are preserved rather than backfilled with invented facts.
 | `20261125030000_f07_task_checkpoint` | New Task/TaskEvent only; existing 11 table snapshots preserved in actual SQL upgrade test |
 
 Use `npm --prefix server run prisma:migrate:deploy` then
-`npm --prefix server exec -- prisma generate` on a fresh development/test DB.
+`npm --prefix server run build` (Prisma generation plus TypeScript compilation)
+on a fresh development/test DB.
 The convenience `prisma:migrate` script is actually `prisma db push`; it is
 not migration history and must not be used on production. Existing populated
 DBs require the reviewed migration-history/backfill procedure in
