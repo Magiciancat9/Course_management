@@ -1,10 +1,17 @@
 # F-05 — Team milestone deliverable submission
 
+**25 Nov current reconciliation (#100):** implementation independently
+reviewed/merged via PR #117, integrated/deployed on main through PR #119.
+The complete contract/AC/STS below is retained; [per-AC actual verification](../deliverable-2/verification-register.md)
+and [current release register](../deliverable-2/continuity-and-status.md)
+separate tested implementation from #97's remaining accepted-tag/authenticated
+release gates. Original pre-code and feature-head execution claims stay dated.
+
 **Contract:** S2-F05 v1.0, 22 Nov 2026; independently reviewed in PR #107 before implementation. Execution addendum: v1.1, 25 Nov 2026.
 **Feature owner / draft author:** `Magiciancat9`; requested reviewer:
 `martinvadre`. **Issue:** [#95](https://github.com/Magiciancat9/Course_management/issues/95).
 **Links:** FR-07; BR-06/07; NFR-01/02/04/05. Dependencies: F-02/F-03 and
-[F-04](f04-milestones.md). **Implemented / executed / accepted:** feature-branch candidate / [executed evidence](f05-execution-evidence.md) / teammate review, integration and accepted Sprint 2 release pending.
+[F-04](f04-milestones.md). **Implemented / executed / accepted:** feature-branch candidate / [executed evidence](f05-execution-evidence.md) / independently reviewed #117 and integrated/deployed #119; #97 accepted-tag/authenticated evidence pending.
 
 ## 1. Workflow and feature SDS
 
@@ -145,9 +152,11 @@ claim the integrated dependency is complete while it remains unverified.
 | S2-F05 v1.0 accepted | 22 Nov 2026; martinvadre approved the shared policies and feature contracts through PR #107, merged at `8eea6f0`; precedes F-05 tests/code |
 | S2-F05 v1.1 execution addendum | 25 Nov 2026; original behavior/AC retained; implementation, real RED/GREEN and legacy grading boundary documented below |
 
-## 8. Implemented AC and remaining integration boundary
+## 8. Original F-05-only execution snapshot (before F-06 integration)
 
-All implementation results refer to the source/run identities in
+This dated feature-only snapshot retains its original limits. Current F-06
+handoff is implemented/tested (grading T06/T07/T08) in the current register.
+The original implementation results below refer to the source/run identities in
 [F-05 execution evidence](f05-execution-evidence.md). They do not establish a
 reviewed main release, production deployment or completion of F-06.
 

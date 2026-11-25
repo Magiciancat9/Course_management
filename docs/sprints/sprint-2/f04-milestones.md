@@ -1,5 +1,12 @@
 # F-04 — Course milestone definition and schedule management
 
+**25 Nov current reconciliation (#100):** implementation independently
+reviewed/merged via PR #116, integrated/deployed on main through PR #119.
+The complete contract/AC/STS below is retained; [per-AC actual verification](../deliverable-2/verification-register.md)
+and [current release register](../deliverable-2/continuity-and-status.md)
+separate tested implementation from #97's remaining accepted-tag/authenticated
+release gates. Original pre-code and feature-head execution claims stay dated.
+
 **25 Nov integration update (#97):** feature implementations were independently
 reviewed and merged in PR #116/#117/#118. The feature-head history below retains
 its original scope; [accepted-release.md](accepted-release.md) records the
@@ -105,7 +112,7 @@ is needed: F-01/F-02/F-03 remain their existing implementations.
 | S2-F04-AC07 | Lists are course-scoped, published-only for students, deterministic/paginated; empty is not an error | S2-F04-T09 |
 | S2-F04-AC08 | UI create/edit/publish and student readback honor pending/error/empty/conflict states | S2-F04-T10, S2-F04-T11 |
 
-## 6. STS — all PLANNED / NOT RUN
+## 6. Original reviewed STS (actual execution in current register)
 
 Fixed clock `2026-11-22T00:00:00.000Z`; synthetic Instructor I, Student A1,
 two courses and legacy/submitted fixtures from the shared contract.

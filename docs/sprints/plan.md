@@ -1,4 +1,4 @@
-# Part D: Three-Sprint Product Delivery Plan
+# Three-Sprint Product Delivery Plan
 
 This document defines the three-sprint delivery roadmap for **CoursePMS (Course Project Management System)** covering the entire baseline scope (`F-01` through `F-08`).
 
@@ -52,7 +52,32 @@ needs reviewed contracts/AC/STS at the checkpoint and at least one meaningful
 implemented/tested Sprint 3 workflow in the RC. Keep exact missing AC, owner,
 dependency and next action in the [finish record](deliverable-2/continuity-and-status.md).
 
-Lab 7 #85 is awaiting a TA response after the user's reported submission.
-Its BR-05 change is not included by this package; contract/backlog work here
-can proceed while approval is pending. The current phase changes documents
-only, including the UI plan; no feature or visual implementation is claimed.
+Lab 7 is approved/reviewed/implemented on maintained main: revision feedback
+minimum20, approval minimum10 after trim/UTF-16. The original request/approval
+and reviewed contract/RED/GREEN are retained in the dated Lab 7 records.
+
+## 4. Actual checkpoint and remaining delivery order (25 Nov 2026)
+
+- F-04/F-05/F-06 and refreshed UI are independently reviewed, integrated and
+  deployed on main `07ffd8f31c3d61d8d13d5217a1fde39628c6649a`; #97's
+  authenticated release check and immutable Sprint 2 tag remain outstanding.
+- F-07 task AC01-06 are reviewed and merged via PR #120 to Sprint 3 staging;
+  task progress is real but not yet deployed as a combined main RC.
+- #100 can prepare full documents now; its final snapshot waits for actual
+  #97/#93/#103 release/continuity evidence. #103 and #93 coordinate candidate
+  preparation and exact-RC checks rather than waiting for each other's closure.
+- Freeze the original accepted Sprint 2 identity before promoting task
+  progress to main, then integrate/deploy/verify the combined RC under #103.
+  Complete original continuity/register under #93 and reconcile #100 before
+  assembling the assessed Parts A-E PDF under #104, due 29 Nov 23:59.
+- F-07 peer AC07-12 (#101, Magiciancat9, 5 Dec) and F-08 AC01-10
+  (#102, martinvadre, 7 Dec) retain full scope. They are not prerequisites to
+  claiming already executed task checkpoint progress, but remain final work.
+- Exams 1-11 Dec constrain capacity: prepare interfaces/reviews before then,
+  use bounded increments and explicit defect/AC tracking during exams, and
+  reserve 12-13 Dec for final regression/UAT retests/video/reviewed release.
+
+The [current finish record](deliverable-2/continuity-and-status.md) gives
+per-AC missing work, named owner/dependencies/next action/date and actual
+source/result identifiers. Any slippage must update that plan openly rather
+than changing unexecuted tests to PASS or silently dropping a requirement.

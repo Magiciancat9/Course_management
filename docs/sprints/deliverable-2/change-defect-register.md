@@ -1,34 +1,38 @@
-# Lab 5–7 change and defect register — D2-01 v1.1
+# Lab 5-7 change/defect register - current #100 reconciliation
 
-**25 Nov release update:** the dated 22 Nov sections below are historical
-planning/continuity evidence, not a current claim that Lab 7/F-04/F-05/F-06
-are still unimplemented. The [Sprint 2 release ledger](../sprint-2/accepted-release.md)
-records their reviewed sources, combined results and remaining main acceptance
-gates. Final Sprint 2/3 RC checks remain #93/#100/#103 work.
+**Current snapshot:** 25 Nov 2026; owners Magiciancat9 and martinvadre.
+[Exact version/run/deployment register](continuity-and-status.md) defines
+S2-MAIN/S2-CI and S3-TASK/S3-CI. Historical Lab records below remain dated;
+this current disposition supersedes old pending-status text without turning
+historical SKIP or limited replay into new PASS. #93 final RC remains open.
 
-**Checked:** 22 Nov 2026. **Owner:** `Magiciancat9`; independent reviewer:
-`martinvadre`. Work item: [#93](https://github.com/Magiciancat9/Course_management/issues/93).
-This register distinguishes accepted history, current source verification,
-and remaining work. A closed historical issue is not a new execution result.
+## 1. Current approved changes, fixes and retest disposition
 
-## 1. Version and release identities
-
-| Identity | Exact source / evidence | Meaning |
+| Finding/change / requirement | Current disposition and approval/release provenance | Actual verification / remaining owner/action |
 | --- | --- | --- |
-| Original CoursePMS Sprint 1 | `v1.0.0-sprint1` → `5979f5870e8e28277996dc3045cbf4be5f7236ad` | Original accepted feature baseline; not the extra-hyphen fastTrack tag |
-| Lab 5 reviewed release | `fa7f156aa782eea48c36be5f23eaa7336a582458`, [PR #36](https://github.com/Magiciancat9/Course_management/pull/36) | Cloud/CI delivery history |
-| Lab 5 documentation release | `792f1ace9c5f8760e119ad61a3df3f6b7b6b29ac`, [PR #41](https://github.com/Magiciancat9/Course_management/pull/41) | Separate documentation promotion; later release history remains in Lab 5 evidence |
-| Accepted Lab 6 / current main | `aeb804ea5bc667399b00cf54df10046a6ded46e0`, [PR #76](https://github.com/Magiciancat9/Course_management/pull/76) | Corrected Sprint 1 runtime; partner acceptance retained |
-| D2 staging tested now | `8eea6f0a9820ad235b99548328394dabb86c6046`, merged [PR #107](https://github.com/Magiciancat9/Course_management/pull/107) | Reviewed contracts integrated; only 18 Markdown paths differ from accepted main |
-| Current public service | [Health](https://course-pms-859617270560.asia-southeast1.run.app/api/health) reports `aeb804ea5bc667399b00cf54df10046a6ded46e0` | Fresh read-only observation at 19:45:40 Asia/Bangkok; not a D2 deployment |
-| Accepted Sprint 2 / final D2 RC | Not yet available | Remains owned by #97/#103; no accepted tag/revision is invented |
+| #71 stale private editor / F-03, BR-06 | Resolved via #72/#73 -> reviewed Lab 6 #76 / aeb804e; roster/session policy preserved | S2/S3-CI reruns App.sessionIsolation/sessionReview plus API/E2E negatives. Historical RT-07 remains isolated replay/evidence inspection, not deployed race injection; final RC continuity Magiciancat9 + martinvadre under #93/#103 by28 Nov |
+| #74 foreign proposal metadata / BR-06 | Resolved under accepted roster-only foreign-team policy, Lab 6 #76 | API TEST-23, routing/privacy and App.directoryPrivacy rerun S2/S3-CI; current-source backend denial/readback PASS; repeat final RC #93 |
+| #75 protected API SPA fallback / F-01, NFR-01 | Resolved in aeb804e; unsupported proposal API stays protected JSON before frontend fallback | routing-privacy.unit.test.ts and TEST-03 rerun S2/S3-CI; final RC #93 |
+| CR-L7-01 / #85, BR-05 | TA P'Tik approval 22 Nov20:18 Asia/Bangkok, user confirmation, reviewed contract #105 before code; revision minimum20/approval10 after trim/UTF-16 implemented and released through #113 and maintained main | [Approval](../../labs/lab-07/approval-record.md), [locked baseline](../../labs/lab-07/pre-change-baseline.md), [implementation chronology](../../labs/lab-07/implementation-evidence.md); Lab7 U/I/UI/E suites pass S2/S3-CI. Old10/10 behavior remains history, not current policy |
+| UI refresh / #106 | User direction22 Nov; full specification review #107, ownership handoff #108, implementation/review #110, current main integration #119 | Quick Fill removed; real auth/team/proposal preserved by actual component/E2E. Full compact/mobile/zoom/contrast acceptance remains explicit #103/#100 work by28 Nov |
+| Versioned migrations / NFR-04 | Original init already existed; reviewed F-04/F-05/F-06 added actual SQL, then F-07 task migration on staging | Fresh migrate:deploy and populated SQL checks PASS S2/S3-CI; legacy fields/grades/session records retained. Production job course-pms-migrate-6cd6s completed for S2-MAIN; F-07 production upgrade not yet performed |
+| TD-02 disposable DB reset guard | Addressed/reviewed in #119, common guard applied before resetting server/browser tests | disposable-database.unit.test.ts10 and full guarded S2/S3 suites PASS; source/test changes now reviewed. No production-reset run inferred |
+| TD-03 maintained rule across refreshed UI/features | Addressed/reviewed in #119 and preserved in #120 | App.lab7Review + App.uiRefresh, Lab7 unit/API/browser and combined S2/S3 regression PASS; final RC rerun still #93/#103 |
+| Startup measurement / NFR-05 | Previous measurement gap addressed by D2-SYS-T01 in reviewed #119 | Actual CI Docker1214.25ms on S2-MAIN and510.48ms on S3 tested merge, with image/source/UTC/DB/HTML; not Cloud Run cold-start timing |
 
-The accepted serving revision `course-pms-00009-mk2` comes from the
-[Lab 6 confirmation](https://github.com/Magiciancat9/Course_management/blob/6916f29bbd97b38e9a86a4284c2e0a0609f3ebbe/docs/labs/lab-06/coursepms-acceptance-confirmed.md).
-The new public health check confirms a commit, not the Cloud Run revision
-name; no console/revision lookup was performed during this task.
+## 2. Explicit remaining debt, evidence limitations and requirements
 
-## 2. Accepted changes and resolved defects
+| Item / severity or kind | Owner / dependency | Concrete next action / target |
+| --- | --- | --- |
+| TD-01 authenticated deployed smoke / retained P1 evidence debt | martinvadre config/release; Magiciancat9 acceptance record / #97 | Demo environment SMOKE_EMAIL/SMOKE_PASSWORD names absent at snapshot; privately configure synthetic account and record actual login/me/courses/logout on accepted SHA. S2 deployment public smoke PASS but authenticated smoke SKIP. Before S3 main promotion, target27 Nov |
+| Accepted Sprint 2 tag / release gate | Magiciancat9 / #97, independent release acceptance | Preserve verified accepted main with annotated v1.1.0-sprint2 once; tag absent at snapshot. Do not tag unaccepted branch or move it after S3 changes; target27 Nov |
+| Final integrated RC / continuity | martinvadre #103; Magiciancat9 + martinvadre #93 | Main integration of preserved S1/S2 and reviewed tasks, exact-source full CI/SQL/build/system checks and actual deployed changed/original/persistence/backend-denial evidence; target28 Nov |
+| Full UI visual/accessibility evidence | martinvadre UI/RC, Magiciancat9 independent verification / #103/#100 | Specific UIR-AC03/04/07/10 gaps: 1440/1024/375 widths, 200% zoom/overflow, copy/keyboard/rendered contrast and final captioned mobile/desktop evidence; target28 Nov |
+| Peer/analytics remaining scope / requirement gaps, not newly observed defects | Magiciancat9 #101; martinvadre #102 | Per-AC actions for F07-AC07-12 and F08-AC01-10 in finish plan; targets5/7 Dec, final13 Dec. Reviewed design is not implementation |
+| Final document/PDF snapshot | Magiciancat9 #100/#104; martinvadre reviews | Reconcile actual #97/#93/#103 identities/results before both members inspect the English Parts A-E PDF; user submits29 Nov23:59, receipt/PDF private |
+| Historical missed deployment notice/authenticated SKIP/RT-07 limit | Both retain original Lab6 process record | Do not fabricate retrospective notice/PASS/deployed race. Follow reviewed notice/check procedure for the next release; historical accepted decision and bounded evidence remain unchanged |
+
+## 3. Historical Lab 5/6 disposition and original rationale (22 Nov record)
 
 All listed historical task/defect issues were CLOSED when inspected on
 22 Nov 2026. The **owner** column records implementation/handoff responsibility,
@@ -46,24 +50,16 @@ not a claim that either student personally executed this task's automated tests.
 | [#74](https://github.com/Magiciancat9/Course_management/issues/74): foreign-team proposal metadata | Accepted Major defect; BR-06 | martinvadre; resolved under roster-only policy | Release #76 / `aeb804e`; recorded targeted RT-03/08 | Current API TEST-23, routing/privacy and client directory checks rerun; no private data in general team responses |
 | [#75](https://github.com/Magiciancat9/Course_management/issues/75): protected API namespace served SPA | Accepted Minor defect; F-01 / AC-03 | martinvadre; resolved | Release #76 / `aeb804e`; recorded RT-09 | Current TEST-03 and routing/privacy checks rerun; unsupported APIs remain JSON 401/404, frontend routes retain HTML |
 
-## 3. Open or explicitly retained items
+## 4. Fresh execution and final closure rule
 
-| Item / current disposition | Owner / next action | Target or trigger / evidence rule |
-| --- | --- | --- |
-| [#85 CR-L7-01](https://github.com/Magiciancat9/Course_management/issues/85): proposed revision-feedback minimum 10→20; TA approval and user confirmation PENDING | Magiciancat9 records the actual TA response and user confirmation; subsequent contract/code work follows #86/#87 | Request target 23 Nov; actual TA response time is not promised. Keep BR-05 at 10 for both decisions until authorized. Pending Lab 7 does not block the current #93 baseline check |
-| [#106](https://github.com/Magiciancat9/Course_management/issues/106): UI refresh / Quick Fill removal not implemented in the tested staging SHA | martinvadre implements; Magiciancat9 independently reviews, per user reassignment and [PR #108](https://github.com/Magiciancat9/Course_management/pull/108) | Proposed target 26 Nov, aligned with integrated feature availability; actual UIR tests/screenshots and accepted implementation still required |
-| Historical missed pre-deployment notice / optional authenticated-smoke SKIP | Preserve the [Lab 6 release record](https://github.com/Magiciancat9/Course_management/blob/6916f29bbd97b38e9a86a4284c2e0a0609f3ebbe/docs/labs/lab-06/release-evidence.md); martinvadre follows the reviewed communication/check procedure at the next release | Retained process/evidence limitation; no retroactive notice or missing PASS is invented. Partner's recorded ACCEPTED decision remains unchanged |
-| Integrated Sprint 2/3 RC continuity and populated-upgrade validation | Magiciancat9 owns #93 evidence; martinvadre supplies integrated RC/deployment via #103; feature owners provide real migrations | After #97 and actual Sprint 3 checkpoint integration; target 28 Nov. Re-execute D2-CONT-01–05 on that exact source, then record deployed checks as applicable |
-| Startup timing and actual post-deploy access/persistence checks | martinvadre release driver; Magiciancat9 records matrix/evidence | #103 by 28 Nov. Docker build/HTTP readiness now is not the D2-SYS-T01 ≤10 s measurement or authenticated production workflow |
+The original [22 Nov staging execution](sprint1-continuity-evidence.md) and
+[immutable register source](https://github.com/Magiciancat9/Course_management/blob/93c39952d165477391548c8a1d89e49ace35ddef/docs/sprints/deliverable-2/change-defect-register.md)
+remain preparation history. Current implemented-feature regression and
+migration results are the named S2/S3 runs, not relabeled historical Lab6 UAT.
 
-## 4. Fresh execution and closure rule
-
-See [Sprint 1 continuity evidence](sprint1-continuity-evidence.md) for this
-task's exact CI source, environment, commands, test counts, expected/actual
-checks and live commit/readiness observations. Raw inspection data and logs
-remain outside Git; only selected project evidence and source links are kept.
-
-#93 can advance now without Lab 7 approval. Its final closure still requires
-the actual integrated-RC continuity/upgrade evidence, independent review and
-an updated disposition of any intervening change. Do not relabel this
-pre-feature baseline as the completed Sprint 2–3 RC.
+Every current finding is resolved with source/retest or explicitly remaining
+with owner/action/target above. This document update does not complete #93's
+actual final integrated-RC journey. Record new failures with severity/owner/
+fix/retest, update the exact candidate identities, and obtain independent
+review. The user handles closure; no new production mutation, reset, release
+acceptance, secret-value read or personal student UAT is claimed.

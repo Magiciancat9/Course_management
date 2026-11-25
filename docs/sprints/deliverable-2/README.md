@@ -1,14 +1,20 @@
 # Deliverable 2 — Sprint 2–3 engineering contracts
 
-**Current status, 25 November 2026:** contracts independently reviewed via
-PR #107; refreshed UI and F-04/F-05/F-06 implemented and reviewed via
-PR #110/#116/#117/#118. [Sprint 2 release ledger](../sprint-2/accepted-release.md)
-records all 27 AC, combined verification and outstanding accepted-main gates.
-Sprint 3 contracts are reviewed; implementation remains separate work.
+**25 Nov current snapshot (#100):** S2 implementation is independently
+reviewed and deployed on main; F-07 tasks are reviewed/merged on Sprint 3
+staging. Peer/analytics implementation remains planned. Accepted S2 tag/
+authenticated release evidence and final combined main RC remain pending.
 
-Work board: [Deliverable 2](https://github.com/users/Magiciancat9/projects/8).
-Original draft dated 22 November 2026. The contract tables preserve their
-pre-code planning rationale; actual execution is recorded separately.
+Read the [current version/result/finish register](continuity-and-status.md),
+[complete requirement matrix](../../traceability.md) and [all 59 AC](verification-register.md).
+The package is complete source for embedding, not a submitted PDF or final
+acceptance. Historical documents keep their actual source/date/result scope.
+
+D2 assessment mapping: Part A continuity/changes; Part B complete Sprint 2;
+Part C Sprint 3 contracts/progress/remaining work; Part D full SRS/features/
+System SDS/matrix/plan; Part E integrated RC/deployment. Legacy D1 section
+letters in source filenames/headings do not define the D2 report structure.
+[Full source/evidence map](continuity-and-status.md#6-assessed-parts-a-e-and-final-snapshot-gates).
 
 ## 1. Read and review in this order
 
@@ -27,9 +33,8 @@ pre-code planning rationale; actual execution is recorded separately.
 | [Verification register](verification-register.md) | Every new AC → planned test/level/file → implementation/execution status |
 | [Complete traceability](../../traceability.md) | All baseline FR/BR/important NFR, actual Sprint 1 files and new planned checks |
 
-Contracts are concrete proposals, including clarified policies where the SRS
-did not specify an exact boundary. They become an implementation baseline
-only after real teammate review records the accepted revision. Any later
+Contracts include concrete clarified policies where the original SRS did not
+specify an exact boundary. PR #107 records independent review before code. Any later
 requirement change keeps its reason, reviewer and dated history. No review
 or approval is inferred from this document's existence.
 
@@ -43,10 +48,11 @@ or approval is inferred from this document's existence.
 UI specification authorship stays with `Magiciancat9`; `martinvadre` reviewed
 the original specification through merged PR #107. See the
 [UIR v1.1 ownership record](../../ui-refresh-spec.md) for the implementation
-handoff. This assignment change does not mark any UI AC implemented/tested.
+handoff. The assignment record itself was not implementation evidence; PR #110 and the
+current per-AC register now identify actual UI implementation/checks and gaps.
 
 This package's draft author is `Magiciancat9`, including drafts for the
-teammate-owned features. `martinvadre` must substantively review these drafts;
+teammate-owned features. `martinvadre` substantively reviewed these drafts in PR #107;
 they are not presented as the teammate's authored/approved work. Subsequent
 code PRs retain the opposite-member review rule. Do not self-approve or
 self-merge a PR.
@@ -70,7 +76,7 @@ flowchart LR
 - **29 November, 23:59 Asia/Bangkok:** all Sprint 2 features completed,
   reviewed, integrated and verified; full Sprint 3 contracts and at least one
   meaningful implemented/tested Sprint 3 workflow in a deployed main RC.
-- Proposed first Sprint 3 workflow: approved-team task create/assign → status
+- Implemented/reviewed first Sprint 3 workflow (#120 on staging): approved-team task create/assign → status
   transition → persisted reload, plus actual backend foreign-team denial.
 - Preserve the original accepted Sprint 2 main/tag even after adding Sprint 3.
 - Exact remaining AC, owner, dependency and next action have target dates by

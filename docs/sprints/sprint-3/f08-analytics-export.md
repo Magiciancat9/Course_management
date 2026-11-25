@@ -1,6 +1,10 @@
 # F-08 — Instructor analytics and CSV grade export
 
-**Contract:** S3-F08 v1.0, 22 Nov 2026; proposed / review pending.
+**Contract:** S3-F08 v1.0, 22 Nov 2026; reviewed via PR #107 before implementation.
+**25 Nov status:** #99 contract checkpoint CLOSED; operational analytics/CSV
+remains NOT IMPLEMENTED / NOT RUN under #102. Draft authorship stays with
+Magiciancat9; martinvadre is feature owner. No future owner-authored code or
+review is inferred from contract authorship.
 **Owner:** `martinvadre`; draft author `Magiciancat9`; requested independent
 contract reviewer `martinvadre`; future owner-authored code reviewer
 `Magiciancat9`. **Issues:** [#99 contracts](https://github.com/Magiciancat9/Course_management/issues/99),
@@ -164,3 +168,7 @@ final release. Exact remaining work must be in the finish plan by 13 Dec.
 | Revision | Date / status |
 | --- | --- |
 | S3-F08 v1.0 | 22 Nov 2026; complete proposed metric/CSV contract, review pending; implementation/tests NOT RUN |
+
+**Independent contract review:** PR #107 accepted the full contract/shared
+decisions on22 Nov before code; #99 contract checkpoint closed.
+Implementation AC01-10 remain #102 / NOT RUN.

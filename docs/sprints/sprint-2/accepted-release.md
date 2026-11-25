@@ -1,5 +1,12 @@
 # Sprint 2 reviewed release ledger - D2-05 / #97
 
+**25 Nov #100 reconciliation:** #119 has been independently approved and
+merged to main `07ffd8f31c3d61d8d13d5217a1fde39628c6649a`; main CI/deployment
+45592525515 succeeded. [Current version/deployment register](../deliverable-2/continuity-and-status.md)
+records digest/migration/revision/public smoke and the actual authenticated
+SKIP. Original candidate evidence below retains its exact source. #97 final
+acceptance/tag remains incomplete; this is not an invented accepted tag.
+
 **Prepared:** 25 November 2026, Asia/Bangkok. Driver: Magiciancat9;
 required independent release reviewer: martinvadre.
 **Decision:** integration candidate, NOT YET an accepted main release.
@@ -175,10 +182,10 @@ these names; this PR does not rotate accounts or deploy unreviewed code.
 
 | Accepted identity | Current recorded value |
 | --- | --- |
-| Independent integration review | PENDING |
-| Accepted main SHA / main CI | PENDING |
-| Deployment / digest / migration / revision | PENDING |
-| Authenticated post-deploy smoke | PENDING; demo configuration missing |
+| Independent integration review | martinvadre APPROVED exact head in #119 before main merge |
+| Reviewed main SHA / main CI | 07ffd8f31c3d61d8d13d5217a1fde39628c6649a / run45592525515 PASS; final accepted tag/evidence still #97 |
+| Deployment / digest / migration / revision | Actual S2 deployment recorded in current version register; task RC not yet deployed |
+| Authenticated post-deploy smoke | Actual S2 pipeline SKIP; demo configuration missing at snapshot; acceptance check remains |
 | Immutable `v1.1.0-sprint2` target | NOT CREATED; reserved name only |
 
 Issue #97 stays open until these gates are recorded. Issue #93 and the final
