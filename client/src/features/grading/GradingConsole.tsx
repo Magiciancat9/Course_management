@@ -198,7 +198,7 @@ export default function GradingConsole({
       return;
     }
 
-    const loaded = (res.data.evaluation as InstructorEvaluationDto | null) ?? null;
+    let loaded = (res.data.evaluation as InstructorEvaluationDto | null) ?? null;
     let nextSub = targetSub;
 
     if (
@@ -215,13 +215,50 @@ export default function GradingConsole({
       nextSub = { ...targetSub, version: targetSub.version + 1 };
     }
 
+    const versionChangedDuringLoad = nextSub.version !== targetSub.version;
+
+    if (
+      !refreshSupersededSubmission &&
+      (versionChangedDuringLoad ||
+        (loaded !== null && loaded.submissionVersion !== nextSub.version))
+    ) {
+      loaded = null;
+      setEvaluation(null);
+      setExpectedVersion(0);
+      setScoreInput('');
+      setFeedbackInput('');
+      if (onStaleSubmissionVersion) {
+        await onStaleSubmissionVersion();
+      }
+
+      const freshRes = await apiRequest(
+        `/api/submissions/${nextSub.id}/evaluation?submissionVersion=${nextSub.version}`,
+        {},
+        expectedKey,
+        expectedGen
+      );
+      if (!freshRes || !isCurrent(expectedKey, expectedGen)) return;
+      if (freshRes.ok) {
+        const candidate =
+          (freshRes.data.evaluation as InstructorEvaluationDto | null) ?? null;
+        if (candidate && candidate.submissionVersion === nextSub.version) {
+          loaded = candidate;
+        }
+      }
+    } else if (loaded && loaded.submissionVersion !== nextSub.version) {
+      loaded = null;
+    }
+
+    const effectivePreserveDraft =
+      preserveDraft && !refreshSupersededSubmission && !versionChangedDuringLoad;
+
     const nextKey = `${token}:${sessionGeneration}:${nextSub.id}:${nextSub.version}`;
     currentContextRef.current = nextKey;
     setActiveSubmission(nextSub);
     setEvaluation(loaded);
     setExpectedVersion(loaded?.version ?? 0);
 
-    if (!preserveDraft) {
+    if (!effectivePreserveDraft) {
       if (loaded) {
         setScoreInput(String(loaded.draft.score));
         setFeedbackInput(loaded.draft.feedback);
@@ -232,11 +269,11 @@ export default function GradingConsole({
     }
 
     setConflictType(null);
-    if (refreshSupersededSubmission) {
+    if (refreshSupersededSubmission || versionChangedDuringLoad) {
       setSuccessMsg(
         `Loaded newer submission v${nextSub.version}. Review the updated deliverable before entering a grade.`
       );
-    } else if (preserveDraft) {
+    } else if (effectivePreserveDraft) {
       setSuccessMsg(
         `Reloaded latest grade state (v${loaded?.version ?? 0}). Your typed draft is preserved — review and save again.`
       );

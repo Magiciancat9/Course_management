@@ -411,4 +411,101 @@ describe('F-06 GradingConsole Component (S2-F06-T09)', () => {
       score: 95,
     });
   });
+
+  it('S2-F06-T09e: discards v1 evaluation and clears draft when initial GET for v1 returns currentSubmission v2', async () => {
+    const requestedUrls: string[] = [];
+    const putBodies: Array<Record<string, unknown>> = [];
+
+    const fetchMock = vi.fn((url: string, init?: RequestInit) => {
+      const method = init?.method || 'GET';
+      if (method === 'GET' && url.startsWith('/api/submissions/42/evaluation')) {
+        requestedUrls.push(url);
+        if (url.includes('submissionVersion=1')) {
+          // Student submitted v2 before v1 evaluation GET completed
+          return okJson({
+            evaluation: DRAFT_EVAL_V1,
+            currentSubmissionVersion: 2,
+            currentSubmission: {
+              ...SAMPLE_SUBMISSION,
+              version: 2,
+              releaseTag: 'v2.0.0',
+              reportUrl: 'https://example.org/report-v2.pdf',
+            },
+          });
+        }
+        return okJson({
+          evaluation: null,
+          currentSubmissionVersion: 2,
+          currentSubmission: {
+            ...SAMPLE_SUBMISSION,
+            version: 2,
+            releaseTag: 'v2.0.0',
+            reportUrl: 'https://example.org/report-v2.pdf',
+          },
+        });
+      }
+      if (method === 'PUT' && url === '/api/submissions/42/evaluation') {
+        const parsed = JSON.parse(String(init?.body || '{}'));
+        putBodies.push(parsed);
+        return okJson(
+          {
+            evaluation: {
+              ...DRAFT_EVAL_V1,
+              submissionVersion: 2,
+              version: 1,
+              draftRevision: 1,
+              draft: {
+                ...DRAFT_EVAL_V1.draft,
+                score: parsed.score,
+                feedback: parsed.feedback,
+              },
+            },
+          },
+          201
+        );
+      }
+      return okJson({});
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    render(
+      <GradingConsole
+        token="instr-token"
+        submission={SAMPLE_SUBMISSION}
+        sessionGeneration={1}
+        getCurrentGeneration={() => 1}
+        onUnauthorized={vi.fn()}
+      />
+    );
+
+    expect(
+      await screen.findByText(/Instructor Grading — Submission v2 \(v2\.0\.0\)/)
+    ).toBeInTheDocument();
+
+    // Must fetch v2's evaluation and never carry v1's score (85) or feedback into v2
+    expect(requestedUrls).toEqual([
+      '/api/submissions/42/evaluation?submissionVersion=1',
+      '/api/submissions/42/evaluation?submissionVersion=2',
+    ]);
+    expect(screen.getByTestId('grading-score-input')).toHaveValue(null);
+    expect(screen.getByTestId('grading-feedback-input')).toHaveValue('');
+    expect(screen.getByTestId('grading-publish-btn')).toBeDisabled();
+
+    // Saving a new draft on v2 uses submissionVersion=2 and expectedVersion=0 (not v1's expectedVersion=1)
+    fireEvent.change(screen.getByTestId('grading-score-input'), {
+      target: { value: '90' },
+    });
+    fireEvent.change(screen.getByTestId('grading-feedback-input'), {
+      target: { value: 'Evaluated v2 deliverable.' },
+    });
+    fireEvent.click(screen.getByTestId('grading-save-draft-btn'));
+
+    await waitFor(() => expect(putBodies).toHaveLength(1));
+    expect(putBodies[0]).toMatchObject({
+      submissionVersion: 2,
+      expectedVersion: 0,
+      score: 90,
+      feedback: 'Evaluated v2 deliverable.',
+    });
+  });
 });
