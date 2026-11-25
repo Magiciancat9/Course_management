@@ -3,7 +3,7 @@
 **25 November 2026 reconciliation (#97):** Sprint 2 F-04/F-05/F-06 are
 implemented and independently reviewed. Contract review: PR #107. Actual
 feature and combined verification: [Sprint 2 release ledger](../sprint-2/accepted-release.md).
-Main acceptance is a separate gate. Sprint 3 implementation remains planned;
+Main acceptance is a separate gate. F-07 task AC01-06 now have a checkpoint implementation; peer/F-08 remain planned;
 a reviewed specification is not an executed test.
 
 ## 1. Complete AC implementation/execution ledger
@@ -63,16 +63,16 @@ Owner `martinvadre`; contract reviewed in PR #107; code reviewed in PR #116/#118
 
 ### S3-F07 — [f07-collaboration.md](../sprint-3/f07-collaboration.md)
 
-Owner `Magiciancat9`; contract v1.0 / review pending.
+Owner `Magiciancat9`; full contract v1.0 reviewed in PR #107. Task checkpoint under #98; peer AC07-12 under #101.
 
 | AC | Planned test IDs | Implemented | Actual verification / version |
 | --- | --- | --- | --- |
-| S3-F07-AC01 | S3-F07-T01 | NO | NOT RUN / no candidate |
-| S3-F07-AC02 | S3-F07-T02 | NO | NOT RUN / no candidate |
-| S3-F07-AC03 | S3-F07-T03 | NO | NOT RUN / no candidate |
-| S3-F07-AC04 | S3-F07-T04 | NO | NOT RUN / no candidate |
-| S3-F07-AC05 | S3-F07-T05, S3-F07-T06 | NO | NOT RUN / no candidate |
-| S3-F07-AC06 | S3-F07-T07, S3-F07-T08 | NO | NOT RUN / no candidate |
+| S3-F07-AC01 | S3-F07-T01 | YES (checkpoint candidate) | [Actual task tests/results and pending review](../sprint-3/f07-execution-evidence.md) |
+| S3-F07-AC02 | S3-F07-T02 | YES (checkpoint candidate) | [Actual task tests/results and pending review](../sprint-3/f07-execution-evidence.md) |
+| S3-F07-AC03 | S3-F07-T03 | YES (checkpoint candidate) | [Actual task tests/results and pending review](../sprint-3/f07-execution-evidence.md) |
+| S3-F07-AC04 | S3-F07-T04 | YES (checkpoint candidate) | [Actual task tests/results and pending review](../sprint-3/f07-execution-evidence.md) |
+| S3-F07-AC05 | S3-F07-T05, S3-F07-T06 | YES (checkpoint candidate) | [Actual task tests/results and pending review](../sprint-3/f07-execution-evidence.md) |
+| S3-F07-AC06 | S3-F07-T07, S3-F07-T08 | YES (checkpoint candidate) | [Actual task tests/results and pending review](../sprint-3/f07-execution-evidence.md) |
 | S3-F07-AC07 | S3-F07-T09 | NO | NOT RUN / no candidate |
 | S3-F07-AC08 | S3-F07-T10 | NO | NOT RUN / no candidate |
 | S3-F07-AC09 | S3-F07-T11 | NO | NOT RUN / no candidate |
@@ -162,14 +162,14 @@ browser checks do not establish every manual design criterion.
 | S2-F06-T09 | UI | `client/src/features/grading/GradingConsole.test.tsx` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
 | S2-F06-T10 | E | `e2e/sprint2-grading.spec.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
 | S2-F06-T11 | I | `server/tests/grading.integration.test.ts` | Feature-head and combined PASS; actual source/run in [S2 ledger](../sprint-2/accepted-release.md) |
-| S3-F07-T01 | I | `server/tests/collaboration.integration.test.ts` | NOT CREATED / NOT RUN |
-| S3-F07-T02 | U+I | `server/tests/collaboration.unit.test.ts`<br>`server/tests/collaboration.integration.test.ts` | NOT CREATED / NOT RUN |
-| S3-F07-T03 | I | `server/tests/collaboration.integration.test.ts` | NOT CREATED / NOT RUN |
-| S3-F07-T04 | I | `server/tests/collaboration.integration.test.ts` | NOT CREATED / NOT RUN |
-| S3-F07-T05 | I | `server/tests/collaboration.integration.test.ts` | NOT CREATED / NOT RUN |
-| S3-F07-T06 | I | `server/tests/collaboration.integration.test.ts` | NOT CREATED / NOT RUN |
-| S3-F07-T07 | UI | `client/src/features/collaboration/Collaboration.test.tsx` | NOT CREATED / NOT RUN |
-| S3-F07-T08 | E | `e2e/sprint3-collaboration.spec.ts` | NOT CREATED / NOT RUN |
+| S3-F07-T01 | I | `server/tests/collaboration.integration.test.ts` | Implemented; [execution ledger](../sprint-3/f07-execution-evidence.md), peer tests remain planned |
+| S3-F07-T02 | U+I | `server/tests/collaboration.unit.test.ts`<br>`server/tests/collaboration.integration.test.ts` | Implemented; [execution ledger](../sprint-3/f07-execution-evidence.md), peer tests remain planned |
+| S3-F07-T03 | I | `server/tests/collaboration.integration.test.ts` | Implemented; [execution ledger](../sprint-3/f07-execution-evidence.md), peer tests remain planned |
+| S3-F07-T04 | I | `server/tests/collaboration.integration.test.ts` | Implemented; [execution ledger](../sprint-3/f07-execution-evidence.md), peer tests remain planned |
+| S3-F07-T05 | I | `server/tests/collaboration.integration.test.ts` | Implemented; [execution ledger](../sprint-3/f07-execution-evidence.md), peer tests remain planned |
+| S3-F07-T06 | I | `server/tests/collaboration.integration.test.ts` | Implemented; [execution ledger](../sprint-3/f07-execution-evidence.md), peer tests remain planned |
+| S3-F07-T07 | UI | `client/src/features/collaboration/Collaboration.test.tsx` | Implemented; [execution ledger](../sprint-3/f07-execution-evidence.md), peer tests remain planned |
+| S3-F07-T08 | E | `e2e/sprint3-collaboration.spec.ts` | Implemented; [execution ledger](../sprint-3/f07-execution-evidence.md), peer tests remain planned |
 | S3-F07-T09 | U+I | `server/tests/collaboration.unit.test.ts`<br>`server/tests/collaboration.integration.test.ts` | NOT CREATED / NOT RUN |
 | S3-F07-T10 | U+I | `server/tests/collaboration.unit.test.ts`<br>`server/tests/collaboration.integration.test.ts` | NOT CREATED / NOT RUN |
 | S3-F07-T11 | I | `server/tests/collaboration.integration.test.ts` | NOT CREATED / NOT RUN |

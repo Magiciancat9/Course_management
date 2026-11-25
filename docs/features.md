@@ -6,7 +6,8 @@ This document defines the complete feature inventory (`F-01` through `F-08`) acr
 F-04/F-05/F-06 are implemented, independently reviewed and integrated in the
 [Sprint 2 release candidate](sprints/sprint-2/accepted-release.md). Main
 acceptance, deployment and immutable tag remain explicit gates. F-07/F-08
-contracts were reviewed; their implementation remains Sprint 3 work.
+contracts were reviewed; F-07 task checkpoint is implemented separately under
+#98, while peer evaluation and F-08 implementation remain planned.
 
 ---
 
@@ -61,7 +62,7 @@ flowchart LR
 | F-04 | martinvadre | [S2-F04 v1.0](sprints/sprint-2/f04-milestones.md) | Implemented/reviewed; combined release results and gates in [S2 ledger](sprints/sprint-2/accepted-release.md) |
 | F-05 | Magiciancat9 | [S2-F05 v1.0 + execution addendum](sprints/sprint-2/f05-submissions.md) | Implemented/reviewed via PR #117/#118; [S2 release ledger](sprints/sprint-2/accepted-release.md) |
 | F-06 | martinvadre | [S2-F06 v1.0](sprints/sprint-2/f06-grading.md) | Implemented/reviewed via PR #117/#118; [S2 release ledger](sprints/sprint-2/accepted-release.md) |
-| F-07 | Magiciancat9 | [S3-F07 v1.0](sprints/sprint-3/f07-collaboration.md) | Task checkpoint and remaining peer work both unimplemented / NOT RUN |
+| F-07 | Magiciancat9 | [S3-F07 v1.0](sprints/sprint-3/f07-collaboration.md) | Task checkpoint AC01-06 implemented; [actual results/review gates](sprints/sprint-3/f07-execution-evidence.md). Peer AC07-12 remain #101 / NOT IMPLEMENTED |
 | F-08 | martinvadre | [S3-F08 v1.0](sprints/sprint-3/f08-analytics-export.md) | Not implemented / NOT RUN |
 
 Original v1.0 drafts were authored by Magiciancat9; martinvadre independently

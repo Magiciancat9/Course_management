@@ -19,7 +19,7 @@ and historical Lab 5-7 records retain their original scope and dates.
 | FR-06 | F-04 / S2 | S2-F04-AC01–08 | S2-F04-T01–11 | [API/DB](../server/tests/milestones.integration.test.ts); [unit](../server/tests/milestones.unit.test.ts); [S2 AC ledger](sprints/sprint-2/accepted-release.md) | Implemented and independently reviewed via PR #116/#117/#118; combined release verification and accepted-main gates in S2 ledger |
 | FR-07 | F-05 / S2 | S2-F05-AC01–10 | S2-F05-T01–12 | [API/DB](../server/tests/submissions.integration.test.ts); [unit](../server/tests/submissions.unit.test.ts); [S2 AC ledger](sprints/sprint-2/accepted-release.md) | Implemented and independently reviewed via PR #116/#117/#118; combined release verification and accepted-main gates in S2 ledger |
 | FR-08 | F-06 / S2 | S2-F06-AC01–09 | S2-F06-T01–11 | [API/DB](../server/tests/grading.integration.test.ts); [unit](../server/tests/grading.unit.test.ts); [S2 AC ledger](sprints/sprint-2/accepted-release.md) | Implemented and independently reviewed via PR #116/#117/#118; combined release verification and accepted-main gates in S2 ledger |
-| FR-09 | F-07 tasks / S3 | S3-F07-AC01–06 | S3-F07-T01–08 | [F-07 STS](sprints/sprint-3/f07-collaboration.md); actual new case: none | Proposed contract; not implemented; test IDs NOT CREATED / NOT RUN; no accepted release |
+| FR-09 | F-07 tasks / S3 | S3-F07-AC01–06 | S3-F07-T01–08 | [API/DB](../server/tests/collaboration.integration.test.ts); [component](../client/src/features/collaboration/Collaboration.test.tsx); [browser](../e2e/sprint3-collaboration.spec.ts) | Task AC01-06 implemented checkpoint; [actual tests/results/release gates](sprints/sprint-3/f07-execution-evidence.md); peer AC07-12 remain #101 |
 | FR-10 | F-07 peer / S3 | S3-F07-AC07–12 | S3-F07-T09–15 | [F-07 STS](sprints/sprint-3/f07-collaboration.md); actual new case: none | Proposed contract; not implemented; test IDs NOT CREATED / NOT RUN; no accepted release |
 | FR-11 | F-08 analytics / S3 | S3-F08-AC01–06/09/10 | S3-F08-T01–06/10–12 | [F-08 STS](sprints/sprint-3/f08-analytics-export.md); actual new case: none | Proposed contract; not implemented; test IDs NOT CREATED / NOT RUN; no accepted release |
 | FR-12 | F-08 CSV / S3 | S3-F08-AC06–10 | S3-F08-T06–12 | [F-08 STS](sprints/sprint-3/f08-analytics-export.md); actual new case: none | Proposed contract; not implemented; test IDs NOT CREATED / NOT RUN; no accepted release |
@@ -41,7 +41,8 @@ and historical Lab 5-7 records retain their original scope and dates.
 
 - FR-01-08, BR-01-07 and the grading part of BR-08 have executable tests.
   Full combined results and exact source/run links belong in the release ledger.
-- FR-09-12 and the peer-rating part of BR-08 remain Sprint 3 work. Contract
+- FR-09 task checkpoint is implemented under #98; FR-10-12 and the peer-rating
+  part of BR-08 remain planned Sprint 3 work. Contract
   review is recorded in PR #107; this does not claim their implementation.
 - NFR-05's 10-second startup target still needs a timed measurement. A green
   build or health response alone is insufficient. Main deployment, authenticated
