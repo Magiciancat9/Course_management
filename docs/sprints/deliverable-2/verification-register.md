@@ -11,7 +11,8 @@ a reviewed specification is not an executed test.
 Sprint 2 rows below are implemented and passed their independently reviewed
 feature-head CI. [Sprint 2 release ledger](../sprint-2/accepted-release.md)
 records combined regression, exact candidate/run identity and pending main/tag gates.
-Sprint 3 rows remain NOT IMPLEMENTED / NOT RUN.
+F-07 task AC01-06 have executed checkpoint results in the task ledger;
+F-07 peer AC07-12 and F-08 implementation remain NOT IMPLEMENTED / NOT RUN.
 
 ### S2-F04 — [f04-milestones.md](../sprint-2/f04-milestones.md)
 

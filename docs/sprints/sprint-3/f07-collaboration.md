@@ -163,5 +163,4 @@ reviewed integration and final release evidence.
 | Revision | Date / status |
 | --- | --- |
 | S3-F07 v1.0 | 22 Nov 2026; complete task/peer draft and proposed completion/rating policy; reviewed by martinvadre in PR #107 (`8eea6f0`), before implementation |
-
 | Task checkpoint, 25 Nov 2026 | RED `c03ff7733719a5cda5af1acfd34ac707133661b0`, then additive task API/UI/migration; execution ledger maps AC01-06. Peer AC07-12 remain #101, owner Magiciancat9, target 5 Dec 2026. Independent code review/release pending. |

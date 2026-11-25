@@ -161,7 +161,7 @@ export default function TaskBoard(props: Props) {
   }
 
   return <section id="section-tasks" className="cpms-card mt-4" aria-labelledby="task-board-heading" data-testid="task-board">
-    <div className="cpms-card-header"><h2 id="task-board-heading" className="h4 mb-1">Team tasks</h2>
+    <div className="cpms-card-header"><h2 id="task-board-heading" className="h4 fw-bold mb-1">Team tasks</h2>
       <p className="cpms-muted mb-0">Plan, assign and track your team’s work.</p></div>
     <div className="cpms-card-body">
       {!teams.length ? <p>Join a project team to view tasks.</p> : <>
@@ -170,7 +170,7 @@ export default function TaskBoard(props: Props) {
           {teams.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}</select>
         {loadedContext !== context ? <p role="status">Loading tasks…</p> : <>
           {error && <div role="alert" className="alert alert-danger" data-testid="task-error">{error}
-            {conflict && <button type="button" className="cpms-btn cpms-btn-outline mt-2" disabled={pending} onClick={() => void reconcile()}>Load latest task version</button>}</div>}
+            {conflict && <button type="button" className="cpms-btn cpms-btn-secondary mt-2" disabled={pending} onClick={() => void reconcile()}>Load latest task version</button>}</div>}
           {success && <p role="status" className="alert alert-success" data-testid="task-success">{success}</p>}
           {userRole === 'INSTRUCTOR' ? <p>Instructor access is read-only.</p> : !writable && <p role="status">Your proposal must be approved before you can change tasks.</p>}
           <div className="row g-2 mb-3">
@@ -179,26 +179,27 @@ export default function TaskBoard(props: Props) {
             <div className="col-sm"><label className="cpms-label" htmlFor="task-status-filter">Filter status</label>
               <select id="task-status-filter" className="cpms-input" value={statusFilter} disabled={pending} onChange={e => setStatusFilter(e.target.value)}><option value="">All statuses</option>{Object.entries(labels).map(([v, label]) => <option key={v} value={v}>{label}</option>)}</select></div>
           </div>
-          <button type="button" className="cpms-btn cpms-btn-outline mb-3" disabled={pending || loading || loadingMore} onClick={() => { setError(''); void loadTasks(); if (team) void loadMilestones(context, team.courseId); }}>Refresh tasks</button>
+          <button type="button" className="cpms-btn cpms-btn-secondary mb-3" disabled={pending || loading || loadingMore} onClick={() => { setError(''); void loadTasks(); if (team) void loadMilestones(context, team.courseId); }}>Refresh tasks</button>
           {loading ? <p role="status">Loading tasks…</p> : <>
             {!tasks.length && <p data-testid="task-empty">No tasks match these filters.</p>}
             <div className="row g-3">{Object.entries(labels).map(([value, label]) => <div className="col-lg-4" key={value}>
-              <h3 className="h5">{label}</h3>
+              <div className="h-100 rounded-3 border p-3" style={{ backgroundColor: 'var(--cpms-surface-subtle)' }}>
+              <h3 className="h5 fw-semibold d-flex justify-content-between align-items-center">{label}<span className={`badge ${value === 'DONE' ? 'bg-success' : value === 'IN_PROGRESS' ? 'bg-primary' : 'bg-secondary'}`}>{tasks.filter(t => t.status === value).length}</span></h3>
               {tasks.filter(t => t.status === value).map(task => <article key={task.id} className="cpms-card p-3 mb-2" data-testid={`task-card-${task.id}`}>
                 <h4 className="h6 text-break">{task.title}</h4><p className="text-break">{task.description}</p>
                 <p className="cpms-muted">Sprint {task.sprintNumber} · {team?.members.find(m => m.id === task.assigneeId)?.name || 'Unassigned'} · Version {task.version}</p>
                 {task.milestoneId && <p>{milestones.find(m => m.id === task.milestoneId)?.title || 'Linked milestone'}</p>}
                 <div className="d-flex gap-2 flex-wrap">
-                  {writable && <button type="button" className="cpms-btn cpms-btn-outline" disabled={pending} onClick={() => edit(task)}>Edit {task.title}</button>}
-                  {writable && <button type="button" className="cpms-btn cpms-btn-outline" disabled={pending || editing !== null} onClick={() => {
+                  {writable && <button type="button" className="cpms-btn cpms-btn-secondary" aria-label={`Edit ${task.title}`} disabled={pending} onClick={() => edit(task)}>Edit task</button>}
+                  {writable && <button type="button" className="cpms-btn cpms-btn-secondary" disabled={pending || editing !== null} onClick={() => {
                     const next = task.status === 'TODO' ? 'IN_PROGRESS' : task.status === 'IN_PROGRESS' ? 'DONE' : 'TODO';
                     edit(task, next); void save({ ...toDraft(task), status: next }, { id: task.id, version: task.version });
                   }}>{task.status === 'TODO' ? 'Start task' : task.status === 'IN_PROGRESS' ? 'Mark done' : 'Reopen task'}</button>}
-                  <button type="button" className="cpms-btn cpms-btn-outline" disabled={pending} onClick={() => void loadHistory(task)}>Activity for {task.title}</button>
+                  <button type="button" className="cpms-btn cpms-btn-secondary" aria-label={`Activity for ${task.title}`} disabled={pending} onClick={() => void loadHistory(task)}>View activity</button>
                 </div>
-              </article>)}</div>)}</div>
+              </article>)}</div></div>)}</div>
           </>}
-          {cursor && <button type="button" className="cpms-btn cpms-btn-outline mt-2" disabled={pending || loadingMore || loading} onClick={() => void loadTasks(true)}>{loadingMore ? 'Loading more tasks…' : 'Load more tasks'}</button>}
+          {cursor && <button type="button" className="cpms-btn cpms-btn-secondary mt-2" disabled={pending || loadingMore || loading} onClick={() => void loadTasks(true)}>{loadingMore ? 'Loading more tasks…' : 'Load more tasks'}</button>}
           {writable && <form className="mt-4" data-testid="task-form" onSubmit={e => { e.preventDefault(); void save(); }}>
             <h3 className="h5">{editing ? 'Edit task' : 'Create task'}</h3>
             <fieldset disabled={pending}><div className="row g-3">
@@ -210,14 +211,14 @@ export default function TaskBoard(props: Props) {
               <div className="col-sm-6"><label className="cpms-label" htmlFor="task-milestone">Milestone (optional)</label><select id="task-milestone" className="cpms-input" value={draft.milestoneId} onChange={e => change('milestoneId', e.target.value)}><option value="">No milestone</option>{milestones.map(m => <option key={m.id} value={m.id}>{m.title}</option>)}</select></div>
             </div>
             <button type="submit" className="cpms-btn cpms-btn-primary mt-3" disabled={conflict} data-testid="task-save">{pending ? 'Saving task…' : 'Save task'}</button>
-            {editing && <button type="button" className="cpms-btn cpms-btn-outline ms-2 mt-3" onClick={() => { setEditing(null); setDraft(empty()); setConflict(false); setError(''); }}>Cancel edit</button>}
+            {editing && <button type="button" className="cpms-btn cpms-btn-secondary ms-2 mt-3" onClick={() => { setEditing(null); setDraft(empty()); setConflict(false); setError(''); }}>Cancel edit</button>}
             </fieldset>
           </form>}
           {history && <aside className="mt-4" aria-label="Task activity"><h3 className="h5">Activity: {history.title}</h3>
             {history.events.map(event => <div key={event.id} className="border-bottom py-2"><p className="mb-1">Version {event.version} · {event.actor.fullName} · {formatTime(event.createdAt)} (Asia/Bangkok)</p>
               <ul>{Object.entries(event.changes).map(([field, change]) => <li key={field}>{({ title: 'Title', description: 'Description', sprintNumber: 'Sprint', status: 'Status', assigneeId: 'Assignee', milestoneId: 'Milestone' } as Record<string, string>)[field]}: {eventValue(field, change.before)} → {eventValue(field, change.after)}</li>)}</ul></div>)}
             {historyLoading && <p role="status">Loading activity…</p>}
-            {history.cursor && <button type="button" className="cpms-btn cpms-btn-outline" disabled={historyLoading} onClick={() => void loadHistory({ id: history.taskId, title: history.title }, true)}>Load more activity</button>}
+            {history.cursor && <button type="button" className="cpms-btn cpms-btn-secondary" disabled={historyLoading} onClick={() => void loadHistory({ id: history.taskId, title: history.title }, true)}>Load more activity</button>}
           </aside>}
         </>}
       </>}
