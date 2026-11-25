@@ -252,11 +252,12 @@ describe('F-06 Instructor Grading, Publication & Private Feedback — Integratio
     const fixedNow = new Date('2026-11-26T09:30:00.000Z');
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(fixedNow);
+    const timedInstructorToken = signAuthToken(seeded.instructor);
 
     try {
       await request(app)
         .put(`/api/submissions/${submissionId}/evaluation`)
-        .set('Authorization', `Bearer ${instructorToken}`)
+        .set('Authorization', `Bearer ${timedInstructorToken}`)
         .send({
           submissionVersion: 1,
           expectedVersion: 0,
@@ -266,7 +267,7 @@ describe('F-06 Instructor Grading, Publication & Private Feedback — Integratio
 
       const pubRes = await request(app)
         .post(`/api/submissions/${submissionId}/evaluation/publish`)
-        .set('Authorization', `Bearer ${instructorToken}`)
+        .set('Authorization', `Bearer ${timedInstructorToken}`)
         .send({ submissionVersion: 1, expectedVersion: 1 });
 
       expect(pubRes.status).toBe(200);
@@ -292,7 +293,7 @@ describe('F-06 Instructor Grading, Publication & Private Feedback — Integratio
       // Stale expectedVersion (1) -> 409 GRADE_VERSION_CONFLICT
       const stalePub = await request(app)
         .post(`/api/submissions/${submissionId}/evaluation/publish`)
-        .set('Authorization', `Bearer ${instructorToken}`)
+        .set('Authorization', `Bearer ${timedInstructorToken}`)
         .send({ submissionVersion: 1, expectedVersion: 1 });
       expect(stalePub.status).toBe(409);
       expect(stalePub.body.code).toBe('GRADE_VERSION_CONFLICT');
@@ -300,7 +301,7 @@ describe('F-06 Instructor Grading, Publication & Private Feedback — Integratio
       // Duplicate publish with current version (2) but unchanged draft -> 409 GRADE_ALREADY_PUBLISHED
       const dupPub = await request(app)
         .post(`/api/submissions/${submissionId}/evaluation/publish`)
-        .set('Authorization', `Bearer ${instructorToken}`)
+        .set('Authorization', `Bearer ${timedInstructorToken}`)
         .send({ submissionVersion: 1, expectedVersion: 2 });
       expect(dupPub.status).toBe(409);
       expect(dupPub.body.code).toBe('GRADE_ALREADY_PUBLISHED');

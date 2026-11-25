@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import GradingConsole from '../grading/GradingConsole';
 
 interface Session {
   token: string;
@@ -17,7 +18,13 @@ interface Submission {
   submittedAt: string;
   dueDateSnapshot: string | null;
   lateStatus: 'ON_TIME' | 'LATE' | 'UNKNOWN';
-  publishedEvaluation: { score: number; feedback: string } | null;
+  publishedEvaluation: {
+    score: number;
+    feedback: string;
+    submissionVersion?: number;
+    draftRevision?: number;
+    publishedAt?: string;
+  } | null;
   legacyEvaluation?: { score: number | null; feedback: string | null; publicationStatus: 'UNKNOWN' } | null;
 }
 export interface SubmissionWorkspaceProps extends Session {
@@ -94,7 +101,15 @@ function SavedSubmission({ value }: { value: Submission }) {
     <div className="small">Submitted: {time(value.submittedAt)}</div>
     <div className="small">Deadline at submission: {time(value.dueDateSnapshot)}</div>
     <div className="small" data-testid="submission-late-status">{value.lateStatus} — at time of submission</div>
-    {value.publishedEvaluation && <div>Published grade: {value.publishedEvaluation.score}/100 — {value.publishedEvaluation.feedback}</div>}
+    {value.publishedEvaluation && (
+      <div data-testid="submission-published-grade">
+        Published grade (v{value.publishedEvaluation.submissionVersion ?? value.version}):{' '}
+        {value.publishedEvaluation.score}/100 — {value.publishedEvaluation.feedback}
+        {value.publishedEvaluation.publishedAt
+          ? ` (${time(value.publishedEvaluation.publishedAt)})`
+          : ''}
+      </div>
+    )}
     {value.legacyEvaluation && <div className="small">Legacy grading (publication unknown): {value.legacyEvaluation.score ?? 'No score'} — {value.legacyEvaluation.feedback}</div>}
   </div>;
 }
@@ -225,6 +240,16 @@ function SubmissionDetail(props: SubmissionWorkspaceProps & { teamId: number }) 
     </form>}
     {!loading && available && <button className="cpms-btn cpms-btn-secondary mt-3" type="button" disabled={saving || historyLoading}
       data-testid="submission-refresh-btn" onClick={() => void reload(true)}>Refresh saved state</button>}
+    {props.userRole === 'INSTRUCTOR' && saved && (
+      <GradingConsole
+        token={props.token}
+        submission={saved}
+        sessionGeneration={props.sessionGeneration}
+        getCurrentGeneration={props.getCurrentGeneration}
+        onUnauthorized={props.onUnauthorized}
+        onEvaluationPublished={() => void reload(true)}
+      />
+    )}
     {history.length > 0 && <section className="mt-4" aria-label="Submission history" data-testid="submission-history">
       <h4 className="h6">Version history</h4>
       {history.map(value => <SavedSubmission key={value.id} value={value} />)}
