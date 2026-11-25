@@ -102,7 +102,7 @@ describe('F-07 confidential peer evaluation: actual API/PostgreSQL', () => {
     expect((await own(instructor)).status).toBe(403); expect((await save({}, instructor)).status).toBe(403);
     const authorized = await all(); expect(authorized.status).toBe(200); expect(authorized.headers['cache-control']).toBe('no-store');
     expect(authorized.body.evaluations[0].comment).toBe('Confidential contribution');
-    for (const path of ['/api/teams', `/api/teams/${f.teamAlpha.id}`, `/api/teams/${f.teamAlpha.id}/tasks`,
+    for (const path of ['/api/teams', `/api/teams/${f.teamAlpha.id}/proposal`, `/api/teams/${f.teamAlpha.id}/tasks`,
       `/api/courses/${f.course.id}/milestones`]) {
       const general = await request(app).get(path).set('Authorization', `Bearer ${teammate}`);
       expect(general.status).toBe(200); expect(JSON.stringify(general.body)).not.toMatch(/Confidential contribution|evaluatorId|peerEvaluations/);

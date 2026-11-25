@@ -114,7 +114,10 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: f07-program-${{ github.sha }}
-          path: test-results/f07-task-checkpoint.png
+          path: |
+            test-results/f07-task-checkpoint.png
+            test-results/f07-peer-outgoing.png
+            test-results/f07-peer-instructor.png
           if-no-files-found: warn
           retention-days: 90
 
