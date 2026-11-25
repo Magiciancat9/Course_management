@@ -30,6 +30,12 @@ enum SubmissionLateStatus {
   UNKNOWN
 }
 
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
 model User {
   id                Int               @id @default(autoincrement())
   email             String            @unique
@@ -44,6 +50,10 @@ model User {
   reviewedProposals   ProjectProposal[]      @relation("ProposalReviewer")
   updatedEvaluations  SubmissionEvaluation[] @relation("EvaluationUpdater")
   publishedGrades     GradePublication[]     @relation("GradePublisher")
+  createdTasks        Task[]                 @relation("TaskCreator")
+  updatedTasks        Task[]                 @relation("TaskUpdater")
+  assignedTasks       Task[]                 @relation("TaskAssignee")
+  taskEvents          TaskEvent[]
 }
 
 model RevokedToken {
@@ -78,6 +88,7 @@ model ProjectTeam {
   members     TeamMember[]
   proposal    ProjectProposal?
   submissions MilestoneSubmission[]
+  tasks       Task[]
 
   @@unique([courseId, name])
 }
@@ -132,6 +143,47 @@ model Milestone {
 
   course        Course                @relation(fields: [courseId], references: [id], onDelete: Cascade)
   submissions   MilestoneSubmission[]
+  tasks         Task[]
+}
+
+model Task {
+  id           Int        @id @default(autoincrement())
+  teamId       Int
+  title        String
+  description  String     @default("")
+  sprintNumber Int
+  status       TaskStatus @default(TODO)
+  assigneeId   Int?
+  milestoneId  Int?
+  createdById  Int
+  updatedById  Int
+  version      Int        @default(1)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @default(now()) @updatedAt
+
+  team         ProjectTeam @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  assignee     User?       @relation("TaskAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+  milestone    Milestone?  @relation(fields: [milestoneId], references: [id], onDelete: SetNull)
+  createdBy    User        @relation("TaskCreator", fields: [createdById], references: [id])
+  updatedBy    User        @relation("TaskUpdater", fields: [updatedById], references: [id])
+  events       TaskEvent[]
+
+  @@index([teamId, id])
+}
+
+model TaskEvent {
+  id        Int      @id @default(autoincrement())
+  taskId    Int
+  actorId   Int
+  version   Int
+  changes   Json
+  createdAt DateTime @default(now())
+
+  task      Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  actor     User @relation(fields: [actorId], references: [id])
+
+  @@unique([taskId, version])
+  @@index([taskId, id])
 }
 
 model MilestoneSubmission {
