@@ -396,4 +396,100 @@ describe('F-04 MilestoneManager Component (S2-F04-T10)', () => {
     });
     expect(screen.getByTestId('milestone-load-more-btn')).not.toBeDisabled();
   });
+
+  it('S2-F04-T10h: focusTarget navigation to Course B resets Course A editing state and aborts pending Course A writes', async () => {
+    const courseAMilestone: MilestoneItem = {
+      id: 10,
+      courseId: 1,
+      title: 'Course A Milestone',
+      description: 'Original Course A milestone description.',
+      dueDate: '2027-05-01T12:00:00.000Z',
+      weightPercent: 30,
+      status: 'PUBLISHED',
+      publishedAt: '2026-11-25T00:00:00.000Z',
+      version: 1,
+    };
+    const courseBMilestone: MilestoneItem = {
+      id: 22,
+      courseId: 2,
+      title: 'Course B Milestone',
+      description: 'Original Course B milestone description.',
+      dueDate: '2027-06-01T12:00:00.000Z',
+      weightPercent: 40,
+      status: 'PUBLISHED',
+      publishedAt: '2026-11-25T00:00:00.000Z',
+      version: 1,
+    };
+
+    let putCourseACount = 0;
+    const fetchMock = vi.fn((url: string, init?: RequestInit) => {
+      const method = init?.method || 'GET';
+      if (method === 'GET' && url === '/api/courses/1/milestones') {
+        return okJson({ milestones: [courseAMilestone], nextAfterId: null });
+      }
+      if (method === 'GET' && url === '/api/courses/2/milestones') {
+        return okJson({ milestones: [courseBMilestone], nextAfterId: null });
+      }
+      if (method === 'PUT' && url === '/api/milestones/10') {
+        putCourseACount += 1;
+        return okJson({ milestone: { ...courseAMilestone, version: 2 } });
+      }
+      if (url === '/api/courses/2/milestones/22/submissions') {
+        return okJson({ submissions: [], nextAfterId: null });
+      }
+      return okJson({});
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const view = render(
+      <MilestoneManager
+        token="instr-token"
+        userRole="INSTRUCTOR"
+        courses={TWO_COURSES}
+        focusTarget={null}
+        sessionGeneration={1}
+        getCurrentGeneration={() => 1}
+        onUnauthorized={vi.fn()}
+      />
+    );
+
+    expect(await screen.findByText('Course A Milestone')).toBeInTheDocument();
+    fireEvent.click(screen.getByTestId('milestone-edit-btn-10'));
+    expect(screen.getByText('Edit Milestone (v1)')).toBeInTheDocument();
+
+    fireEvent.change(screen.getByTestId('milestone-title-input'), {
+      target: { value: 'Modified Course A Draft' },
+    });
+
+    // Simulate Analytics "Grade submission" navigation to Course B
+    view.rerender(
+      <MilestoneManager
+        token="instr-token"
+        userRole="INSTRUCTOR"
+        courses={TWO_COURSES}
+        focusTarget={{
+          nonce: 1,
+          courseId: 2,
+          milestoneId: 22,
+          milestoneTitle: 'Course B Milestone',
+        }}
+        sessionGeneration={1}
+        getCurrentGeneration={() => 1}
+        onUnauthorized={vi.fn()}
+      />
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId('milestone-course-select')).toHaveValue('2');
+    });
+
+    // Course A's editing state and draft must be cleared
+    expect(screen.queryByText('Edit Milestone (v1)')).not.toBeInTheDocument();
+    expect(screen.getByText('New Milestone')).toBeInTheDocument();
+    expect((screen.getByTestId('milestone-title-input') as HTMLInputElement).value).toBe('');
+
+    // Clicking Save on Course B must not send PUT /api/milestones/10 for Course A
+    fireEvent.click(screen.getByTestId('milestone-save-btn'));
+    expect(putCourseACount).toBe(0);
+  });
 });

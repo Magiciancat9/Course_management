@@ -83,6 +83,7 @@ export default function MilestoneManager({
 
   // Instructor form state
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingCourseId, setEditingCourseId] = useState<number | null>(null);
   const [expectedVersion, setExpectedVersion] = useState<number | null>(null);
   const [editingStatus, setEditingStatus] = useState<'DRAFT' | 'PUBLISHED' | null>(null);
   const [titleInput, setTitleInput] = useState('');
@@ -97,25 +98,44 @@ export default function MilestoneManager({
 
   const abortRef = useRef<AbortController | null>(null);
   const loadMoreAbortRef = useRef<AbortController | null>(null);
+  const mutationAbortRef = useRef<AbortController | null>(null);
   const selectedCourseIdRef = useRef<number | null>(selectedCourseId);
   selectedCourseIdRef.current = selectedCourseId;
+
+  function switchCourseContext(nextCourseId: number) {
+    if (selectedCourseIdRef.current !== nextCourseId) {
+      if (mutationAbortRef.current) {
+        mutationAbortRef.current.abort();
+        mutationAbortRef.current = null;
+      }
+      setPendingAction(null);
+      setMilestones([]);
+      setNextAfterId(null);
+      setLoadingMore(false);
+      setLoadError(null);
+      setFormSuccess(null);
+      resetFormToNew();
+    }
+    selectedCourseIdRef.current = nextCourseId;
+    setSelectedCourseId(nextCourseId);
+  }
 
   useEffect(() => {
     if (courses.length === 0) {
       setSelectedCourseId(null);
       setMilestones([]);
       setNextAfterId(null);
+      resetFormToNew();
       return;
     }
     if (selectedCourseId === null || !courses.some((c) => c.id === selectedCourseId)) {
-      setSelectedCourseId(courses[0].id);
+      switchCourseContext(courses[0].id);
     }
   }, [courses, selectedCourseId]);
 
   useEffect(() => {
     if (!focusTarget) return;
-    selectedCourseIdRef.current = focusTarget.courseId;
-    setSelectedCourseId(focusTarget.courseId);
+    switchCourseContext(focusTarget.courseId);
     if (typeof focusTarget.milestoneId === 'number') {
       const targetMilestoneId = focusTarget.milestoneId;
       const existing = milestones.find(
@@ -161,6 +181,7 @@ export default function MilestoneManager({
 
   function resetFormToNew() {
     setEditingId(null);
+    setEditingCourseId(null);
     setExpectedVersion(null);
     setEditingStatus(null);
     setTitleInput('');
@@ -173,6 +194,7 @@ export default function MilestoneManager({
 
   function startEditing(item: MilestoneItem) {
     setEditingId(item.id);
+    setEditingCourseId(item.courseId);
     setExpectedVersion(item.version);
     setEditingStatus(item.status);
     setTitleInput(item.title);
@@ -303,6 +325,10 @@ export default function MilestoneManager({
         loadMoreAbortRef.current.abort();
         loadMoreAbortRef.current = null;
       }
+      if (mutationAbortRef.current) {
+        mutationAbortRef.current.abort();
+        mutationAbortRef.current = null;
+      }
     };
   }, [selectedCourseId, token, sessionGeneration]);
 
@@ -334,10 +360,18 @@ export default function MilestoneManager({
     }
 
     const expectedGen = sessionGeneration;
+    if (mutationAbortRef.current) {
+      mutationAbortRef.current.abort();
+    }
+    const controller = new AbortController();
+    mutationAbortRef.current = controller;
     setPendingAction('save-milestone');
 
     try {
-      const isEdit = editingId !== null && expectedVersion !== null;
+      const isEdit =
+        editingId !== null &&
+        expectedVersion !== null &&
+        editingCourseId === requestCourseId;
       const url = isEdit
         ? `/api/milestones/${editingId}`
         : `/api/courses/${requestCourseId}/milestones`;
@@ -364,10 +398,12 @@ export default function MilestoneManager({
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(body),
+        signal: controller.signal,
       });
       const data = await res.json().catch(() => ({}));
 
       if (
+        controller.signal.aborted ||
         expectedGen !== getCurrentGeneration() ||
         requestCourseId !== selectedCourseIdRef.current
       ) {
@@ -396,15 +432,24 @@ export default function MilestoneManager({
       setFormSuccess(isEdit ? 'Milestone updated.' : 'Milestone draft created.');
       resetFormToNew();
       await loadMilestones(requestCourseId);
-    } catch {
+    } catch (err) {
       if (
+        (err as Error)?.name !== 'AbortError' &&
+        !controller.signal.aborted &&
         expectedGen === getCurrentGeneration() &&
         requestCourseId === selectedCourseIdRef.current
       ) {
         setFormError({ error: 'Network error while saving milestone.' });
       }
     } finally {
-      if (expectedGen === getCurrentGeneration()) {
+      if (mutationAbortRef.current === controller) {
+        mutationAbortRef.current = null;
+      }
+      if (
+        !controller.signal.aborted &&
+        expectedGen === getCurrentGeneration() &&
+        requestCourseId === selectedCourseIdRef.current
+      ) {
         setPendingAction(null);
       }
     }
@@ -419,6 +464,11 @@ export default function MilestoneManager({
     setHasConflict(false);
 
     const expectedGen = sessionGeneration;
+    if (mutationAbortRef.current) {
+      mutationAbortRef.current.abort();
+    }
+    const controller = new AbortController();
+    mutationAbortRef.current = controller;
     setPendingAction(`publish-${item.id}`);
 
     try {
@@ -429,10 +479,12 @@ export default function MilestoneManager({
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ expectedVersion: item.version }),
+        signal: controller.signal,
       });
       const data = await res.json().catch(() => ({}));
 
       if (
+        controller.signal.aborted ||
         expectedGen !== getCurrentGeneration() ||
         requestCourseId !== selectedCourseIdRef.current
       ) {
@@ -463,15 +515,24 @@ export default function MilestoneManager({
         resetFormToNew();
       }
       await loadMilestones(requestCourseId);
-    } catch {
+    } catch (err) {
       if (
+        (err as Error)?.name !== 'AbortError' &&
+        !controller.signal.aborted &&
         expectedGen === getCurrentGeneration() &&
         requestCourseId === selectedCourseIdRef.current
       ) {
         setFormError({ error: 'Network error while publishing milestone.' });
       }
     } finally {
-      if (expectedGen === getCurrentGeneration()) {
+      if (mutationAbortRef.current === controller) {
+        mutationAbortRef.current = null;
+      }
+      if (
+        !controller.signal.aborted &&
+        expectedGen === getCurrentGeneration() &&
+        requestCourseId === selectedCourseIdRef.current
+      ) {
         setPendingAction(null);
       }
     }
@@ -538,8 +599,9 @@ export default function MilestoneManager({
               value={selectedCourseId ?? ''}
               disabled={pendingAction !== null}
               onChange={(e) => {
-                setSelectedCourseId(Number(e.target.value));
-                resetFormToNew();
+                setSubmissionMilestone(null);
+                setFocusedTeam(null);
+                switchCourseContext(Number(e.target.value));
               }}
             >
               {courses.map((c) => (

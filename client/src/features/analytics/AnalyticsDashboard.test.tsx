@@ -612,6 +612,14 @@ describe('S3-F08-T11 (S3-F08-AC10): Instructor AnalyticsDashboard UI, export, er
 
     // MilestoneManager initially defaults to Course A (id = 1)
     expect(screen.getByTestId('milestone-course-select')).toHaveValue('1');
+    await screen.findByTestId('milestone-edit-btn-11');
+
+    // Start editing a milestone in Course A and modify its title
+    fireEvent.click(screen.getByTestId('milestone-edit-btn-11'));
+    expect(screen.getByText('Edit Milestone (v1)')).toBeInTheDocument();
+    fireEvent.change(screen.getByTestId('milestone-title-input'), {
+      target: { value: 'Edited Course A Draft Title' },
+    });
 
     // Switch Analytics to Course B (id = 2)
     fireEvent.change(screen.getByTestId('analytics-course-select'), { target: { value: '2' } });
@@ -620,10 +628,21 @@ describe('S3-F08-T11 (S3-F08-AC10): Instructor AnalyticsDashboard UI, export, er
     // Click "Grade submission" on Course B's ungraded submission
     fireEvent.click(screen.getByRole('button', { name: 'Grade submission' }));
 
-    // MilestoneManager must switch to Course B and open Course B's milestone submission and grading console
+    // MilestoneManager must switch to Course B, reset Course A's editing state, and open Course B's grading console
     await waitFor(() => {
       expect(screen.getByTestId('milestone-course-select')).toHaveValue('2');
     });
+    expect(screen.queryByText('Edit Milestone (v1)')).not.toBeInTheDocument();
+    expect(screen.getByText('New Milestone')).toBeInTheDocument();
+    expect((screen.getByTestId('milestone-title-input') as HTMLInputElement).value).toBe('');
+
+    // Clicking Save while displaying Course B must NOT submit PUT /api/milestones/11 for Course A
+    fireEvent.click(screen.getByTestId('milestone-save-btn'));
+    const courseAPutCalls = fetchMock.mock.calls.filter(([input]) =>
+      String(input).includes('/api/milestones/11')
+    );
+    expect(courseAPutCalls).toHaveLength(0);
+
     expect(await screen.findByTestId('submission-workspace')).toHaveTextContent(
       'Capstone Final Deliverable — submissions'
     );
