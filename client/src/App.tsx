@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import MilestoneManager from './features/milestones/MilestoneManager';
+import MilestoneManager, { type MilestoneFocusTarget } from './features/milestones/MilestoneManager';
 import TaskBoard from './features/collaboration/TaskBoard';
 import PeerEvaluation from './features/collaboration/PeerEvaluation';
-import AnalyticsDashboard from './features/analytics/AnalyticsDashboard';
+import AnalyticsDashboard, { type AnalyticsWorkflowTarget } from './features/analytics/AnalyticsDashboard';
 
 export interface User {
   id: number;
@@ -98,6 +98,7 @@ export default function App() {
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [selectedTeamId, setSelectedTeamId] = useState<number | null>(null);
   const [reviewFeedbackInput, setReviewFeedbackInput] = useState('');
+  const [milestoneFocusTarget, setMilestoneFocusTarget] = useState<MilestoneFocusTarget | null>(null);
 
   // Session boundary refs: prevent cross-session stale responses and callbacks
   const sessionGenerationRef = useRef<number>(0);
@@ -127,6 +128,7 @@ export default function App() {
     setStatusFilter('ALL');
     setSelectedTeamId(null);
     setReviewFeedbackInput('');
+    setMilestoneFocusTarget(null);
     setActiveNav('overview');
     setMobileNavOpen(false);
   }
@@ -378,10 +380,23 @@ export default function App() {
 
   function navigateToSection(
     navKey: 'overview' | 'team' | 'proposal' | 'teams' | 'review' | 'milestones' | 'tasks' | 'peers' | 'analytics',
-    sectionId?: string
+    sectionId?: string,
+    target?: AnalyticsWorkflowTarget
   ) {
     setActiveNav(navKey);
     setMobileNavOpen(false);
+    if (target) {
+      if (navKey === 'milestones') {
+        setMilestoneFocusTarget((prev) => ({
+          nonce: (prev?.nonce ?? 0) + 1,
+          ...target,
+        }));
+      } else if (navKey === 'review' && typeof target.teamId === 'number') {
+        setStatusFilter('ALL');
+        setSelectedTeamId(target.teamId);
+        setReviewFeedbackInput('');
+      }
+    }
     if (sectionId) {
       const prefersReducedMotion =
         typeof window !== 'undefined' &&
@@ -1613,6 +1628,7 @@ export default function App() {
               ownTeams={teams.filter(team => team.members.some(member => member.userId === user.id))
                 .map(team => ({ id: team.id, courseId: team.courseId, proposalStatus: team.proposal?.status || null }))}
               courses={courses}
+              focusTarget={milestoneFocusTarget}
               sessionGeneration={sessionGenerationRef.current}
               getCurrentGeneration={() => sessionGenerationRef.current}
               onUnauthorized={(msg, code) => {

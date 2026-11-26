@@ -1,6 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 import { PrismaClient } from '../server/node_modules/@prisma/client';
 import { execSync } from 'child_process';
+import fs from 'fs';
 import path from 'path';
 import { assertDisposableTestDatabase } from '../server/tests/helpers/disposableDatabase';
 
@@ -251,8 +252,21 @@ test('S3-F08-T12 (S3-F08-AC10): instructor analytics dashboard and CSV export re
   await page.getByRole('button', { name: 'Analytics & Export', exact: true }).click();
   await expect(dashboard.getByTestId('analytics-total-teams')).toHaveText('3');
 
+  const downloadPromise = page.waitForEvent('download');
   await dashboard.getByTestId('analytics-export-csv').click();
+  const download = await downloadPromise;
   await expect(dashboard.getByTestId('analytics-export-success')).toContainText('Exported gradebook CSV');
+
+  const downloadPath = await download.path();
+  expect(downloadPath).toBeTruthy();
+  const downloadedFileBytes = fs.readFileSync(downloadPath!);
+  expect(Array.from(downloadedFileBytes.subarray(0, 3))).toEqual([0xef, 0xbb, 0xbf]);
+  const downloadedCsvText = downloadedFileBytes.toString('utf8');
+  expect(downloadedCsvText.startsWith('\uFEFF')).toBe(true);
+  expect(downloadedCsvText).toContain('"M1 Baseline Architecture"');
+  expect(downloadedCsvText).toContain('"0"'); // published zero score on M1
+  expect(downloadedCsvText).not.toContain('"88"'); // superseded v1 grade on M2 excluded
+  expect(downloadedCsvText).not.toContain('"94"'); // unpublished v2 draft on M2 excluded
 
   const instToken = await page.evaluate(() => localStorage.getItem('course_pms_token'));
   const csvRes = await request.get(`/api/courses/${courseId}/gradebook.csv`, {
@@ -265,6 +279,14 @@ test('S3-F08-T12 (S3-F08-AC10): instructor analytics dashboard and CSV export re
   expect(csvBody).toContain('"0"'); // published zero score on M1
   expect(csvBody).not.toContain('"88"'); // superseded v1 grade on M2 excluded
   expect(csvBody).not.toContain('"94"'); // unpublished v2 draft on M2 excluded
+
+  // Clicking "Grade submission" opens the targeted course/milestone/team submission in GradingConsole
+  await dashboard
+    .getByTestId(`analytics-ungraded-row-${subM2Id}`)
+    .getByRole('button', { name: 'Grade submission' })
+    .click();
+  await expect(page.getByTestId('submission-workspace')).toContainText('M2 Release Candidate — submissions');
+  await expect(page.getByTestId('grading-console')).toContainText('Instructor Grading — Submission v2 (m2-v2)');
 
   await dashboard.screenshot({ path: path.join(root, 'test-results/f08-analytics-dashboard.png') });
 });

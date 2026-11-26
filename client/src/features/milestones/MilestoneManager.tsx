@@ -14,6 +14,16 @@ export interface MilestoneItem {
   version: number;
 }
 
+export interface MilestoneFocusTarget {
+  nonce: number;
+  courseId: number;
+  milestoneId?: number;
+  milestoneTitle?: string;
+  teamId?: number;
+  submissionId?: number;
+  submissionVersion?: number;
+}
+
 interface MilestoneManagerProps {
   token: string;
   userRole: 'STUDENT' | 'INSTRUCTOR';
@@ -22,6 +32,7 @@ interface MilestoneManagerProps {
   getCurrentGeneration: () => number;
   onUnauthorized: (message: string, code?: string) => void;
   ownTeams?: Array<{ id: number; courseId: number; proposalStatus: string | null }>;
+  focusTarget?: MilestoneFocusTarget | null;
 }
 
 function toLocalDateTimeInput(isoString: string): string {
@@ -57,12 +68,14 @@ export default function MilestoneManager({
   getCurrentGeneration,
   onUnauthorized,
   ownTeams = [],
+  focusTarget = null,
 }: MilestoneManagerProps) {
   const [selectedCourseId, setSelectedCourseId] = useState<number | null>(
     courses[0]?.id ?? null
   );
   const [milestones, setMilestones] = useState<MilestoneItem[]>([]);
   const [submissionMilestone, setSubmissionMilestone] = useState<MilestoneItem | null>(null);
+  const [focusedTeam, setFocusedTeam] = useState<{ nonce: number; teamId: number | null } | null>(null);
   const [nextAfterId, setNextAfterId] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingMore, setLoadingMore] = useState<boolean>(false);
@@ -98,6 +111,53 @@ export default function MilestoneManager({
       setSelectedCourseId(courses[0].id);
     }
   }, [courses, selectedCourseId]);
+
+  useEffect(() => {
+    if (!focusTarget) return;
+    selectedCourseIdRef.current = focusTarget.courseId;
+    setSelectedCourseId(focusTarget.courseId);
+    if (typeof focusTarget.milestoneId === 'number') {
+      const targetMilestoneId = focusTarget.milestoneId;
+      const existing = milestones.find(
+        (m) => m.id === targetMilestoneId && m.courseId === focusTarget.courseId
+      );
+      setSubmissionMilestone(
+        existing ?? {
+          id: targetMilestoneId,
+          courseId: focusTarget.courseId,
+          title: focusTarget.milestoneTitle || `Milestone #${targetMilestoneId}`,
+          description: '',
+          dueDate: new Date().toISOString(),
+          weightPercent: 20,
+          status: 'PUBLISHED',
+          publishedAt: null,
+          version: 1,
+        }
+      );
+      setFocusedTeam({
+        nonce: focusTarget.nonce,
+        teamId: typeof focusTarget.teamId === 'number' ? focusTarget.teamId : null,
+      });
+    } else {
+      setSubmissionMilestone(null);
+      setFocusedTeam(null);
+    }
+  }, [focusTarget?.nonce]);
+
+  useEffect(() => {
+    if (!submissionMilestone) return;
+    const loaded = milestones.find(
+      (m) => m.id === submissionMilestone.id && m.courseId === submissionMilestone.courseId
+    );
+    if (
+      loaded &&
+      (loaded.title !== submissionMilestone.title ||
+        loaded.status !== submissionMilestone.status ||
+        loaded.version !== submissionMilestone.version)
+    ) {
+      setSubmissionMilestone(loaded);
+    }
+  }, [milestones, submissionMilestone]);
 
   function resetFormToNew() {
     setEditingId(null);
@@ -721,7 +781,7 @@ export default function MilestoneManager({
                       <p className="mb-0 mt-2 small">{m.description}</p>
                       {(userRole === 'INSTRUCTOR' || m.status === 'PUBLISHED') && <button type="button"
                         className="cpms-btn cpms-btn-secondary mt-2" data-testid={`milestone-submission-btn-${m.id}`}
-                        onClick={() => setSubmissionMilestone(m)}>
+                        onClick={() => { setFocusedTeam(null); setSubmissionMilestone(m); }}>
                         {userRole === 'INSTRUCTOR' ? 'View submissions' : 'View / submit deliverable'}
                       </button>}
                     </div>
@@ -746,10 +806,11 @@ export default function MilestoneManager({
           </>
         )}
         {submissionMilestone && submissionMilestone.courseId === selectedCourseId && <>
-          <button type="button" className="cpms-btn cpms-btn-secondary mt-3" onClick={() => setSubmissionMilestone(null)}>Close submission details</button>
+          <button type="button" className="cpms-btn cpms-btn-secondary mt-3" onClick={() => { setFocusedTeam(null); setSubmissionMilestone(null); }}>Close submission details</button>
           <SubmissionWorkspace key={`${sessionGeneration}:${selectedCourseId}:${submissionMilestone.id}`} token={token}
             userRole={userRole} courseId={selectedCourseId} milestone={submissionMilestone}
             ownTeam={ownTeams.find(team => team.courseId === selectedCourseId) || null}
+            initialTeamId={focusedTeam?.teamId ?? null} focusNonce={focusedTeam?.nonce}
             sessionGeneration={sessionGeneration} getCurrentGeneration={getCurrentGeneration} onUnauthorized={onUnauthorized} />
         </>}
       </div>

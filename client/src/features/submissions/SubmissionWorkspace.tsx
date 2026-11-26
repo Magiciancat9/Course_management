@@ -32,6 +32,8 @@ export interface SubmissionWorkspaceProps extends Session {
   courseId: number;
   milestone: { id: number; title: string; status: 'DRAFT' | 'PUBLISHED' };
   ownTeam: { id: number; proposalStatus: string | null } | null;
+  initialTeamId?: number | null;
+  focusNonce?: number;
 }
 type TeamSubmission = Submission & { team: { id: number; name: string } };
 type Payload = { error?: unknown; code?: string; submission?: Submission; versions?: Submission[];
@@ -267,7 +269,7 @@ function InstructorSubmissions(props: SubmissionWorkspaceProps) {
   const [after, setAfter] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [teamId, setTeamId] = useState<number | null>(null);
+  const [teamId, setTeamId] = useState<number | null>(props.initialTeamId ?? null);
   async function load(cursor?: number) {
     setLoading(true); setError(null);
     const response = await request(`/api/courses/${props.courseId}/milestones/${props.milestone.id}/submissions` +
@@ -281,7 +283,12 @@ function InstructorSubmissions(props: SubmissionWorkspaceProps) {
     } else setError(String(response.data.error || 'Could not load submissions.'));
     setLoading(false);
   }
-  useEffect(() => { setRows([]); setAfter(null); setTeamId(null); void load(); }, [key]);
+  useEffect(() => { setRows([]); setAfter(null); setTeamId(props.initialTeamId ?? null); void load(); }, [key]);
+  useEffect(() => {
+    if (typeof props.initialTeamId === 'number') {
+      setTeamId(props.initialTeamId);
+    }
+  }, [props.focusNonce, props.initialTeamId]);
   return <div>
     <h3 className="h5">Submitted team deliverables</h3>
     {error && <p role="alert">{error}</p>}

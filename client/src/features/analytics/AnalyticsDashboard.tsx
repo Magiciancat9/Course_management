@@ -62,6 +62,15 @@ export interface CourseAnalyticsData {
   }>;
 }
 
+export interface AnalyticsWorkflowTarget {
+  courseId: number;
+  milestoneId?: number;
+  milestoneTitle?: string;
+  teamId?: number;
+  submissionId?: number;
+  submissionVersion?: number;
+}
+
 export interface AnalyticsDashboardProps {
   token: string;
   userId: number;
@@ -72,7 +81,8 @@ export interface AnalyticsDashboardProps {
   onUnauthorized: (message: string, code?: string) => void;
   onNavigateToSection?: (
     navKey: 'overview' | 'team' | 'proposal' | 'teams' | 'review' | 'milestones' | 'tasks' | 'peers' | 'analytics',
-    sectionId?: string
+    sectionId?: string,
+    target?: AnalyticsWorkflowTarget
   ) => void;
 }
 
@@ -249,6 +259,7 @@ export default function AnalyticsDashboard(props: AnalyticsDashboardProps) {
         } catch {
           // ignore
         }
+        if (!isContextValid(capturedContext, capturedEpoch) || controller.signal.aborted) return;
         onUnauthorized(errMsg, errCode);
         return;
       }
@@ -261,11 +272,32 @@ export default function AnalyticsDashboard(props: AnalyticsDashboardProps) {
         } catch {
           // ignore
         }
+        if (!isContextValid(capturedContext, capturedEpoch) || controller.signal.aborted) return;
         throw new Error(errMsg);
       }
 
-      const csvText = await response.text();
+      let csvBytes: Uint8Array;
+      if (typeof response.arrayBuffer === 'function') {
+        const rawBuffer = await response.arrayBuffer();
+        csvBytes = new Uint8Array(rawBuffer);
+      } else if (typeof response.blob === 'function') {
+        const rawBlob = await response.blob();
+        csvBytes = new Uint8Array(await rawBlob.arrayBuffer());
+      } else {
+        const csvText = await response.text();
+        csvBytes = new TextEncoder().encode(csvText);
+      }
       if (!isContextValid(capturedContext, capturedEpoch) || controller.signal.aborted) return;
+
+      // Ensure leading UTF-8 BOM (0xEF 0xBB 0xBF) is preserved in the downloaded file bytes
+      const hasUtf8Bom =
+        csvBytes.length >= 3 && csvBytes[0] === 0xef && csvBytes[1] === 0xbb && csvBytes[2] === 0xbf;
+      if (!hasUtf8Bom) {
+        const prefixed = new Uint8Array(csvBytes.length + 3);
+        prefixed.set([0xef, 0xbb, 0xbf], 0);
+        prefixed.set(csvBytes, 3);
+        csvBytes = prefixed;
+      }
 
       const filename = extractFilename(
         response.headers.get('Content-Disposition'),
@@ -274,7 +306,7 @@ export default function AnalyticsDashboard(props: AnalyticsDashboardProps) {
       );
 
       if (typeof window !== 'undefined' && typeof URL !== 'undefined' && typeof URL.createObjectURL === 'function') {
-        const blob = new Blob([csvText], { type: 'text/csv;charset=utf-8;' });
+        const blob = new Blob([csvBytes as unknown as BlobPart], { type: 'text/csv;charset=utf-8;' });
         const objectUrl = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = objectUrl;
@@ -359,6 +391,7 @@ export default function AnalyticsDashboard(props: AnalyticsDashboardProps) {
                 </label>
                 <select
                   id="analytics-course"
+                  data-testid="analytics-course-select"
                   className="cpms-input"
                   value={courseId}
                   disabled={loading || exporting}
@@ -539,7 +572,13 @@ export default function AnalyticsDashboard(props: AnalyticsDashboardProps) {
                                   <button
                                     type="button"
                                     className="cpms-btn cpms-btn-secondary btn-sm"
-                                    onClick={() => onNavigateToSection?.('milestones', 'section-milestones')}
+                                    onClick={() =>
+                                      onNavigateToSection?.('milestones', 'section-milestones', {
+                                        courseId: analytics.course.id,
+                                        milestoneId: ms.milestoneId,
+                                        milestoneTitle: ms.title,
+                                      })
+                                    }
                                   >
                                     Open in Milestones
                                   </button>
@@ -596,7 +635,16 @@ export default function AnalyticsDashboard(props: AnalyticsDashboardProps) {
                                   <button
                                     type="button"
                                     className="cpms-btn cpms-btn-secondary btn-sm"
-                                    onClick={() => onNavigateToSection?.('milestones', 'section-milestones')}
+                                    onClick={() =>
+                                      onNavigateToSection?.('milestones', 'section-milestones', {
+                                        courseId: analytics.course.id,
+                                        milestoneId: item.milestoneId,
+                                        milestoneTitle: item.milestoneTitle,
+                                        teamId: item.teamId,
+                                        submissionId: item.submissionId,
+                                        submissionVersion: item.submissionVersion,
+                                      })
+                                    }
                                   >
                                     Grade submission
                                   </button>
@@ -645,14 +693,20 @@ export default function AnalyticsDashboard(props: AnalyticsDashboardProps) {
                                   <button
                                     type="button"
                                     className="cpms-btn cpms-btn-secondary btn-sm"
-                                    onClick={() =>
+                                    onClick={() => {
+                                      const isRevision = team.reasons.includes('REVISION_REQUESTED');
+                                      const targetMilestoneId =
+                                        team.lateMilestoneIds[0] ?? team.overdueMilestoneIds[0];
                                       onNavigateToSection?.(
-                                        team.reasons.includes('REVISION_REQUESTED') ? 'review' : 'milestones',
-                                        team.reasons.includes('REVISION_REQUESTED')
-                                          ? 'section-review'
-                                          : 'section-milestones'
-                                      )
-                                    }
+                                        isRevision ? 'review' : 'milestones',
+                                        isRevision ? 'section-review' : 'section-milestones',
+                                        {
+                                          courseId: analytics.course.id,
+                                          teamId: team.teamId,
+                                          ...(targetMilestoneId ? { milestoneId: targetMilestoneId } : {}),
+                                        }
+                                      );
+                                    }}
                                   >
                                     Inspect workflow
                                   </button>
