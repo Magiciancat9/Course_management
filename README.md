@@ -1,8 +1,17 @@
 # CoursePMS — Course Project Management System
 
+**25 Nov current snapshot:** reviewed/deployed Sprint 2 main (`07ffd8f31c3d61d8d13d5217a1fde39628c6649a`)
+passed full public and authenticated deployment smoke ([run 45645149796](https://github.com/Magiciancat9/Course_management/actions/runs/45645149796),
+revision `course-pms-00014-28n`) and is preserved as immutable tag `v1.1.0-sprint2` (#97).
+Reviewed `sprint-3-staging` (`c35714dc7e9d7ca4e88ae5ab1d65fd3a8707c312`) integrates the
+F-07 task checkpoint (#120), reconciled D2 documentation (#121), and confidential
+F-07 peer evaluation (#122, reviewed at `57045b5`). Analytics/CSV (#102) remains planned.
+[Current source/release/results and remaining-work plan](docs/sprints/deliverable-2/continuity-and-status.md)
+tracks the combined Sprint 1/2/3 release candidate promotion (#103).
+
 **Course:** CPE 334 Software Engineering in the Age of AI Agents (Semester 1/2026)  
 **Deliverable:** Project Deliverable 1 — Engineering Baseline and Working Sprint 1  
-**Current planning:** Sprint 2–3 contracts were reviewed in PR #107; UI refresh and F-04 merged into staging via #110/#116. F-05 is implemented on its feature branch for independent review; accepted Sprint 2/main deployment remains pending. See [F-05 evidence](docs/sprints/sprint-2/f05-execution-evidence.md).
+**Current planning:** Sprint 2 is accepted and tagged `v1.1.0-sprint2` (`07ffd8f3`, #119/#97). Tasks (#120), current documents (#121), and confidential peer evaluation (#122, [#101 ledger](docs/sprints/sprint-3/f07-peer-execution-evidence.md)) are reviewed and merged on Sprint 3 staging (`c35714d`), and promoted for combined main RC review/deployment under #103.
 **Team Members:**
 - **Pawarit Wongdaeng** (`67070503466`, GitHub: `martinvadre`)
 - **Tatchakorn Thamnimitr** (`67070503415`, GitHub: `Magiciancat9`)
@@ -70,14 +79,17 @@ Set `JWT_SECRET` to the generated value in `server/.env`. `POSTGRES_PASSWORD` is
 ### 3.3. Install, Apply Schema, and Seed Database
 ```bash
 # 1. Install dependencies across root, server, and client
-npm install
-npm --prefix server install
-npm --prefix client install
+npm ci
+npm --prefix server ci
+npm --prefix client ci
 
-# 2. Apply the Sprint 1 schema with prisma db push and generate Prisma Client
-npm --prefix server run prisma:migrate
+# 2. Apply all committed migrations to the configured fresh local DB
+npm --prefix server run prisma:migrate:deploy
 
-# 3. Seed reproducible synthetic demo data (development/test databases only)
+# 3. Generate Prisma Client and compile the server
+npm --prefix server run build
+
+# 4. Seed reproducible synthetic demo data (development/test databases only)
 npm --prefix server run prisma:seed
 ```
 The local `prisma:migrate` script runs `prisma db push` for a disposable development database. The repository also contains versioned Prisma migrations; the production release job uses `npm --prefix server run prisma:migrate:deploy` (`prisma migrate deploy`), as described in the [deployment instructions](docs/labs/lab-05/deployment.md).
@@ -119,13 +131,13 @@ npm run test:client   # Vitest + React Testing Library UI tests
 npm run test:e2e      # Playwright End-to-End browser tests
 ```
 
-> **Test database safety:** Server integration tests reset the database through `seedDatabase`, and each Playwright test runs the Prisma seed script. Set `DATABASE_URL` to a separate, disposable PostgreSQL test database before running `test:server` or `test:e2e`; never point these suites at a development or production database.
+> **Test database safety:** Server integration tests reset the database through `seedDatabase`, and each Playwright test runs the Prisma seed script. Set `DATABASE_URL` to a separate, disposable PostgreSQL test database before running `test:server` or `test:e2e`; the name must end `_test` on localhost/CI and NODE_ENV must not be production. Never point these suites at a non-disposable development or production database.
 
 ## 5. F-03 Proposal Drafting, Submission & Instructor Review
 
 F-03 uses the existing `ProjectProposal` Prisma model; no additional migration or
 environment variable is required. Apply the current schema to a local database
-with the existing `npm --prefix server run prisma:migrate` command in Section 3.3.
+with `npm --prefix server run prisma:migrate:deploy` in Section 3.3.
 
 | Method | Endpoint | Access | Result |
 | :--- | :--- | :--- | :--- |
@@ -161,6 +173,22 @@ data.
 
 ## 6. Known Limitations
 
-- Local schema synchronization uses `prisma db push`; production uses the committed migration history through `prisma migrate deploy`. Never use the local schema-sync or test reset commands on production.
-- Students cannot self-join an existing team. A current team member adds an eligible student by university email; a self-service join workflow remains a proposed scope change pending team approval.
+- The legacy `prisma:migrate` alias uses `prisma db push`; the recommended fresh setup and production procedure use committed migrations through `prisma:migrate:deploy`. Never use the local schema-sync or test reset commands on production.
+- Students cannot self-join an existing team. A current team member adds an eligible student by university email; self-service joining remains outside the implemented baseline under approved CHG-05.
 - PostgreSQL integration and E2E suites are destructive to their configured database and must only run against a disposable test database.
+
+
+## 7. Current migration and deployment boundaries
+
+Main S2 has four ordered migrations; Sprint 3 staging adds
+`20261125030000_f07_task_checkpoint` as the fifth. Existing populated data must
+follow the reviewed migration-history procedure in the Lab 5 deployment notes;
+do not reset it or mark init applied without verifying the actual schema.
+Docker Compose starts the app/database services but does not automatically run
+migration or seed commands; provision schema explicitly before using a fresh DB.
+
+The deployed service identity, image digest, migration/revision, bounded public
+readback and actual authenticated-smoke SKIP are in the current snapshot above.
+Do not count a local demo password/login as proof of the production smoke.
+The native environment examples contain placeholders only. Final PDFs/private
+credentials/receipts and temporary inspection files remain outside public Git.

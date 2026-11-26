@@ -1,5 +1,13 @@
 # Shared Sprint 2–3 contract — D2-COMMON v1.0
 
+**25 Nov #100 source reconciliation:** this complete shared design was
+reviewed in PR #107 before code. F-04/F-05/F-06 are reviewed/deployed on main;
+Task/TaskEvent are implemented/reviewed on S3 staging via #120. PeerEvaluation
+is implemented/tested on the #101 feature candidate, pending independent review
+and integration; analytics/CSV remains future design. [Actual per-AC status](verification-register.md)
+and [current versions/finish plan](continuity-and-status.md) govern execution
+and release claims; old draft-status statements below retain their 22 Nov scope.
+
 **Original draft:** 22 Nov 2026; independently reviewed via PR #107 before code.
 **25 Nov update:** F-04/F-05/F-06 implemented and reviewed via PR #116/#117/#118;
 combined results and release gates: [Sprint 2 ledger](../sprint-2/accepted-release.md).
@@ -14,7 +22,7 @@ an instructor-assignment/enrolment model. Keep the existing global instructor
 role authority over existing courses; do not silently add a new enrolment
 subsystem. Private team operations always verify membership server-side.
 
-| Decision | Proposed interpretation for review | Reason / affected contracts |
+| Decision | Reviewed interpretation (PR #107) | Reason / affected contracts |
 | --- | --- | --- |
 | DD-S2-01 | Accept only absolute HTTP(S) artifact/report URLs; trim and validate, never fetch them server-side | F-05 links are references, not an upload/proxy subsystem |
 | DD-S2-02 | Late submissions are permitted and flagged; equality to the deadline is on time | Existing SRS includes late flagging, not a blanket late-submission ban |
@@ -181,3 +189,4 @@ Record command, actual path/name, tested commit, counts and environment.
 | Revision | Review status |
 | --- | --- |
 | D2-COMMON v1.0, 22 Nov 2026 | Proposed by Magiciancat9; martinvadre review pending; no implementation/test execution |
+| Independent review / current implementation | PR #107, 22 Nov, reviewed the full shared policy before code. S2 implemented/reviewed via #116-#119; task checkpoint #120 on S3 staging. Peer/analytics remain design, not implementation. |

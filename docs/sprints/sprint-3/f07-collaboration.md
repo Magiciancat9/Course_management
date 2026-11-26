@@ -1,12 +1,17 @@
 # F-07 — Team sprint tasks and confidential peer evaluation
 
-**Contract:** S3-F07 v1.0, 22 Nov 2026; proposed / review pending.
-**Owner / author:** `Magiciancat9`; requested reviewer `martinvadre`.
+**Contract:** S3-F07 v1.0, 22 Nov 2026; independently reviewed via PR #107 before implementation.
+**Owner / author:** `Magiciancat9`; independent implementation reviewer `martinvadre`.
 **Issues:** [#98 checkpoint](https://github.com/Magiciancat9/Course_management/issues/98),
 [#101 remaining peer work](https://github.com/Magiciancat9/Course_management/issues/101).
 **Links:** FR-09/10; BR-06/08; NFR-01/02/04. Dependencies: F-02 and
 [F-05 milestone/submission context](../sprint-2/f05-submissions.md).
-**Implemented / executed / accepted:** NO / NOT RUN / NONE.
+**25 Nov task checkpoint:** AC01-06 implemented on `feat/98-f07-tasks`;
+[execution ledger](f07-execution-evidence.md) records exact tests/results.
+AC07-12 peer evaluation is now implemented/tested on #101's feature branch;
+[peer execution ledger](f07-peer-execution-evidence.md) names actual cases/results.
+Independent peer implementation review and staging/main integration remain pending.
+No accepted Sprint 3 release is claimed.
 
 ## 1. Scope and feature SDS
 
@@ -29,7 +34,7 @@ flowchart LR
   P --> C[Confidential own outgoing / instructor reads]
 ```
 
-Planned modules: `server/src/routes/tasks.ts`, `peerEvaluations.ts`,
+Reviewed module design (implemented for tasks and #101 peer candidate): `server/src/routes/tasks.ts`, `peerEvaluations.ts`,
 `server/src/services/taskService.ts`, `peerEvaluationService.ts`, related
 models; client `features/collaboration/TaskBoard.tsx` and `PeerEvaluation.tsx`.
 Apply the [shared contract](../deliverable-2/shared-contract.md).
@@ -119,7 +124,7 @@ no changed proposal-review rule or GitHub integration is needed.
 | S3-F07-AC11 | Concurrent peer updates preserve one pair and expected-version semantics without partial writes | S3-F07-T13 |
 | S3-F07-AC12 | Peer UI reflects actual eligibility/save/error states and reloads confidential persisted outgoing feedback | S3-F07-T14, S3-F07-T15 |
 
-## 6. STS — PLANNED / NOT RUN
+## 6. Reviewed STS (original pre-code design)
 
 I; A1/A2 approved Team A; D1 draft Team D; B1 foreign; published M1 due at
 fixed instant, draft/wrong-course milestones; own/foreign submission variants.
@@ -145,7 +150,13 @@ fixed instant, draft/wrong-course milestones; own/foreign submission variants.
 Planned files: U `server/tests/collaboration.unit.test.ts`; I
 `server/tests/collaboration.integration.test.ts`; UI
 `client/src/features/collaboration/Collaboration.test.tsx`; E
-`e2e/sprint3-collaboration.spec.ts`. No file/test execution is claimed yet.
+`e2e/sprint3-collaboration.spec.ts`. Task U/I/UI/E files now exist; exact task execution is in the linked ledger.
+Peer T09-T15 are now implemented/executed in `server/tests/peer-evaluation.unit.test.ts`,
+`peer-evaluation.integration.test.ts`, `peer-evaluation-migration.integration.test.ts`,
+`client/src/features/collaboration/PeerEvaluation.test.tsx` and
+`e2e/sprint3-peer-evaluation.spec.ts`. Dedicated peer files refine the original planned
+file grouping without changing AC or expected results. Exact commands/results and
+one corrected nonexistent general-DTO test route are recorded in the peer ledger.
 
 ## 7. Checkpoint and final DoD / history
 
@@ -153,9 +164,13 @@ By 29 Nov all F-07 contracts/AC/STS must be reviewed; implement and test the
 task lifecycle AC01–06 as the proposed meaningful progress. Do not close all
 F-07 scope by claiming those task checks cover peer evaluation. #101 tracks
 AC07–12 and unachieved task AC to an exact final plan (proposed target 5 Dec).
+The #101 candidate now covers AC07-12 before the original 5 Dec target; the
+original task checkpoint scope/date above remains history.
 Feature acceptance still requires all AC, shared DoD, real persistence/access,
 reviewed integration and final release evidence.
 
 | Revision | Date / status |
 | --- | --- |
-| S3-F07 v1.0 | 22 Nov 2026; complete task/peer draft and proposed completion/rating policy; review pending; implementation/tests NOT RUN |
+| S3-F07 v1.0 | 22 Nov 2026; complete task/peer draft and proposed completion/rating policy; reviewed by martinvadre in PR #107 (`8eea6f0`), before implementation |
+| Peer candidate, 25 Nov 2026 | User authorized #101 after #121 merged. Full pre-code contract unchanged; dedicated peer test-only RED `bb32e59`, implementation `70beb09`; actual results in peer ledger; independent code review/integration/final accepted release pending. |
+| Task checkpoint, 25 Nov 2026 | RED `c03ff7733719a5cda5af1acfd34ac707133661b0`, then additive task API/UI/migration; execution ledger maps AC01-06. Peer AC07-12 remain #101, owner Magiciancat9, target 5 Dec 2026. Independent code review and staging merge complete via #120; main RC pending #103. |

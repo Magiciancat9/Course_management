@@ -1,3 +1,22 @@
+# Current UI specification and historical Sprint 1 as-built record
+
+**25 Nov reconciliation:** PR #110 implemented the refreshed shell and Quick
+Fill removal; maintained Lab 7 now enforces approval10/revision20 after trim.
+F-04/F-05/F-06 screens are reviewed/deployed on main; F-07 task board is
+reviewed on Sprint 3 staging. Peer evaluation UI is implemented/tested on #101's
+feature branch, pending review/integration; analytics remains unimplemented.
+The current system screen/state/permission specification is in
+[System SDS section 3](system-sds.md#3-ui-api-and-sessionaccess-conventions),
+with design tokens/AC in [UI refresh specification](ui-refresh-spec.md) and
+actual per-AC results/gaps in the verification register.
+
+The complete original UI description below is retained as a dated historical
+snapshot, not a claim that Quick Fill or the old 10/10 rule still exists.
+Historical pending statements are superseded only by the current source and
+actual evidence above. New mobile/zoom/contrast evidence is not invented.
+
+---
+
 This document describes the Sprint 1 UI as implemented in PR #8 (as-built). UI behavior contracts are in the F-01 to F-03 feature contracts and docs/system-sds.md section 3.1; this file adds visual conventions and records where the implementation differs from them.
 
 **22 Nov 2026 planning note:** keep this as-built record separate from the

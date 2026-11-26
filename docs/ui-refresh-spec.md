@@ -1,7 +1,7 @@
 # CoursePMS UI refresh — UIR v1.1
 
-**Date:** 22 Nov 2026. **Phase:** specification only; implementation deferred
-to Sprint 2–3. **Implementation owner:** `martinvadre`; independent
+**Original specification:** 22 Nov 2026. **Current phase:** implemented UI
+with scoped executed checks and outstanding full visual/accessibility acceptance. **Implementation owner:** `martinvadre`; independent
 implementation reviewer: `Magiciancat9`. **Original specification author:**
 `Magiciancat9`; specification reviewed by `martinvadre` in
 [PR #107](https://github.com/Magiciancat9/Course_management/pull/107).
@@ -9,7 +9,15 @@ implementation reviewer: `Magiciancat9`. **Original specification author:**
 
 The user reassigned implementation to `martinvadre` on 22 Nov 2026. This v1.1
 update changes ownership only; the reviewed UI/AC/STS and original authorship
-remain intact. Reassignment does not indicate that implementation has begun.
+remain intact. The assignment record itself was not implementation evidence; later implementation is identified above.
+
+**25 Nov implementation reconciliation:** the v1.0 design was reviewed in PR
+#107, ownership transferred in v1.1, and refreshed UI/Quick Fill removal was
+implemented/reviewed via PR #110. Current S2/S3 CI contains actual component
+and browser checks. Full compact/mobile/200% zoom/rendered-contrast and final
+visual acceptance remain explicit gaps in the per-AC verification register.
+The original planned STS below is design history; a planned filename or test
+ID does not claim that its named case exists or ran.
 
 The user requested a sharper, modern interface and clarified that the **demo
 Quick Fill account box**, not email authentication, should be removed. The
@@ -59,7 +67,7 @@ Do not rely on color alone for proposal status or validation.
 
 The request did **not** remove the university-email login field, password
 field, authentication or the member-by-email workflow. It did not authorize
-the pending Lab 7 BR-05 change. Avoid showing `(PUT)`, `(POST)`, BR/feature
+the separately approved/versioned Lab 7 BR-05 maintenance rule. Avoid showing `(PUT)`, `(POST)`, BR/feature
 IDs or database implementation details in ordinary user-facing instructions;
 retain appropriate diagnostic codes in error details where useful.
 
@@ -144,10 +152,10 @@ claims based only on a screenshot. Do not invent data for visual polish.
 | UIR-AC06 | Foreign-team/private/session isolation remains correct even with delayed responses or account switching | UIR-T07 |
 | UIR-AC07 | Labels, focus, keyboard/menu/status semantics and measured contrast meet the planned targets | UIR-T08 |
 | UIR-AC08 | Loading/empty/error/pending/conflict/success states use true server results and preserve appropriate drafts | UIR-T09 |
-| UIR-AC09 | Existing proposal feedback rule stays at 10 for both decisions unless separately approved/versioned through Lab 7 | UIR-T10 |
+| UIR-AC09 | Preserve the separately approved/versioned Lab 7 BR-05 rule: approval minimum10, revision minimum20 after trim/UTF-16 (the original pre-approval design used 10 for both) | UIR-T10 |
 | UIR-AC10 | Integrated desktop/mobile visual and functional evidence identifies the actual commit and distinguishes implemented versus planned features | UIR-T11, UIR-T12 |
 
-## 7. STS — PLANNED / NOT RUN
+## 7. Original reviewed STS (actual execution and gaps in verification register)
 
 | Test ID | Level | Inputs / preconditions | Expected result | AC |
 | --- | --- | --- | --- | --- |
@@ -160,7 +168,7 @@ claims based only on a screenshot. Do not invent data for visual polish.
 | UIR-T07 | UI+E | Existing Lab 6 session/directory fixtures; delayed login/load/mutation across A→B; 401 | No A draft/feedback leak or stale B-state overwrite; foreign roster stays PRIVATE | UIR-AC06 |
 | UIR-T08 | E+M | Keyboard only, focus/Escape menu, labelled forms/alerts, measured token/rendered text contrast | Operable/named controls and visible focus; actual contrast targets met; retain results | UIR-AC07 |
 | UIR-T09 | UI | Real loading/empty/server error/409 and delayed mutation fixtures | Accurate state, draft retention/reconcile and no fake success/zero data | UIR-AC08 |
-| UIR-T10 | I+UI | Existing BR-05 9/10 boundary and both decisions before TA approval | Rule/hint remains existing 10; no accidental 20-character maintenance implementation | UIR-AC09 |
+| UIR-T10 | I+UI | Current approved BR-05 approval9/10 and revision19/20 boundaries with state precedence | Approved 10/20 hints/backend boundaries preserved; no accidental rollback to the old 10/10 rule | UIR-AC09 |
 | UIR-T11 | E | Existing working journeys on exact UI commit + selected implemented Sprint 2/3 journeys | Relevant tests run and saved states reconcile; planned features explicitly excluded from completion | UIR-AC10 |
 | UIR-T12 | M | Actual desktop/mobile screenshots, labels/captions and final product inspection | Readable truthful UI evidence with role/steps/expected/actual/time/commit; reviewer acceptance recorded | UIR-AC10 |
 
@@ -186,3 +194,7 @@ This phase creates no tests, screenshots of a new UI or compatibility claims.
 | UIR v1.0, 22 Nov 2026 | User requested the redesign and specifically Quick Fill removal; implementation explicitly deferred. Concrete design/AC/STS proposed by Magiciancat9; teammate review pending |
 | UIR v1.0 accepted, 22 Nov 2026 | martinvadre approved the pre-implementation specification in PR #107, subsequently merged into sprint-2-staging; implementation/tests remain outstanding |
 | UIR v1.1, 22 Nov 2026 | User reassigned #106 implementation to martinvadre; Magiciancat9 independently reviews future UI/code changes. No AC/STS or application behavior changed |
+
+**Current implementation record:** UI #110 implemented/refreshed main via #119;
+#100 maps actual scripted checks and explicit remaining viewport/zoom/contrast/
+final visual acceptance. No new visual PASS inferred.

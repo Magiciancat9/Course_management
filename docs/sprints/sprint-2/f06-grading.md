@@ -1,5 +1,12 @@
 # F-06 — Instructor grading and rubric feedback
 
+**25 Nov current reconciliation (#100):** implementation independently
+reviewed/merged via PR #118, integrated/deployed on main through PR #119.
+The complete contract/AC/STS below is retained; [per-AC actual verification](../deliverable-2/verification-register.md)
+and [current release register](../deliverable-2/continuity-and-status.md)
+separate tested implementation from #97's remaining accepted-tag/authenticated
+release gates. Original pre-code and feature-head execution claims stay dated.
+
 **25 Nov integration update (#97):** feature implementations were independently
 reviewed and merged in PR #116/#117/#118. The feature-head history below retains
 its original scope; [accepted-release.md](accepted-release.md) records the
@@ -59,8 +66,9 @@ summary. Apply the [shared contract](../deliverable-2/shared-contract.md).
 - `score`: required integer **0–100 inclusive**, matching existing Int design.
   Reject null, fractions, strings, -1 and 101 with 400 `VALIDATION_ERROR`.
 - `feedback`: required trimmed string **1–2000**; blank/wrong type rejected.
-  BR-05's 10-character proposal-review rule is not reused for this different
-  field, and the pending Lab 7 proposal rule is not applied here.
+  The proposal BR-05 approval10/revision20 rule is for a different field;
+  grading feedback retains its reviewed 1-2000 rule. F-06 does not alter
+  maintained main's approved Lab 7 proposal rule.
 - New draft starts resource version 1 / draftRevision 1. Expected-version
   errors follow common 400/409 rules (`GRADE_VERSION_CONFLICT`). Unauthorized
   student mutation is 403, anonymous 401, foreign-team read 403, authorized
@@ -104,7 +112,7 @@ publication metadata. Authentication and proposal/team behavior need no change.
 | S2-F06-AC08 | UI draft/publish/error/conflict states prevent duplicate actions and false publication | S2-F06-T09 |
 | S2-F06-AC09 | End-to-end instructor publication and authorized student reload reflect actual persisted current-version grade | S2-F06-T10, S2-F06-T11 |
 
-## 6. STS — PLANNED / NOT RUN
+## 6. Original reviewed STS (actual execution in current register)
 
 Fixtures: I, second instructor I2, owning A1 and foreign B1; current submitted
 version v1, newer v2 and a missing submission. Shared fixed clock/DB fixtures.
