@@ -62,9 +62,9 @@ describe('F-08 instructor analytics and CSV grade export: actual API/PostgreSQL'
     assertDisposableTestDatabase();
     await clearRevokedTokens();
     f = await seedDatabase(prisma);
+    vi.spyOn(Date, 'now').mockReturnValue(fixedNow);
     instructor = signAuthToken(f.instructor);
     student = signAuthToken(f.pawarit);
-    vi.spyOn(Date, 'now').mockReturnValue(fixedNow);
   });
 
   afterEach(() => vi.restoreAllMocks());

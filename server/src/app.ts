@@ -19,6 +19,7 @@ import submissionsRouter from './routes/submissions';
 import gradingRouter from './routes/grading';
 import tasksRouter from './routes/tasks';
 import peerEvaluationsRouter from './routes/peerEvaluations';
+import analyticsRouter from './routes/analytics';
 
 function isUniqueConstraintViolation(err: unknown, fields: string[]): boolean {
   if (
@@ -777,6 +778,7 @@ app.use('/api', submissionsRouter);
 app.use('/api', gradingRouter);
 app.use('/api', tasksRouter);
 app.use('/api', peerEvaluationsRouter);
+app.use('/api', analyticsRouter);
 
 // Unsupported proposal routes still belong to the protected API namespace.
 app.use('/api/proposals', requireAuth);
