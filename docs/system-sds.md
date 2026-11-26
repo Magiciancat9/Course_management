@@ -1,25 +1,22 @@
 # System-Level Software Design Specification
 
-**Current source:** 25 Nov 2026 #100 snapshot plus #101 peer candidate. The
-[version/release register](sprints/deliverable-2/continuity-and-status.md)
-distinguishes deployed S2-MAIN from reviewed S3-TASK staging and future RC.
-F-01 through F-06 and F-07 tasks are implemented/reviewed. The #101 feature
-candidate adds implemented/tested confidential peer evaluation, pending
-independent review/integration; F-08 remains a reviewed unimplemented design. Baseline FR/BR/NFR
-scope remains in [SRS](srs.md); complete per-feature contracts retain their
-numbered AC/STS and shared DoD.
+**26 Nov 2026 reconciliation (#100).** The [version/release register](sprints/deliverable-2/continuity-and-status.md)
+distinguishes accepted S2, deployed S1–F07 main `dd9d85a`, and reviewed F08
+staging `14178f1` (#124). Architecture/API below describe implemented staging;
+F08 is not yet deployed main. Requirements/contracts and numbered AC/STS/DoD
+retain their reviewed scope and explicit verification limits.
 
 ## 1. Architecture and responsibility
 
 | Layer | Actual responsibility / source |
 | --- | --- |
-| React 18 / TypeScript / Vite | `client/src/App.tsx` authenticates, owns session boundaries and team/proposal screens; feature components implement milestones, submissions, grading, tasks and peer evaluation; shared visual tokens in `styles.css` |
+| React 18 / TypeScript / Vite | `client/src/App.tsx` authenticates, owns session boundaries and team/proposal screens; feature components implement milestones, submissions, grading, tasks, peer evaluation and analytics/export; shared visual tokens in `styles.css` |
 | Express / TypeScript | `server/src/app.ts` serves auth/course/team/proposal, mounts feature routes, JSON API fallback and production static client |
-| Domain/services | Existing `domainRules.ts` for capacity/completeness/review; milestone/submission/grading/task/peer services own validation, authorization context and transactions |
+| Domain/services | Existing `domainRules.ts` for capacity/completeness/review; milestone/submission/grading/task/peer/analytics/export services own validation, authorization context and transactions |
 | Prisma / PostgreSQL | Typed client, persistent users/team/proposal, revoked JWTs, catalogue, immutable submission content/publications and attributed task events |
 | Delivery | Reusable GitHub CI on disposable PostgreSQL, multi-stage Docker, Artifact Registry, reviewed-main guard and WIF-based Cloud Run/SQL/Secret Manager release |
-| Peer evaluation (#101 candidate) | Separate confidential API/UI, completion/current-membership/version validation, explicit DTOs and no-store; review/integration pending |
-| Planned F-08 | Instructor aggregate/CSV services per reviewed contract; no implementation claim |
+| Peer evaluation (#101) | Confidential API/UI, completion/membership/version validation, explicit DTOs/no-store; reviewed #122 and deployed #123 |
+| F08 analytics/CSV (#124 staging) | Instructor-only coherent snapshot and byte-preserving CSV download; implemented/tested/reviewed; not deployed main |
 
 ```mermaid
 flowchart LR
@@ -105,7 +102,7 @@ UNKNOWN lateness are preserved rather than backfilled with invented facts.
 | `20261125010000_f05_submission_versions` | Immutable submission versions; preserve existing IDs/content/legacy grading, unknown report/deadline/late provenance |
 | `20261125020000_f06_grading_publications` | Version-bound evaluation/publication; no fabricated historical publication |
 | `20261125030000_f07_task_checkpoint` | New Task/TaskEvent only; existing 11 table snapshots preserved in actual SQL upgrade test |
-| `20261125040000_f07_peer_evaluations` | #101 candidate: additive PeerEvaluation, no fake backfill; populated actual SQL test preserves all 13 earlier tables including task/event/publication/revocation data |
+| `20261125040000_f07_peer_evaluations` | Reviewed/deployed #101: additive PeerEvaluation, no fake backfill; populated actual SQL test preserves all 13 earlier tables including task/event/publication/revocation data |
 
 Use `npm --prefix server run prisma:migrate:deploy` then
 `npm --prefix server run build` (Prisma generation plus TypeScript compilation)
@@ -181,7 +178,8 @@ resource, 409 prerequisite/state/version conflict. Private feature responses
 use no-store. Unsupported APIs terminate in JSON before SPA fallback; the
 historical protected proposal namespace correction remains. Do not claim the
 Express parser's malformed-JSON/oversize errors were separately normalized
-by a new feature, or that unimplemented analytics/CSV routes exist.
+by a new feature. Analytics/CSV routes exist in reviewed staging; deployed main
+remains the earlier F07 RC until a separate reviewed promotion.
 
 ### 3.3. Permission matrix
 
@@ -200,15 +198,19 @@ by a new feature, or that unimplemented analytics/CSV routes exist.
 | Task create/update | 401 | Current membership + APPROVED; current-member assignee and published same-course milestone if linked | 403 | 403 |
 | Peer own outgoing read/write (#101) | 401 | Current own membership; write requires completed milestone, own saved submission and eligible other teammate | 403 | 403 on student-only /me and writes |
 | Peer confidential collection (#101) | 401 | 403 even within own team | 403 | Authorized team/course context, paginated read-only |
-| Analytics/export | NOT IMPLEMENTED | Future permissions only in reviewed contracts | No current verification claim | No current implementation claim |
+| Analytics/export (#124 staging) | 401 JSON | 403 JSON | 403 JSON | Coherent course snapshot and formula-neutralized CSV; invalid/missing course400/404 after authorization |
 
 Instructor authority is global within the existing catalogue; it is not a new
 per-course enrollment assignment. General roster/task DTOs never substitute
 for authorization to confidential peer details. Peer completion, rating1-5,
 no-self-rating, own outgoing visibility and instructor-only collections are
-implemented/tested in the #101 candidate. General team/course/task responses
+implemented/tested/reviewed and deployed through #122/#123. General team/course/task responses
 contain no peer records; no automatic peer-to-grade adjustment is added. F-08 coherent snapshot/current-publication CSV, quoting,
-UTF-8 BOM and formula neutralization remain design obligations, not results.
+UTF-8 BOM and formula neutralization are implemented/tested in #124 staging.
+RepeatableRead plus course/milestone/submission share locks and retry preserve
+coherent aggregates/current-version grades. UI download retains raw bytes;
+context/epoch/abort guards isolate sessions and cross-course grading navigation.
+Named desktop GUI spreadsheet compatibility and live F08 acceptance remain unverified.
 
 ### 3.4. Sessions and transaction boundaries
 
@@ -241,7 +243,7 @@ mapped in traceability; UI disabling alone is not concurrency protection.
 | DEMO_USER_PASSWORD | Local synthetic seed or separate private production seed job; not browser-delivered config |
 | APP_COMMIT_SHA / VITE_APP_COMMIT_SHA | Baked full source identity for health/client build |
 | GCP_PROJECT_ID / GCP_REGION / WIF_PROVIDER / WIF_SERVICE_ACCOUNT | GitHub demo environment metadata for WIF/keyless deploy |
-| SMOKE_EMAIL / SMOKE_PASSWORD | Optional pipeline authenticated smoke names; unset at snapshot, actual SKIP; release acceptance still needs named authenticated checks |
+| SMOKE_EMAIL / SMOKE_PASSWORD | Configured privately in demo as variable/secret; actual authenticated smoke PASS in accepted S2 and RC runs; no values exposed |
 
 [README](../README.md) contains reproducible install/dev/test/build steps.
 CI uses Node20, PostgreSQL16 and explicit disposable `course_pms_test`, then
@@ -269,8 +271,8 @@ actual digest/revision and remaining final RC gates are in the version register.
 Full per-feature API/UI/data/error/AC/STS/DoD contracts: F-04/F-05/F-06 in
 `sprints/sprint-2/`; F-07/F-08 in `sprints/sprint-3/`; shared policy in
 [shared contract](sprints/deliverable-2/shared-contract.md). PR #107 reviewed
-these before implementation. The future analytics design does
-not replace the actual Prisma schema. Remaining AC/owners/dates and uncovered
+these before implementation. Reviewed #124 implements the analytics/CSV
+services against the existing schema without a new migration. Remaining AC/owners/dates and uncovered
 verification are explicit in the finish plan and verification register.
 
 Approved state/revocation/feedback/UI changes retain dated rationale in the

@@ -2,14 +2,12 @@
 
 This document defines the complete feature inventory (`F-01` through `F-08`) across Sprints 1, 2, and 3 for **CoursePMS (Course Project Management System)**, including linked requirements (`FR`, `BR`, `NFR`), dependencies, and planned sprint allocation.
 
-**25 November 2026 status:** maintained Sprint 1 includes approved Lab 7.
-F-04/F-05/F-06 are implemented, independently reviewed and integrated in the
-[Sprint 2 release candidate](sprints/sprint-2/accepted-release.md). Main
-deployment is recorded; authenticated release acceptance and immutable tag
-remain explicit gates. F-07/F-08
-contracts were reviewed; F-07 task checkpoint is implemented separately under
-#98. Peer AC07-12 are implemented/tested on #101's feature branch, pending
-independent code review/integration; F-08 implementation remains planned.
+**26 Nov 2026 reconciliation (#100).** F01–F07 are implemented, independently reviewed and
+deployed in combined main `dd9d85a` (#123), preserving accepted Sprint 2
+`v1.1.0-sprint2`. F08 is implemented/tested/reviewed and merged to staging
+`14178f1` (#124), not yet deployed main. Manual UI/spreadsheet acceptance and
+personal December UAT retain explicit gaps in the
+[version/release register](sprints/deliverable-2/continuity-and-status.md) and per-AC ledger.
 
 ---
 
@@ -64,24 +62,24 @@ flowchart LR
 | F-04 | martinvadre | [S2-F04 v1.0](sprints/sprint-2/f04-milestones.md) | Implemented/reviewed; combined release results and gates in [S2 ledger](sprints/sprint-2/accepted-release.md) |
 | F-05 | Magiciancat9 | [S2-F05 v1.0 + execution addendum](sprints/sprint-2/f05-submissions.md) | Implemented/reviewed via PR #117; [S2 release ledger](sprints/sprint-2/accepted-release.md) |
 | F-06 | martinvadre | [S2-F06 v1.0](sprints/sprint-2/f06-grading.md) | Implemented/reviewed via PR #118; [S2 release ledger](sprints/sprint-2/accepted-release.md) |
-| F-07 | Magiciancat9 | [S3-F07 v1.0](sprints/sprint-3/f07-collaboration.md) | Task checkpoint AC01-06 implemented/tested/reviewed and merged #120 to S3 staging; [actual results/review gates](sprints/sprint-3/f07-execution-evidence.md). Peer AC07-12 implemented/tested on #101 feature branch; [peer evidence](sprints/sprint-3/f07-peer-execution-evidence.md); independent review/integration and accepted release pending |
-| F-08 | martinvadre | [S3-F08 v1.0](sprints/sprint-3/f08-analytics-export.md) | Contract reviewed #107; #99 contract checkpoint closed. Operational AC01-10 implemented/tested on #102 feature branch; [F-08 evidence](sprints/sprint-3/f08-execution-evidence.md); independent code review/integration pending |
+| F-07 | Magiciancat9 | [S3-F07 v1.0](sprints/sprint-3/f07-collaboration.md) | All 12 AC implemented/tested; task #120 and peer #122 independently reviewed, deployed via #123; [task](sprints/sprint-3/f07-execution-evidence.md) and [peer](sprints/sprint-3/f07-peer-execution-evidence.md) ledgers retain actual results/live verification; December personal UAT planned |
+| F-08 | martinvadre | [S3-F08 v1.0](sprints/sprint-3/f08-analytics-export.md) | Contract #107 before code; all ten AC have automated results; #124 independently approved at688e552 and merged staging 14178f1; [F08 ledger](sprints/sprint-3/f08-execution-evidence.md); main/deployed acceptance and named desktop spreadsheet GUI check remain |
 
 Original v1.0 drafts were authored by Magiciancat9; martinvadre independently
 reviewed the contract package in PR #107 before implementation. Code PRs
 retain their respective authors and opposite-member reviews. The refreshed
-UI is implemented via PR #110. [Verification register](sprints/deliverable-2/verification-register.md)
-separates executable Sprint 2 results from planned Sprint 3 work and full
-visual acceptance checks.
+UI is implemented via PR #110. The
+[complete verification register](sprints/deliverable-2/verification-register.md)
+separates accepted Sprint2/main F07 results from reviewed F08 staging and
+explicitly partial manual UI/spreadsheet checks.
 
 ## 4. Responsibility and achieved versus remaining scope
 
-Sprint 2 requires all 27 F-04/F-05/F-06 AC, not a subset moved to Sprint 3.
-All 27 have actual tests/reviews; #97 still preserves the accepted main/tag
-and authenticated release evidence. F-07 is deliberately split: six task AC
-achieved on reviewed staging, six peer AC remain #101. All ten F-08 AC remain
-#102 even though contract checkpoint #99 is closed. Existing proposal-status
-cards do not count as the unimplemented aggregate/CSV feature.
+All 27 Sprint2 AC and 12 F07
+AC have actual results/reviews and accepted deployed RC evidence. All 10 F08
+AC have named automated execution and reviewed staging integration; main
+promotion/live and desktop spreadsheet acceptance remain. Original target
+dates remain history, not a reason to describe implemented features as planned.
 
 The [finish plan](sprints/deliverable-2/continuity-and-status.md#5-exact-remaining-work-risk-and-completion-plan)
 assigns every remaining scope and verification gap to an owner/dependency,

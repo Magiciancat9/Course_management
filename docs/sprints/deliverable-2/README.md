@@ -1,10 +1,11 @@
 # Deliverable 2 — Sprint 2–3 engineering contracts
 
-**25 Nov current snapshot (#100):** S2 implementation is independently
-reviewed and deployed on main; F-07 tasks are reviewed/merged on Sprint 3
-staging. Peer implementation is tested on #101's feature branch, pending
-independent review/integration; analytics remains planned. Accepted S2 tag/
-authenticated release evidence and final combined main RC remain pending.
+**26 Nov current snapshot (#100):** Sprint 2 is accepted/tagged with
+authenticated smoke. Reviewed tasks and confidential peer evaluation are
+deployed on main `dd9d85a` through #123, with actual CI/live verification.
+Analytics/CSV is reviewed and merged #124 to staging `14178f1`, with exact-head
+CI PASS; its main promotion/deployed and desktop spreadsheet checks remain.
+This final document reconciliation awaits its own independent review/merge.
 
 Read the [current version/result/finish register](continuity-and-status.md),
 [complete requirement matrix](../../traceability.md) and [all 59 AC](verification-register.md).
@@ -25,13 +26,13 @@ letters in source filenames/headings do not define the D2 report structure.
 | [F-04 milestones](../sprint-2/f04-milestones.md) | FR-06; feature owner `martinvadre`; [#94](https://github.com/Magiciancat9/Course_management/issues/94) |
 | [F-05 submissions](../sprint-2/f05-submissions.md) | FR-07 / BR-07; owner `Magiciancat9`; [#95](https://github.com/Magiciancat9/Course_management/issues/95) |
 | [F-06 grading](../sprint-2/f06-grading.md) | FR-08 / BR-08; owner `martinvadre`; [#96](https://github.com/Magiciancat9/Course_management/issues/96) |
-| [F-07 collaboration](../sprint-3/f07-collaboration.md) | FR-09/10; owner `Magiciancat9`; task checkpoint [#98](https://github.com/Magiciancat9/Course_management/issues/98), remaining peer work [#101](https://github.com/Magiciancat9/Course_management/issues/101) |
-| [Peer implementation evidence](../sprint-3/f07-peer-execution-evidence.md) | #101 exact RED/GREEN, real persistence/privacy/concurrency and pending review/release gates |
-| [F-08 analytics/export](../sprint-3/f08-analytics-export.md) | FR-11/12; owner `martinvadre`; contracts [#99](https://github.com/Magiciancat9/Course_management/issues/99), remaining implementation [#102](https://github.com/Magiciancat9/Course_management/issues/102) |
+| [F-07 collaboration](../sprint-3/f07-collaboration.md) | FR-09/10; owner `Magiciancat9`; task checkpoint [#98](https://github.com/Magiciancat9/Course_management/issues/98), reviewed/deployed peer [#101](https://github.com/Magiciancat9/Course_management/issues/101) |
+| [Peer implementation evidence](../sprint-3/f07-peer-execution-evidence.md) | #101 exact RED/GREEN, real persistence/privacy/concurrency and accepted main/live verification |
+| [F-08 analytics/export](../sprint-3/f08-analytics-export.md) | FR-11/12; owner `martinvadre`; contracts [#99](https://github.com/Magiciancat9/Course_management/issues/99), reviewed staging / remaining production acceptance [#102](https://github.com/Magiciancat9/Course_management/issues/102) |
 | [UI refresh plan](../../ui-refresh-spec.md) | Screen changes, design tokens, Quick Fill removal, UIR-AC/STS; implemented in PR #110; integration verification in Sprint 2 ledger |
 | [Continuity and checkpoint status](continuity-and-status.md) | Part A register / Part B–E status / remaining work; [#93](https://github.com/Magiciancat9/Course_management/issues/93), [#100](https://github.com/Magiciancat9/Course_management/issues/100) |
 | [Detailed Lab 5–7 change/defect register](change-defect-register.md) | Accepted history, current disposition, owners, release/retest sources and concrete next actions for #93 |
-| [Sprint 1 continuity execution evidence](sprint1-continuity-evidence.md) | Fresh tests on current staging, live commit/readiness checks and the remaining final-RC gate |
+| [Sprint 1 continuity execution evidence](sprint1-continuity-evidence.md) | Historical 22 Nov staging evidence plus the actual final-RC addendum |
 | [Verification register](verification-register.md) | Every new AC → planned test/level/file → implementation/execution status |
 | [Complete traceability](../../traceability.md) | All baseline FR/BR/important NFR, actual Sprint 1 files and new planned checks |
 
@@ -78,7 +79,7 @@ flowchart LR
 - **29 November, 23:59 Asia/Bangkok:** all Sprint 2 features completed,
   reviewed, integrated and verified; full Sprint 3 contracts and at least one
   meaningful implemented/tested Sprint 3 workflow in a deployed main RC.
-- Implemented/reviewed first Sprint 3 workflow (#120 on staging): approved-team task create/assign → status
+- Implemented/reviewed first Sprint 3 workflow (#120, deployed via #123): approved-team task create/assign → status
   transition → persisted reload, plus actual backend foreign-team denial.
 - Preserve the original accepted Sprint 2 main/tag even after adding Sprint 3.
 - Exact remaining AC, owner, dependency and next action have target dates by
@@ -100,7 +101,8 @@ their actual dates/results and are not reused as Sprint 2 verification.
 | --- | --- | --- |
 | D2-SPEC v1.0 | 22 Nov 2026 | Initial complete draft, UI plan and planned verification; no new runtime behavior/test results |
 | Independent contract review | 22 Nov 2026 | martinvadre approved and merged PR #107 (`8eea6f0`) before implementation |
-| Sprint 2 release reconciliation | 25 Nov 2026 | All F-04/F-05/F-06 source/reviews, combined verification and pending main/tag gates in the release ledger |
+| Sprint 2 acceptance | 25 Nov 2026 | Full F04/05/06, authenticated acceptance and immutable tag in release ledger |
+| Final document reconciliation | 26 Nov 2026 | Actual #123 main/live RC and #124 reviewed F08 staging, remaining checks/owners/dates; this update needs independent review |
 
 The final assessed PDF must embed the complete required documents and
 selected actual execution evidence. This repository package is the source;

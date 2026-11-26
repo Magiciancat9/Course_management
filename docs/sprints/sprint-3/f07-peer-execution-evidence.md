@@ -79,18 +79,18 @@ rating/comment errors and HTTP statuses follow the contract.
 
 | AC | Actual executable check and result | Integration / release boundary |
 | --- | --- | --- |
-| S3-F07-AC01 | Existing `collaboration.integration.test.ts` T01 task creation/independent DB readback, PASS in runtime GREEN | Reviewed task #120; final combined release pending |
+| S3-F07-AC01 | Existing `collaboration.integration.test.ts` T01 task creation/independent DB readback, PASS in runtime GREEN | Reviewed #120; accepted/deployed main #123, RC-CI and dated live checks PASS |
 | S3-F07-AC02 | Existing task T02/unit and populated task SQL, PASS in runtime GREEN | Same task boundary |
 | S3-F07-AC03 | Existing task T03 transitions/reopen/immutable event versions, PASS in runtime GREEN | Same task boundary |
 | S3-F07-AC04 | Existing task T04 anonymous/foreign/role/removed-member denials with unchanged rows/events, PASS | Same task boundary |
 | S3-F07-AC05 | Existing task T05/T06 lock-controlled concurrency/filter/cursor checks, PASS | Same task boundary |
 | S3-F07-AC06 | Existing `Collaboration.test.tsx` T07 and `sprint3-collaboration.spec.ts` T08 keyboard lifecycle/reload/denial, PASS | Same task boundary; no residual task AC discovered |
-| S3-F07-AC07 | `peer-evaluation.integration.test.ts` T09: due-1ms/equal/+1ms, draft/future/no own submission, rejected rows unchanged, historical read after extension; unit completion boundaries; SQL T09-M; PASS | Peer independent implementation review/staging integration/main acceptance pending |
+| S3-F07-AC07 | `peer-evaluation.integration.test.ts` T09: due-1 ms/equal/+1 ms, draft/future/no own submission, rejected rows unchanged, historical read after extension; unit completion boundaries; SQL T09-M; PASS | Reviewed #122; accepted/deployed main #123, RC-CI and dated live checks PASS |
 | S3-F07-AC08 | Peer API T10 + unit trim/UTF-16, types/rating/comment/version/ID bounds, self/foreign/non-current target checks; PASS | Same peer boundary |
 | S3-F07-AC09 | Peer API T11: normalized own pair create/update, immutable author/id/creation metadata, independent outgoing/DB read, duplicate0 conflict and no grade adjustment; pagination T11/T12; browser T15; PASS | Same peer boundary |
 | S3-F07-AC10 | Peer API T12: all three methods/routes anonymous/role/foreign checks, removed membership, own-student full-collection denial, instructor read, general team/proposal/task/milestone DTO negatives; browser T15 direct teammate/foreign denials and unchanged saved rows; PASS | Same peer boundary |
 | S3-F07-AC11 | Peer API T13, two barrier-controlled cases for initial0 and update1: observed two DB lock waiters, one winner/409, one unique pair, exact winner readback; PASS | Same peer boundary |
-| S3-F07-AC12 | `PeerEvaluation.test.tsx` T14: eligibility/no-self UI, draft retention, duplicate guard, conflict reconcile, outgoing pages, identity/generation, team switch-back and delayed milestone response,401; `sprint3-peer-evaluation.spec.ts` T15: real keyboard save/update/reload, no incoming disclosure, instructor read; PASS. Follow-up retry case separately named in final PR CI | Same peer boundary; personal UAT/final accepted release not claimed |
+| S3-F07-AC12 | `PeerEvaluation.test.tsx` T14: eligibility/no-self UI, draft retention, duplicate guard, conflict reconcile, outgoing pages, identity/generation, team switch-back and delayed milestone response,401; `sprint3-peer-evaluation.spec.ts` T15: real keyboard save/update/reload, no incoming disclosure, instructor read; PASS. Follow-up retry case separately named in final PR CI | Same accepted F07 RC boundary; personal December UAT remains planned |
 
 Actual source files:
 
@@ -131,9 +131,24 @@ selected evidence must be retained outside public Git before expiry.
 Local visual inspection confirmed readable labelled fields/cards at1366x900;
 no full-product mobile/200% zoom/rendered-contrast acceptance is claimed.
 
-Remaining: martinvadre independently reviews the actual PR head, successful
-exact-head CI, then teammate staging integration and accepted main/final UAT
-evidence. #97's original accepted S2 identity must remain preserved before
-S3 main promotion. #93/#103/#100/#104 retain their real release/reconciliation
-gates. F-08 remains #102's unimplemented scope; this implementation does not
-claim analytics/CSV acceptance or close #101 automatically.
+## 5. Accepted main and explicit verification outcome — 26 Nov 2026
+
+Reviewed #123 promoted tasks+peer to main
+`dd9d85ac9f0f6b21f9503c1031173992fb69ce35`;
+[run 45759742341](https://github.com/Magiciancat9/Course_management/actions/runs/45759742341)
+passed192 server/64 client/9 browser, six migrations/builds/Docker,
+startup 1165.96 ms and public/authenticated smoke. Cloud Run revision
+`course-pms-00015-lrr`, migration `course-pms-migrate-zt7vg`.
+
+[Dated live verification26 Nov 12:20:06–12:20:16 Asia/Bangkok](https://github.com/Magiciancat9/Course_management/issues/103#issuecomment-7183418289)
+records task lifecycle/events/readback/denials, pre/post-due peer eligibility,
+self/foreign target rejection, saved outgoing readback/stale conflict,
+teammate/foreign confidentiality, no peer fields in general DTOs and instructor
+read-only access PASS. These are reported AI-assisted synthetic checks and
+actual CI/browser execution, not personal student UAT or a new run by this
+documentation audit. Original candidate-only statements retain historical scope.
+
+#101 checklist evidence is reconciled. Personal December UAT/video/retests
+remain planned12–13 Dec. F08 is reviewed/tested staging #124, not yet deployed.
+See the [remaining-work plan](../deliverable-2/continuity-and-status.md).
+The user handles issue closure; no automatic closing reference is added.

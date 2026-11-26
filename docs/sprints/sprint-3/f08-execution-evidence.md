@@ -64,7 +64,7 @@ student UAT, GCP F-08 deployment or final release acceptance is inferred.
 
 | AC | Actual executable check and result | Integration / release boundary |
 | --- | --- | --- |
-| S3-F08-AC01 | `analytics-export.integration.test.ts` `S3-F08-T01`: 55-team (>1 UI page) full-course snapshot, unrelated-course exclusion, empty-course snapshot, injected clock `generatedAt`, `Cache-Control: no-store`; PASS | Independent code review, staging/main integration and final accepted release pending |
+| S3-F08-AC01 | `analytics-export.integration.test.ts` `S3-F08-T01`: 55-team (>1 UI page) full-course snapshot, unrelated-course exclusion, empty-course snapshot, injected clock `generatedAt`, `Cache-Control: no-store`; PASS | Independently reviewed #124 at688e552; merged staging 14178f1; main/deployed acceptance pending |
 | S3-F08-AC02 | `analytics-export.integration.test.ts` `S3-F08-T02`: mutually exclusive `NONE`/`DRAFT`/`SUBMITTED`/`APPROVED`/`REVISION_REQUESTED` summing to `totalTeams` and excluding other courses; PASS | Same F-08 boundary |
 | S3-F08-AC03 | `analytics-export.integration.test.ts` `S3-F08-T03` + `analytics-export.unit.test.ts` `S3-F08-T03`: `1/3 -> 33.33%`, multi-version logical submission counted once, `DRAFT` milestones excluded, `0/0 -> null` rate; PASS | Same F-08 boundary |
 | S3-F08-AC04 | `analytics-export.integration.test.ts` `S3-F08-T04`: ungraded queue ignores unpublished draft and superseded v1 published grade, counts current published score `0` as graded, separates `ON_TIME`/`LATE`/`UNKNOWN`; PASS | Same F-08 boundary |
@@ -101,6 +101,18 @@ Actual source files:
   `""`; confirmed 3 rows × 14 columns parsed with leading `\t` preserved and
   zero column shifting. Manual desktop GUI Excel/LibreOffice Calc opening is
   not claimed from headless CLI execution.
-- Remaining: `Magiciancat9` independently reviews the actual PR head and exact-head
-  CI, merges to `sprint-3-staging`, and coordinates final main promotion/document
-  reconciliation (#100/#104).
+- **Independent approval/integration26 Nov:** Magiciancat9 approved head
+  `688e5523f797fc19c6b4fed3303ea38d2fd16e0b` with AI assistance after four
+  findings/fixes and six independent reviewer regressions;
+  [review](https://github.com/Magiciancat9/Course_management/pull/124#pullrequestreview-3474967312).
+  #124 merged20:49:32 Asia/Bangkok to staging
+  `14178f162e037a4bee8f2ec85c57bdc726e8fa58`.
+- **Exact approved-head CI:** [45830829000](https://github.com/Magiciancat9/Course_management/actions/runs/45830829000)
+  PASS207 server/74 client/10 browser, six migrations/builds/Docker,
+  startup 1116.61 ms/source/DB/HTML. Tested merge ref
+  `bd2bdb876951bbc16155b2e1cb942f7e69e1ef0d` differs from head/staging merge.
+- Remaining: martinvadre owns reviewed main promotion, exact-source
+  deployment/live instructor analytics/CSV/current-version handoff and backend
+  anonymous/student denials, plus named/versioned desktop spreadsheet GUI
+  import evidence by 7 Dec. This documentation audit performs none of those
+  checks and never attributes staging results to deployed main dd9d85a.

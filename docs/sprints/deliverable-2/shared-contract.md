@@ -1,12 +1,13 @@
 # Shared Sprint 2–3 contract — D2-COMMON v1.0
 
-**25 Nov #100 source reconciliation:** this complete shared design was
-reviewed in PR #107 before code. F-04/F-05/F-06 are reviewed/deployed on main;
-Task/TaskEvent are implemented/reviewed on S3 staging via #120. PeerEvaluation
-is implemented/tested on the #101 feature candidate, pending independent review
-and integration; analytics/CSV remains future design. [Actual per-AC status](verification-register.md)
-and [current versions/finish plan](continuity-and-status.md) govern execution
-and release claims; old draft-status statements below retain their 22 Nov scope.
+**26 Nov #100 reconciliation:** this complete shared design was reviewed in
+PR #107 before code. F01–F07 are implemented/reviewed and deployed on combined
+main RC via #123, preserving accepted Sprint2. Analytics/CSV is implemented,
+tested and independently reviewed/merged #124 to staging, not deployed main.
+[Actual per-AC status](verification-register.md) and
+[versions/finish plan](continuity-and-status.md) govern execution/release claims.
+The dated draft/update statements below describe their historical scope;
+contract policies, AC, STS and DoD are unchanged by this reconciliation.
 
 **Original draft:** 22 Nov 2026; independently reviewed via PR #107 before code.
 **25 Nov update:** F-04/F-05/F-06 implemented and reviewed via PR #116/#117/#118;

@@ -1,5 +1,20 @@
 # Sprint 1 continuity execution evidence — D2-01 v1.1
 
+**26 Nov final-RC addendum:** the22 Nov baseline below is historical and
+does not substitute for the actual combined RC. Final verification is now
+recorded on main `dd9d85ac9f0f6b21f9503c1031173992fb69ce35`,
+[run 45759742341](https://github.com/Magiciancat9/Course_management/actions/runs/45759742341)
+(192 server/64 client/9 browser, six migrations, builds/Docker and authenticated
+smoke PASS). TEST-11/12 and L7-T05/T06 browser journeys, API/privacy/session
+checks and populated S2/task/peer migration tests all passed on that main.
+[Dated live checks](https://github.com/Magiciancat9/Course_management/issues/103#issuecomment-7183418289)
+corroborate persisted records/denials on revision course-pms-00015-lrr;
+live readback is not a full production DB snapshot comparison.
+[Full D2-CONT-01–05 mapping](continuity-and-status.md#4-part-a-continuity-and-change-register)
+and #93 checklist reconciliation retain original test/source/date boundaries.
+Current Lab7 is approved revision 20/approval 10; pending10/10 statements below
+are22 Nov history. No old SKIP/replay is promoted or new personal UAT claimed.
+
 **Execution date:** 22 Nov 2026, Asia/Bangkok (UTC+07:00).
 **Work:** [#93](https://github.com/Magiciancat9/Course_management/issues/93).
 **Driver/evidence author:** `Magiciancat9`, assisted by Codex AI.

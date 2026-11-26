@@ -6,13 +6,17 @@
 under #102 (RED `1950b765defd62464206e67613e13cce4fc25823` / [CI 45762211090](https://github.com/Magiciancat9/Course_management/actions/runs/45762211090);
 GREEN `fa5e3f107d59644395e03ac3f8309a488b955164` / [CI 45763416780](https://github.com/Magiciancat9/Course_management/actions/runs/45763416780):
 207 server / 70 client / 10 browser PASS; [execution ledger](f08-execution-evidence.md)).
-Independent code review by `Magiciancat9` and staging/main integration remain pending.
+The original GREEN counts above retain their historical source. Final head
+`688e552` passed207 server/74 client/10 browser in run 45830829000 and was
+independently approved by `Magiciancat9` with AI assistance, then merged #124
+to staging `14178f1` on26 Nov 20:49:32 Asia/Bangkok. Main promotion/deployed
+checks and named desktop spreadsheet GUI import remain; no contract policy changes.
 **Owner:** `martinvadre`; draft author `Magiciancat9`; independent
 contract reviewer `martinvadre` (PR #107); independent code reviewer
-`Magiciancat9` (pending). **Issues:** [#99 contracts](https://github.com/Magiciancat9/Course_management/issues/99),
+`Magiciancat9` (approved #124). **Issues:** [#99 contracts](https://github.com/Magiciancat9/Course_management/issues/99),
 [#102 implementation](https://github.com/Magiciancat9/Course_management/issues/102).
 **Links:** FR-11/12; NFR-01/02/04; F-03, F-05/F-06 and F-07 data contracts.
-**Implemented / executed / accepted:** YES (candidate) / PASS (`S3-F08-T01`–`T12` automated; manual GUI Excel/LibreOffice import noted) / PENDING REVIEW.
+**Implemented / executed / accepted:** YES / PASS (`S3-F08-T01`–`T12` automated; desktop GUI import unexecuted) / independently reviewed and merged staging #124; production acceptance pending.
 
 ## 1. Feature SDS, workflow and layers
 
@@ -165,9 +169,9 @@ now implemented and executed; see the [F-08 execution ledger](f08-execution-evid
 Full F-08 contracts/AC/STS are required at 29 Nov; this document does not
 satisfy the separate implemented Sprint 3 workflow requirement by itself.
 #102 tracks implementation and all remaining AC (proposed target 7 Dec).
-The #102 candidate now implements and verifies `S3-F08-AC01`–`AC10` ahead of the
-7 Dec target; independent code review by `Magiciancat9`, staging/main integration,
-and manual desktop GUI Excel/LibreOffice opening remain explicit gates.
+The #102 implementation verifies `S3-F08-AC01`–`AC10` ahead of the 7 Dec target;
+independent review and staging integration are complete via #124. Main
+promotion/deployed checks and named desktop GUI spreadsheet import remain.
 
 | Revision | Date / status |
 | --- | --- |
@@ -176,4 +180,6 @@ and manual desktop GUI Excel/LibreOffice opening remain explicit gates.
 
 **Independent contract review:** PR #107 accepted the full contract/shared
 decisions on22 Nov before code; #99 contract checkpoint closed.
-Implementation AC01-10 are executed on `feat/102-f08-analytics-export` and await independent code review.
+Implementation AC01-10 have actual execution and independent review #124,
+approved at `688e552` and merged staging `14178f1`; F08-CI passed207/74/10.
+The candidate rows above retain original pre-review chronology.
