@@ -1,5 +1,12 @@
 # F-07 task checkpoint execution evidence - #98
 
+**26 Nov release addendum:** task checkpoint was promoted via reviewed #123
+to main `dd9d85a`; RC-CI45759742341 and dated live task/events/readback/denials
+PASS. Peer #122 is also reviewed/deployed; see the
+[peer ledger](f07-peer-execution-evidence.md#5-accepted-main-and-explicit-verification-outcome--26-nov-2026).
+The original25 Nov checkpoint scope/results below are preserved as history;
+their future-RC/peer statements do not describe the current release.
+
 **Prepared:** 25 November 2026, Asia/Bangkok. Driver: Magiciancat9 (Codex-assisted).
 Independent code reviewer: martinvadre; approved exact head and merged PR #120
 to sprint-3-staging on25 Nov18:59:08 Asia/Bangkok, merge

@@ -8,12 +8,11 @@
 
 ---
 
-**Current reconciliation:** 25 Nov 2026, #100 plus #101 implementation. This is the complete product
-baseline, not a claim that every feature is implemented. Deployed main has
-F-01-F-06; reviewed Sprint 3 staging additionally has F-07 tasks. The #101
-feature branch implements/tests peer evaluation, pending independent review and
-integration. Analytics/export remains planned. [Exact source/result/release register](sprints/deliverable-2/continuity-and-status.md)
-separates implementation, executed checks and accepted-release gates.
+**26 Nov 2026 reconciliation (#100).** This complete product baseline retains its original
+requirements. F01–F07 are implemented/reviewed/deployed on main `dd9d85a`;
+accepted Sprint 2 is tagged `v1.1.0-sprint2`. F08 is implemented/tested/reviewed
+on staging `14178f1` (#124), with production acceptance still pending. The
+[version/release register](sprints/deliverable-2/continuity-and-status.md) separates actual source-specific results and remaining checks.
 
 ## 1. Stakeholder Problem and Context
 
@@ -138,12 +137,12 @@ and analytics/CSV semantics where the earlier SRS did not fix a boundary.
 The shared contracts were independently reviewed in PR #107 before code.
 F-04/F-05/F-06 are implemented and reviewed in PR #116/#117/#118. The
 [Sprint 2 release ledger](sprints/sprint-2/accepted-release.md) maps all AC
-to actual files, results, source identities and pending main acceptance gates.
-F-07 task AC01-06 are implemented, tested and independently reviewed in PR #120
-on Sprint 3 staging. F-07 peer AC07-12 and all F-08 implementation remain
-planned. The [per-AC register](sprints/deliverable-2/verification-register.md)
-records implemented/run/result/source separately, including UI verification gaps.
-The combined Sprint 2/3 main RC remains #103 work.
+to actual files/results and the accepted immutable main/tag. F07 task AC01-06
+and peer AC07-12 are implemented, independently reviewed (#120/#122), and
+verified/deployed via #123. F08 AC01-10 have actual automated execution and
+independent review/staging integration #124; production promotion and desktop
+spreadsheet GUI evidence remain. The [per-AC register](sprints/deliverable-2/verification-register.md)
+records actual implementation/run/result/source and partial UI checks.
 
 The refreshed UI and Quick Fill removal were implemented in PR #110.
 Authenticated email/password, team/member functions and backend access control
@@ -161,9 +160,10 @@ configurable rubric editor or automatic peer-based grade adjustment is added.
 The approved FR/BR/NFR identifiers and sprint allocations are unchanged.
 
 All FR-01-12, BR-01-08 and NFR-01-05 remain allocated in the complete matrix.
-Unimplemented peer/analytics paths, full UI responsive/contrast acceptance,
-missing authenticated deployed smoke, accepted Sprint 2 tag and final RC
-continuity are explicit gaps with owners/actions/dates in the finish plan.
+F08 production acceptance, named spreadsheet GUI import, full responsive/contrast
+inspection, assessed PDF/submission and personal December UAT/video/retests
+remain owned/dated work in the finish plan. S2 tag/authenticated smoke and
+actual RC continuity are completed evidence, not pending implementation.
 The NFR-05 10-second target has an actual built-container measurement on
 named CI images; that is not a Cloud Run cold-start measurement. General
 credential hygiene and whole-product coverage are not inferred from a green

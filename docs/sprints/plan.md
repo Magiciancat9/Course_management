@@ -56,31 +56,26 @@ Lab 7 is approved/reviewed/implemented on maintained main: revision feedback
 minimum20, approval minimum10 after trim/UTF-16. The original request/approval
 and reviewed contract/RED/GREEN are retained in the dated Lab 7 records.
 
-## 4. Actual checkpoint and remaining delivery order (25 Nov 2026)
+## 4. Actual checkpoint and remaining delivery order (26 Nov 2026)
 
-- F-04/F-05/F-06 and refreshed UI are independently reviewed, integrated and
-  deployed on main `07ffd8f31c3d61d8d13d5217a1fde39628c6649a`; #97's
-  authenticated release check and immutable Sprint 2 tag remain outstanding.
-- F-07 task AC01-06 are reviewed and merged via PR #120 to Sprint 3 staging;
-  task progress is real but not yet deployed as a combined main RC.
-- #100 can prepare full documents now; its final snapshot waits for actual
-  #97/#93/#103 release/continuity evidence. #103 and #93 coordinate candidate
-  preparation and exact-RC checks rather than waiting for each other's closure.
-- Freeze the original accepted Sprint 2 identity before promoting task
-  progress to main, then integrate/deploy/verify the combined RC under #103.
-  Complete original continuity/register under #93 and reconcile #100 before
-  assembling the assessed Parts A-E PDF under #104, due 29 Nov 23:59.
-- F-07 peer AC07-12 (#101, Magiciancat9) are now implemented/tested on the
-  feature candidate ahead of the original 5 Dec target; independent review,
-  staging integration and final accepted-release/UAT evidence remain.
-  F-08 AC01-10 (#102, martinvadre, 7 Dec) remains planned in full.
-  [Peer ledger](sprint-3/f07-peer-execution-evidence.md) preserves actual results.
-  The already executed task checkpoint remains independently traceable.
-- Exams 1-11 Dec constrain capacity: prepare interfaces/reviews before then,
-  use bounded increments and explicit defect/AC tracking during exams, and
-  reserve 12-13 Dec for final regression/UAT retests/video/reviewed release.
+- Complete Sprint2 is accepted, authenticated and preserved as immutable
+  `v1.1.0-sprint2` -> `07ffd8f31c3d61d8d13d5217a1fde39628c6649a` (#97).
+- Task #120 and confidential peer #122 are independently reviewed and
+  promoted #123 to main `dd9d85a`; actual full CI/deployment/live checks PASS.
+  Original continuity #93 and peer #101 checklist evidence is reconciled.
+- Analytics/CSV #124 is independently reviewed and merged staging 14178f1;
+  exact-head CI45830829000 passed207 server/74 client/10 browser. Main
+  promotion/deployed checks and named spreadsheet GUI import remain; owner
+  martinvadre, original7 Dec target retained (implementation achieved early).
+- This #100 final documentation update reconciles actual source/results and
+  remaining actions. Independent review/CI/integration precede closure.
+- Both members complete remaining UI viewport/zoom/copy/keyboard/contrast/
+  desktop/mobile inspection by 28 Nov under #104 preparation, retain actual
+  results, then inspect English Parts A–E PDF. User submits29 Nov 23:59.
+- Exams1–11 Dec: bounded reviewed release/defect/check increments; retain
+  explicit blockers. Both reserve12–13 Dec for personal UAT/full regression/
+  retests/video and independently reviewed final release, due13 Dec 23:59.
 
-The [current finish record](deliverable-2/continuity-and-status.md) gives
-per-AC missing work, named owner/dependencies/next action/date and actual
-source/result identifiers. Any slippage must update that plan openly rather
-than changing unexecuted tests to PASS or silently dropping a requirement.
+The [finish record](deliverable-2/continuity-and-status.md) gives exact
+remaining AC/measurements, owners/dependencies/actions/dates. No planned test
+is turned into PASS or scope dropped to make an issue appear complete.

@@ -1,23 +1,23 @@
 # Lab 5-7 change/defect register - current #100 reconciliation
 
-**Current snapshot:** 25 Nov 2026; owners Magiciancat9 and martinvadre.
+**Current snapshot:** 26 Nov 2026; owners Magiciancat9 and martinvadre.
 [Exact version/run/deployment register](continuity-and-status.md) defines
-S2-MAIN/S2-CI and S3-TASK/S3-CI. Historical Lab records below remain dated;
+accepted S2, actual main RC-CI and reviewed F08 staging. Historical Lab records below remain dated;
 this current disposition supersedes old pending-status text without turning
-historical SKIP or limited replay into new PASS. #93 final RC remains open.
+historical SKIP or limited replay into new PASS. #93 actual RC checklist evidence is now reconciled; user handles closure.
 
 ## 1. Current approved changes, fixes and retest disposition
 
 | Finding/change / requirement | Current disposition and approval/release provenance | Actual verification / remaining owner/action |
 | --- | --- | --- |
-| #71 stale private editor / F-03, BR-06 | Resolved via #72/#73 -> reviewed Lab 6 #76 / aeb804e; roster/session policy preserved | S2/S3-CI reruns App.sessionIsolation/sessionReview plus API/E2E negatives. Historical RT-07 remains isolated replay/evidence inspection, not deployed race injection; final RC continuity Magiciancat9 + martinvadre under #93/#103 by28 Nov |
-| #74 foreign proposal metadata / BR-06 | Resolved under accepted roster-only foreign-team policy, Lab 6 #76 | API TEST-23, routing/privacy and App.directoryPrivacy rerun S2/S3-CI; current-source backend denial/readback PASS; repeat final RC #93 |
-| #75 protected API SPA fallback / F-01, NFR-01 | Resolved in aeb804e; unsupported proposal API stays protected JSON before frontend fallback | routing-privacy.unit.test.ts and TEST-03 rerun S2/S3-CI; final RC #93 |
+| #71 stale private editor / F-03, BR-06 | Resolved via #72/#73 -> reviewed Lab 6 #76 / aeb804e; roster/session policy preserved | S2/S3-CI reruns App.sessionIsolation/sessionReview plus API/E2E negatives. Historical RT-07 remains isolated replay/evidence inspection, not deployed race injection; RC-CI45759742341 and dated live verification now recorded #93/#103 |
+| #74 foreign proposal metadata / BR-06 | Resolved under accepted roster-only foreign-team policy, Lab 6 #76 | API TEST-23, routing/privacy and App.directoryPrivacy rerun S2/S3-CI; current-source backend denial/readback PASS; actual RC-CI and live roster privacy/denial recorded #93/#103 |
+| #75 protected API SPA fallback / F-01, NFR-01 | Resolved in aeb804e; unsupported proposal API stays protected JSON before frontend fallback | routing-privacy.unit.test.ts and TEST-03 rerun S2/S3-CI; actual RC-CI and live protected-namespace401 recorded #93/#103 |
 | CR-L7-01 / #85, BR-05 | TA P'Tik approval 22 Nov20:18 Asia/Bangkok, user confirmation, reviewed contract #105 before code; revision minimum20/approval10 after trim/UTF-16 implemented and released through #113 and maintained main | [Approval](../../labs/lab-07/approval-record.md), [locked baseline](../../labs/lab-07/pre-change-baseline.md), [implementation chronology](../../labs/lab-07/implementation-evidence.md); Lab7 U/I/UI/E suites pass S2/S3-CI. Old10/10 behavior remains history, not current policy |
-| UI refresh / #106 | User direction22 Nov; full specification review #107, ownership handoff #108, implementation/review #110, current main integration #119 | Quick Fill removed; real auth/team/proposal preserved by actual component/E2E. Full compact/mobile/zoom/contrast acceptance remains explicit #103/#100 work by28 Nov |
-| Versioned migrations / NFR-04 | Original init already existed; reviewed F-04/F-05/F-06 added actual SQL, then F-07 task migration on staging | Fresh migrate:deploy and populated SQL checks PASS S2/S3-CI; legacy fields/grades/session records retained. Production job course-pms-migrate-6cd6s completed for S2-MAIN; F-07 production upgrade not yet performed |
+| UI refresh / #106 | User direction22 Nov; full specification review #107, ownership handoff #108, implementation/review #110, current main integration #119 | Quick Fill removed; real auth/team/proposal preserved by actual component/E2E. Full compact/mobile/zoom/contrast acceptance remains explicit #104 evidence preparation by 28 Nov, both owners |
+| Versioned migrations / NFR-04 | Actual init + reviewed F04/05/06/task/peer additive SQL, no fabricated legacy backfill | RC-CI populated S2/task/peer tests PASS; separate deployed job course-pms-migrate-zt7vg SUCCESS and retained prior records read back. F08 staging adds no migration |
 | TD-02 disposable DB reset guard | Addressed/reviewed in #119, common guard applied before resetting server/browser tests | disposable-database.unit.test.ts10 and full guarded S2/S3 suites PASS; source/test changes now reviewed. No production-reset run inferred |
-| TD-03 maintained rule across refreshed UI/features | Addressed/reviewed in #119 and preserved in #120 | App.lab7Review + App.uiRefresh, Lab7 unit/API/browser and combined S2/S3 regression PASS; final RC rerun still #93/#103 |
+| TD-03 maintained rule across refreshed UI/features | Reviewed #119, maintained through #120/#122/#123 | Lab7 unit/API/UI/browser and combined RC-CI PASS; actual final RC rerun complete. Old10/10 remains history |
 | Startup measurement / NFR-05 | Previous measurement gap addressed by D2-SYS-T01 in reviewed #119 | Actual CI Docker1214.25ms on S2-MAIN and510.48ms on S3 tested merge, with image/source/UTC/DB/HTML; not Cloud Run cold-start timing |
 
 ## 2. Explicit remaining debt, evidence limitations and requirements
@@ -26,9 +26,9 @@ historical SKIP or limited replay into new PASS. #93 final RC remains open.
 | --- | --- | --- |
 | TD-01 authenticated deployed smoke / retained P1 evidence debt | martinvadre config/release; Magiciancat9 acceptance record / #97 | **Resolved on 25 Nov:** `SMOKE_EMAIL` variable and `SMOKE_PASSWORD` secret privately configured in `demo`; normal main deployment [run 45645149796](https://github.com/Magiciancat9/Course_management/actions/runs/45645149796) on `07ffd8f31c3d61d8d13d5217a1fde39628c6649a` (`course-pms-00014-28n`) passed public and authenticated login/me/courses/logout smoke checks |
 | Accepted Sprint 2 tag / release gate | martinvadre + Magiciancat9 / #97 | **Resolved on 25 Nov:** immutable annotated tag `v1.1.0-sprint2` created and pushed on `07ffd8f31c3d61d8d13d5217a1fde39628c6649a` before Sprint 3 main promotion ([issue #97 record](https://github.com/Magiciancat9/Course_management/issues/97#issuecomment-7166980735)) |
-| Final integrated RC / continuity | martinvadre #103; Magiciancat9 + martinvadre #93 | Main integration of preserved S1/S2 and reviewed tasks, exact-source full CI/SQL/build/system checks and actual deployed changed/original/persistence/backend-denial evidence; target28 Nov |
-| Full UI visual/accessibility evidence | martinvadre UI/RC, Magiciancat9 independent verification / #103/#100 | Specific UIR-AC03/04/07/10 gaps: 1440/1024/375 widths, 200% zoom/overflow, copy/keyboard/rendered contrast and final captioned mobile/desktop evidence; target28 Nov |
-| Peer/analytics remaining scope / requirement gaps, not newly observed defects | Magiciancat9 #101; martinvadre #102 | Per-AC actions for F07-AC07-12 and F08-AC01-10 in finish plan; targets5/7 Dec, final13 Dec. Reviewed design is not implementation |
+| Final integrated RC / continuity | martinvadre #103; both #93 | Resolved 26 Nov: reviewed #123 main dd9d85a, RC-CI45759742341, deployment plus actual dated original/changed/persistence/backend-denial verification; #93 checklist reconciled |
+| Full UI visual/accessibility evidence | martinvadre UI/RC, Magiciancat9 independent verification / #104 evidence preparation | Specific UIR-AC03/04/07/10 gaps: 1440/1024/375 widths, 200% zoom/overflow, copy/keyboard/rendered contrast and final captioned mobile/desktop evidence; target 28 Nov under #104; document reconciliation records this gap |
+| F08 production/GUI acceptance; December personal UAT | martinvadre #102, Magiciancat9 independent inspection; both UAT | F07 is reviewed/deployed/verified; F08 is reviewed/tested staging. Next main/live and named spreadsheet GUI checks by 7 Dec; personal UAT/video/retests12–13 Dec. Exact actions in finish plan |
 | Final document/PDF snapshot | Magiciancat9 #100/#104; martinvadre reviews | Reconcile actual #97/#93/#103 identities/results before both members inspect the English Parts A-E PDF; user submits29 Nov23:59, receipt/PDF private |
 | Historical missed deployment notice/authenticated SKIP/RT-07 limit | Both retain original Lab6 process record | Do not fabricate retrospective notice/PASS/deployed race. Follow reviewed notice/check procedure for the next release; historical accepted decision and bounded evidence remain unchanged |
 
@@ -57,9 +57,14 @@ The original [22 Nov staging execution](sprint1-continuity-evidence.md) and
 remain preparation history. Current implemented-feature regression and
 migration results are the named S2/S3 runs, not relabeled historical Lab6 UAT.
 
-Every current finding is resolved with source/retest or explicitly remaining
-with owner/action/target above. This document update does not complete #93's
-actual final integrated-RC journey. Record new failures with severity/owner/
-fix/retest, update the exact candidate identities, and obtain independent
-review. The user handles closure; no new production mutation, reset, release
-acceptance, secret-value read or personal student UAT is claimed.
+Every finding is resolved with source/retest or explicitly owned with
+action/date above. Actual combined main `dd9d85a` and
+[run 45759742341](https://github.com/Magiciancat9/Course_management/actions/runs/45759742341)
+re-executed original journeys/privacy/session and populated SQL preservation;
+[dated live verification](https://github.com/Magiciancat9/Course_management/issues/103#issuecomment-7183418289)
+records retained data and backend denials. #93 checklist evidence is reconciled.
+Historical rows above describe their original scope, not new production actions.
+The current [finish plan](continuity-and-status.md#5-exact-remaining-work-risk-and-completion-plan)
+owns remaining UI, F08 production/GUI, PDF and December UAT/release checks.
+New failures require severity/owner/fix/retest. This audit performs no new
+production mutation/reset/release or personal UAT; the user handles closure.

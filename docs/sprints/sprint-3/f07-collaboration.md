@@ -6,12 +6,12 @@
 [#101 remaining peer work](https://github.com/Magiciancat9/Course_management/issues/101).
 **Links:** FR-09/10; BR-06/08; NFR-01/02/04. Dependencies: F-02 and
 [F-05 milestone/submission context](../sprint-2/f05-submissions.md).
-**25 Nov task checkpoint:** AC01-06 implemented on `feat/98-f07-tasks`;
-[execution ledger](f07-execution-evidence.md) records exact tests/results.
-AC07-12 peer evaluation is now implemented/tested on #101's feature branch;
-[peer execution ledger](f07-peer-execution-evidence.md) names actual cases/results.
-Independent peer implementation review and staging/main integration remain pending.
-No accepted Sprint 3 release is claimed.
+**26 Nov status:** all 12 task/peer AC have executed results and independent
+review (#120/#122); promoted via #123 to main `dd9d85a`, with actual CI,
+deployment and dated live verification. [Task ledger](f07-execution-evidence.md)
+and [peer ledger](f07-peer-execution-evidence.md) retain actual source/results.
+Personal December UAT/retests/video remain planned; no new execution is
+claimed by this contract-status update. AC/STS/policy remain unchanged.
 
 ## 1. Scope and feature SDS
 
@@ -164,10 +164,10 @@ By 29 Nov all F-07 contracts/AC/STS must be reviewed; implement and test the
 task lifecycle AC01–06 as the proposed meaningful progress. Do not close all
 F-07 scope by claiming those task checks cover peer evaluation. #101 tracks
 AC07–12 and unachieved task AC to an exact final plan (proposed target 5 Dec).
-The #101 candidate now covers AC07-12 before the original 5 Dec target; the
-original task checkpoint scope/date above remains history.
-Feature acceptance still requires all AC, shared DoD, real persistence/access,
-reviewed integration and final release evidence.
+All12 AC now have actual verification, independent review and deployed main
+release evidence through #120/#122/#123, ahead of the original 5 Dec target.
+The checkpoint scope/date remains history; task checks never substitute for
+peer checks. Personal December UAT/retests remain separately planned.
 
 | Revision | Date / status |
 | --- | --- |

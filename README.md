@@ -1,17 +1,19 @@
 # CoursePMS — Course Project Management System
 
-**25 Nov current snapshot:** reviewed/deployed Sprint 2 main (`07ffd8f31c3d61d8d13d5217a1fde39628c6649a`)
-passed full public and authenticated deployment smoke ([run 45645149796](https://github.com/Magiciancat9/Course_management/actions/runs/45645149796),
-revision `course-pms-00014-28n`) and is preserved as immutable tag `v1.1.0-sprint2` (#97).
-Reviewed `sprint-3-staging` (`c35714dc7e9d7ca4e88ae5ab1d65fd3a8707c312`) integrates the
-F-07 task checkpoint (#120), reconciled D2 documentation (#121), and confidential
-F-07 peer evaluation (#122, reviewed at `57045b5`). Analytics/CSV (#102) remains planned.
-[Current source/release/results and remaining-work plan](docs/sprints/deliverable-2/continuity-and-status.md)
-tracks the combined Sprint 1/2/3 release candidate promotion (#103).
+**26 Nov current snapshot:** accepted Sprint 2 is preserved as annotated tag
+`v1.1.0-sprint2` -> `07ffd8f31c3d61d8d13d5217a1fde39628c6649a`.
+Reviewed PR #123 deployed S1/Lab7/S2/F07 tasks and confidential peer evaluation
+to main `dd9d85ac9f0f6b21f9503c1031173992fb69ce35`
+([run 45759742341](https://github.com/Magiciancat9/Course_management/actions/runs/45759742341),
+revision `course-pms-00015-lrr`, public/authenticated smoke PASS).
+F08 analytics/CSV is independently reviewed and merged via #124 to staging
+`14178f162e037a4bee8f2ec85c57bdc726e8fa58` (207 server /74 client /10 browser PASS);
+it is not yet deployed main. [Current source/results/remaining-work plan](docs/sprints/deliverable-2/continuity-and-status.md)
+keeps production acceptance, manual checks and assessed PDF work explicit.
 
 **Course:** CPE 334 Software Engineering in the Age of AI Agents (Semester 1/2026)  
 **Deliverable:** Project Deliverable 1 — Engineering Baseline and Working Sprint 1  
-**Current planning:** Sprint 2 is accepted and tagged `v1.1.0-sprint2` (`07ffd8f3`, #119/#97). Tasks (#120), current documents (#121), and confidential peer evaluation (#122, [#101 ledger](docs/sprints/sprint-3/f07-peer-execution-evidence.md)) are reviewed and merged on Sprint 3 staging (`c35714d`), and promoted for combined main RC review/deployment under #103.
+**Current planning:** Deliverable 2 covers accepted Sprint 2 and verified Sprint 3 progress; #100 reconciles the documentation, #104 owns the assessed PDF. Final product/UAT/video target remains 13 December.
 **Team Members:**
 - **Pawarit Wongdaeng** (`67070503466`, GitHub: `martinvadre`)
 - **Tatchakorn Thamnimitr** (`67070503415`, GitHub: `Magiciancat9`)

@@ -1,10 +1,11 @@
 # Current UI specification and historical Sprint 1 as-built record
 
-**25 Nov reconciliation:** PR #110 implemented the refreshed shell and Quick
+**26 Nov reconciliation:** PR #110 implemented the refreshed shell and Quick
 Fill removal; maintained Lab 7 now enforces approval10/revision20 after trim.
-F-04/F-05/F-06 screens are reviewed/deployed on main; F-07 task board is
-reviewed on Sprint 3 staging. Peer evaluation UI is implemented/tested on #101's
-feature branch, pending review/integration; analytics remains unimplemented.
+F-04/F-05/F-06 screens and the F-07 task board are reviewed/deployed on main.
+Peer evaluation UI is implemented/tested on
+reviewed main RC via #122/#123; analytics UI is implemented/tested/reviewed
+on staging #124, not yet deployed main.
 The current system screen/state/permission specification is in
 [System SDS section 3](system-sds.md#3-ui-api-and-sessionaccess-conventions),
 with design tokens/AC in [UI refresh specification](ui-refresh-spec.md) and
