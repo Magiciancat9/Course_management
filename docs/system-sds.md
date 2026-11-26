@@ -172,7 +172,8 @@ and positive afterId. Existing Sprint 1 list shapes remain unchanged.
 | F-05 | GET/PUT `/teams/:teamId/milestones/:milestoneId/submission`; GET same path + `/versions`; GET `/courses/:courseId/milestones/:milestoneId/submissions` |
 | F-06 | GET/PUT `/submissions/:id/evaluation`; POST same path + `/publish` |
 | F-07 tasks | GET/POST `/teams/:teamId/tasks`; PUT `/tasks/:taskId`; GET `/tasks/:taskId/events` |
-| F-07 peer (#101 candidate) | GET `/teams/:teamId/milestones/:milestoneId/peer-evaluations/me` (own outgoing); PUT same base + `/:evaluateeId` (student author); GET base (instructor collection) |
+| F-07 peer (#101) | GET `/teams/:teamId/milestones/:milestoneId/peer-evaluations/me` (own outgoing); PUT same base + `/:evaluateeId` (student author); GET base (instructor collection) |
+| F-08 analytics/export (#102 candidate) | GET `/courses/:courseId/analytics` (instructor coherent JSON snapshot); GET `/courses/:courseId/gradebook.csv` (instructor UTF-8 BOM + CRLF quoted CSV with formula-risk neutralization) |
 
 Documented feature errors use safe `{error,code}` JSON: 400 invalid data/IDs,
 401 missing/invalid/revoked session, 403 role/ownership, 404 missing/context

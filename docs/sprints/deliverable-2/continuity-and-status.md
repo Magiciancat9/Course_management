@@ -63,7 +63,7 @@ or independent traffic measurement is claimed here.
 | F-06; S2-F06-AC01-09 | Implemented, reviewed #118, version-bound draft/publication/score/privacy/race tests PASS | Same #97 gate; old publications never grade new content |
 | F-07 tasks; S3-F07-AC01-06 | Implemented, reviewed/merged #120, S3-CI PASS | Main RC integration/deployed evidence remain #103 |
 | F-07 peer; S3-F07-AC07-12 | Pre-code contract #107; #101 candidate now implements model/API/UI and actual U/I/SQL/UI/E cases; S3-PEER results in peer ledger | Magiciancat9; independent review, staging/main integration, final accepted-release/UAT remain; original 5 Dec target preserved |
-| F-08; S3-F08-AC01-10 | Full contract reviewed #107; #99 closed for contract checkpoint; operational analytics/export NOT IMPLEMENTED / NOT RUN | #102, martinvadre, target 7 Dec; depends on #101 as assigned |
+| F-08; S3-F08-AC01-10 | Pre-code contract #107; #99 closed for contract checkpoint; #102 candidate now implements `analyticsService`, `gradebookExport`, `routes/analytics` and `AnalyticsDashboard` with actual U/I/UI/E + Python excel-dialect consumer checks; S3-F08 results in [F-08 ledger](../sprint-3/f08-execution-evidence.md) | #102, martinvadre; independent code review by Magiciancat9, staging/main integration and manual desktop GUI spreadsheet check remain |
 | UI refresh; UIR-AC01-10 | Shell/Quick Fill removal implemented #110; many preserved/new component/browser checks PASS | Full mobile/compact/200% zoom, rendered contrast and final visual acceptance are not yet established; per-AC gaps in verification register |
 
 The [complete verification register](verification-register.md) lists all 59

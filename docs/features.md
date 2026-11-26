@@ -65,7 +65,7 @@ flowchart LR
 | F-05 | Magiciancat9 | [S2-F05 v1.0 + execution addendum](sprints/sprint-2/f05-submissions.md) | Implemented/reviewed via PR #117; [S2 release ledger](sprints/sprint-2/accepted-release.md) |
 | F-06 | martinvadre | [S2-F06 v1.0](sprints/sprint-2/f06-grading.md) | Implemented/reviewed via PR #118; [S2 release ledger](sprints/sprint-2/accepted-release.md) |
 | F-07 | Magiciancat9 | [S3-F07 v1.0](sprints/sprint-3/f07-collaboration.md) | Task checkpoint AC01-06 implemented/tested/reviewed and merged #120 to S3 staging; [actual results/review gates](sprints/sprint-3/f07-execution-evidence.md). Peer AC07-12 implemented/tested on #101 feature branch; [peer evidence](sprints/sprint-3/f07-peer-execution-evidence.md); independent review/integration and accepted release pending |
-| F-08 | martinvadre | [S3-F08 v1.0](sprints/sprint-3/f08-analytics-export.md) | Contract reviewed #107; #99 contract checkpoint closed. Operational implementation NOT IMPLEMENTED / NOT RUN |
+| F-08 | martinvadre | [S3-F08 v1.0](sprints/sprint-3/f08-analytics-export.md) | Contract reviewed #107; #99 contract checkpoint closed. Operational AC01-10 implemented/tested on #102 feature branch; [F-08 evidence](sprints/sprint-3/f08-execution-evidence.md); independent code review/integration pending |
 
 Original v1.0 drafts were authored by Magiciancat9; martinvadre independently
 reviewed the contract package in PR #107 before implementation. Code PRs
