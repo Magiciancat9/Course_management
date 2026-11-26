@@ -14,6 +14,16 @@ export interface MilestoneItem {
   version: number;
 }
 
+export interface MilestoneFocusTarget {
+  nonce: number;
+  courseId: number;
+  milestoneId?: number;
+  milestoneTitle?: string;
+  teamId?: number;
+  submissionId?: number;
+  submissionVersion?: number;
+}
+
 interface MilestoneManagerProps {
   token: string;
   userRole: 'STUDENT' | 'INSTRUCTOR';
@@ -22,6 +32,7 @@ interface MilestoneManagerProps {
   getCurrentGeneration: () => number;
   onUnauthorized: (message: string, code?: string) => void;
   ownTeams?: Array<{ id: number; courseId: number; proposalStatus: string | null }>;
+  focusTarget?: MilestoneFocusTarget | null;
 }
 
 function toLocalDateTimeInput(isoString: string): string {
@@ -57,12 +68,14 @@ export default function MilestoneManager({
   getCurrentGeneration,
   onUnauthorized,
   ownTeams = [],
+  focusTarget = null,
 }: MilestoneManagerProps) {
   const [selectedCourseId, setSelectedCourseId] = useState<number | null>(
     courses[0]?.id ?? null
   );
   const [milestones, setMilestones] = useState<MilestoneItem[]>([]);
   const [submissionMilestone, setSubmissionMilestone] = useState<MilestoneItem | null>(null);
+  const [focusedTeam, setFocusedTeam] = useState<{ nonce: number; teamId: number | null } | null>(null);
   const [nextAfterId, setNextAfterId] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingMore, setLoadingMore] = useState<boolean>(false);
@@ -70,6 +83,7 @@ export default function MilestoneManager({
 
   // Instructor form state
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingCourseId, setEditingCourseId] = useState<number | null>(null);
   const [expectedVersion, setExpectedVersion] = useState<number | null>(null);
   const [editingStatus, setEditingStatus] = useState<'DRAFT' | 'PUBLISHED' | null>(null);
   const [titleInput, setTitleInput] = useState('');
@@ -84,23 +98,90 @@ export default function MilestoneManager({
 
   const abortRef = useRef<AbortController | null>(null);
   const loadMoreAbortRef = useRef<AbortController | null>(null);
+  const mutationAbortRef = useRef<AbortController | null>(null);
   const selectedCourseIdRef = useRef<number | null>(selectedCourseId);
   selectedCourseIdRef.current = selectedCourseId;
+
+  function switchCourseContext(nextCourseId: number) {
+    if (selectedCourseIdRef.current !== nextCourseId) {
+      if (mutationAbortRef.current) {
+        mutationAbortRef.current.abort();
+        mutationAbortRef.current = null;
+      }
+      setPendingAction(null);
+      setMilestones([]);
+      setNextAfterId(null);
+      setLoadingMore(false);
+      setLoadError(null);
+      setFormSuccess(null);
+      resetFormToNew();
+    }
+    selectedCourseIdRef.current = nextCourseId;
+    setSelectedCourseId(nextCourseId);
+  }
 
   useEffect(() => {
     if (courses.length === 0) {
       setSelectedCourseId(null);
       setMilestones([]);
       setNextAfterId(null);
+      resetFormToNew();
       return;
     }
     if (selectedCourseId === null || !courses.some((c) => c.id === selectedCourseId)) {
-      setSelectedCourseId(courses[0].id);
+      switchCourseContext(courses[0].id);
     }
   }, [courses, selectedCourseId]);
 
+  useEffect(() => {
+    if (!focusTarget) return;
+    switchCourseContext(focusTarget.courseId);
+    if (typeof focusTarget.milestoneId === 'number') {
+      const targetMilestoneId = focusTarget.milestoneId;
+      const existing = milestones.find(
+        (m) => m.id === targetMilestoneId && m.courseId === focusTarget.courseId
+      );
+      setSubmissionMilestone(
+        existing ?? {
+          id: targetMilestoneId,
+          courseId: focusTarget.courseId,
+          title: focusTarget.milestoneTitle || `Milestone #${targetMilestoneId}`,
+          description: '',
+          dueDate: new Date().toISOString(),
+          weightPercent: 20,
+          status: 'PUBLISHED',
+          publishedAt: null,
+          version: 1,
+        }
+      );
+      setFocusedTeam({
+        nonce: focusTarget.nonce,
+        teamId: typeof focusTarget.teamId === 'number' ? focusTarget.teamId : null,
+      });
+    } else {
+      setSubmissionMilestone(null);
+      setFocusedTeam(null);
+    }
+  }, [focusTarget?.nonce]);
+
+  useEffect(() => {
+    if (!submissionMilestone) return;
+    const loaded = milestones.find(
+      (m) => m.id === submissionMilestone.id && m.courseId === submissionMilestone.courseId
+    );
+    if (
+      loaded &&
+      (loaded.title !== submissionMilestone.title ||
+        loaded.status !== submissionMilestone.status ||
+        loaded.version !== submissionMilestone.version)
+    ) {
+      setSubmissionMilestone(loaded);
+    }
+  }, [milestones, submissionMilestone]);
+
   function resetFormToNew() {
     setEditingId(null);
+    setEditingCourseId(null);
     setExpectedVersion(null);
     setEditingStatus(null);
     setTitleInput('');
@@ -113,6 +194,7 @@ export default function MilestoneManager({
 
   function startEditing(item: MilestoneItem) {
     setEditingId(item.id);
+    setEditingCourseId(item.courseId);
     setExpectedVersion(item.version);
     setEditingStatus(item.status);
     setTitleInput(item.title);
@@ -243,6 +325,10 @@ export default function MilestoneManager({
         loadMoreAbortRef.current.abort();
         loadMoreAbortRef.current = null;
       }
+      if (mutationAbortRef.current) {
+        mutationAbortRef.current.abort();
+        mutationAbortRef.current = null;
+      }
     };
   }, [selectedCourseId, token, sessionGeneration]);
 
@@ -274,10 +360,18 @@ export default function MilestoneManager({
     }
 
     const expectedGen = sessionGeneration;
+    if (mutationAbortRef.current) {
+      mutationAbortRef.current.abort();
+    }
+    const controller = new AbortController();
+    mutationAbortRef.current = controller;
     setPendingAction('save-milestone');
 
     try {
-      const isEdit = editingId !== null && expectedVersion !== null;
+      const isEdit =
+        editingId !== null &&
+        expectedVersion !== null &&
+        editingCourseId === requestCourseId;
       const url = isEdit
         ? `/api/milestones/${editingId}`
         : `/api/courses/${requestCourseId}/milestones`;
@@ -304,10 +398,12 @@ export default function MilestoneManager({
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(body),
+        signal: controller.signal,
       });
       const data = await res.json().catch(() => ({}));
 
       if (
+        controller.signal.aborted ||
         expectedGen !== getCurrentGeneration() ||
         requestCourseId !== selectedCourseIdRef.current
       ) {
@@ -336,15 +432,24 @@ export default function MilestoneManager({
       setFormSuccess(isEdit ? 'Milestone updated.' : 'Milestone draft created.');
       resetFormToNew();
       await loadMilestones(requestCourseId);
-    } catch {
+    } catch (err) {
       if (
+        (err as Error)?.name !== 'AbortError' &&
+        !controller.signal.aborted &&
         expectedGen === getCurrentGeneration() &&
         requestCourseId === selectedCourseIdRef.current
       ) {
         setFormError({ error: 'Network error while saving milestone.' });
       }
     } finally {
-      if (expectedGen === getCurrentGeneration()) {
+      if (mutationAbortRef.current === controller) {
+        mutationAbortRef.current = null;
+      }
+      if (
+        !controller.signal.aborted &&
+        expectedGen === getCurrentGeneration() &&
+        requestCourseId === selectedCourseIdRef.current
+      ) {
         setPendingAction(null);
       }
     }
@@ -359,6 +464,11 @@ export default function MilestoneManager({
     setHasConflict(false);
 
     const expectedGen = sessionGeneration;
+    if (mutationAbortRef.current) {
+      mutationAbortRef.current.abort();
+    }
+    const controller = new AbortController();
+    mutationAbortRef.current = controller;
     setPendingAction(`publish-${item.id}`);
 
     try {
@@ -369,10 +479,12 @@ export default function MilestoneManager({
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ expectedVersion: item.version }),
+        signal: controller.signal,
       });
       const data = await res.json().catch(() => ({}));
 
       if (
+        controller.signal.aborted ||
         expectedGen !== getCurrentGeneration() ||
         requestCourseId !== selectedCourseIdRef.current
       ) {
@@ -403,15 +515,24 @@ export default function MilestoneManager({
         resetFormToNew();
       }
       await loadMilestones(requestCourseId);
-    } catch {
+    } catch (err) {
       if (
+        (err as Error)?.name !== 'AbortError' &&
+        !controller.signal.aborted &&
         expectedGen === getCurrentGeneration() &&
         requestCourseId === selectedCourseIdRef.current
       ) {
         setFormError({ error: 'Network error while publishing milestone.' });
       }
     } finally {
-      if (expectedGen === getCurrentGeneration()) {
+      if (mutationAbortRef.current === controller) {
+        mutationAbortRef.current = null;
+      }
+      if (
+        !controller.signal.aborted &&
+        expectedGen === getCurrentGeneration() &&
+        requestCourseId === selectedCourseIdRef.current
+      ) {
         setPendingAction(null);
       }
     }
@@ -478,8 +599,9 @@ export default function MilestoneManager({
               value={selectedCourseId ?? ''}
               disabled={pendingAction !== null}
               onChange={(e) => {
-                setSelectedCourseId(Number(e.target.value));
-                resetFormToNew();
+                setSubmissionMilestone(null);
+                setFocusedTeam(null);
+                switchCourseContext(Number(e.target.value));
               }}
             >
               {courses.map((c) => (
@@ -721,7 +843,7 @@ export default function MilestoneManager({
                       <p className="mb-0 mt-2 small">{m.description}</p>
                       {(userRole === 'INSTRUCTOR' || m.status === 'PUBLISHED') && <button type="button"
                         className="cpms-btn cpms-btn-secondary mt-2" data-testid={`milestone-submission-btn-${m.id}`}
-                        onClick={() => setSubmissionMilestone(m)}>
+                        onClick={() => { setFocusedTeam(null); setSubmissionMilestone(m); }}>
                         {userRole === 'INSTRUCTOR' ? 'View submissions' : 'View / submit deliverable'}
                       </button>}
                     </div>
@@ -746,10 +868,11 @@ export default function MilestoneManager({
           </>
         )}
         {submissionMilestone && submissionMilestone.courseId === selectedCourseId && <>
-          <button type="button" className="cpms-btn cpms-btn-secondary mt-3" onClick={() => setSubmissionMilestone(null)}>Close submission details</button>
+          <button type="button" className="cpms-btn cpms-btn-secondary mt-3" onClick={() => { setFocusedTeam(null); setSubmissionMilestone(null); }}>Close submission details</button>
           <SubmissionWorkspace key={`${sessionGeneration}:${selectedCourseId}:${submissionMilestone.id}`} token={token}
             userRole={userRole} courseId={selectedCourseId} milestone={submissionMilestone}
             ownTeam={ownTeams.find(team => team.courseId === selectedCourseId) || null}
+            initialTeamId={focusedTeam?.teamId ?? null} focusNonce={focusedTeam?.nonce}
             sessionGeneration={sessionGeneration} getCurrentGeneration={getCurrentGeneration} onUnauthorized={onUnauthorized} />
         </>}
       </div>

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import MilestoneManager from './features/milestones/MilestoneManager';
+import MilestoneManager, { type MilestoneFocusTarget } from './features/milestones/MilestoneManager';
 import TaskBoard from './features/collaboration/TaskBoard';
 import PeerEvaluation from './features/collaboration/PeerEvaluation';
+import AnalyticsDashboard, { type AnalyticsWorkflowTarget } from './features/analytics/AnalyticsDashboard';
 
 export interface User {
   id: number;
@@ -80,7 +81,7 @@ export default function App() {
   const [showPassword, setShowPassword] = useState(false);
 
   // Navigation state
-  const [activeNav, setActiveNav] = useState<'overview' | 'team' | 'proposal' | 'teams' | 'review' | 'milestones' | 'tasks' | 'peers'>('overview');
+  const [activeNav, setActiveNav] = useState<'overview' | 'team' | 'proposal' | 'teams' | 'review' | 'milestones' | 'tasks' | 'peers' | 'analytics'>('overview');
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   // Student Team creation & member addition state
@@ -97,6 +98,7 @@ export default function App() {
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [selectedTeamId, setSelectedTeamId] = useState<number | null>(null);
   const [reviewFeedbackInput, setReviewFeedbackInput] = useState('');
+  const [milestoneFocusTarget, setMilestoneFocusTarget] = useState<MilestoneFocusTarget | null>(null);
 
   // Session boundary refs: prevent cross-session stale responses and callbacks
   const sessionGenerationRef = useRef<number>(0);
@@ -126,6 +128,7 @@ export default function App() {
     setStatusFilter('ALL');
     setSelectedTeamId(null);
     setReviewFeedbackInput('');
+    setMilestoneFocusTarget(null);
     setActiveNav('overview');
     setMobileNavOpen(false);
   }
@@ -376,11 +379,24 @@ export default function App() {
   }, [mobileNavOpen]);
 
   function navigateToSection(
-    navKey: 'overview' | 'team' | 'proposal' | 'teams' | 'review' | 'milestones' | 'tasks' | 'peers',
-    sectionId?: string
+    navKey: 'overview' | 'team' | 'proposal' | 'teams' | 'review' | 'milestones' | 'tasks' | 'peers' | 'analytics',
+    sectionId?: string,
+    target?: AnalyticsWorkflowTarget
   ) {
     setActiveNav(navKey);
     setMobileNavOpen(false);
+    if (target) {
+      if (navKey === 'milestones') {
+        setMilestoneFocusTarget((prev) => ({
+          nonce: (prev?.nonce ?? 0) + 1,
+          ...target,
+        }));
+      } else if (navKey === 'review' && typeof target.teamId === 'number') {
+        setStatusFilter('ALL');
+        setSelectedTeamId(target.teamId);
+        setReviewFeedbackInput('');
+      }
+    }
     if (sectionId) {
       const prefersReducedMotion =
         typeof window !== 'undefined' &&
@@ -828,7 +844,7 @@ export default function App() {
   const courseTerm = courses[0]?.term || '1/2026';
 
   const navItems: Array<{
-    key: 'overview' | 'team' | 'proposal' | 'teams' | 'review' | 'milestones' | 'tasks' | 'peers';
+    key: 'overview' | 'team' | 'proposal' | 'teams' | 'review' | 'milestones' | 'tasks' | 'peers' | 'analytics';
     label: string;
     sectionId: string;
   }> =
@@ -848,6 +864,7 @@ export default function App() {
           { key: 'milestones', label: 'Milestones', sectionId: 'section-milestones' },
           { key: 'tasks', label: 'Team Tasks', sectionId: 'section-tasks' },
           { key: 'peers', label: 'Peer Evaluation', sectionId: 'section-peer-evaluation' },
+          { key: 'analytics', label: 'Analytics & Export', sectionId: 'section-analytics' },
         ];
 
   return (
@@ -1611,6 +1628,7 @@ export default function App() {
               ownTeams={teams.filter(team => team.members.some(member => member.userId === user.id))
                 .map(team => ({ id: team.id, courseId: team.courseId, proposalStatus: team.proposal?.status || null }))}
               courses={courses}
+              focusTarget={milestoneFocusTarget}
               sessionGeneration={sessionGenerationRef.current}
               getCurrentGeneration={() => sessionGenerationRef.current}
               onUnauthorized={(msg, code) => {
@@ -1647,6 +1665,22 @@ export default function App() {
                 setErrorBanner({ error: msg, code });
               }}
             />
+            {user.role === 'INSTRUCTOR' && (
+              <AnalyticsDashboard
+                key={`analytics:${user.id}:${sessionGenerationRef.current}`}
+                token={token!}
+                userId={user.id}
+                userRole={user.role}
+                courses={courses.map(course => ({ id: course.id, code: course.code, name: course.name, term: course.term }))}
+                sessionGeneration={sessionGenerationRef.current}
+                getCurrentGeneration={() => sessionGenerationRef.current}
+                onUnauthorized={(msg, code) => {
+                  invalidateSessionBoundary(null);
+                  setErrorBanner({ error: msg, code });
+                }}
+                onNavigateToSection={navigateToSection}
+              />
+            )}
           </main>
         </div>
       </div>

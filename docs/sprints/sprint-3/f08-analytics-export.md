@@ -1,16 +1,18 @@
 # F-08 — Instructor analytics and CSV grade export
 
 **Contract:** S3-F08 v1.0, 22 Nov 2026; reviewed via PR #107 before implementation.
-**25 Nov status:** #99 contract checkpoint CLOSED; operational analytics/CSV
-remains NOT IMPLEMENTED / NOT RUN under #102. Draft authorship stays with
-Magiciancat9; martinvadre is feature owner. No future owner-authored code or
-review is inferred from contract authorship.
-**Owner:** `martinvadre`; draft author `Magiciancat9`; requested independent
-contract reviewer `martinvadre`; future owner-authored code reviewer
-`Magiciancat9`. **Issues:** [#99 contracts](https://github.com/Magiciancat9/Course_management/issues/99),
+**26 Nov status:** #99 contract checkpoint CLOSED; operational analytics/CSV
+(`S3-F08-AC01`–`AC10`) is now implemented and executed on `feat/102-f08-analytics-export`
+under #102 (RED `1950b765defd62464206e67613e13cce4fc25823` / [CI 45762211090](https://github.com/Magiciancat9/Course_management/actions/runs/45762211090);
+GREEN `fa5e3f107d59644395e03ac3f8309a488b955164` / [CI 45763416780](https://github.com/Magiciancat9/Course_management/actions/runs/45763416780):
+207 server / 70 client / 10 browser PASS; [execution ledger](f08-execution-evidence.md)).
+Independent code review by `Magiciancat9` and staging/main integration remain pending.
+**Owner:** `martinvadre`; draft author `Magiciancat9`; independent
+contract reviewer `martinvadre` (PR #107); independent code reviewer
+`Magiciancat9` (pending). **Issues:** [#99 contracts](https://github.com/Magiciancat9/Course_management/issues/99),
 [#102 implementation](https://github.com/Magiciancat9/Course_management/issues/102).
 **Links:** FR-11/12; NFR-01/02/04; F-03, F-05/F-06 and F-07 data contracts.
-**Implemented / executed / accepted:** NO / NOT RUN / NONE.
+**Implemented / executed / accepted:** YES (candidate) / PASS (`S3-F08-T01`–`T12` automated; manual GUI Excel/LibreOffice import noted) / PENDING REVIEW.
 
 ## 1. Feature SDS, workflow and layers
 
@@ -154,21 +156,24 @@ Planned files: U `server/tests/analytics-export.unit.test.ts`; I
 `server/tests/analytics-export.integration.test.ts`; UI
 `client/src/features/analytics/AnalyticsDashboard.test.tsx`; E
 `e2e/sprint3-analytics.spec.ts`; M records named spreadsheet version/date and
-actual import outcome. No such test/measurement is executed by this draft.
+actual import outcome. All four automated test files (`S3-F08-T01`–`T12`) and
+the Python 3.14.7 `csv.reader(..., dialect='excel')` consumer import check are
+now implemented and executed; see the [F-08 execution ledger](f08-execution-evidence.md).
 
 ## 7. DoD / checkpoint / history
 
 Full F-08 contracts/AC/STS are required at 29 Nov; this document does not
 satisfy the separate implemented Sprint 3 workflow requirement by itself.
 #102 tracks implementation and all remaining AC (proposed target 7 Dec).
-Final acceptance requires all AC/shared DoD, real fixture reconciliation,
-negative backend tests, safe actual CSV, independent review/CI and accepted
-final release. Exact remaining work must be in the finish plan by 13 Dec.
+The #102 candidate now implements and verifies `S3-F08-AC01`–`AC10` ahead of the
+7 Dec target; independent code review by `Magiciancat9`, staging/main integration,
+and manual desktop GUI Excel/LibreOffice opening remain explicit gates.
 
 | Revision | Date / status |
 | --- | --- |
 | S3-F08 v1.0 | 22 Nov 2026; complete proposed metric/CSV contract, review pending; implementation/tests NOT RUN |
+| F-08 candidate, 26 Nov 2026 | Test-only RED `1950b76` ([CI 45762211090](https://github.com/Magiciancat9/Course_management/actions/runs/45762211090)), runtime GREEN `fa5e3f1` ([CI 45763416780](https://github.com/Magiciancat9/Course_management/actions/runs/45763416780): 207 server / 70 client / 10 browser PASS); actual results in [F-08 ledger](f08-execution-evidence.md); independent code review/integration pending |
 
 **Independent contract review:** PR #107 accepted the full contract/shared
 decisions on22 Nov before code; #99 contract checkpoint closed.
-Implementation AC01-10 remain #102 / NOT RUN.
+Implementation AC01-10 are executed on `feat/102-f08-analytics-export` and await independent code review.
